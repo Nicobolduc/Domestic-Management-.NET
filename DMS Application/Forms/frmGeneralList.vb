@@ -1,4 +1,6 @@
-﻿Public Class frmGeneralList
+﻿Option Strict Off
+
+Public Class frmGeneralList
     Inherits System.Windows.Forms.Form
 
     Private Const mintItem_ID_col As Integer = 0
@@ -96,19 +98,12 @@
 
     Private Function blnOpenForm(ByVal vFormMode As clsConstants.Form_Modes) As Boolean
         Dim blnReturn As Boolean = True
-        Dim frmToOpen As System.Windows.Forms.Form = Nothing
+        Dim frmToOpen As Object = Nothing
 
         Try
             Select Case mListToOpen
                 Case mGeneralList.GeneralLists_ID.EXPENSES_ID
                     frmToOpen = New frmExpense
-                    DirectCast(frmToOpen, frmExpense).mintFormMode = vFormMode
-
-                    If vFormMode <> clsConstants.Form_Modes.INSERT Then
-                        DirectCast(frmToOpen, frmExpense).mintExp_ID = CInt(grdList.SelectedRows(0).Cells(mintItem_ID_col).Value)
-                    Else
-                        'Do nothing
-                    End If
 
                 Case mGeneralList.GeneralLists_ID.PRODUCTS_ID
                     frmToOpen = New frmProduct
@@ -122,7 +117,6 @@
 
                 Case mGeneralList.GeneralLists_ID.PRODUCT_CATEGORY_ID
                     frmToOpen = New frmProductCategory
-                    DirectCast(frmToOpen, frmProductCategory).mintFormMode = vFormMode
 
                     If vFormMode <> clsConstants.Form_Modes.INSERT Then
                         'DirectCast(frmToOpen, frmProductCategory).mintPro_ID = CInt(grdList.SelectedRows(0).Cells(mintItem_ID_col).Value)
@@ -136,7 +130,7 @@
                 mintSelectedRow = grdList.SelectedRows(0).Index
             End If
 
-            frmToOpen.ShowDialog()
+            frmToOpen.myFormManager.bln_ShowForm(vFormMode, CInt(grdList.SelectedRows(0).Cells(mintItem_ID_col).Value), True)
 
             frmGeneralList_Load(Me, New System.EventArgs)
 

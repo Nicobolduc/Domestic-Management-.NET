@@ -17,7 +17,7 @@
                 Case Else
                     blnReturn = True
             End Select
-            'Allo kim
+
         Catch ex As Exception
             blnReturn = False
             gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)

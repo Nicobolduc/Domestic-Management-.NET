@@ -74,7 +74,7 @@ Public Class clsSQL_Transactions
 
             Select Case vintDBType
                 Case clsConstants.MySQL_FieldTypes.VARCHAR_TYPE, clsConstants.MySQL_FieldTypes.DATETIME_TYPE
-                    vstrValue = "'" & vstrValue & "'"
+                    vstrValue = gcApp.str_FixStringForSQL(vstrValue)
 
             End Select
 

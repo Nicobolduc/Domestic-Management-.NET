@@ -5,20 +5,6 @@
 
     Private mcSQL As clsSQL_Transactions
 
-    Private Sub frmDepense_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        Dim blnReturn As Boolean
-
-        Select Case False
-            Case blnSetReadRights()
-            Case blnCboInterval_Load()
-            Case mintFormMode <> clsConstants.Form_Modes.INSERT
-                blnReturn = True
-            Case blnGrdExpense_Load()
-            Case Else
-                blnReturn = True
-        End Select
-
-    End Sub
 
     Private Function blnCboInterval_Load() As Boolean
         Dim blnReturn As Boolean
@@ -106,37 +92,6 @@
         Return blnReturn
     End Function
 
-    Private Function blnSetReadRights() As Boolean
-        Dim blnReturn As Boolean = True
-
-        Try
-            Select Case mintFormMode
-                Case clsConstants.Form_Modes.INSERT
-                    btnApply.Text = "Enregistrer"
-
-                Case clsConstants.Form_Modes.UPDATE
-                    btnApply.Text = "Appliquer"
-
-                Case clsConstants.Form_Modes.DELETE
-                    btnApply.Text = "Supprimer"
-
-                    Dim ctrl As Control
-                    For Each ctrl In Me.Controls
-                        If Not TypeOf ctrl Is Windows.Forms.Button And Not TypeOf ctrl Is Windows.Forms.Label Then
-                            ctrl.Enabled = False
-                        End If
-                    Next
-
-            End Select
-
-        Catch ex As Exception
-            blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
-
-        Return blnReturn
-    End Function
-
     Private Function blnExpense_Insert() As Boolean
         Dim blnReturn As Boolean
 
@@ -208,12 +163,16 @@
     '    Return blnReturn
     'End Function
 
-    Private Sub btnQuit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnQuit.Click
-        Me.Close()
-    End Sub
+    Private Sub myFormManager_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormManager.LoadData
+        Dim blnReturn As Boolean
 
-    Private Sub btnApply_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnApply.Click
-        blnSaveData()
-        Me.Close()
+        Select Case False
+            Case blnCboInterval_Load()
+            Case mintFormMode <> clsConstants.Form_Modes.INSERT
+                blnReturn = True
+            Case blnGrdExpense_Load()
+            Case Else
+                blnReturn = True
+        End Select
     End Sub
 End Class

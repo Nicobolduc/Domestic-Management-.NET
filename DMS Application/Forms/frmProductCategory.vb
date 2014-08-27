@@ -1,7 +1,7 @@
 ﻿Public Class frmProductCategory
 
-    Public mintProC_ID As Integer
-    Public mintFormMode As clsConstants.Form_Modes
+    Private Sub formManager_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormManager.LoadData
 
+    End Sub
 
 End Class

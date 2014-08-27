@@ -6,6 +6,8 @@ Public Class clsApplication
     Private mcMySQLConnection As MySqlConnection
     Private mcErrorsLog As clsErrorsLog
 
+    Private mcStringCleaner As System.Text.RegularExpressions.Regex = New System.Text.RegularExpressions.Regex("'", System.Text.RegularExpressions.RegexOptions.Compiled Or System.Text.RegularExpressions.RegexOptions.CultureInvariant Or System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+
     Public ReadOnly Property cMySQLConnection As MySqlConnection
         Get
             Return mcMySQLConnection
@@ -62,7 +64,7 @@ Public Class clsApplication
         Return blnReturn
     End Function
 
-    Private Function bln_CTLBindCaption(ByRef rControl As System.Windows.Forms.Control) As Boolean
+    Public Function bln_CTLBindCaption(ByRef rControl As System.Windows.Forms.Control) As Boolean
         Dim blnReturn As Boolean
         Dim strCaption As String = vbNullString
 
@@ -96,6 +98,12 @@ Public Class clsApplication
         End Try
 
         Return strCaption
+    End Function
+
+    Public Function str_FixStringForSQL(ByVal vstrStringToFix As String) As String
+
+        Return "'" & mcStringCleaner.Replace(vstrStringToFix, "''") & "'"
+
     End Function
 
 End Class

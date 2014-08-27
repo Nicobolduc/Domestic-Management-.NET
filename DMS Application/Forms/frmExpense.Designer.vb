@@ -25,10 +25,9 @@ Partial Class frmExpense
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmExpense))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtCode = New System.Windows.Forms.TextBox()
-        Me.btnQuit = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.cboInterval = New System.Windows.Forms.ComboBox()
-        Me.btnApply = New System.Windows.Forms.Button()
+        Me.myFormManager = New DMS_Application.ctlFormManager()
         Me.SuspendLayout()
         '
         'Label1
@@ -45,17 +44,6 @@ Partial Class frmExpense
         Me.txtCode.Name = "txtCode"
         Me.txtCode.Size = New System.Drawing.Size(256, 20)
         Me.txtCode.TabIndex = 1
-        '
-        'btnQuit
-        '
-        Me.btnQuit.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnQuit.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnQuit.Location = New System.Drawing.Point(363, 103)
-        Me.btnQuit.Name = "btnQuit"
-        Me.btnQuit.Size = New System.Drawing.Size(75, 23)
-        Me.btnQuit.TabIndex = 4
-        Me.btnQuit.Text = "Fermer"
-        Me.btnQuit.UseVisualStyleBackColor = True
         '
         'Label2
         '
@@ -74,26 +62,21 @@ Partial Class frmExpense
         Me.cboInterval.Size = New System.Drawing.Size(163, 21)
         Me.cboInterval.TabIndex = 2
         '
-        'btnApply
+        'myFormManager
         '
-        Me.btnApply.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnApply.Location = New System.Drawing.Point(282, 103)
-        Me.btnApply.Name = "btnApply"
-        Me.btnApply.Size = New System.Drawing.Size(75, 23)
-        Me.btnApply.TabIndex = 3
-        Me.btnApply.Text = "Enregistrer"
-        Me.btnApply.UseVisualStyleBackColor = True
+        Me.myFormManager.Location = New System.Drawing.Point(0, 86)
+        Me.myFormManager.Name = "myFormManager"
+        Me.myFormManager.Size = New System.Drawing.Size(445, 33)
+        Me.myFormManager.TabIndex = 4
         '
         'frmExpense
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.CancelButton = Me.btnQuit
-        Me.ClientSize = New System.Drawing.Size(444, 133)
-        Me.Controls.Add(Me.btnApply)
+        Me.ClientSize = New System.Drawing.Size(444, 117)
+        Me.Controls.Add(Me.myFormManager)
         Me.Controls.Add(Me.cboInterval)
         Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.btnQuit)
         Me.Controls.Add(Me.txtCode)
         Me.Controls.Add(Me.Label1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
@@ -109,8 +92,7 @@ Partial Class frmExpense
     End Sub
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents txtCode As System.Windows.Forms.TextBox
-    Friend WithEvents btnQuit As System.Windows.Forms.Button
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents cboInterval As System.Windows.Forms.ComboBox
-    Friend WithEvents btnApply As System.Windows.Forms.Button
+    Public WithEvents myFormManager As DMS_Application.ctlFormManager
 End Class

@@ -88,10 +88,11 @@
     <Compile Include="Classes\clsDataGridView.vb" />
     <Compile Include="Classes\clsErrorsLog.vb" />
     <Compile Include="Classes\clsSQL_Transactions.vb" />
-    <Compile Include="Controls\ctlFormActions.Designer.vb">
-      <DependentUpon>ctlFormActions.vb</DependentUpon>
+    <Compile Include="Classes\LoadDataEventArgs.vb" />
+    <Compile Include="Controls\ctlFormManager.Designer.vb">
+      <DependentUpon>ctlFormManager.vb</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ctlFormActions.vb">
+    <Compile Include="Controls\ctlFormManager.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\frmExpense.Designer.vb">
@@ -158,8 +159,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Controls\ctlFormActions.resx">
-      <DependentUpon>ctlFormActions.vb</DependentUpon>
+    <EmbeddedResource Include="Controls\ctlFormManager.resx">
+      <DependentUpon>ctlFormManager.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmExpense.resx">
       <DependentUpon>frmExpense.vb</DependentUpon>
