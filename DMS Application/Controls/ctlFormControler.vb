@@ -1,15 +1,18 @@
 ﻿
 
-Public Class ctlFormManager
+Public Class ctlFormControler
     Inherits System.Windows.Forms.UserControl
 
     Private mintItem_ID As Integer
     Private mintFormMode As clsConstants.Form_Modes
+    Private mblnChangeMade As Boolean
+    Private mblnShowButtonQuitOnly As Boolean
 
     Private WithEvents mfrmParent As System.Windows.Forms.Form
 
     Public Event SetReadRights()
     Public Event LoadData(ByVal eventArgs As LoadDataEventArgs)
+    Public Event SaveData(ByVal eventArgs As SaveDataEventArgs)
 
     Public ReadOnly Property GetItem_ID As Integer
         Get
@@ -23,6 +26,19 @@ Public Class ctlFormManager
         End Get
     End Property
 
+    Public WriteOnly Property ChangeMade As Boolean
+        Set(ByVal value As Boolean)
+            mblnChangeMade = value
+
+            SetButtonsReadRights()
+        End Set
+    End Property
+
+    Public WriteOnly Property ShowButtonQuitOnly As Boolean
+        Set(ByVal value As Boolean)
+            mblnShowButtonQuitOnly = value
+        End Set
+    End Property
 
     Public Function bln_ShowForm(ByVal vintFormMode As clsConstants.Form_Modes, Optional ByVal vintItem_ID As Integer = 0, Optional ByVal vblnIsModal As Boolean = False) As Boolean
         Dim blnReturn As Boolean
@@ -47,6 +63,8 @@ Public Class ctlFormManager
 
             RaiseEvent SetReadRights()
 
+            RaiseEvent LoadData(New LoadDataEventArgs(mintItem_ID))
+
             If Not vblnIsModal Then
                 mfrmParent.MdiParent = My.Forms.mdiGeneral
 
@@ -65,7 +83,21 @@ Public Class ctlFormManager
         Return blnReturn
     End Function
 
-    Public Function bln_DisableAllFormsControls(Optional ByRef rTabPage As TabPage = Nothing) As Boolean
+    Private Sub SetButtonsReadRights()
+        Select Case mintFormMode
+            Case clsConstants.Form_Modes.INSERT, clsConstants.Form_Modes.UPDATE
+                If mblnChangeMade Then
+                    btnApply.Enabled = True
+                    btnCancel.Enabled = True
+                Else
+                    btnApply.Enabled = False
+                    btnCancel.Enabled = False
+                End If
+
+        End Select
+    End Sub
+
+    Private Function bln_DisableAllFormsControls(Optional ByRef rTabPage As TabPage = Nothing) As Boolean
         Dim blnReturn As Boolean
         Dim controlCollection As System.Windows.Forms.Control.ControlCollection
 
@@ -113,7 +145,15 @@ Public Class ctlFormManager
     End Sub
 
     Private Sub btnApply_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnApply.Click
+        Dim saveEvent As New SaveDataEventArgs
 
+        RaiseEvent SaveData(saveEvent)
+
+        If saveEvent.SaveSuccessful Then
+            mfrmParent.Close()
+        Else
+            gcApp.bln_ShowMessage(clsConstants.Messages.ERROR_SAVE_MSG, MsgBoxStyle.Information)
+        End If
     End Sub
 
     Private Sub btnCancel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCancel.Click

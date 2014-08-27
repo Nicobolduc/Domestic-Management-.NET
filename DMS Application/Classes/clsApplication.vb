@@ -5,6 +5,7 @@ Public Class clsApplication
     Private mdiGeneral As mdiGeneral
     Private mcMySQLConnection As MySqlConnection
     Private mcErrorsLog As clsErrorsLog
+    Private mcUser As clsUser
 
     Private mcStringCleaner As System.Text.RegularExpressions.Regex = New System.Text.RegularExpressions.Regex("'", System.Text.RegularExpressions.RegexOptions.Compiled Or System.Text.RegularExpressions.RegexOptions.CultureInvariant Or System.Text.RegularExpressions.RegexOptions.IgnoreCase)
 
@@ -17,6 +18,12 @@ Public Class clsApplication
     Public ReadOnly Property cErrorsLog As clsErrorsLog
         Get
             Return Me.mcErrorsLog
+        End Get
+    End Property
+
+    Public ReadOnly Property cUser As clsUser
+        Get
+            Return Me.mcUser
         End Get
     End Property
 
@@ -36,6 +43,8 @@ Public Class clsApplication
     Public Sub New()
 
         mcErrorsLog = New clsErrorsLog
+
+        mcUser = New clsUser
 
         blnSetMySQLConnection()
 
@@ -104,6 +113,25 @@ Public Class clsApplication
 
         Return "'" & mcStringCleaner.Replace(vstrStringToFix, "''") & "'"
 
+    End Function
+
+    Public Function bln_ShowMessage(ByVal vintCaption_ID As Integer, ByVal vmsgType As MsgBoxStyle) As Boolean
+        Dim blnReturn As Boolean
+        Dim strMessage As String = vbNullString
+
+        Try
+            strMessage = gcApp.str_GetCaption(vintCaption_ID, mcUser.GetLanguage)
+
+            MsgBox(strMessage, vmsgType)
+
+            blnReturn = True
+
+        Catch ex As Exception
+            blnReturn = False
+            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnReturn
     End Function
 
 End Class

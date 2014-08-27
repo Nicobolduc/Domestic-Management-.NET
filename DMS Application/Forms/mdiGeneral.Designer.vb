@@ -87,7 +87,7 @@ Partial Class mdiGeneral
         'mnuiExpense
         '
         Me.mnuiExpense.Name = "mnuiExpense"
-        Me.mnuiExpense.Size = New System.Drawing.Size(119, 22)
+        Me.mnuiExpense.Size = New System.Drawing.Size(152, 22)
         Me.mnuiExpense.Text = "Dépense"
         '
         'mnuProduit

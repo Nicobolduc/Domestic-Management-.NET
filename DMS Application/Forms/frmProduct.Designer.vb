@@ -32,8 +32,7 @@ Partial Class frmProduct
         Me.cboBrand = New System.Windows.Forms.ComboBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.gbInfos = New System.Windows.Forms.GroupBox()
-        Me.btnQuit = New System.Windows.Forms.Button()
-        Me.btnApply = New System.Windows.Forms.Button()
+        Me.myFormControler = New DMS_Application.ctlFormControler()
         Me.SuspendLayout()
         '
         'Label2
@@ -111,35 +110,19 @@ Partial Class frmProduct
         Me.gbInfos.TabStop = False
         Me.gbInfos.Text = "Informations"
         '
-        'btnQuit
+        'myFormControler
         '
-        Me.btnQuit.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnQuit.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnQuit.Location = New System.Drawing.Point(297, 271)
-        Me.btnQuit.Name = "btnQuit"
-        Me.btnQuit.Size = New System.Drawing.Size(75, 23)
-        Me.btnQuit.TabIndex = 15
-        Me.btnQuit.Text = "Fermer"
-        Me.btnQuit.UseVisualStyleBackColor = True
-        '
-        'btnApply
-        '
-        Me.btnApply.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnApply.Location = New System.Drawing.Point(216, 271)
-        Me.btnApply.Name = "btnApply"
-        Me.btnApply.Size = New System.Drawing.Size(75, 23)
-        Me.btnApply.TabIndex = 16
-        Me.btnApply.Text = "Enregistrer"
-        Me.btnApply.UseVisualStyleBackColor = True
+        Me.myFormControler.Location = New System.Drawing.Point(0, 267)
+        Me.myFormControler.Name = "myFormControler"
+        Me.myFormControler.Size = New System.Drawing.Size(376, 33)
+        Me.myFormControler.TabIndex = 15
         '
         'frmProduct
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.CancelButton = Me.btnQuit
         Me.ClientSize = New System.Drawing.Size(375, 299)
-        Me.Controls.Add(Me.btnApply)
-        Me.Controls.Add(Me.btnQuit)
+        Me.Controls.Add(Me.myFormControler)
         Me.Controls.Add(Me.gbInfos)
         Me.Controls.Add(Me.cboBrand)
         Me.Controls.Add(Me.Label5)
@@ -170,6 +153,5 @@ Partial Class frmProduct
     Friend WithEvents cboBrand As System.Windows.Forms.ComboBox
     Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents gbInfos As System.Windows.Forms.GroupBox
-    Friend WithEvents btnQuit As System.Windows.Forms.Button
-    Friend WithEvents btnApply As System.Windows.Forms.Button
+    Public WithEvents myFormControler As DMS_Application.ctlFormControler
 End Class

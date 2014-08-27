@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class ctlFormManager
+Partial Class ctlFormControler
     Inherits System.Windows.Forms.UserControl
 
     'UserControl overrides dispose to clean up the component list.
@@ -25,8 +25,8 @@ Partial Class ctlFormManager
         Me.btnQuit = New System.Windows.Forms.Button()
         Me.btnApply = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.imgFormMode = New System.Windows.Forms.PictureBox()
+        CType(Me.imgFormMode, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'btnQuit
@@ -60,31 +60,31 @@ Partial Class ctlFormManager
         Me.btnCancel.Text = "Annuler"
         Me.btnCancel.UseVisualStyleBackColor = True
         '
-        'PictureBox1
+        'imgFormMode
         '
-        Me.PictureBox1.Image = Global.DMS_Application.My.Resources.Resources.Ajouter
-        Me.PictureBox1.Location = New System.Drawing.Point(5, 0)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(36, 33)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox1.TabIndex = 24
-        Me.PictureBox1.TabStop = False
+        Me.imgFormMode.Image = Global.DMS_Application.My.Resources.Resources.Ajouter
+        Me.imgFormMode.Location = New System.Drawing.Point(5, 0)
+        Me.imgFormMode.Name = "imgFormMode"
+        Me.imgFormMode.Size = New System.Drawing.Size(36, 33)
+        Me.imgFormMode.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.imgFormMode.TabIndex = 24
+        Me.imgFormMode.TabStop = False
         '
-        'ctlFormActions
+        'ctlFormControler
         '
-        Me.Controls.Add(Me.PictureBox1)
+        Me.Controls.Add(Me.imgFormMode)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnQuit)
         Me.Controls.Add(Me.btnApply)
-        Me.Name = "ctlFormActions"
+        Me.Name = "ctlFormControler"
         Me.Size = New System.Drawing.Size(324, 33)
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.imgFormMode, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
     Friend WithEvents btnQuit As System.Windows.Forms.Button
     Friend WithEvents btnApply As System.Windows.Forms.Button
     Friend WithEvents btnCancel As System.Windows.Forms.Button
-    Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
+    Friend WithEvents imgFormMode As System.Windows.Forms.PictureBox
 
 End Class

@@ -1,5 +1,5 @@
 ﻿
-Module mFunctions
+Module mControlsFunctions
 
     Public Function blnComboBox_LoadFromSQL(ByVal vstrSQL As String, ByVal vstrValueMember As String, ByVal vstrDisplayMember As String, ByVal vblnAllowEmpty As Boolean, ByRef rcboToLoad As ComboBox) As Boolean
         Dim blnReturn As Boolean

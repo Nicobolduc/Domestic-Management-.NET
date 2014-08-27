@@ -1,10 +1,6 @@
 ﻿Public Class frmExpense
 
-    Public mintExp_ID As Integer
-    Public mintFormMode As clsConstants.Form_Modes
-
     Private mcSQL As clsSQL_Transactions
-
 
     Private Function blnCboInterval_Load() As Boolean
         Dim blnReturn As Boolean
@@ -35,7 +31,7 @@
             strSQL = strSQL & " SELECT Expense.Exp_Code, " & vbCrLf
             strSQL = strSQL & "        Expense.Per_ID " & vbCrLf
             strSQL = strSQL & " FROM Expense " & vbCrLf
-            strSQL = strSQL & " WHERE Expense.Exp_ID = " & mintExp_ID & vbCrLf
+            strSQL = strSQL & " WHERE Expense.Exp_ID = " & myFormControler.GetItem_ID & vbCrLf
             strSQL = strSQL & " ORDER BY Expense.Exp_Code " & vbCrLf
 
             mySQLReader = mSQL.ADOSelect(strSQL)
@@ -69,7 +65,7 @@
 
             mcSQL.bln_BeginTransaction()
 
-            Select Case mintFormMode
+            Select Case myFormControler.GetFormMode
                 Case clsConstants.Form_Modes.INSERT
                     blnReturn = blnExpense_Insert()
 
@@ -119,7 +115,7 @@
             Select Case False
                 Case mcSQL.bln_AddField("Exp_Code", txtCode.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
                 Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedIndex + 1), clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_ADOUpdate("Expense", "Exp_ID = " & mintExp_ID)
+                Case mcSQL.bln_ADOUpdate("Expense", "Exp_ID = " & myFormControler.GetItem_ID)
                 Case Else
                     blnReturn = True
             End Select
@@ -137,7 +133,7 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_ADODelete("Expense", "Exp_ID = " & mintExp_ID)
+                Case mcSQL.bln_ADODelete("Expense", "Exp_ID = " & myFormControler.GetItem_ID)
                 Case Else
                     blnReturn = True
             End Select
@@ -150,29 +146,23 @@
         Return blnReturn
     End Function
 
-    'Private Function () As Boolean
-    '    Dim blnReturn As Boolean
-
-    '    Try
-
-    '    Catch ex As Exception
-    '       blnReturn = False
-    '       gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-    '    End Try
-
-    '    Return blnReturn
-    'End Function
-
-    Private Sub myFormManager_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormManager.LoadData
+    Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
         Dim blnReturn As Boolean
 
         Select Case False
             Case blnCboInterval_Load()
-            Case mintFormMode <> clsConstants.Form_Modes.INSERT
+            Case myFormControler.GetFormMode <> clsConstants.Form_Modes.INSERT
                 blnReturn = True
             Case blnGrdExpense_Load()
             Case Else
                 blnReturn = True
         End Select
     End Sub
+
+    Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles myFormControler.SaveData
+
+        eventArgs.SaveSuccessful = blnSaveData()
+
+    End Sub
+
 End Class

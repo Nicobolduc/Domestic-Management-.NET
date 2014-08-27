@@ -33,6 +33,10 @@
 
                     Case mGeneralList.GeneralLists_ID.PRODUCT_CATEGORY_ID
                         strSQL = strGetProductCategory_SQL()
+                        frmGenList.mintGridTag = CStr(GeneralList_AppCapID.PRODUCT_TYPE_CAP)
+
+                    Case mGeneralList.GeneralLists_ID.PRODUCT_CATEGORY_ID
+                        strSQL = strGetProductCategory_SQL()
                         frmGenList.mintGridTag = CStr(GeneralList_AppCapID.PRODUCT_CATEGORY_CAP)
 
                     Case Else

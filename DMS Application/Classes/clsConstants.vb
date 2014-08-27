@@ -22,4 +22,8 @@
         DELETE = 3
     End Enum
 
+    Public Enum Messages
+        ERROR_SAVE_MSG = 5
+    End Enum
+
 End Class

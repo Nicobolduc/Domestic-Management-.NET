@@ -2,10 +2,6 @@
 
     Private mcSQL As clsSQL_Transactions
 
-    Public mintPro_ID As Integer
-    Public mintFormMode As clsConstants.Form_Modes
-
-
     Private Function blnProduit_Insert() As Boolean
         Dim blnReturn As Boolean
 
@@ -87,12 +83,20 @@
         Return blnReturn
     End Function
 
-    Private Sub frmProduct_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+    Private Sub cboType_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboType.SelectedIndexChanged
+        If cboType.SelectedIndex > 0 Then
+            blnCboCategory_Load()
+        Else
+            cboCategory.Items.Clear()
+        End If
+    End Sub
+
+    Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
         Dim blnReturn As Boolean
 
         Select Case False
             Case blnCboType_Load()
-            Case mintFormMode = clsConstants.Form_Modes.INSERT
+            Case myFormControler.GetFormMode = clsConstants.Form_Modes.INSERT
                 blnReturn = True
             Case Else
                 blnReturn = True
@@ -105,15 +109,7 @@
         End If
     End Sub
 
-    Private Sub btnQuit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnQuit.Click
-        Me.Close()
-    End Sub
-
-    Private Sub cboType_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboType.SelectedIndexChanged
-        If cboType.SelectedIndex > 0 Then
-            blnCboCategory_Load()
-        Else
-            cboCategory.Items.Clear()
-        End If
+    Private Sub txtName_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtName.TextChanged
+        myFormControler.ChangeMade = True
     End Sub
 End Class

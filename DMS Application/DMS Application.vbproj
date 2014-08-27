@@ -88,11 +88,13 @@
     <Compile Include="Classes\clsDataGridView.vb" />
     <Compile Include="Classes\clsErrorsLog.vb" />
     <Compile Include="Classes\clsSQL_Transactions.vb" />
-    <Compile Include="Classes\LoadDataEventArgs.vb" />
-    <Compile Include="Controls\ctlFormManager.Designer.vb">
-      <DependentUpon>ctlFormManager.vb</DependentUpon>
+    <Compile Include="Classes\clsUser.vb" />
+    <Compile Include="Classes\Events\SaveDataEventArgs.vb" />
+    <Compile Include="Classes\Events\LoadDataEventArgs.vb" />
+    <Compile Include="Controls\ctlFormControler.Designer.vb">
+      <DependentUpon>ctlFormControler.vb</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ctlFormManager.vb">
+    <Compile Include="Controls\ctlFormControler.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\frmExpense.Designer.vb">
@@ -138,7 +140,7 @@
     <Compile Include="Forms\frmProductCategory.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Modules\mFunctions.vb" />
+    <Compile Include="Modules\mControlsFunctions.vb" />
     <Compile Include="Modules\mGeneralList.vb" />
     <Compile Include="Modules\mMain.vb" />
     <Compile Include="Modules\mSQL.vb" />
@@ -159,8 +161,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Controls\ctlFormManager.resx">
-      <DependentUpon>ctlFormManager.vb</DependentUpon>
+    <EmbeddedResource Include="Controls\ctlFormControler.resx">
+      <DependentUpon>ctlFormControler.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmExpense.resx">
       <DependentUpon>frmExpense.vb</DependentUpon>

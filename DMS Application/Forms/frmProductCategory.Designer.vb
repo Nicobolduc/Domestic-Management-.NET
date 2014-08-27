@@ -25,7 +25,7 @@ Partial Class frmProductCategory
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmProductCategory))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtName = New System.Windows.Forms.TextBox()
-        Me.myFormManager = New DMS_Application.ctlFormManager()
+        Me.myFormControler = New DMS_Application.ctlFormControler()
         Me.SuspendLayout()
         '
         'Label1
@@ -43,19 +43,19 @@ Partial Class frmProductCategory
         Me.txtName.Size = New System.Drawing.Size(271, 20)
         Me.txtName.TabIndex = 21
         '
-        'myFormManager
+        'myFormControler
         '
-        Me.myFormManager.Location = New System.Drawing.Point(0, 38)
-        Me.myFormManager.Name = "myFormManager"
-        Me.myFormManager.Size = New System.Drawing.Size(421, 33)
-        Me.myFormManager.TabIndex = 23
+        Me.myFormControler.Location = New System.Drawing.Point(0, 38)
+        Me.myFormControler.Name = "myFormControler"
+        Me.myFormControler.Size = New System.Drawing.Size(421, 33)
+        Me.myFormControler.TabIndex = 23
         '
         'frmProductCategory
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(420, 70)
-        Me.Controls.Add(Me.myFormManager)
+        Me.Controls.Add(Me.myFormControler)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.txtName)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
@@ -71,5 +71,5 @@ Partial Class frmProductCategory
     End Sub
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents txtName As System.Windows.Forms.TextBox
-    Public WithEvents myFormManager As DMS_Application.ctlFormManager
+    Public WithEvents myFormControler As DMS_Application.ctlFormControler
 End Class

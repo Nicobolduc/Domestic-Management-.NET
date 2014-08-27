@@ -35,4 +35,7 @@
         mGeneralList.blnShowGenList(mGeneralList.GeneralLists_ID.PRODUCT_CATEGORY_ID)
     End Sub
 
+    Private Sub mnuiProductType_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiProductType.Click
+        mGeneralList.blnShowGenList(mGeneralList.GeneralLists_ID.PRODUCT_TYPE_ID)
+    End Sub
 End Class

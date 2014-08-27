@@ -107,22 +107,12 @@ Public Class frmGeneralList
 
                 Case mGeneralList.GeneralLists_ID.PRODUCTS_ID
                     frmToOpen = New frmProduct
-                    DirectCast(frmToOpen, frmProduct).mintFormMode = vFormMode
 
-                    If vFormMode <> clsConstants.Form_Modes.INSERT Then
-                        DirectCast(frmToOpen, frmProduct).mintPro_ID = CInt(grdList.SelectedRows(0).Cells(mintItem_ID_col).Value)
-                    Else
-                        'Do nothing
-                    End If
+                Case mGeneralList.GeneralLists_ID.PRODUCT_TYPE_ID
+                    frmToOpen = New frmProductType
 
                 Case mGeneralList.GeneralLists_ID.PRODUCT_CATEGORY_ID
                     frmToOpen = New frmProductCategory
-
-                    If vFormMode <> clsConstants.Form_Modes.INSERT Then
-                        'DirectCast(frmToOpen, frmProductCategory).mintPro_ID = CInt(grdList.SelectedRows(0).Cells(mintItem_ID_col).Value)
-                    Else
-                        'Do nothing
-                    End If
 
             End Select
 
@@ -130,7 +120,11 @@ Public Class frmGeneralList
                 mintSelectedRow = grdList.SelectedRows(0).Index
             End If
 
-            frmToOpen.myFormManager.bln_ShowForm(vFormMode, CInt(grdList.SelectedRows(0).Cells(mintItem_ID_col).Value), True)
+            If vFormMode <> clsConstants.Form_Modes.INSERT Then
+                frmToOpen.myFormControler.bln_ShowForm(vFormMode, CInt(grdList.SelectedRows(0).Cells(mintItem_ID_col).Value), True)
+            Else
+                frmToOpen.myFormControler.bln_ShowForm(vFormMode, 0, True)
+            End If
 
             frmGeneralList_Load(Me, New System.EventArgs)
 

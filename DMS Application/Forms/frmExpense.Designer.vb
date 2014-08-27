@@ -27,7 +27,7 @@ Partial Class frmExpense
         Me.txtCode = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.cboInterval = New System.Windows.Forms.ComboBox()
-        Me.myFormManager = New DMS_Application.ctlFormManager()
+        Me.myFormControler = New DMS_Application.ctlFormControler()
         Me.SuspendLayout()
         '
         'Label1
@@ -62,19 +62,19 @@ Partial Class frmExpense
         Me.cboInterval.Size = New System.Drawing.Size(163, 21)
         Me.cboInterval.TabIndex = 2
         '
-        'myFormManager
+        'myFormControler
         '
-        Me.myFormManager.Location = New System.Drawing.Point(0, 86)
-        Me.myFormManager.Name = "myFormManager"
-        Me.myFormManager.Size = New System.Drawing.Size(445, 33)
-        Me.myFormManager.TabIndex = 4
+        Me.myFormControler.Location = New System.Drawing.Point(0, 86)
+        Me.myFormControler.Name = "myFormControler"
+        Me.myFormControler.Size = New System.Drawing.Size(445, 33)
+        Me.myFormControler.TabIndex = 4
         '
         'frmExpense
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(444, 117)
-        Me.Controls.Add(Me.myFormManager)
+        Me.Controls.Add(Me.myFormControler)
         Me.Controls.Add(Me.cboInterval)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.txtCode)
@@ -94,5 +94,5 @@ Partial Class frmExpense
     Friend WithEvents txtCode As System.Windows.Forms.TextBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents cboInterval As System.Windows.Forms.ComboBox
-    Public WithEvents myFormManager As DMS_Application.ctlFormManager
+    Public WithEvents myFormControler As DMS_Application.ctlFormControler
 End Class

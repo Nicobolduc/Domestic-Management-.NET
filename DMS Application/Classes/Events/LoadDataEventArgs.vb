@@ -3,7 +3,7 @@
 
     Private mintItem_ID As Integer
 
-    Public ReadOnly Property Item_ID As Integer
+    Public ReadOnly Property GetItem_ID As Integer
         Get
             Return mintItem_ID
         End Get
