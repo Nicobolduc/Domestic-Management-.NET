@@ -25,7 +25,7 @@ Partial Class frmProductType
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmProductType))
         Me.txtName = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.CtlFormControler1 = New DMS_Application.ctlFormControler()
+        Me.myFormControler = New DMS_Application.ctlFormControler()
         Me.SuspendLayout()
         '
         'txtName
@@ -43,19 +43,20 @@ Partial Class frmProductType
         Me.Label1.TabIndex = 18
         Me.Label1.Text = "Nom:"
         '
-        'CtlFormControler1
+        'myFormControler
         '
-        Me.CtlFormControler1.Location = New System.Drawing.Point(0, 32)
-        Me.CtlFormControler1.Name = "CtlFormControler1"
-        Me.CtlFormControler1.Size = New System.Drawing.Size(408, 33)
-        Me.CtlFormControler1.TabIndex = 19
+        Me.myFormControler.Location = New System.Drawing.Point(0, 32)
+        Me.myFormControler.Name = "myFormControler"
+        Me.myFormControler.ShowButtonQuitOnly = False
+        Me.myFormControler.Size = New System.Drawing.Size(408, 33)
+        Me.myFormControler.TabIndex = 19
         '
         'frmProductType
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(407, 64)
-        Me.Controls.Add(Me.CtlFormControler1)
+        Me.Controls.Add(Me.myFormControler)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.txtName)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
@@ -71,5 +72,5 @@ Partial Class frmProductType
     End Sub
     Friend WithEvents txtName As System.Windows.Forms.TextBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Public WithEvents CtlFormControler1 As DMS_Application.ctlFormControler
+    Public WithEvents myFormControler As DMS_Application.ctlFormControler
 End Class

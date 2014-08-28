@@ -1,8 +1,11 @@
-﻿
+﻿Imports System.ComponentModel
+
 
 Public Class ctlFormControler
     Inherits System.Windows.Forms.UserControl
+    Implements INotifyPropertyChanged
 
+    'Private members
     Private mintItem_ID As Integer
     Private mintFormMode As clsConstants.Form_Modes
     Private mblnChangeMade As Boolean
@@ -10,9 +13,14 @@ Public Class ctlFormControler
 
     Private WithEvents mfrmParent As System.Windows.Forms.Form
 
+    'Public members
+    Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
+
     Public Event SetReadRights()
     Public Event LoadData(ByVal eventArgs As LoadDataEventArgs)
     Public Event SaveData(ByVal eventArgs As SaveDataEventArgs)
+
+#Region "Properties"
 
     Public ReadOnly Property GetItem_ID As Integer
         Get
@@ -34,11 +42,20 @@ Public Class ctlFormControler
         End Set
     End Property
 
-    Public WriteOnly Property ShowButtonQuitOnly As Boolean
+    Public Property ShowButtonQuitOnly As Boolean
+        Get
+            Return mblnShowButtonQuitOnly
+        End Get
         Set(ByVal value As Boolean)
             mblnShowButtonQuitOnly = value
+
+            RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs("ShowButtonQuitOnly"))
         End Set
     End Property
+
+#End Region
+
+
 
     Public Function bln_ShowForm(ByVal vintFormMode As clsConstants.Form_Modes, Optional ByVal vintItem_ID As Integer = 0, Optional ByVal vblnIsModal As Boolean = False) As Boolean
         Dim blnReturn As Boolean
@@ -52,12 +69,15 @@ Public Class ctlFormControler
             Select Case mintFormMode
                 Case clsConstants.Form_Modes.INSERT
                     btnApply.Text = "Enregistrer"
+                    imgFormMode.Image = My.Resources.Add
 
                 Case clsConstants.Form_Modes.UPDATE
                     btnApply.Text = "Appliquer"
+                    imgFormMode.Image = My.Resources.Update
 
                 Case clsConstants.Form_Modes.DELETE
                     btnApply.Text = "Supprimer"
+                    imgFormMode.Image = My.Resources.Delete
 
             End Select
 
@@ -97,48 +117,16 @@ Public Class ctlFormControler
         End Select
     End Sub
 
-    Private Function bln_DisableAllFormsControls(Optional ByRef rTabPage As TabPage = Nothing) As Boolean
-        Dim blnReturn As Boolean
-        Dim controlCollection As System.Windows.Forms.Control.ControlCollection
+    Private Sub SetControlsVisility()
+        If mblnShowButtonQuitOnly Then
 
-        Try
-            If Not rTabPage Is Nothing Then
-                controlCollection = rTabPage.Controls
-            Else
-                controlCollection = Me.Controls
-            End If
-
-            'For Each objControl As Object In controlCollection
-            '    On Error Resume Next
-
-            '    Select Case objControl.GetType.Name
-            '        Case "Button", "TextBox", "CheckBox", "RadioButton", "ctlTTDateTimePicker", "ctlTTTextCombo_3PL", "ListView", "ComboBox"
-            '            If objControl.name <> "_cmdCompagnie_9" And objControl.name <> "_cmdCompagnie_10" And objControl.name <> "_cmdCompagnie_11" And objControl.name <> "_cmdCompagnie_15" Then
-            '                blnReturn = gcTTAPP.bln_CTLDisabled(objControl)
-            '            End If
-
-            '        Case "GroupBox"
-            '            blnReturn = bln_DisableAllFormsControls(objControl)
-
-            '        Case "ctlTTSSTab"
-            '            For Each tp As TabPage In DirectCast(objControl, TabPage).TabPageControlCollection
-            '                blnReturn = pfblnDisableControlsOnLoad(tp)
-            '            Next
-
-            '        Case Else
-            '            'Do Nothing
-            '    End Select
-
-            '    If Not blnReturn Then Exit For
-            'Next objControl
-
-        Catch ex As Exception
-            blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
-
-        Return blnReturn
-    End Function
+            Me.Width = btnQuit.Width + 10
+            imgFormMode.Visible = False
+        Else
+            Me.Width = 324
+            imgFormMode.Visible = True
+        End If
+    End Sub
 
     Protected Overrides Sub Finalize()
         MyBase.Finalize()
@@ -165,4 +153,7 @@ Public Class ctlFormControler
         Me.Dispose()
     End Sub
 
+    Private Sub ctlFormControler_PropertyChanged() Handles Me.PropertyChanged
+        SetControlsVisility()
+    End Sub
 End Class

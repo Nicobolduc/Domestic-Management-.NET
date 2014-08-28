@@ -114,6 +114,7 @@ Partial Class frmProduct
         '
         Me.myFormControler.Location = New System.Drawing.Point(0, 267)
         Me.myFormControler.Name = "myFormControler"
+        Me.myFormControler.ShowButtonQuitOnly = False
         Me.myFormControler.Size = New System.Drawing.Size(376, 33)
         Me.myFormControler.TabIndex = 15
         '

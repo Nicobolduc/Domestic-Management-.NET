@@ -31,8 +31,8 @@
                         strSQL = strGetProducts_SQL()
                         frmGenList.mintGridTag = CStr(GeneralList_AppCapID.PRODUCTS_CAP)
 
-                    Case mGeneralList.GeneralLists_ID.PRODUCT_CATEGORY_ID
-                        strSQL = strGetProductCategory_SQL()
+                    Case mGeneralList.GeneralLists_ID.PRODUCT_TYPE_ID
+                        strSQL = strGetProductType_SQL()
                         frmGenList.mintGridTag = CStr(GeneralList_AppCapID.PRODUCT_TYPE_CAP)
 
                     Case mGeneralList.GeneralLists_ID.PRODUCT_CATEGORY_ID
@@ -92,6 +92,22 @@
             strSQL = strSQL & "  FROM Product " & vbCrLf
             strSQL = strSQL & "     LEFT JOIN ProductCategory ON ProductCategory.ProC_ID = Product.ProC_ID " & vbCrLf
             strSQL = strSQL & "     LEFT JOIN ProductType ON ProductType.ProT_ID = ProductCategory.ProT_ID " & vbCrLf
+
+            If vstrWhere <> vbNullString Then
+
+            Else
+                'Do nothing
+            End If
+
+            Return strSQL
+        End Function
+
+        Private Function strGetProductType_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
+            Dim strSQL As String = vbNullString
+
+            strSQL = strSQL & "  SELECT ProductType.ProT_ID, " & vbCrLf
+            strSQL = strSQL & "         ProductType.ProT_Name " & vbCrLf
+            strSQL = strSQL & "  FROM ProductType " & vbCrLf
 
             If vstrWhere <> vbNullString Then
 

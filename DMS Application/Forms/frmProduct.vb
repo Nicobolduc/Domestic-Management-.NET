@@ -2,25 +2,6 @@
 
     Private mcSQL As clsSQL_Transactions
 
-    Private Function blnProduit_Insert() As Boolean
-        Dim blnReturn As Boolean
-
-        Try
-            Select Case False
-                Case mcSQL.bln_AddField("Pro_Nom", txtName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("ProC_ID", CStr(cboCategory.SelectedIndex + 1), clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_ADOInsert("Expense")
-                Case Else
-                    blnReturn = True
-            End Select
-
-        Catch ex As Exception
-            blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
-
-        Return blnReturn
-    End Function
 
     Private Function blnCboType_Load() As Boolean
         Dim blnReturn As Boolean
@@ -71,9 +52,62 @@
             strSQL = strSQL & " SELECT Brand.Bra_ID, " & vbCrLf
             strSQL = strSQL & "        Brand.Bra_Name " & vbCrLf
             strSQL = strSQL & " FROM Brand " & vbCrLf
-            strSQL = strSQL & " ORDER BY Brand.Bra_Name " & vbCrLf
+            strSQL = strSQL & " ORDER BY Brand.Bra_ID " & vbCrLf
 
             blnReturn = blnComboBox_LoadFromSQL(strSQL, "Bra_ID", "Bra_Name", True, cboBrand)
+
+        Catch ex As Exception
+            blnReturn = False
+            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnReturn
+    End Function
+
+    Private Function blnSaveData() As Boolean
+        Dim blnReturn As Boolean
+
+        Try
+            mcSQL = New clsSQL_Transactions
+
+            mcSQL.bln_BeginTransaction()
+
+            Select Case myFormControler.GetFormMode
+                Case clsConstants.Form_Modes.INSERT
+                    blnReturn = blnProduct_Insert()
+
+                Case clsConstants.Form_Modes.UPDATE
+                    'blnReturn = blnExense_Update()
+
+                Case clsConstants.Form_Modes.DELETE
+                    'blnReturn = blnExpense_Delete()
+
+            End Select
+
+        Catch ex As Exception
+            blnReturn = False
+            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        Finally
+            mcSQL.bln_EndTransaction(blnReturn)
+            mcSQL = Nothing
+        End Try
+
+        Return blnReturn
+    End Function
+
+    Private Function blnProduct_Insert() As Boolean
+        Dim blnReturn As Boolean
+
+        Try
+            Select Case False
+                Case mcSQL.bln_AddField("Pro_Name", txtName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("ProT_ID", CStr(cboType.SelectedIndex), clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("ProC_ID", CStr(cboType.SelectedIndex), clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Bra_ID", CStr(cboBrand.SelectedIndex), clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_ADOInsert("Product")
+                Case Else
+                    blnReturn = True
+            End Select
 
         Catch ex As Exception
             blnReturn = False
@@ -96,6 +130,7 @@
 
         Select Case False
             Case blnCboType_Load()
+            Case blnCboBrand_Load()
             Case myFormControler.GetFormMode = clsConstants.Form_Modes.INSERT
                 blnReturn = True
             Case Else
@@ -111,5 +146,9 @@
 
     Private Sub txtName_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtName.TextChanged
         myFormControler.ChangeMade = True
+    End Sub
+
+    Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles myFormControler.SaveData
+        eventArgs.SaveSuccessful = blnSaveData()
     End Sub
 End Class

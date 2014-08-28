@@ -97,6 +97,12 @@
     <Compile Include="Controls\ctlFormControler.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Forms\frmBrand.Designer.vb">
+      <DependentUpon>frmBrand.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmBrand.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\frmExpense.Designer.vb">
       <DependentUpon>frmExpense.vb</DependentUpon>
     </Compile>
@@ -164,6 +170,9 @@
     <EmbeddedResource Include="Controls\ctlFormControler.resx">
       <DependentUpon>ctlFormControler.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmBrand.resx">
+      <DependentUpon>frmBrand.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmExpense.resx">
       <DependentUpon>frmExpense.vb</DependentUpon>
     </EmbeddedResource>
@@ -205,13 +214,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Ajouter.png" />
+    <None Include="Resources\Add.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Modifier.png" />
+    <None Include="Resources\Update.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Supprimer.png" />
+    <None Include="Resources\Delete.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

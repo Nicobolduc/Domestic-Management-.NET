@@ -66,6 +66,7 @@ Partial Class frmExpense
         '
         Me.myFormControler.Location = New System.Drawing.Point(0, 86)
         Me.myFormControler.Name = "myFormControler"
+        Me.myFormControler.ShowButtonQuitOnly = False
         Me.myFormControler.Size = New System.Drawing.Size(445, 33)
         Me.myFormControler.TabIndex = 4
         '

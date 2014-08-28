@@ -62,7 +62,7 @@ Partial Class ctlFormControler
         '
         'imgFormMode
         '
-        Me.imgFormMode.Image = Global.DMS_Application.My.Resources.Resources.Ajouter
+        Me.imgFormMode.Image = Global.DMS_Application.My.Resources.Resources.Add
         Me.imgFormMode.Location = New System.Drawing.Point(5, 0)
         Me.imgFormMode.Name = "imgFormMode"
         Me.imgFormMode.Size = New System.Drawing.Size(36, 33)
