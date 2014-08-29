@@ -23,7 +23,7 @@ Partial Class frmGeneralList
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmGeneralList))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.grdList = New System.Windows.Forms.DataGridView()
@@ -31,8 +31,8 @@ Partial Class frmGeneralList
         Me.btnDelete = New System.Windows.Forms.Button()
         Me.btnUpdate = New System.Windows.Forms.Button()
         Me.btnAdd = New System.Windows.Forms.Button()
-        Me.btnQuit = New System.Windows.Forms.Button()
         Me.ToolTips = New System.Windows.Forms.ToolTip(Me.components)
+        Me.myFormManager = New DMS_Application.ctlFormControler()
         CType(Me.grdList, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -56,8 +56,8 @@ Partial Class frmGeneralList
         Me.grdList.MultiSelect = False
         Me.grdList.Name = "grdList"
         Me.grdList.RowHeadersWidth = 10
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.White
-        Me.grdList.RowsDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.White
+        Me.grdList.RowsDefaultCellStyle = DataGridViewCellStyle1
         Me.grdList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.grdList.Size = New System.Drawing.Size(507, 474)
         Me.grdList.TabIndex = 3
@@ -100,27 +100,27 @@ Partial Class frmGeneralList
         Me.ToolTips.SetToolTip(Me.btnAdd, "Ajouter")
         Me.btnAdd.UseVisualStyleBackColor = True
         '
-        'btnQuit
-        '
-        Me.btnQuit.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnQuit.Location = New System.Drawing.Point(498, 519)
-        Me.btnQuit.Name = "btnQuit"
-        Me.btnQuit.Size = New System.Drawing.Size(75, 23)
-        Me.btnQuit.TabIndex = 5
-        Me.btnQuit.Text = "Fermer"
-        Me.btnQuit.UseVisualStyleBackColor = True
-        '
         'ToolTips
         '
         Me.ToolTips.IsBalloon = True
+        '
+        'myFormManager
+        '
+        Me.myFormManager.FormIsLoading = False
+        Me.myFormManager.FormMode = DMS_Application.clsConstants.Form_Modes.LOADED
+        Me.myFormManager.GetItem_ID = 0
+        Me.myFormManager.Location = New System.Drawing.Point(494, 513)
+        Me.myFormManager.Name = "myFormManager"
+        Me.myFormManager.ShowButtonQuitOnly = True
+        Me.myFormManager.Size = New System.Drawing.Size(85, 33)
+        Me.myFormManager.TabIndex = 5
         '
         'frmGeneralList
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.CancelButton = Me.btnQuit
         Me.ClientSize = New System.Drawing.Size(579, 546)
-        Me.Controls.Add(Me.btnQuit)
+        Me.Controls.Add(Me.myFormManager)
         Me.Controls.Add(Me.btnAdd)
         Me.Controls.Add(Me.btnUpdate)
         Me.Controls.Add(Me.btnDelete)
@@ -130,7 +130,7 @@ Partial Class frmGeneralList
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmGeneralList"
-        Me.Text = "Liste - "
+        Me.Text = "Liste générique"
         CType(Me.grdList, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -142,6 +142,6 @@ Partial Class frmGeneralList
     Friend WithEvents btnDelete As System.Windows.Forms.Button
     Friend WithEvents btnUpdate As System.Windows.Forms.Button
     Friend WithEvents btnAdd As System.Windows.Forms.Button
-    Friend WithEvents btnQuit As System.Windows.Forms.Button
     Friend WithEvents ToolTips As System.Windows.Forms.ToolTip
+    Public WithEvents myFormManager As DMS_Application.ctlFormControler
 End Class

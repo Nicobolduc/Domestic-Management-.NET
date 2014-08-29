@@ -89,6 +89,7 @@
     <Compile Include="Classes\clsErrorsLog.vb" />
     <Compile Include="Classes\clsSQL_Transactions.vb" />
     <Compile Include="Classes\clsUser.vb" />
+    <Compile Include="Classes\Events\ValidateRulesEventArgs.vb" />
     <Compile Include="Classes\Events\SaveDataEventArgs.vb" />
     <Compile Include="Classes\Events\LoadDataEventArgs.vb" />
     <Compile Include="Controls\ctlFormControler.Designer.vb">

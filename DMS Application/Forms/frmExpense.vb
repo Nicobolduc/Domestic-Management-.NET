@@ -22,7 +22,7 @@
         Return blnReturn
     End Function
 
-    Private Function blnGrdExpense_Load() As Boolean
+    Private Function blnLoadData() As Boolean
         Dim blnReturn As Boolean
         Dim strSQL As String = vbNullString
         Dim mySQLReader As MySqlDataReader = Nothing
@@ -32,7 +32,6 @@
             strSQL = strSQL & "        Expense.Per_ID " & vbCrLf
             strSQL = strSQL & " FROM Expense " & vbCrLf
             strSQL = strSQL & " WHERE Expense.Exp_ID = " & myFormControler.GetItem_ID & vbCrLf
-            strSQL = strSQL & " ORDER BY Expense.Exp_Code " & vbCrLf
 
             mySQLReader = mSQL.ADOSelect(strSQL)
 
@@ -150,18 +149,15 @@
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
         Dim blnReturn As Boolean
 
-        myFormControler.FormIsLoading = True
-
         Select Case False
             Case blnCboInterval_Load()
             Case myFormControler.FormMode <> clsConstants.Form_Modes.INSERT
                 blnReturn = True
-            Case blnGrdExpense_Load()
+            Case blnLoadData()
             Case Else
                 blnReturn = True
         End Select
 
-        myFormControler.FormIsLoading = False
     End Sub
 
     Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles myFormControler.SaveData

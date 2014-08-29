@@ -72,7 +72,7 @@
 
             mcSQL.bln_BeginTransaction()
 
-            Select Case myFormControler.GetFormMode
+            Select Case myFormControler.FormMode
                 Case clsConstants.Form_Modes.INSERT
                     blnReturn = blnProduct_Insert()
 
@@ -118,10 +118,17 @@
     End Function
 
     Private Sub cboType_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboType.SelectedIndexChanged
-        If cboType.SelectedIndex > 0 Then
-            blnCboCategory_Load()
+        If Not myFormControler.FormIsLoading Then
+
+            If cboType.SelectedIndex > 0 Then
+                blnCboCategory_Load()
+            Else
+                cboCategory.Items.Clear()
+            End If
+
+            ChangeMade()
         Else
-            cboCategory.Items.Clear()
+            'Do nothing
         End If
     End Sub
 
@@ -131,8 +138,9 @@
         Select Case False
             Case blnCboType_Load()
             Case blnCboBrand_Load()
-            Case myFormControler.GetFormMode = clsConstants.Form_Modes.INSERT
+            Case myFormControler.FormMode <> clsConstants.Form_Modes.INSERT
                 blnReturn = True
+            Case blnLoadData()
             Case Else
                 blnReturn = True
         End Select
@@ -142,13 +150,92 @@
         Else
             'Do nothing
         End If
+
     End Sub
 
+    Private Function blnLoadData() As Boolean
+        Dim blnReturn As Boolean
+        Dim strSQL As String = vbNullString
+        Dim mySQLReader As MySqlDataReader = Nothing
+
+        Try
+            strSQL = strSQL & " SELECT Product.Pro_Name, " & vbCrLf
+            strSQL = strSQL & "        Product.ProT_ID, " & vbCrLf
+            strSQL = strSQL & "        Product.ProC_ID, " & vbCrLf
+            strSQL = strSQL & "        Product.Bra_ID " & vbCrLf
+            strSQL = strSQL & " FROM Product " & vbCrLf
+            strSQL = strSQL & " WHERE Product.Pro_ID = " & myFormControler.GetItem_ID & vbCrLf
+
+            mySQLReader = mSQL.ADOSelect(strSQL)
+
+            While mySQLReader.Read
+                txtName.Text = mySQLReader.Item("Pro_Name").ToString
+
+                cboType.SelectedIndex = CInt(mySQLReader.Item("ProT_ID"))
+                cboCategory.SelectedIndex = CInt(mySQLReader.Item("ProC_ID"))
+                cboBrand.SelectedIndex = CInt(mySQLReader.Item("Bra_ID"))
+            End While
+
+            blnReturn = True
+
+        Catch ex As Exception
+            blnReturn = False
+            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        Finally
+            If Not IsNothing(mySQLReader) Then
+                mySQLReader.Close()
+                mySQLReader.Dispose()
+            End If
+        End Try
+
+        Return blnReturn
+    End Function
+
     Private Sub txtName_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtName.TextChanged
-        myFormControler.ChangeMade = True
+        ChangeMade()
     End Sub
 
     Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles myFormControler.SaveData
         eventArgs.SaveSuccessful = blnSaveData()
+    End Sub
+
+    Private Sub ChangeMade()
+        Select Case False
+            Case Not myFormControler.FormIsLoading
+            Case Else
+                myFormControler.ChangeMade = True
+
+        End Select
+    End Sub
+
+    Private Sub cboBrand_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboBrand.SelectedIndexChanged
+        ChangeMade()
+    End Sub
+
+    Private Sub cboCategory_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboCategory.SelectedIndexChanged
+        ChangeMade()
+    End Sub
+
+    Private Sub myFormControler_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles myFormControler.ValidateRules
+        Select Case False
+            Case txtName.Text <> vbNullString
+                txtName.Focus()
+
+            Case cboType.SelectedIndex > -1
+                cboType.DroppedDown = True
+                cboType.Focus()
+
+            Case cboCategory.SelectedIndex > -1
+                cboType.DroppedDown = True
+                cboType.Focus()
+
+            Case cboBrand.SelectedIndex > -1
+                cboType.DroppedDown = True
+                cboType.Focus()
+
+            Case Else
+                eventArgs.IsValid = True
+
+        End Select
     End Sub
 End Class

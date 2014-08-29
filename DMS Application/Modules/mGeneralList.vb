@@ -49,7 +49,7 @@
                     frmGenList.mstrGridSQL = strSQL
                     frmGenList.MdiParent = My.Forms.mdiGeneral
 
-                    frmGenList.Show()
+                    frmGenList.myFormManager.bln_ShowForm(clsConstants.Form_Modes.LOADED)
                 Else
                     'Do nothing
                 End If

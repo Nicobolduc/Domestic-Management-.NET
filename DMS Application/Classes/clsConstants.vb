@@ -17,13 +17,18 @@
     End Enum
 
     Public Enum Form_Modes
+        LOADED = 0
         INSERT = 1
         UPDATE = 2
         DELETE = 3
     End Enum
 
-    Public Enum Messages
+    Public Enum Error_Messages
         ERROR_SAVE_MSG = 5
+    End Enum
+
+    Public Enum Validation_Messages
+        MANDATORY_VALUE = 6
     End Enum
 
 End Class

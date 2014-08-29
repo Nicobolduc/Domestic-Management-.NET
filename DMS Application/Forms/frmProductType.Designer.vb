@@ -33,7 +33,7 @@ Partial Class frmProductType
         Me.txtName.Location = New System.Drawing.Point(51, 12)
         Me.txtName.Name = "txtName"
         Me.txtName.Size = New System.Drawing.Size(350, 20)
-        Me.txtName.TabIndex = 17
+        Me.txtName.TabIndex = 1
         '
         'Label1
         '
@@ -45,6 +45,9 @@ Partial Class frmProductType
         '
         'myFormControler
         '
+        Me.myFormControler.FormIsLoading = False
+        Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.LOADED
+        Me.myFormControler.GetItem_ID = 0
         Me.myFormControler.Location = New System.Drawing.Point(0, 32)
         Me.myFormControler.Name = "myFormControler"
         Me.myFormControler.ShowButtonQuitOnly = False

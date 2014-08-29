@@ -56,7 +56,7 @@ Partial Class frmProduct
         Me.txtName.Location = New System.Drawing.Point(72, 6)
         Me.txtName.Name = "txtName"
         Me.txtName.Size = New System.Drawing.Size(299, 20)
-        Me.txtName.TabIndex = 5
+        Me.txtName.TabIndex = 1
         '
         'cboCategory
         '
@@ -65,7 +65,7 @@ Partial Class frmProduct
         Me.cboCategory.Location = New System.Drawing.Point(72, 55)
         Me.cboCategory.Name = "cboCategory"
         Me.cboCategory.Size = New System.Drawing.Size(299, 21)
-        Me.cboCategory.TabIndex = 8
+        Me.cboCategory.TabIndex = 3
         '
         'cboType
         '
@@ -74,7 +74,7 @@ Partial Class frmProduct
         Me.cboType.Location = New System.Drawing.Point(72, 30)
         Me.cboType.Name = "cboType"
         Me.cboType.Size = New System.Drawing.Size(299, 21)
-        Me.cboType.TabIndex = 10
+        Me.cboType.TabIndex = 2
         '
         'Label1
         '
@@ -91,7 +91,7 @@ Partial Class frmProduct
         Me.cboBrand.Location = New System.Drawing.Point(72, 82)
         Me.cboBrand.Name = "cboBrand"
         Me.cboBrand.Size = New System.Drawing.Size(299, 21)
-        Me.cboBrand.TabIndex = 13
+        Me.cboBrand.TabIndex = 4
         '
         'Label5
         '
@@ -112,6 +112,9 @@ Partial Class frmProduct
         '
         'myFormControler
         '
+        Me.myFormControler.FormIsLoading = False
+        Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.LOADED
+        Me.myFormControler.GetItem_ID = 0
         Me.myFormControler.Location = New System.Drawing.Point(0, 267)
         Me.myFormControler.Name = "myFormControler"
         Me.myFormControler.ShowButtonQuitOnly = False

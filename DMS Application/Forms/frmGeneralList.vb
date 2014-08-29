@@ -17,6 +17,8 @@ Public Class frmGeneralList
     Private Sub frmGeneralList_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Me.Load
         Dim blnReturn As Boolean
 
+        Me.Cursor = Cursors.WaitCursor
+
         grdList.Tag = mintGridTag
 
         mcGrid = New clsDataGridView
@@ -33,6 +35,8 @@ Public Class frmGeneralList
         Else
             'Do nothing
         End If
+
+        Me.Cursor = Cursors.Default
     End Sub
 
     Private Function blnGrdList_Load() As Boolean
@@ -50,7 +54,7 @@ Public Class frmGeneralList
         Return blnReturn
     End Function
 
-    Private Sub btnQuit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnQuit.Click
+    Private Sub btnQuit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Me.Close()
     End Sub
 
@@ -120,16 +124,30 @@ Public Class frmGeneralList
                 mintSelectedRow = grdList.SelectedRows(0).Index
             End If
 
-            If vFormMode <> clsConstants.Form_Modes.INSERT Then
-                frmToOpen.myFormControler.bln_ShowForm(vFormMode, CInt(grdList.SelectedRows(0).Cells(mintItem_ID_col).Value), True)
-            Else
-                frmToOpen.myFormControler.bln_ShowForm(vFormMode, 0, True)
-            End If
+            Select Case vFormMode
+                Case clsConstants.Form_Modes.INSERT
+                    frmToOpen.myFormControler.bln_ShowForm(vFormMode, 0, True)
+
+                Case clsConstants.Form_Modes.UPDATE
+                    frmToOpen.myFormControler.bln_ShowForm(vFormMode, CInt(grdList.SelectedRows(0).Cells(mintItem_ID_col).Value), True)
+
+                Case clsConstants.Form_Modes.DELETE
+                    gcApp.DisableAllControls(frmToOpen)
+                    frmToOpen.myFormControler.bln_ShowForm(vFormMode, CInt(grdList.SelectedRows(0).Cells(mintItem_ID_col).Value), True)
+
+            End Select
 
             frmGeneralList_Load(Me, New System.EventArgs)
 
-            grdList.Rows(mintSelectedRow).Selected = True
-            grdList.FirstDisplayedScrollingRowIndex = grdList.SelectedRows(0).Index
+            'mintSelectedRow = IIf(vFormMode = clsConstants.Form_Modes.INSERT, grdList.RowCount - 1, mintSelectedRow)
+            'mintSelectedRow = IIf(vFormMode = clsConstants.Form_Modes.DELETE, mintSelectedRow + 1, mintSelectedRow)
+
+            'If mintSelectedRow >= 0 Then
+            '    grdList.Rows(mintSelectedRow).Selected = True
+            '    grdList.FirstDisplayedScrollingRowIndex = grdList.SelectedRows(0).Index
+            'Else
+            '    'Do nothing, grille vide
+            'End If
 
         Catch ex As Exception
             blnReturn = False

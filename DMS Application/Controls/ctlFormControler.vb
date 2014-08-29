@@ -5,33 +5,44 @@ Public Class ctlFormControler
     Inherits System.Windows.Forms.UserControl
     Implements INotifyPropertyChanged
 
+
     'Private members
     Private mintItem_ID As Integer
     Private mintFormMode As clsConstants.Form_Modes
     Private mblnChangeMade As Boolean
+    Private mblnFormIsLoading As Boolean
     Private mblnShowButtonQuitOnly As Boolean
 
     Private WithEvents mfrmParent As System.Windows.Forms.Form
 
-    'Public members
+    'Public Events
     Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
-
     Public Event SetReadRights()
     Public Event LoadData(ByVal eventArgs As LoadDataEventArgs)
+    Public Event ValidateRules(ByVal eventArgs As ValidateRulesEventArgs)
     Public Event SaveData(ByVal eventArgs As SaveDataEventArgs)
 
 #Region "Properties"
 
-    Public ReadOnly Property GetItem_ID As Integer
+    <Browsable(False)>
+    Public Property GetItem_ID As Integer
         Get
             Return mintItem_ID
         End Get
+        Set(ByVal value As Integer)
+            mintItem_ID = value
+        End Set
     End Property
 
-    Public ReadOnly Property GetFormMode As clsConstants.Form_Modes
+    <Browsable(False)>
+    Public Property FormMode As clsConstants.Form_Modes
         Get
             Return mintFormMode
         End Get
+        Set(ByVal value As clsConstants.Form_Modes)
+            mintFormMode = value
+            SetButtonsReadRights()
+        End Set
     End Property
 
     Public WriteOnly Property ChangeMade As Boolean
@@ -39,6 +50,22 @@ Public Class ctlFormControler
             mblnChangeMade = value
 
             SetButtonsReadRights()
+        End Set
+    End Property
+
+    <Browsable(False)>
+    Public Property FormIsLoading As Boolean
+        Get
+            Return mblnFormIsLoading
+        End Get
+        Set(ByVal value As Boolean)
+            mblnFormIsLoading = value
+
+            If Not mfrmParent Is Nothing And mblnFormIsLoading Then
+                mfrmParent.SuspendLayout()
+            ElseIf Not mfrmParent Is Nothing Then
+                mfrmParent.ResumeLayout()
+            End If
         End Set
     End Property
 
@@ -66,24 +93,15 @@ Public Class ctlFormControler
         Try
             mfrmParent = MyBase.FindForm()
 
-            Select Case mintFormMode
-                Case clsConstants.Form_Modes.INSERT
-                    btnApply.Text = "Enregistrer"
-                    imgFormMode.Image = My.Resources.Add
+            SetButtonsReadRights()
 
-                Case clsConstants.Form_Modes.UPDATE
-                    btnApply.Text = "Appliquer"
-                    imgFormMode.Image = My.Resources.Update
-
-                Case clsConstants.Form_Modes.DELETE
-                    btnApply.Text = "Supprimer"
-                    imgFormMode.Image = My.Resources.Delete
-
-            End Select
+            FormIsLoading = True
 
             RaiseEvent SetReadRights()
 
             RaiseEvent LoadData(New LoadDataEventArgs(mintItem_ID))
+
+            FormIsLoading = False
 
             If Not vblnIsModal Then
                 mfrmParent.MdiParent = My.Forms.mdiGeneral
@@ -105,14 +123,35 @@ Public Class ctlFormControler
 
     Private Sub SetButtonsReadRights()
         Select Case mintFormMode
+            Case clsConstants.Form_Modes.INSERT
+                btnApply.Text = "Enregistrer"
+                imgFormMode.Image = My.Resources.Add
+
+            Case clsConstants.Form_Modes.UPDATE
+                btnApply.Text = "Appliquer"
+                imgFormMode.Image = My.Resources.Update
+
+        End Select
+
+        Select Case mintFormMode
             Case clsConstants.Form_Modes.INSERT, clsConstants.Form_Modes.UPDATE
                 If mblnChangeMade Then
                     btnApply.Enabled = True
                     btnCancel.Enabled = True
+                    btnQuit.Enabled = False
                 Else
                     btnApply.Enabled = False
                     btnCancel.Enabled = False
+                    btnQuit.Enabled = True
                 End If
+
+            Case clsConstants.Form_Modes.DELETE
+                btnApply.Enabled = True
+                btnCancel.Enabled = False
+                btnQuit.Enabled = True
+
+                btnApply.Text = "Supprimer"
+                imgFormMode.Image = My.Resources.Delete
 
         End Select
     End Sub
@@ -130,22 +169,49 @@ Public Class ctlFormControler
 
     Protected Overrides Sub Finalize()
         MyBase.Finalize()
+        Me.Dispose()
     End Sub
 
     Private Sub btnApply_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnApply.Click
         Dim saveEvent As New SaveDataEventArgs
+        Dim validationEvent As New ValidateRulesEventArgs
 
-        RaiseEvent SaveData(saveEvent)
+        Me.Cursor = Cursors.WaitCursor
 
-        If saveEvent.SaveSuccessful Then
-            mfrmParent.Close()
+        RaiseEvent ValidateRules(validationEvent)
+
+        If validationEvent.IsValid Then
+
+            RaiseEvent SaveData(saveEvent)
+
+            If saveEvent.SaveSuccessful Then
+                ChangeMade = False
+
+                Select Case mintFormMode
+                    Case clsConstants.Form_Modes.INSERT
+                        FormMode = clsConstants.Form_Modes.UPDATE
+                        RaiseEvent LoadData(New LoadDataEventArgs(mintItem_ID))
+
+                    Case clsConstants.Form_Modes.UPDATE
+                        RaiseEvent LoadData(New LoadDataEventArgs(mintItem_ID))
+
+                    Case clsConstants.Form_Modes.DELETE
+                        mfrmParent.Close()
+
+                End Select
+            Else
+                gcApp.bln_ShowMessage(clsConstants.Error_Messages.ERROR_SAVE_MSG, MsgBoxStyle.Critical)
+            End If
         Else
-            gcApp.bln_ShowMessage(clsConstants.Messages.ERROR_SAVE_MSG, MsgBoxStyle.Information)
+            'Do nothing
         End If
+
+        Me.Cursor = Cursors.Default
     End Sub
 
     Private Sub btnCancel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCancel.Click
-
+        ChangeMade = False
+        RaiseEvent LoadData(New LoadDataEventArgs(mintItem_ID))
     End Sub
 
     Private Sub btnQuit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnQuit.Click
@@ -156,4 +222,5 @@ Public Class ctlFormControler
     Private Sub ctlFormControler_PropertyChanged() Handles Me.PropertyChanged
         SetControlsVisility()
     End Sub
+
 End Class

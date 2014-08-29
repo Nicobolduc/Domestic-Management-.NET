@@ -6,7 +6,7 @@ Public Class clsSQL_Transactions
     Private mblnTransactionStarted As Boolean
 
     Private mMySQLCmd As MySqlCommand
-    Private mMySQLTrans As MySqlTransaction
+    Private mMySQLTransaction As MySqlTransaction
 
     Private mColFields As Dictionary(Of String, String)
 
@@ -28,9 +28,9 @@ Public Class clsSQL_Transactions
         Dim blnReturn As Boolean
 
         Try
-            mMySQLTrans = gcApp.cMySQLConnection.BeginTransaction(IsolationLevel.ReadCommitted)
+            mMySQLTransaction = gcApp.cMySQLConnection.BeginTransaction(IsolationLevel.ReadCommitted)
             mblnTransactionStarted = True
-            mMySQLCmd.Transaction = mMySQLTrans
+            mMySQLCmd.Transaction = mMySQLTransaction
             mMySQLCmd.Connection = gcApp.cMySQLConnection
             mMySQLCmd.CommandType = CommandType.Text
 
@@ -49,9 +49,9 @@ Public Class clsSQL_Transactions
 
         Try
             If vblnCommitChanges Then
-                mMySQLTrans.Commit()
+                mMySQLTransaction.Commit()
             Else
-                mMySQLTrans.Rollback()
+                mMySQLTransaction.Rollback()
             End If
 
             blnReturn = True
@@ -90,7 +90,7 @@ Public Class clsSQL_Transactions
         Return blnReturn
     End Function
 
-    Public Function bln_ADOInsert(ByVal vstrTable As String) As Boolean
+    Public Function bln_ADOInsert(ByVal vstrTable As String, Optional ByRef rintNewItem_ID As Integer = 0) As Boolean
         Dim blnReturn As Boolean
         Dim strSQL As String = vbNullString
         Dim strFields As String = vbNullString
@@ -112,6 +112,10 @@ Public Class clsSQL_Transactions
             mMySQLCmd.CommandText = strSQL & strFields & strValues
 
             mMySQLCmd.ExecuteNonQuery()
+
+            mMySQLCmd.CommandText = "SELECT LAST_INSERT_ID()"
+
+            rintNewItem_ID = CInt(mMySQLCmd.ExecuteScalar)
 
             blnReturn = True
 

@@ -41,14 +41,18 @@ Partial Class frmProductCategory
         Me.txtName.Location = New System.Drawing.Point(49, 12)
         Me.txtName.Name = "txtName"
         Me.txtName.Size = New System.Drawing.Size(271, 20)
-        Me.txtName.TabIndex = 21
+        Me.txtName.TabIndex = 1
         '
         'myFormControler
         '
+        Me.myFormControler.FormIsLoading = False
+        Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.LOADED
+        Me.myFormControler.GetItem_ID = 0
         Me.myFormControler.Location = New System.Drawing.Point(0, 38)
         Me.myFormControler.Name = "myFormControler"
+        Me.myFormControler.ShowButtonQuitOnly = False
         Me.myFormControler.Size = New System.Drawing.Size(421, 33)
-        Me.myFormControler.TabIndex = 23
+        Me.myFormControler.TabIndex = 10
         '
         'frmProductCategory
         '

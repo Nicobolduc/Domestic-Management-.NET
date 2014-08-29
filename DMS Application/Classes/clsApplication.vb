@@ -134,8 +134,7 @@ Public Class clsApplication
         Return blnReturn
     End Function
 
-    Public Function bln_DisableAllFormsControls(Optional ByRef rForm As System.Windows.Forms.Form = Nothing, Optional ByRef rTabPage As TabPage = Nothing, Optional ByRef rControl As Control = Nothing) As Boolean
-        Dim blnReturn As Boolean
+    Public Sub DisableAllControls(Optional ByRef rForm As System.Windows.Forms.Form = Nothing, Optional ByRef rTabPage As TabPage = Nothing, Optional ByRef rControl As Control = Nothing)
         Dim controlCollection As System.Windows.Forms.Control.ControlCollection
 
         Try
@@ -149,14 +148,14 @@ Public Class clsApplication
 
                 Select Case objControl.GetType.Name
                     Case "Button", "TextBox", "CheckBox", "RadioButton", "DateTimePicker", "ListView", "ComboBox"
-                        blnReturn = objControl.Enabled = False
+                        objControl.Enabled = False
 
                     Case "GroupBox"
-                        blnReturn = bln_DisableAllFormsControls(Nothing, Nothing, objControl)
+                        DisableAllControls(Nothing, Nothing, objControl)
 
                     Case "TabControl"
                         For Each tp As TabPage In DirectCast(objControl, TabControl).TabPages
-                            blnReturn = bln_DisableAllFormsControls(Nothing, tp)
+                            DisableAllControls(Nothing, tp)
                         Next
 
                     Case Else
@@ -164,14 +163,11 @@ Public Class clsApplication
 
                 End Select
 
-                If Not blnReturn Then Exit For
             Next objControl
 
         Catch ex As Exception
-            blnReturn = False
             gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
-    End Function
+    End Sub
 End Class
