@@ -65,7 +65,7 @@
 
             mcSQL.bln_BeginTransaction()
 
-            Select Case myFormControler.GetFormMode
+            Select Case myFormControler.FormMode
                 Case clsConstants.Form_Modes.INSERT
                     blnReturn = blnExpense_Insert()
 
@@ -95,7 +95,8 @@
             Select Case False
                 Case mcSQL.bln_AddField("Exp_Code", txtCode.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
                 Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedIndex + 1), clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_ADOInsert("Expense")
+                Case mcSQL.bln_ADOInsert("Expense", myFormControler.GetItem_ID)
+                Case myFormControler.GetItem_ID > 0
                 Case Else
                     blnReturn = True
             End Select
@@ -149,14 +150,18 @@
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
         Dim blnReturn As Boolean
 
+        myFormControler.FormIsLoading = True
+
         Select Case False
             Case blnCboInterval_Load()
-            Case myFormControler.GetFormMode <> clsConstants.Form_Modes.INSERT
+            Case myFormControler.FormMode <> clsConstants.Form_Modes.INSERT
                 blnReturn = True
             Case blnGrdExpense_Load()
             Case Else
                 blnReturn = True
         End Select
+
+        myFormControler.FormIsLoading = False
     End Sub
 
     Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles myFormControler.SaveData
@@ -165,4 +170,37 @@
 
     End Sub
 
+    Private Sub txtCode_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtCode.TextChanged
+        ChangeMade()
+    End Sub
+
+    Private Sub ChangeMade()
+        Select Case False
+            Case Not myFormControler.FormIsLoading
+            Case Else
+                myFormControler.ChangeMade = True
+
+        End Select
+    End Sub
+
+    Private Sub cboInterval_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboInterval.SelectedIndexChanged
+        ChangeMade()
+    End Sub
+
+    Private Sub myFormControler_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles myFormControler.ValidateRules
+        Select Case False
+            Case txtCode.Text <> vbNullString
+                gcApp.bln_ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                txtCode.Focus()
+
+            Case cboInterval.SelectedIndex <> -1
+                gcApp.bln_ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                cboInterval.Focus()
+                cboInterval.DroppedDown = True
+
+            Case Else
+                eventArgs.IsValid = True
+
+        End Select
+    End Sub
 End Class
