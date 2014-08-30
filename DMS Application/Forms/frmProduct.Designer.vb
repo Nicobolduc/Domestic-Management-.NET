@@ -29,7 +29,6 @@ Partial Class frmProduct
         Me.cboCategory = New System.Windows.Forms.ComboBox()
         Me.cboType = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.cboBrand = New System.Windows.Forms.ComboBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.gbInfos = New System.Windows.Forms.GroupBox()
         Me.myFormControler = New DMS_Application.ctlFormControler()
@@ -84,15 +83,6 @@ Partial Class frmProduct
         Me.Label1.TabIndex = 9
         Me.Label1.Text = "Type:"
         '
-        'cboBrand
-        '
-        Me.cboBrand.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboBrand.FormattingEnabled = True
-        Me.cboBrand.Location = New System.Drawing.Point(72, 82)
-        Me.cboBrand.Name = "cboBrand"
-        Me.cboBrand.Size = New System.Drawing.Size(299, 21)
-        Me.cboBrand.TabIndex = 4
-        '
         'Label5
         '
         Me.Label5.Location = New System.Drawing.Point(12, 85)
@@ -114,7 +104,7 @@ Partial Class frmProduct
         '
         Me.myFormControler.FormIsLoading = False
         Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.LOADED
-        Me.myFormControler.GetItem_ID = 0
+        Me.myFormControler.Item_ID = 0
         Me.myFormControler.Location = New System.Drawing.Point(0, 267)
         Me.myFormControler.Name = "myFormControler"
         Me.myFormControler.ShowButtonQuitOnly = False
@@ -128,7 +118,6 @@ Partial Class frmProduct
         Me.ClientSize = New System.Drawing.Size(375, 299)
         Me.Controls.Add(Me.myFormControler)
         Me.Controls.Add(Me.gbInfos)
-        Me.Controls.Add(Me.cboBrand)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.cboType)
         Me.Controls.Add(Me.Label1)
@@ -154,7 +143,6 @@ Partial Class frmProduct
     Friend WithEvents cboCategory As System.Windows.Forms.ComboBox
     Friend WithEvents cboType As System.Windows.Forms.ComboBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents cboBrand As System.Windows.Forms.ComboBox
     Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents gbInfos As System.Windows.Forms.GroupBox
     Public WithEvents myFormControler As DMS_Application.ctlFormControler

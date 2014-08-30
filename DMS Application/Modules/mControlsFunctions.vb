@@ -1,27 +1,38 @@
-﻿
+﻿Imports System.ComponentModel
+
 Module mControlsFunctions
 
     Public Function blnComboBox_LoadFromSQL(ByVal vstrSQL As String, ByVal vstrValueMember As String, ByVal vstrDisplayMember As String, ByVal vblnAllowEmpty As Boolean, ByRef rcboToLoad As ComboBox) As Boolean
         Dim blnReturn As Boolean
         Dim mySQLCmd As MySqlCommand
         Dim mySQLReader As MySqlDataReader = Nothing
+        Dim myBindingList As New BindingList(Of KeyValuePair(Of Integer, String))
 
         Try
-            rcboToLoad.Items.Clear()
+            rcboToLoad.DataSource = Nothing
 
             mySQLCmd = New MySqlCommand(vstrSQL, gcApp.cMySQLConnection)
 
             mySQLReader = mySQLCmd.ExecuteReader
 
             If vblnAllowEmpty Then
-                rcboToLoad.Items.Add(" ")
+                myBindingList.Add(New KeyValuePair(Of Integer, String)(0, ""))
             Else
                 'Do nothing
             End If
 
             While mySQLReader.Read
-                rcboToLoad.Items.Add(New cboListItem(CInt(mySQLReader.Item(0)), CStr(mySQLReader.Item(1))))
+                If Not IsDBNull(mySQLReader(vstrValueMember)) Then
+                    myBindingList.Add(New KeyValuePair(Of Integer, String)(CInt(mySQLReader(vstrValueMember)), CStr(mySQLReader(vstrDisplayMember))))
+                Else
+                    'Do nothing
+                End If
             End While
+
+            rcboToLoad.DataSource = myBindingList
+            rcboToLoad.ValueMember = "Key"
+            rcboToLoad.DisplayMember = "Value"
+            rcboToLoad.SelectedIndex = 0
 
             blnReturn = True
 
@@ -37,21 +48,5 @@ Module mControlsFunctions
 
         Return blnReturn
     End Function
-
-    Private Class cboListItem
-
-        Private Value As Object
-        Private Text As String
-
-        Protected Friend Sub New(ByVal strNewValue As Integer, ByVal strNewText As String)
-            Value = strNewValue
-            Text = strNewText
-        End Sub
-
-        Public Overrides Function ToString() As String
-            Return Text
-        End Function
-
-    End Class
 
 End Module

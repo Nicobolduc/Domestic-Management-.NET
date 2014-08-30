@@ -31,14 +31,14 @@
             strSQL = strSQL & " SELECT Expense.Exp_Code, " & vbCrLf
             strSQL = strSQL & "        Expense.Per_ID " & vbCrLf
             strSQL = strSQL & " FROM Expense " & vbCrLf
-            strSQL = strSQL & " WHERE Expense.Exp_ID = " & myFormControler.GetItem_ID & vbCrLf
+            strSQL = strSQL & " WHERE Expense.Exp_Code = " & myFormControler.Item_ID & vbCrLf
 
             mySQLReader = mSQL.ADOSelect(strSQL)
 
             While mySQLReader.Read
                 txtCode.Text = mySQLReader.Item("Exp_Code").ToString
 
-                cboInterval.SelectedIndex = CInt(mySQLReader.Item("Per_ID")) - 1
+                cboInterval.SelectedValue = CInt(mySQLReader.Item("Per_ID"))
             End While
 
             blnReturn = True
@@ -93,9 +93,9 @@
         Try
             Select Case False
                 Case mcSQL.bln_AddField("Exp_Code", txtCode.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedIndex + 1), clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_ADOInsert("Expense", myFormControler.GetItem_ID)
-                Case myFormControler.GetItem_ID > 0
+                Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_ADOInsert("Expense", myFormControler.Item_ID)
+                Case myFormControler.Item_ID > 0
                 Case Else
                     blnReturn = True
             End Select
@@ -114,8 +114,8 @@
         Try
             Select Case False
                 Case mcSQL.bln_AddField("Exp_Code", txtCode.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedIndex + 1), clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_ADOUpdate("Expense", "Exp_ID = " & myFormControler.GetItem_ID)
+                Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_ADOUpdate("Expense", "Exp_ID = " & myFormControler.Item_ID)
                 Case Else
                     blnReturn = True
             End Select
@@ -133,7 +133,7 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_ADODelete("Expense", "Exp_ID = " & myFormControler.GetItem_ID)
+                Case mcSQL.bln_ADODelete("Expense", "Exp_ID = " & myFormControler.Item_ID)
                 Case Else
                     blnReturn = True
             End Select
@@ -189,7 +189,7 @@
                 gcApp.bln_ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtCode.Focus()
 
-            Case cboInterval.SelectedIndex <> -1
+            Case cboInterval.SelectedIndex > 0
                 gcApp.bln_ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 cboInterval.Focus()
                 cboInterval.DroppedDown = True

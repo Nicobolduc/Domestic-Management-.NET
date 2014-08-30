@@ -11,7 +11,7 @@
             strSQL = strSQL & " SELECT ProductType.ProT_ID, " & vbCrLf
             strSQL = strSQL & "        ProductType.ProT_Name " & vbCrLf
             strSQL = strSQL & " FROM ProductType " & vbCrLf
-            strSQL = strSQL & " ORDER BY ProductType.ProT_ID " & vbCrLf
+            strSQL = strSQL & " ORDER BY ProductType.ProT_Name " & vbCrLf
 
             blnReturn = blnComboBox_LoadFromSQL(strSQL, "ProT_ID", "ProT_Name", True, cboType)
 
@@ -23,7 +23,7 @@
         Return blnReturn
     End Function
 
-    Private Function blnCboCategory_Load() As Boolean
+    Private Function blnCboCategory_Load(Optional ByVal vintSelectedValue As Integer = 0) As Boolean
         Dim blnReturn As Boolean
         Dim strSQL As String = vbNullString
 
@@ -31,10 +31,12 @@
             strSQL = strSQL & " SELECT ProductCategory.ProC_ID, " & vbCrLf
             strSQL = strSQL & "        ProductCategory.ProC_Name " & vbCrLf
             strSQL = strSQL & " FROM ProductCategory " & vbCrLf
-            strSQL = strSQL & " WHERE ProductCategory.ProT_ID = " & cboType.SelectedIndex & vbCrLf
-            strSQL = strSQL & " ORDER BY ProductCategory.ProC_ID " & vbCrLf
+            strSQL = strSQL & " WHERE ProductCategory.ProT_ID = " & CInt(cboType.SelectedValue) & vbCrLf
+            strSQL = strSQL & " ORDER BY ProductCategory.ProC_Name " & vbCrLf
 
             blnReturn = blnComboBox_LoadFromSQL(strSQL, "ProC_ID", "ProC_Name", True, cboCategory)
+
+            cboCategory.SelectedValue = vintSelectedValue
 
         Catch ex As Exception
             blnReturn = False
@@ -52,7 +54,7 @@
             strSQL = strSQL & " SELECT Brand.Bra_ID, " & vbCrLf
             strSQL = strSQL & "        Brand.Bra_Name " & vbCrLf
             strSQL = strSQL & " FROM Brand " & vbCrLf
-            strSQL = strSQL & " ORDER BY Brand.Bra_ID " & vbCrLf
+            strSQL = strSQL & " ORDER BY Brand.Bra_Name " & vbCrLf
 
             blnReturn = blnComboBox_LoadFromSQL(strSQL, "Bra_ID", "Bra_Name", True, cboBrand)
 
@@ -77,10 +79,10 @@
                     blnReturn = blnProduct_Insert()
 
                 Case clsConstants.Form_Modes.UPDATE
-                    'blnReturn = blnExense_Update()
+                    blnReturn = blnProduct_Update()
 
                 Case clsConstants.Form_Modes.DELETE
-                    'blnReturn = blnExpense_Delete()
+                    blnReturn = blnProduct_Delete()
 
             End Select
 
@@ -101,10 +103,50 @@
         Try
             Select Case False
                 Case mcSQL.bln_AddField("Pro_Name", txtName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("ProT_ID", CStr(cboType.SelectedIndex), clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("ProC_ID", CStr(cboType.SelectedIndex), clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("Bra_ID", CStr(cboBrand.SelectedIndex), clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_ADOInsert("Product")
+                Case mcSQL.bln_AddField("ProT_ID", CStr(cboType.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("ProC_ID", CStr(cboType.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Bra_ID", CStr(cboBrand.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_ADOInsert("Product", myFormControler.Item_ID)
+                Case Else
+                    blnReturn = True
+            End Select
+
+        Catch ex As Exception
+            blnReturn = False
+            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnReturn
+    End Function
+
+    Private Function blnProduct_Update() As Boolean
+        Dim blnReturn As Boolean
+
+        Try
+            Select Case False
+                Case mcSQL.bln_AddField("Pro_Name", txtName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("ProT_ID", CStr(cboType.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("ProC_ID", CStr(cboCategory.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Bra_ID", CStr(cboBrand.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_ADOUpdate("Product", "Pro_ID = " & myFormControler.Item_ID)
+                Case Else
+                    blnReturn = True
+            End Select
+
+        Catch ex As Exception
+            blnReturn = False
+            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnReturn
+    End Function
+
+    Private Function blnProduct_Delete() As Boolean
+        Dim blnReturn As Boolean
+
+        Try
+            Select Case False
+                Case mcSQL.bln_ADODelete("Product", "Pro_ID = " & myFormControler.Item_ID)
                 Case Else
                     blnReturn = True
             End Select
@@ -123,7 +165,7 @@
             If cboType.SelectedIndex > 0 Then
                 blnCboCategory_Load()
             Else
-                cboCategory.Items.Clear()
+                cboCategory.DataSource = Nothing
             End If
 
             ChangeMade()
@@ -156,6 +198,7 @@
     Private Function blnLoadData() As Boolean
         Dim blnReturn As Boolean
         Dim strSQL As String = vbNullString
+        Dim intProC_ID As Integer
         Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
@@ -164,26 +207,37 @@
             strSQL = strSQL & "        Product.ProC_ID, " & vbCrLf
             strSQL = strSQL & "        Product.Bra_ID " & vbCrLf
             strSQL = strSQL & " FROM Product " & vbCrLf
-            strSQL = strSQL & " WHERE Product.Pro_ID = " & myFormControler.GetItem_ID & vbCrLf
+            strSQL = strSQL & " WHERE Product.Pro_ID = " & myFormControler.Item_ID & vbCrLf
 
             mySQLReader = mSQL.ADOSelect(strSQL)
 
-            While mySQLReader.Read
-                txtName.Text = mySQLReader.Item("Pro_Name").ToString
+            mySQLReader.Read()
 
-                cboType.SelectedIndex = CInt(mySQLReader.Item("ProT_ID"))
-                cboCategory.SelectedIndex = CInt(mySQLReader.Item("ProC_ID"))
-                cboBrand.SelectedIndex = CInt(mySQLReader.Item("Bra_ID"))
-            End While
+            txtName.Text = mySQLReader.Item("Pro_Name").ToString
 
-            blnReturn = True
+            cboType.SelectedValue = CInt(mySQLReader.Item("ProT_ID"))
+
+            If Not IsDBNull(mySQLReader.Item("ProC_ID")) Then
+                intProC_ID = CInt(mySQLReader.Item("ProC_ID"))
+            Else
+                intProC_ID = 0
+            End If
+
+            If Not IsDBNull(mySQLReader.Item("Bra_ID")) Then
+                cboBrand.SelectedValue = CInt(mySQLReader.Item("Bra_ID"))
+            Else
+                cboBrand.SelectedIndex = 0
+            End If
+
+            mySQLReader.Close()
+
+            blnReturn = blnCboCategory_Load(intProC_ID)
 
         Catch ex As Exception
             blnReturn = False
             gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
-                mySQLReader.Close()
                 mySQLReader.Dispose()
             End If
         End Try
@@ -208,7 +262,7 @@
         End Select
     End Sub
 
-    Private Sub cboBrand_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboBrand.SelectedIndexChanged
+    Private Sub cboBrand_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs)
         ChangeMade()
     End Sub
 

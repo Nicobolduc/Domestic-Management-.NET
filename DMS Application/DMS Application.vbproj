@@ -53,6 +53,9 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Accessibility">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="DMS Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <ExecutableExtension>.exe</ExecutableExtension>
     </Reference>
@@ -97,6 +100,12 @@
     </Compile>
     <Compile Include="Controls\ctlFormControler.vb">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Form1.Designer.vb">
+      <DependentUpon>Form1.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Form1.vb">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmBrand.Designer.vb">
       <DependentUpon>frmBrand.vb</DependentUpon>
@@ -170,6 +179,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Controls\ctlFormControler.resx">
       <DependentUpon>ctlFormControler.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form1.resx">
+      <DependentUpon>Form1.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmBrand.resx">
       <DependentUpon>frmBrand.vb</DependentUpon>

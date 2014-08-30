@@ -39,7 +39,7 @@ Public Class clsDataGridView
         Dim blnReturn As Boolean = True
         Dim sqlCmd As MySqlCommand
         Dim mySQLReader As MySqlDataReader = Nothing
-        Dim dtTable As DataTable = New DataTable
+        Dim myDataTable As DataTable = New DataTable
         Dim strGridCaption As String = vbNullString
         Dim lstColumns As String()
 
@@ -52,9 +52,9 @@ Public Class clsDataGridView
 
             mySQLReader = sqlCmd.ExecuteReader
 
-            dtTable.Load(mySQLReader)
+            myDataTable.Load(mySQLReader)
 
-            grdGrid.DataSource = dtTable
+            grdGrid.DataSource = myDataTable
 
             For intIndex As Short = 0 To CShort(lstColumns.Length - 1)
 

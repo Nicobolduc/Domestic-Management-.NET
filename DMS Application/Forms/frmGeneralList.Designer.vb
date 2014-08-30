@@ -73,7 +73,7 @@ Partial Class frmGeneralList
         'btnDelete
         '
         Me.btnDelete.Image = CType(resources.GetObject("btnDelete.Image"), System.Drawing.Image)
-        Me.btnDelete.Location = New System.Drawing.Point(525, 147)
+        Me.btnDelete.Location = New System.Drawing.Point(525, 146)
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Size = New System.Drawing.Size(48, 48)
         Me.btnDelete.TabIndex = 4
@@ -83,7 +83,7 @@ Partial Class frmGeneralList
         'btnUpdate
         '
         Me.btnUpdate.Image = CType(resources.GetObject("btnUpdate.Image"), System.Drawing.Image)
-        Me.btnUpdate.Location = New System.Drawing.Point(525, 93)
+        Me.btnUpdate.Location = New System.Drawing.Point(525, 92)
         Me.btnUpdate.Name = "btnUpdate"
         Me.btnUpdate.Size = New System.Drawing.Size(48, 48)
         Me.btnUpdate.TabIndex = 3
@@ -93,7 +93,7 @@ Partial Class frmGeneralList
         'btnAdd
         '
         Me.btnAdd.Image = CType(resources.GetObject("btnAdd.Image"), System.Drawing.Image)
-        Me.btnAdd.Location = New System.Drawing.Point(525, 39)
+        Me.btnAdd.Location = New System.Drawing.Point(525, 38)
         Me.btnAdd.Name = "btnAdd"
         Me.btnAdd.Size = New System.Drawing.Size(48, 48)
         Me.btnAdd.TabIndex = 2
@@ -108,7 +108,7 @@ Partial Class frmGeneralList
         '
         Me.myFormManager.FormIsLoading = False
         Me.myFormManager.FormMode = DMS_Application.clsConstants.Form_Modes.LOADED
-        Me.myFormManager.GetItem_ID = 0
+        Me.myFormManager.Item_ID = 0
         Me.myFormManager.Location = New System.Drawing.Point(494, 513)
         Me.myFormManager.Name = "myFormManager"
         Me.myFormManager.ShowButtonQuitOnly = True
@@ -129,6 +129,7 @@ Partial Class frmGeneralList
         Me.Controls.Add(Me.Label1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.MaximizeBox = False
         Me.Name = "frmGeneralList"
         Me.Text = "Liste générique"
         CType(Me.grdList, System.ComponentModel.ISupportInitialize).EndInit()

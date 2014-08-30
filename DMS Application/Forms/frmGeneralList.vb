@@ -14,31 +14,6 @@ Public Class frmGeneralList
     Public mstrGridSQL As String = vbNullString
 
 
-    Private Sub frmGeneralList_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Me.Load
-        Dim blnReturn As Boolean
-
-        Me.Cursor = Cursors.WaitCursor
-
-        grdList.Tag = mintGridTag
-
-        mcGrid = New clsDataGridView
-
-        Select Case False
-            Case mcGrid.bln_Init(grdList)
-            Case blnGrdList_Load()
-            Case Else
-                blnReturn = True
-        End Select
-
-        If Not blnReturn Then
-            Me.Close()
-        Else
-            'Do nothing
-        End If
-
-        Me.Cursor = Cursors.Default
-    End Sub
-
     Private Function blnGrdList_Load() As Boolean
         Dim blnReturn As Boolean
 
@@ -103,6 +78,7 @@ Public Class frmGeneralList
     Private Function blnOpenForm(ByVal vFormMode As clsConstants.Form_Modes) As Boolean
         Dim blnReturn As Boolean = True
         Dim frmToOpen As Object = Nothing
+        Dim intItem_ID As Integer
 
         Try
             Select Case mListToOpen
@@ -122,6 +98,7 @@ Public Class frmGeneralList
 
             If grdList.SelectedRows.Count > 0 Then
                 mintSelectedRow = grdList.SelectedRows(0).Index
+                intItem_ID = CInt(grdList.SelectedRows(0).Cells(mintItem_ID_col).Value)
             End If
 
             Select Case vFormMode
@@ -129,15 +106,15 @@ Public Class frmGeneralList
                     frmToOpen.myFormControler.bln_ShowForm(vFormMode, 0, True)
 
                 Case clsConstants.Form_Modes.UPDATE
-                    frmToOpen.myFormControler.bln_ShowForm(vFormMode, CInt(grdList.SelectedRows(0).Cells(mintItem_ID_col).Value), True)
+                    frmToOpen.myFormControler.bln_ShowForm(vFormMode, intItem_ID, True)
 
                 Case clsConstants.Form_Modes.DELETE
                     gcApp.DisableAllControls(frmToOpen)
-                    frmToOpen.myFormControler.bln_ShowForm(vFormMode, CInt(grdList.SelectedRows(0).Cells(mintItem_ID_col).Value), True)
+                    frmToOpen.myFormControler.bln_ShowForm(vFormMode, intItem_ID, True)
 
             End Select
 
-            frmGeneralList_Load(Me, New System.EventArgs)
+            myFormManager.LoadFormData()
 
             'mintSelectedRow = IIf(vFormMode = clsConstants.Form_Modes.INSERT, grdList.RowCount - 1, mintSelectedRow)
             'mintSelectedRow = IIf(vFormMode = clsConstants.Form_Modes.DELETE, mintSelectedRow + 1, mintSelectedRow)
@@ -178,5 +155,27 @@ Public Class frmGeneralList
         InitializeComponent()
 
         mListToOpen = vstrGenList_ID
+    End Sub
+
+    Private Sub myFormManager_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormManager.LoadData
+        Dim blnReturn As Boolean
+
+        grdList.Tag = mintGridTag
+
+        mcGrid = New clsDataGridView
+
+        Select Case False
+            Case mcGrid.bln_Init(grdList)
+            Case blnGrdList_Load()
+            Case Else
+                blnReturn = True
+        End Select
+
+        If Not blnReturn Then
+            Me.Close()
+        Else
+            'Do nothing
+        End If
+
     End Sub
 End Class

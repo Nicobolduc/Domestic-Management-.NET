@@ -61,6 +61,7 @@ Public Class clsSQL_Transactions
             gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mblnTransactionStarted = False
+            mMySQLTransaction.Dispose()
             mMySQLCmd.Dispose()
         End Try
 
@@ -75,6 +76,11 @@ Public Class clsSQL_Transactions
             Select Case vintDBType
                 Case clsConstants.MySQL_FieldTypes.VARCHAR_TYPE, clsConstants.MySQL_FieldTypes.DATETIME_TYPE
                     vstrValue = gcApp.str_FixStringForSQL(vstrValue)
+
+                Case clsConstants.MySQL_FieldTypes.INT_TYPE
+                    If vstrValue = vbNullString Or vstrValue = "0" Then
+                        vstrValue = "NULL"
+                    End If
 
             End Select
 
@@ -151,6 +157,8 @@ Public Class clsSQL_Transactions
         Catch ex As Exception
             blnReturn = False
             gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        Finally
+            mColFields.Clear()
         End Try
 
         Return blnReturn

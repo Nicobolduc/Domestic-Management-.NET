@@ -25,7 +25,7 @@ Public Class ctlFormControler
 #Region "Properties"
 
     <Browsable(False)>
-    Public Property GetItem_ID As Integer
+    Public Property Item_ID As Integer
         Get
             Return mintItem_ID
         End Get
@@ -62,8 +62,10 @@ Public Class ctlFormControler
             mblnFormIsLoading = value
 
             If Not mfrmParent Is Nothing And mblnFormIsLoading Then
+                Me.Cursor = Cursors.WaitCursor
                 mfrmParent.SuspendLayout()
             ElseIf Not mfrmParent Is Nothing Then
+                Me.Cursor = Cursors.Default
                 mfrmParent.ResumeLayout()
             End If
         End Set
@@ -95,13 +97,7 @@ Public Class ctlFormControler
 
             SetButtonsReadRights()
 
-            FormIsLoading = True
-
-            RaiseEvent SetReadRights()
-
-            RaiseEvent LoadData(New LoadDataEventArgs(mintItem_ID))
-
-            FormIsLoading = False
+            LoadFormData
 
             If Not vblnIsModal Then
                 mfrmParent.MdiParent = My.Forms.mdiGeneral
@@ -156,6 +152,18 @@ Public Class ctlFormControler
         End Select
     End Sub
 
+    Public Sub LoadFormData()
+        FormIsLoading = True
+
+        ChangeMade = False
+
+        RaiseEvent SetReadRights()
+
+        RaiseEvent LoadData(New LoadDataEventArgs(mintItem_ID))
+
+        FormIsLoading = False
+    End Sub
+
     Private Sub SetControlsVisility()
         If mblnShowButtonQuitOnly Then
 
@@ -185,15 +193,16 @@ Public Class ctlFormControler
             RaiseEvent SaveData(saveEvent)
 
             If saveEvent.SaveSuccessful Then
+
                 ChangeMade = False
 
                 Select Case mintFormMode
                     Case clsConstants.Form_Modes.INSERT
                         FormMode = clsConstants.Form_Modes.UPDATE
-                        RaiseEvent LoadData(New LoadDataEventArgs(mintItem_ID))
+                        LoadFormData()
 
                     Case clsConstants.Form_Modes.UPDATE
-                        RaiseEvent LoadData(New LoadDataEventArgs(mintItem_ID))
+                        LoadFormData()
 
                     Case clsConstants.Form_Modes.DELETE
                         mfrmParent.Close()
@@ -210,8 +219,7 @@ Public Class ctlFormControler
     End Sub
 
     Private Sub btnCancel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCancel.Click
-        ChangeMade = False
-        RaiseEvent LoadData(New LoadDataEventArgs(mintItem_ID))
+        LoadFormData()
     End Sub
 
     Private Sub btnQuit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnQuit.Click

@@ -39,8 +39,8 @@
         Try
             Select Case False
                 Case mcSQL.bln_AddField("ProT_Name", txtName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_ADOInsert("ProductType", myFormControler.GetItem_ID)
-                Case myFormControler.GetItem_ID > 0
+                Case mcSQL.bln_ADOInsert("ProductType", myFormControler.Item_ID)
+                Case myFormControler.Item_ID > 0
                 Case Else
                     blnReturn = True
             End Select
@@ -59,7 +59,7 @@
         Try
             Select Case False
                 Case mcSQL.bln_AddField("ProT_Name", txtName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_ADOUpdate("ProductType", "ProT_ID = " & myFormControler.GetItem_ID)
+                Case mcSQL.bln_ADOUpdate("ProductType", "ProT_ID = " & myFormControler.Item_ID)
                 Case Else
                     blnReturn = True
             End Select
@@ -77,7 +77,7 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_ADODelete("ProductType", "ProT_ID = " & myFormControler.GetItem_ID)
+                Case mcSQL.bln_ADODelete("ProductType", "ProT_ID = " & myFormControler.Item_ID)
                 Case Else
                     blnReturn = True
             End Select
@@ -121,7 +121,7 @@
             strSQL = strSQL & " SELECT ProductType.ProT_Name, " & vbCrLf
             strSQL = strSQL & "        ProductType.ProT_ID " & vbCrLf
             strSQL = strSQL & " FROM ProductType " & vbCrLf
-            strSQL = strSQL & " WHERE ProductType.ProT_ID = " & myFormControler.GetItem_ID & vbCrLf
+            strSQL = strSQL & " WHERE ProductType.ProT_ID = " & myFormControler.Item_ID & vbCrLf
 
             mySQLReader = mSQL.ADOSelect(strSQL)
 
