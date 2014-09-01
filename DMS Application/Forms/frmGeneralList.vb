@@ -12,7 +12,7 @@ Public Class frmGeneralList
     Public mstrGridSQL As String = vbNullString
 
     'Private class members
-    Private WithEvents mcGrid As clsDataGridView
+    Private WithEvents mcGrdList As clsDataGridView
 
 
 #Region "Constructor"
@@ -51,6 +51,9 @@ Public Class frmGeneralList
 
                 Case mGeneralList.GeneralLists_ID.PRODUCT_BRAND_LIST_ID
                     frmToOpen = New frmProductBrand
+
+                Case mGeneralList.GeneralLists_ID.COMPANY_LIST_ID
+                    frmToOpen = New frmCompany
 
             End Select
 
@@ -106,7 +109,7 @@ Public Class frmGeneralList
 
         Try
 
-            blnReturn = mcGrid.bln_FillData(mstrGridSQL)
+            blnReturn = mcGrdList.bln_FillData(mstrGridSQL)
 
         Catch ex As Exception
             blnReturn = False
@@ -127,7 +130,7 @@ Public Class frmGeneralList
         Me.Close()
     End Sub
 
-    Private Sub mcGrid_SetDisplay() Handles mcGrid.SetDisplay
+    Private Sub mcGrid_SetDisplay() Handles mcGrdList.SetDisplay
 
         grdList.ReadOnly = True
 
@@ -188,12 +191,12 @@ Public Class frmGeneralList
     Private Sub myFormManager_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormManager.LoadData
         Dim blnReturn As Boolean
 
+        mcGrdList = New clsDataGridView
+
         grdList.Tag = mintGridTag
 
-        mcGrid = New clsDataGridView
-
         Select Case False
-            Case mcGrid.bln_Init(grdList)
+            Case mcGrdList.bln_Init(grdList)
             Case blnGrdList_Load()
             Case Else
                 blnReturn = True

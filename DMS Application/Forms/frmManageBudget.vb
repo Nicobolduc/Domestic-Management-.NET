@@ -22,7 +22,6 @@
 #Region "Private events"
 
     Private Sub frmGestionBudget_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        mcGridBudget = New clsDataGridView
 
         Try
             Select Case False

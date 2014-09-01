@@ -24,22 +24,26 @@
     End Sub
 
     Private Sub mnuiExpenseToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiExpense.Click
-        mGeneralList.blnShowGenList(mGeneralList.GeneralLists_ID.EXPENSES_LIST_ID)
+        mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.EXPENSES_LIST_ID)
     End Sub
 
     Private Sub mnuiProductToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiProducts.Click
-        mGeneralList.blnShowGenList(mGeneralList.GeneralLists_ID.PRODUCTS_LIST_ID)
+        mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.PRODUCTS_LIST_ID)
     End Sub
 
     Private Sub mnuiProductCategory_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiProductCategory.Click
-        mGeneralList.blnShowGenList(mGeneralList.GeneralLists_ID.PRODUCT_CATEGORY_LIST_ID)
+        mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.PRODUCT_CATEGORY_LIST_ID)
     End Sub
 
     Private Sub mnuiProductType_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiProductType.Click
-        mGeneralList.blnShowGenList(mGeneralList.GeneralLists_ID.PRODUCT_TYPE_LIST_ID)
+        mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.PRODUCT_TYPE_LIST_ID)
     End Sub
 
     Private Sub mnuiBrand_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiBrand.Click
-        mGeneralList.blnShowGenList(mGeneralList.GeneralLists_ID.PRODUCT_BRAND_LIST_ID)
+        mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.PRODUCT_BRAND_LIST_ID)
+    End Sub
+
+    Private Sub CompagnieToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CompagnieToolStripMenuItem.Click
+        mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.COMPANY_LIST_ID)
     End Sub
 End Class

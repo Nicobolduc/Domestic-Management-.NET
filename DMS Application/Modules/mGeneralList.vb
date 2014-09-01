@@ -9,6 +9,7 @@
             PRODUCT_TYPE_LIST_ID = 3
             PRODUCT_CATEGORY_LIST_ID = 4
             PRODUCT_BRAND_LIST_ID = 5
+            COMPANY_LIST_ID = 6
         End Enum
 
         Public Enum GeneralList_AppCapID
@@ -17,13 +18,13 @@
             PRODUCT_TYPE_CAP = 3
             PRODUCT_CATEGORY_CAP = 4
             PRODUCT_BRAND_CAP = 7
+            COMPANY_CAP = 8
         End Enum
 
 
 #Region "Functions / Subs"
 
-        Public Function blnShowGenList(ByVal vList_ID As mGeneralList.GeneralLists_ID) As Boolean
-            Dim blnReturn As Boolean
+        Public Sub ShowGenList(ByVal vList_ID As mGeneralList.GeneralLists_ID)
             Dim strListName As String = vbNullString
             Dim strSQL As String = vbNullString
             Dim frmGenList As New frmGeneralList(vList_ID)
@@ -31,29 +32,34 @@
             Try
                 Select Case vList_ID
                     Case mGeneralList.GeneralLists_ID.EXPENSES_LIST_ID
-                        strSQL = strGetExpense_SQL()
+                        strSQL = strGetExpenseList_SQL()
                         strListName = " - Dépenses"
                         frmGenList.mintGridTag = CStr(GeneralList_AppCapID.EXPENSES_CAP)
 
                     Case mGeneralList.GeneralLists_ID.PRODUCTS_LIST_ID
-                        strSQL = strGetProducts_SQL()
+                        strSQL = strGetProductsList_SQL()
                         strListName = " - Produits"
                         frmGenList.mintGridTag = CStr(GeneralList_AppCapID.PRODUCTS_CAP)
 
                     Case mGeneralList.GeneralLists_ID.PRODUCT_TYPE_LIST_ID
-                        strSQL = strGetProductType_SQL()
+                        strSQL = strGetProductTypeList_SQL()
                         strListName = " - Types de produit"
                         frmGenList.mintGridTag = CStr(GeneralList_AppCapID.PRODUCT_TYPE_CAP)
 
                     Case mGeneralList.GeneralLists_ID.PRODUCT_CATEGORY_LIST_ID
-                        strSQL = strGetProductCategory_SQL()
+                        strSQL = strGetProductCategoryList_SQL()
                         strListName = " - Catégories de produit"
                         frmGenList.mintGridTag = CStr(GeneralList_AppCapID.PRODUCT_CATEGORY_CAP)
 
                     Case mGeneralList.GeneralLists_ID.PRODUCT_BRAND_LIST_ID
-                        strSQL = strGetProductBrand_SQL()
+                        strSQL = strGetProductBrandList_SQL()
                         strListName = " - Marques de produit"
                         frmGenList.mintGridTag = CStr(GeneralList_AppCapID.PRODUCT_BRAND_CAP)
+
+                    Case mGeneralList.GeneralLists_ID.COMPANY_LIST_ID
+                        strSQL = strGetCompanyList_SQL()
+                        strListName = " - Compagnies"
+                        frmGenList.mintGridTag = CStr(GeneralList_AppCapID.COMPANY_CAP)
 
                     Case Else
                         'Do nothing
@@ -70,19 +76,17 @@
                 End If
 
             Catch ex As Exception
-                blnReturn = False
                 gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             End Try
 
-            Return blnReturn
-        End Function
+        End Sub
 
 #End Region
 
 
 #Region "SQL Queries"
 
-        Private Function strGetExpense_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
+        Private Function strGetExpenseList_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
             Dim strSQL As String = vbNullString
 
             strSQL = strSQL & "  SELECT Expense.Exp_ID, " & vbCrLf
@@ -96,10 +100,12 @@
 
             End If
 
+            strSQL = strSQL & "  ORDER BY Expense.Exp_Code " & vbCrLf
+
             Return strSQL
         End Function
 
-        Private Function strGetProducts_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
+        Private Function strGetProductsList_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
             Dim strSQL As String = vbNullString
 
             strSQL = strSQL & "  SELECT Product.Pro_ID, " & vbCrLf
@@ -115,10 +121,12 @@
 
             End If
 
+            strSQL = strSQL & "  ORDER BY Product.Pro_Name " & vbCrLf
+
             Return strSQL
         End Function
 
-        Private Function strGetProductType_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
+        Private Function strGetProductTypeList_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
             Dim strSQL As String = vbNullString
 
             strSQL = strSQL & "  SELECT ProductType.ProT_ID, " & vbCrLf
@@ -129,10 +137,12 @@
 
             End If
 
+            strSQL = strSQL & "  ORDER BY ProductType.ProT_Name " & vbCrLf
+
             Return strSQL
         End Function
 
-        Private Function strGetProductCategory_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
+        Private Function strGetProductCategoryList_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
             Dim strSQL As String = vbNullString
 
             strSQL = strSQL & "  SELECT ProductCategory.ProC_ID, " & vbCrLf
@@ -141,13 +151,15 @@
 
             If vstrWhere <> vbNullString Then
 
-    
+
             End If
+
+            strSQL = strSQL & "  ORDER BY ProductCategory.ProC_Name " & vbCrLf
 
             Return strSQL
         End Function
 
-        Private Function strGetProductBrand_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
+        Private Function strGetProductBrandList_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
             Dim strSQL As String = vbNullString
 
             strSQL = strSQL & "  SELECT ProductBrand.ProB_ID, " & vbCrLf
@@ -157,6 +169,24 @@
             If vstrWhere <> vbNullString Then
 
             End If
+
+            strSQL = strSQL & "  ORDER BY ProductBrand.ProB_Name " & vbCrLf
+
+            Return strSQL
+        End Function
+
+        Private Function strGetCompanyList_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
+            Dim strSQL As String = vbNullString
+
+            strSQL = strSQL & "  SELECT Company.Cy_ID, " & vbCrLf
+            strSQL = strSQL & "         Company.Cy_Name " & vbCrLf
+            strSQL = strSQL & "  FROM Company " & vbCrLf
+
+            If vstrWhere <> vbNullString Then
+
+            End If
+
+            strSQL = strSQL & "  ORDER BY Company.Cy_Name " & vbCrLf
 
             Return strSQL
         End Function

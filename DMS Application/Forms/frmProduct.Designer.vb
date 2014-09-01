@@ -22,6 +22,7 @@ Partial Class frmProduct
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmProduct))
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -30,7 +31,10 @@ Partial Class frmProduct
         Me.cboType = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.gbInfos = New System.Windows.Forms.GroupBox()
+        Me.grdPrices = New System.Windows.Forms.DataGridView()
         Me.myFormControler = New DMS_Application.ctlFormControler()
+        Me.gbInfos.SuspendLayout()
+        CType(Me.grdPrices, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label2
@@ -84,12 +88,31 @@ Partial Class frmProduct
         '
         'gbInfos
         '
+        Me.gbInfos.Controls.Add(Me.grdPrices)
         Me.gbInfos.Location = New System.Drawing.Point(5, 109)
         Me.gbInfos.Name = "gbInfos"
         Me.gbInfos.Size = New System.Drawing.Size(366, 156)
         Me.gbInfos.TabIndex = 14
         Me.gbInfos.TabStop = False
-        Me.gbInfos.Text = "Informations"
+        Me.gbInfos.Text = "Prix"
+        '
+        'grdPrices
+        '
+        Me.grdPrices.AllowUserToAddRows = False
+        Me.grdPrices.AllowUserToOrderColumns = True
+        Me.grdPrices.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised
+        Me.grdPrices.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.grdPrices.EnableHeadersVisualStyles = False
+        Me.grdPrices.Location = New System.Drawing.Point(6, 19)
+        Me.grdPrices.MultiSelect = False
+        Me.grdPrices.Name = "grdPrices"
+        Me.grdPrices.RowHeadersWidth = 10
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.White
+        Me.grdPrices.RowsDefaultCellStyle = DataGridViewCellStyle1
+        Me.grdPrices.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.grdPrices.Size = New System.Drawing.Size(354, 131)
+        Me.grdPrices.TabIndex = 1
+        Me.grdPrices.Tag = "9"
         '
         'myFormControler
         '
@@ -123,6 +146,8 @@ Partial Class frmProduct
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Produit"
+        Me.gbInfos.ResumeLayout(False)
+        CType(Me.grdPrices, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -135,4 +160,5 @@ Partial Class frmProduct
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents gbInfos As System.Windows.Forms.GroupBox
     Public WithEvents myFormControler As DMS_Application.ctlFormControler
+    Friend WithEvents grdPrices As System.Windows.Forms.DataGridView
 End Class

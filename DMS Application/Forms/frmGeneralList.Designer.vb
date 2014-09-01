@@ -60,7 +60,7 @@ Partial Class frmGeneralList
         Me.grdList.RowsDefaultCellStyle = DataGridViewCellStyle1
         Me.grdList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.grdList.Size = New System.Drawing.Size(507, 474)
-        Me.grdList.TabIndex = 3
+        Me.grdList.TabIndex = 0
         Me.grdList.Tag = ""
         '
         'txtFiltre
@@ -76,7 +76,7 @@ Partial Class frmGeneralList
         Me.btnDelete.Location = New System.Drawing.Point(525, 146)
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Size = New System.Drawing.Size(48, 48)
-        Me.btnDelete.TabIndex = 4
+        Me.btnDelete.TabIndex = 3
         Me.ToolTips.SetToolTip(Me.btnDelete, "Supprimer")
         Me.btnDelete.UseVisualStyleBackColor = True
         '
@@ -86,7 +86,7 @@ Partial Class frmGeneralList
         Me.btnUpdate.Location = New System.Drawing.Point(525, 92)
         Me.btnUpdate.Name = "btnUpdate"
         Me.btnUpdate.Size = New System.Drawing.Size(48, 48)
-        Me.btnUpdate.TabIndex = 3
+        Me.btnUpdate.TabIndex = 2
         Me.ToolTips.SetToolTip(Me.btnUpdate, "Modifier")
         Me.btnUpdate.UseVisualStyleBackColor = True
         '
@@ -96,7 +96,7 @@ Partial Class frmGeneralList
         Me.btnAdd.Location = New System.Drawing.Point(525, 38)
         Me.btnAdd.Name = "btnAdd"
         Me.btnAdd.Size = New System.Drawing.Size(48, 48)
-        Me.btnAdd.TabIndex = 2
+        Me.btnAdd.TabIndex = 1
         Me.ToolTips.SetToolTip(Me.btnAdd, "Ajouter")
         Me.btnAdd.UseVisualStyleBackColor = True
         '
@@ -113,7 +113,7 @@ Partial Class frmGeneralList
         Me.myFormManager.Name = "myFormManager"
         Me.myFormManager.ShowButtonQuitOnly = True
         Me.myFormManager.Size = New System.Drawing.Size(85, 33)
-        Me.myFormManager.TabIndex = 5
+        Me.myFormManager.TabIndex = 4
         '
         'frmGeneralList
         '

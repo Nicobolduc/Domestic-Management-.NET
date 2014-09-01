@@ -1,7 +1,17 @@
 ﻿Public Class frmProduct
 
+    'Private members
+    Private mintGrdPrices_Action_col As Short = 0
+    Private mintGrdPrices_Cy_ID_col As Short = 1
+    Private mintGrdPrices_Cy_Name_col As Short = 2
+    Private mintGrdPrices_ProB_ID_col As Short = 3
+    Private mintGrdPrices_ProB_Name_col As Short = 4
+    Private mintGrdPrices_Price_col As Short = 5
+
+
     'Private class members
     Private mcSQL As clsSQL_Transactions
+    Private mcGrdPrices As clsDataGridView
 
 
 #Region "Functions / Subs"
@@ -45,6 +55,33 @@
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Dispose()
             End If
+        End Try
+
+        Return blnReturn
+    End Function
+
+    Private Function blnGrdPrices_Load() As Boolean
+        Dim blnReturn As Boolean
+        Dim strSQL As String = vbNullString
+
+        Try
+            strSQL = strSQL & "  SELECT 0 AS Action, " & vbCrLf
+            strSQL = strSQL & "         Company.Cy_ID, " & vbCrLf
+            strSQL = strSQL & "         Company.Cy_Name, " & vbCrLf
+            strSQL = strSQL & "         ProductBrand.ProB_ID, " & vbCrLf
+            strSQL = strSQL & "         ProductBrand.ProB_Name, " & vbCrLf
+            strSQL = strSQL & "         ProductPrice.ProP_ID " & vbCrLf
+            strSQL = strSQL & "  FROM ProductPrice " & vbCrLf
+            strSQL = strSQL & "     INNER JOIN Company ON Company.Cy_ID = ProductPrice.Cy_ID " & vbCrLf
+            strSQL = strSQL & "     INNER JOIN ProductBrand ON ProductBrand.ProB_ID = ProductPrice.ProB_ID " & vbCrLf
+            strSQL = strSQL & "  WHERE ProductPrice.Pro_ID = " & myFormControler.Item_ID & vbCrLf
+            strSQL = strSQL & "  ORDER BY Company.Cy_name " & vbCrLf
+
+            blnReturn = mcGrdPrices.bln_FillData(strSQL)
+
+        Catch ex As Exception
+            blnReturn = False
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -208,8 +245,12 @@
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
         Dim blnReturn As Boolean
 
+        mcGrdPrices = New clsDataGridView
+
         Select Case False
+            Case mcGrdPrices.bln_Init(grdPrices)
             Case blnCboType_Load()
+            Case blnGrdPrices_Load()
             Case myFormControler.FormMode <> clsConstants.Form_Modes.INSERT
                 blnReturn = True
             Case blnLoadData()
