@@ -1,18 +1,22 @@
 ﻿Module mSQL
 
+#Region "Public functions"
+
     Public Function ADOSelect(ByVal vstrSQL As String) As MySqlDataReader
         Dim mySQLCmd As MySqlCommand = Nothing
         Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
-            mySQLCmd = New MySqlCommand(vstrSQL, gcApp.cMySQLConnection)
+            mySQLCmd = New MySqlCommand(vstrSQL, gcAppControler.MySQLConnection)
 
             mySQLReader = mySQLCmd.ExecuteReader
 
-            mySQLCmd.Dispose()
-
         Catch ex As Exception
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        Finally
+            If Not IsNothing(mySQLCmd) Then
+                mySQLCmd.Dispose()
+            End If
         End Try
 
         Return mySQLReader
@@ -27,20 +31,18 @@
         Try
             strSQL = "SELECT " & vstrField & " FROM " & vstrTable & " WHERE " & vstrWhere
 
-            mySQLCmd = New MySqlCommand(strSQL, gcApp.cMySQLConnection)
+            mySQLCmd = New MySqlCommand(strSQL, gcAppControler.MySQLConnection)
 
             mySQLReader = mySQLCmd.ExecuteReader
 
             If mySQLReader.Read Then
                 strReturnValue = mySQLReader.Item(vstrField).ToString
-            Else
-                'Do nothing
             End If
 
             mySQLCmd.Dispose()
 
         Catch ex As Exception
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Close()
@@ -51,4 +53,6 @@
         Return strReturnValue
     End Function
 
+#End Region
+    
 End Module

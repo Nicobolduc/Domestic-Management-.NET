@@ -86,7 +86,7 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\clsApplication.vb" />
+    <Compile Include="Classes\clsApplicationControler.vb" />
     <Compile Include="Classes\clsConstants.vb" />
     <Compile Include="Classes\clsDataGridView.vb" />
     <Compile Include="Classes\clsErrorsLog.vb" />
@@ -101,16 +101,10 @@
     <Compile Include="Controls\ctlFormControler.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\Form1.Designer.vb">
-      <DependentUpon>Form1.vb</DependentUpon>
+    <Compile Include="Forms\frmProductBrand.Designer.vb">
+      <DependentUpon>frmProductBrand.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form1.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmBrand.Designer.vb">
-      <DependentUpon>frmBrand.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\frmBrand.vb">
+    <Compile Include="Forms\frmProductBrand.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmExpense.Designer.vb">
@@ -180,11 +174,8 @@
     <EmbeddedResource Include="Controls\ctlFormControler.resx">
       <DependentUpon>ctlFormControler.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form1.resx">
-      <DependentUpon>Form1.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmBrand.resx">
-      <DependentUpon>frmBrand.vb</DependentUpon>
+    <EmbeddedResource Include="Forms\frmProductBrand.resx">
+      <DependentUpon>frmProductBrand.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmExpense.resx">
       <DependentUpon>frmExpense.vb</DependentUpon>

@@ -1,15 +1,18 @@
 ﻿Imports MySql.Data.MySqlClient
 
-Public Class clsApplication
+Public Class clsApplicationControler
 
+    'Private class members
     Private mdiGeneral As mdiGeneral
     Private mcMySQLConnection As MySqlConnection
     Private mcErrorsLog As clsErrorsLog
     Private mcUser As clsUser
-
     Private mcStringCleaner As System.Text.RegularExpressions.Regex = New System.Text.RegularExpressions.Regex("'", System.Text.RegularExpressions.RegexOptions.Compiled Or System.Text.RegularExpressions.RegexOptions.CultureInvariant Or System.Text.RegularExpressions.RegexOptions.IgnoreCase)
 
-    Public ReadOnly Property cMySQLConnection As MySqlConnection
+
+#Region "Properties"
+
+    Public ReadOnly Property MySQLConnection As MySqlConnection
         Get
             Return mcMySQLConnection
         End Get
@@ -27,18 +30,22 @@ Public Class clsApplication
         End Get
     End Property
 
-    Public ReadOnly Property getDateFormat As String
+    Public ReadOnly Property str_GetDateFormat As String
         Get
             Return "dd-MMMM-yyyy"
         End Get
     End Property
 
-    Public ReadOnly Property getDateTimeFormat As String
+    Public ReadOnly Property str_GetDateTimeFormat As String
         Get
             Return "dd-MMMM-yyyy hh:mm"
         End Get
     End Property
 
+#End Region
+
+
+#Region "Constructors"
 
     Public Sub New()
 
@@ -50,6 +57,11 @@ Public Class clsApplication
 
         mdiGeneral = New mdiGeneral
     End Sub
+
+#End Region
+
+
+#Region "Functions / Subs"
 
     Private Function blnSetMySQLConnection() As Boolean
         Dim blnReturn As Boolean
@@ -87,7 +99,7 @@ Public Class clsApplication
 
         Catch ex As Exception
             blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -103,7 +115,7 @@ Public Class clsApplication
 
         Catch ex As Exception
             blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return strCaption
@@ -115,24 +127,19 @@ Public Class clsApplication
 
     End Function
 
-    Public Function bln_ShowMessage(ByVal vintCaption_ID As Integer, ByVal vmsgType As MsgBoxStyle) As Boolean
-        Dim blnReturn As Boolean
+    Public Sub ShowMessage(ByVal vintCaption_ID As Integer, ByVal vmsgType As MsgBoxStyle)
         Dim strMessage As String = vbNullString
 
         Try
-            strMessage = gcApp.str_GetCaption(vintCaption_ID, mcUser.GetLanguage)
+            strMessage = gcAppControler.str_GetCaption(vintCaption_ID, mcUser.GetLanguage)
 
             MsgBox(strMessage, vmsgType)
 
-            blnReturn = True
-
         Catch ex As Exception
-            blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
-    End Function
+    End Sub
 
     Public Sub DisableAllControls(Optional ByRef rForm As System.Windows.Forms.Form = Nothing, Optional ByRef rTabPage As TabPage = Nothing, Optional ByRef rControl As Control = Nothing)
         Dim controlCollection As System.Windows.Forms.Control.ControlCollection
@@ -166,8 +173,55 @@ Public Class clsApplication
             Next objControl
 
         Catch ex As Exception
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
+
+    Public Sub ClearAllControls(Optional ByRef rForm As System.Windows.Forms.Form = Nothing, Optional ByRef rTabPage As TabPage = Nothing, Optional ByRef rControl As Control = Nothing)
+        Dim controlCollection As System.Windows.Forms.Control.ControlCollection
+
+        Try
+            If Not rControl Is Nothing Then
+                controlCollection = rControl.Controls
+            Else
+                controlCollection = rForm.Controls
+            End If
+
+            For Each objControl As Control In controlCollection
+
+                Select Case objControl.GetType.Name
+                    Case "TextBox"
+                        objControl.Text = vbNullString
+
+                    Case "CheckBox", "RadioButton"
+                        DirectCast(objControl, CheckBox).Checked = False
+
+                    Case "ComboBox"
+                        DirectCast(objControl, ComboBox).DataSource = Nothing
+                        DirectCast(objControl, ComboBox).Items.Clear()
+
+                    Case "GroupBox"
+                        DisableAllControls(Nothing, Nothing, objControl)
+
+                    Case "TabControl"
+                        For Each tp As TabPage In DirectCast(objControl, TabControl).TabPages
+                            DisableAllControls(Nothing, tp)
+                        Next
+
+                    Case Else
+                        'Do Nothing
+
+                End Select
+
+            Next objControl
+
+        Catch ex As Exception
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+    End Sub
+
+#End Region
+
 End Class

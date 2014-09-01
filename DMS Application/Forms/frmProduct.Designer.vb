@@ -29,7 +29,6 @@ Partial Class frmProduct
         Me.cboCategory = New System.Windows.Forms.ComboBox()
         Me.cboType = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label5 = New System.Windows.Forms.Label()
         Me.gbInfos = New System.Windows.Forms.GroupBox()
         Me.myFormControler = New DMS_Application.ctlFormControler()
         Me.SuspendLayout()
@@ -83,14 +82,6 @@ Partial Class frmProduct
         Me.Label1.TabIndex = 9
         Me.Label1.Text = "Type:"
         '
-        'Label5
-        '
-        Me.Label5.Location = New System.Drawing.Point(12, 85)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(63, 13)
-        Me.Label5.TabIndex = 12
-        Me.Label5.Text = "Marque:"
-        '
         'gbInfos
         '
         Me.gbInfos.Location = New System.Drawing.Point(5, 109)
@@ -118,7 +109,6 @@ Partial Class frmProduct
         Me.ClientSize = New System.Drawing.Size(375, 299)
         Me.Controls.Add(Me.myFormControler)
         Me.Controls.Add(Me.gbInfos)
-        Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.cboType)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.cboCategory)
@@ -143,7 +133,6 @@ Partial Class frmProduct
     Friend WithEvents cboCategory As System.Windows.Forms.ComboBox
     Friend WithEvents cboType As System.Windows.Forms.ComboBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents gbInfos As System.Windows.Forms.GroupBox
     Public WithEvents myFormControler As DMS_Application.ctlFormControler
 End Class

@@ -2,10 +2,14 @@
 
 Public Class clsDataGridView
 
+    'Private class members
     Private grdGrid As DataGridView
 
-
+    'Public events
     Public Event SetDisplay()
+
+
+#Region "Functions / Subs"
 
     Public Function bln_Init(ByRef rgrdGrid As DataGridView) As Boolean
         Dim blnReturn As Boolean = True
@@ -29,7 +33,7 @@ Public Class clsDataGridView
 
         Catch ex As Exception
             blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -44,11 +48,11 @@ Public Class clsDataGridView
         Dim lstColumns As String()
 
         Try
-            strGridCaption = gcApp.str_GetCaption(CInt(grdGrid.Tag), 1)
+            strGridCaption = gcAppControler.str_GetCaption(CInt(grdGrid.Tag), 1)
 
             lstColumns = Split(strGridCaption, "|")
 
-            sqlCmd = New MySqlCommand(vstrSQL, gcApp.cMySQLConnection)
+            sqlCmd = New MySqlCommand(vstrSQL, gcAppControler.MySQLConnection)
 
             mySQLReader = sqlCmd.ExecuteReader
 
@@ -84,7 +88,7 @@ Public Class clsDataGridView
 
         Catch ex As Exception
             blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Close()
@@ -95,5 +99,6 @@ Public Class clsDataGridView
         Return blnReturn
     End Function
 
+#End Region
 
 End Class

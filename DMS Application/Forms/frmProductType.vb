@@ -1,6 +1,42 @@
-﻿Public Class frmProductType
+﻿Public Class frmBrandProto
 
+    'Private class members
     Private mcSQL As clsSQL_Transactions
+
+
+#Region "Functions / Subs"
+
+    Private Function blnLoadData() As Boolean
+        Dim blnReturn As Boolean
+        Dim strSQL As String = vbNullString
+        Dim mySQLReader As MySqlDataReader = Nothing
+
+        Try
+            strSQL = strSQL & " SELECT ProductType.ProT_Name " & vbCrLf
+            strSQL = strSQL & " FROM ProductType " & vbCrLf
+            strSQL = strSQL & " WHERE ProductType.ProT_ID = " & myFormControler.Item_ID & vbCrLf
+
+            mySQLReader = mSQL.ADOSelect(strSQL)
+
+            While mySQLReader.Read
+
+                txtName.Text = mySQLReader.Item("ProT_Name").ToString
+            End While
+
+            blnReturn = True
+
+        Catch ex As Exception
+            blnReturn = False
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        Finally
+            If Not IsNothing(mySQLReader) Then
+                mySQLReader.Close()
+                mySQLReader.Dispose()
+            End If
+        End Try
+
+        Return blnReturn
+    End Function
 
     Private Function blnSaveData() As Boolean
         Dim blnReturn As Boolean
@@ -24,7 +60,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mcSQL.bln_EndTransaction(blnReturn)
             mcSQL = Nothing
@@ -47,7 +83,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -66,7 +102,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -84,20 +120,16 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
     End Function
 
-    Private Sub ChangeMade()
-        Select Case False
-            Case Not myFormControler.FormIsLoading
-            Case Else
-                myFormControler.ChangeMade = True
+#End Region
 
-        End Select
-    End Sub
+
+#Region "Private events"
 
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
         Dim blnReturn As Boolean
@@ -112,39 +144,6 @@
 
     End Sub
 
-    Private Function blnLoadData() As Boolean
-        Dim blnReturn As Boolean
-        Dim strSQL As String = vbNullString
-        Dim mySQLReader As MySqlDataReader = Nothing
-
-        Try
-            strSQL = strSQL & " SELECT ProductType.ProT_Name, " & vbCrLf
-            strSQL = strSQL & "        ProductType.ProT_ID " & vbCrLf
-            strSQL = strSQL & " FROM ProductType " & vbCrLf
-            strSQL = strSQL & " WHERE ProductType.ProT_ID = " & myFormControler.Item_ID & vbCrLf
-
-            mySQLReader = mSQL.ADOSelect(strSQL)
-
-            While mySQLReader.Read
-
-                txtName.Text = mySQLReader.Item("ProT_Name").ToString
-            End While
-
-            blnReturn = True
-
-        Catch ex As Exception
-            blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        Finally
-            If Not IsNothing(mySQLReader) Then
-                mySQLReader.Close()
-                mySQLReader.Dispose()
-            End If
-        End Try
-
-        Return blnReturn
-    End Function
-
     Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles myFormControler.SaveData
         eventArgs.SaveSuccessful = blnSaveData()
     End Sub
@@ -152,7 +151,7 @@
     Private Sub myFormControler_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles myFormControler.ValidateRules
         Select Case False
             Case txtName.Text <> vbNullString
-                gcApp.bln_ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppControler.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtName.Focus()
 
             Case Else
@@ -162,7 +161,9 @@
     End Sub
 
     Private Sub txtName_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtName.TextChanged
-        ChangeMade()
+        myFormControler.ChangeMade = True
     End Sub
+
+#End Region
 
 End Class

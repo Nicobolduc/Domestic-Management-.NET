@@ -1,10 +1,11 @@
 ﻿Public Class frmManageBudget
 
-
+    'Private class members
     Private WithEvents mcGridBudget As clsDataGridView
     Private WithEvents mcSQL As clsSQL_Transactions
 
 
+#Region "Functions / Subs"
 
     Private Function blnLoadData() As Boolean
         Dim blnReturn As Boolean = True
@@ -14,6 +15,11 @@
 
         Return blnReturn
     End Function
+
+#End Region
+   
+
+#Region "Private events"
 
     Private Sub frmGestionBudget_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         mcGridBudget = New clsDataGridView
@@ -28,7 +34,7 @@
             End Select
 
         Catch ex As Exception
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -57,38 +63,32 @@
 
     Private Sub rbtnHedo_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnHebdo.CheckedChanged
         If rbtnHebdo.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcApp.getDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppControler.str_GetDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Day, 7, dtpFrom.Value)
-        Else
-            'Do nothing
         End If
     End Sub
 
     Private Sub rbtnBiMensuel_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnBiMensuel.CheckedChanged
         If rbtnBiMensuel.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcApp.getDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppControler.str_GetDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Day, 14, dtpFrom.Value)
-        Else
-            'Do nothing
         End If
     End Sub
 
     Private Sub rbtnMensuelle_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnMensuelle.CheckedChanged
         If rbtnMensuelle.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcApp.getDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppControler.str_GetDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Month, 1, dtpFrom.Value)
-        Else
-            'Do nothing
         End If
     End Sub
 
     Private Sub rbtnDeuxMois_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnDeuxMois.CheckedChanged
         If rbtnDeuxMois.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcApp.getDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppControler.str_GetDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Month, 2, dtpFrom.Value)
-        Else
-            'Do nothing
         End If
     End Sub
 
+#End Region
+    
 End Class

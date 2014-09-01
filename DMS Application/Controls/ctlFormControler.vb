@@ -22,6 +22,7 @@ Public Class ctlFormControler
     Public Event ValidateRules(ByVal eventArgs As ValidateRulesEventArgs)
     Public Event SaveData(ByVal eventArgs As SaveDataEventArgs)
 
+
 #Region "Properties"
 
     <Browsable(False)>
@@ -47,7 +48,11 @@ Public Class ctlFormControler
 
     Public WriteOnly Property ChangeMade As Boolean
         Set(ByVal value As Boolean)
-            mblnChangeMade = value
+            If Not FormIsLoading Then
+                mblnChangeMade = value
+            Else
+                mblnChangeMade = False
+            End If
 
             SetButtonsReadRights()
         End Set
@@ -71,6 +76,7 @@ Public Class ctlFormControler
         End Set
     End Property
 
+    <Browsable(True)>
     Public Property ShowButtonQuitOnly As Boolean
         Get
             Return mblnShowButtonQuitOnly
@@ -85,19 +91,19 @@ Public Class ctlFormControler
 #End Region
 
 
+#Region "Functions / Subs"
 
-    Public Function bln_ShowForm(ByVal vintFormMode As clsConstants.Form_Modes, Optional ByVal vintItem_ID As Integer = 0, Optional ByVal vblnIsModal As Boolean = False) As Boolean
-        Dim blnReturn As Boolean
+    Public Sub ShowForm(ByVal vintFormMode As clsConstants.Form_Modes, Optional ByRef rintItem_ID As Integer = 0, Optional ByVal vblnIsModal As Boolean = False)
 
         mintFormMode = vintFormMode
-        mintItem_ID = vintItem_ID
+        mintItem_ID = rintItem_ID
 
         Try
             mfrmParent = MyBase.FindForm()
 
             SetButtonsReadRights()
 
-            LoadFormData
+            LoadFormData()
 
             If Not vblnIsModal Then
                 mfrmParent.MdiParent = My.Forms.mdiGeneral
@@ -109,13 +115,13 @@ Public Class ctlFormControler
                 mfrmParent.ShowDialog()
             End If
 
+            rintItem_ID = mintItem_ID
+
         Catch ex As Exception
-            blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
-    End Function
+    End Sub
 
     Private Sub SetButtonsReadRights()
         Select Case mintFormMode
@@ -180,6 +186,11 @@ Public Class ctlFormControler
         Me.Dispose()
     End Sub
 
+#End Region
+
+
+#Region "Privates events"
+
     Private Sub btnApply_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnApply.Click
         Dim saveEvent As New SaveDataEventArgs
         Dim validationEvent As New ValidateRulesEventArgs
@@ -209,16 +220,16 @@ Public Class ctlFormControler
 
                 End Select
             Else
-                gcApp.bln_ShowMessage(clsConstants.Error_Messages.ERROR_SAVE_MSG, MsgBoxStyle.Critical)
+                gcAppControler.ShowMessage(clsConstants.Error_Messages.ERROR_SAVE_MSG, MsgBoxStyle.Critical)
             End If
-        Else
-            'Do nothing
+
         End If
 
         Me.Cursor = Cursors.Default
     End Sub
 
     Private Sub btnCancel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCancel.Click
+        gcAppControler.ClearAllControls(mfrmParent)
         LoadFormData()
     End Sub
 
@@ -231,4 +242,6 @@ Public Class ctlFormControler
         SetControlsVisility()
     End Sub
 
+#End Region
+    
 End Class

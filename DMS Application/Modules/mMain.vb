@@ -1,12 +1,12 @@
 ﻿Module mMain
 
 
-    Public gcApp As clsApplication
+    Public gcAppControler As clsApplicationControler
 
 
     Sub main()
 
-        gcApp = New clsApplication
+        gcAppControler = New clsApplicationControler
 
     End Sub
 

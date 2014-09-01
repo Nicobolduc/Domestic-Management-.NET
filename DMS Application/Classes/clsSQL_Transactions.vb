@@ -2,7 +2,7 @@
 
 Public Class clsSQL_Transactions
 
-
+    'Private members
     Private mblnTransactionStarted As Boolean
 
     Private mMySQLCmd As MySqlCommand
@@ -11,12 +11,18 @@ Public Class clsSQL_Transactions
     Private mColFields As Dictionary(Of String, String)
 
 
+#Region "Properties"
+
     Public ReadOnly Property blnTransactionStarted As Boolean
         Get
             Return mblnTransactionStarted
         End Get
     End Property
 
+#End Region
+
+
+#Region "Constructor"
 
     Public Sub New()
         mMySQLCmd = New MySqlCommand
@@ -24,21 +30,26 @@ Public Class clsSQL_Transactions
         mColFields = New Dictionary(Of String, String)
     End Sub
 
+#End Region
+    
+
+#Region "Functions / Subs"
+
     Public Function bln_BeginTransaction() As Boolean
         Dim blnReturn As Boolean
 
         Try
-            mMySQLTransaction = gcApp.cMySQLConnection.BeginTransaction(IsolationLevel.ReadCommitted)
+            mMySQLTransaction = gcAppControler.MySQLConnection.BeginTransaction(IsolationLevel.ReadCommitted)
             mblnTransactionStarted = True
             mMySQLCmd.Transaction = mMySQLTransaction
-            mMySQLCmd.Connection = gcApp.cMySQLConnection
+            mMySQLCmd.Connection = gcAppControler.MySQLConnection
             mMySQLCmd.CommandType = CommandType.Text
 
             blnReturn = True
 
         Catch ex As Exception
             blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -58,7 +69,7 @@ Public Class clsSQL_Transactions
 
         Catch ex As Exception
             blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mblnTransactionStarted = False
             mMySQLTransaction.Dispose()
@@ -75,7 +86,7 @@ Public Class clsSQL_Transactions
 
             Select Case vintDBType
                 Case clsConstants.MySQL_FieldTypes.VARCHAR_TYPE, clsConstants.MySQL_FieldTypes.DATETIME_TYPE
-                    vstrValue = gcApp.str_FixStringForSQL(vstrValue)
+                    vstrValue = gcAppControler.str_FixStringForSQL(vstrValue)
 
                 Case clsConstants.MySQL_FieldTypes.INT_TYPE
                     If vstrValue = vbNullString Or vstrValue = "0" Then
@@ -90,7 +101,7 @@ Public Class clsSQL_Transactions
 
         Catch ex As Exception
             blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -127,7 +138,7 @@ Public Class clsSQL_Transactions
 
         Catch ex As Exception
             blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -156,7 +167,7 @@ Public Class clsSQL_Transactions
 
         Catch ex As Exception
             blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mColFields.Clear()
         End Try
@@ -179,10 +190,12 @@ Public Class clsSQL_Transactions
 
         Catch ex As Exception
             blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
     End Function
+
+#End Region
 
 End Class

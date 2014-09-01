@@ -34,18 +34,20 @@ Partial Class mdiGeneral
         Me.mnuiProducts = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiProductType = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiProductCategory = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuiBrand = New System.Windows.Forms.ToolStripMenuItem()
         Me.statusBar = New System.Windows.Forms.StatusStrip()
         Me.lblStatusUser = New System.Windows.Forms.ToolStripStatusLabel()
         Me.lblStatusBD = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.mnuWindows = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMain.SuspendLayout()
         Me.statusBar.SuspendLayout()
         Me.SuspendLayout()
         '
         'mnuMain
         '
-        Me.mnuMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnUsager, Me.mnuGestion, Me.mnuFacturation, Me.mnuProduit})
+        Me.mnuMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnUsager, Me.mnuGestion, Me.mnuFacturation, Me.mnuProduit, Me.mnuWindows})
         Me.mnuMain.Location = New System.Drawing.Point(0, 0)
-        Me.mnuMain.MdiWindowListItem = Me.mnuGestion
+        Me.mnuMain.MdiWindowListItem = Me.mnuWindows
         Me.mnuMain.Name = "mnuMain"
         Me.mnuMain.Size = New System.Drawing.Size(1008, 24)
         Me.mnuMain.TabIndex = 0
@@ -74,7 +76,7 @@ Partial Class mdiGeneral
         'mnuiBudget
         '
         Me.mnuiBudget.Name = "mnuiBudget"
-        Me.mnuiBudget.Size = New System.Drawing.Size(112, 22)
+        Me.mnuiBudget.Size = New System.Drawing.Size(152, 22)
         Me.mnuiBudget.Text = "Budget"
         '
         'mnuFacturation
@@ -92,7 +94,7 @@ Partial Class mdiGeneral
         '
         'mnuProduit
         '
-        Me.mnuProduit.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuiProducts, Me.mnuiProductType, Me.mnuiProductCategory})
+        Me.mnuProduit.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuiProducts, Me.mnuiProductType, Me.mnuiProductCategory, Me.mnuiBrand})
         Me.mnuProduit.Name = "mnuProduit"
         Me.mnuProduit.Size = New System.Drawing.Size(58, 20)
         Me.mnuProduit.Text = "Produit"
@@ -101,7 +103,7 @@ Partial Class mdiGeneral
         '
         Me.mnuiProducts.Name = "mnuiProducts"
         Me.mnuiProducts.Size = New System.Drawing.Size(179, 22)
-        Me.mnuiProducts.Text = "Produits"
+        Me.mnuiProducts.Text = "Produit"
         '
         'mnuiProductType
         '
@@ -114,6 +116,12 @@ Partial Class mdiGeneral
         Me.mnuiProductCategory.Name = "mnuiProductCategory"
         Me.mnuiProductCategory.Size = New System.Drawing.Size(179, 22)
         Me.mnuiProductCategory.Text = "Catégorie de poduit"
+        '
+        'mnuiBrand
+        '
+        Me.mnuiBrand.Name = "mnuiBrand"
+        Me.mnuiBrand.Size = New System.Drawing.Size(179, 22)
+        Me.mnuiBrand.Text = "Marque de produit"
         '
         'statusBar
         '
@@ -137,6 +145,12 @@ Partial Class mdiGeneral
         Me.lblStatusBD.Name = "lblStatusBD"
         Me.lblStatusBD.Size = New System.Drawing.Size(25, 17)
         Me.lblStatusBD.Text = "BD:"
+        '
+        'mnuWindows
+        '
+        Me.mnuWindows.Name = "mnuWindows"
+        Me.mnuWindows.Size = New System.Drawing.Size(63, 20)
+        Me.mnuWindows.Text = "Fenêtres"
         '
         'mdiGeneral
         '
@@ -173,4 +187,6 @@ Partial Class mdiGeneral
     Friend WithEvents mnuiOptions As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuiProductType As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuiProductCategory As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mnuiBrand As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mnuWindows As System.Windows.Forms.ToolStripMenuItem
 End Class

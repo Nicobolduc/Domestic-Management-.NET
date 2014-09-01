@@ -2,11 +2,13 @@
 
     Public Module mGeneralList
 
+        'Enums
         Public Enum GeneralLists_ID
-            EXPENSES_ID = 1
-            PRODUCTS_ID = 2
-            PRODUCT_TYPE_ID = 3
-            PRODUCT_CATEGORY_ID = 4
+            EXPENSES_LIST_ID = 1
+            PRODUCTS_LIST_ID = 2
+            PRODUCT_TYPE_LIST_ID = 3
+            PRODUCT_CATEGORY_LIST_ID = 4
+            PRODUCT_BRAND_LIST_ID = 5
         End Enum
 
         Public Enum GeneralList_AppCapID
@@ -14,30 +16,44 @@
             PRODUCTS_CAP = 2
             PRODUCT_TYPE_CAP = 3
             PRODUCT_CATEGORY_CAP = 4
+            PRODUCT_BRAND_CAP = 7
         End Enum
+
+
+#Region "Functions / Subs"
 
         Public Function blnShowGenList(ByVal vList_ID As mGeneralList.GeneralLists_ID) As Boolean
             Dim blnReturn As Boolean
+            Dim strListName As String = vbNullString
             Dim strSQL As String = vbNullString
             Dim frmGenList As New frmGeneralList(vList_ID)
 
             Try
                 Select Case vList_ID
-                    Case mGeneralList.GeneralLists_ID.EXPENSES_ID
+                    Case mGeneralList.GeneralLists_ID.EXPENSES_LIST_ID
                         strSQL = strGetExpense_SQL()
+                        strListName = " - Dépenses"
                         frmGenList.mintGridTag = CStr(GeneralList_AppCapID.EXPENSES_CAP)
 
-                    Case mGeneralList.GeneralLists_ID.PRODUCTS_ID
+                    Case mGeneralList.GeneralLists_ID.PRODUCTS_LIST_ID
                         strSQL = strGetProducts_SQL()
+                        strListName = " - Produits"
                         frmGenList.mintGridTag = CStr(GeneralList_AppCapID.PRODUCTS_CAP)
 
-                    Case mGeneralList.GeneralLists_ID.PRODUCT_TYPE_ID
+                    Case mGeneralList.GeneralLists_ID.PRODUCT_TYPE_LIST_ID
                         strSQL = strGetProductType_SQL()
+                        strListName = " - Types de produit"
                         frmGenList.mintGridTag = CStr(GeneralList_AppCapID.PRODUCT_TYPE_CAP)
 
-                    Case mGeneralList.GeneralLists_ID.PRODUCT_CATEGORY_ID
+                    Case mGeneralList.GeneralLists_ID.PRODUCT_CATEGORY_LIST_ID
                         strSQL = strGetProductCategory_SQL()
+                        strListName = " - Catégories de produit"
                         frmGenList.mintGridTag = CStr(GeneralList_AppCapID.PRODUCT_CATEGORY_CAP)
+
+                    Case mGeneralList.GeneralLists_ID.PRODUCT_BRAND_LIST_ID
+                        strSQL = strGetProductBrand_SQL()
+                        strListName = " - Marques de produit"
+                        frmGenList.mintGridTag = CStr(GeneralList_AppCapID.PRODUCT_BRAND_CAP)
 
                     Case Else
                         'Do nothing
@@ -47,20 +63,22 @@
                 If strSQL <> vbNullString Then
 
                     frmGenList.mstrGridSQL = strSQL
+                    frmGenList.Text = frmGenList.Text & strListName
                     frmGenList.MdiParent = My.Forms.mdiGeneral
 
-                    frmGenList.myFormManager.bln_ShowForm(clsConstants.Form_Modes.LOADED)
-                Else
-                    'Do nothing
+                    frmGenList.myFormManager.ShowForm(clsConstants.Form_Modes.LOADED)
                 End If
 
             Catch ex As Exception
                 blnReturn = False
-                gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             End Try
 
             Return blnReturn
         End Function
+
+#End Region
+
 
 #Region "SQL Queries"
 
@@ -75,8 +93,7 @@
 
             If vstrWhere <> vbNullString Then
 
-            Else
-                'Do nothing
+
             End If
 
             Return strSQL
@@ -95,8 +112,7 @@
 
             If vstrWhere <> vbNullString Then
 
-            Else
-                'Do nothing
+
             End If
 
             Return strSQL
@@ -111,8 +127,6 @@
 
             If vstrWhere <> vbNullString Then
 
-            Else
-                'Do nothing
             End If
 
             Return strSQL
@@ -127,8 +141,21 @@
 
             If vstrWhere <> vbNullString Then
 
-            Else
-                'Do nothing
+    
+            End If
+
+            Return strSQL
+        End Function
+
+        Private Function strGetProductBrand_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
+            Dim strSQL As String = vbNullString
+
+            strSQL = strSQL & "  SELECT ProductBrand.ProB_ID, " & vbCrLf
+            strSQL = strSQL & "         ProductBrand.ProB_Name " & vbCrLf
+            strSQL = strSQL & "  FROM ProductBrand " & vbCrLf
+
+            If vstrWhere <> vbNullString Then
+
             End If
 
             Return strSQL

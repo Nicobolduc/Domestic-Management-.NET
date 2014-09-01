@@ -11,21 +11,17 @@ Module mControlsFunctions
         Try
             rcboToLoad.DataSource = Nothing
 
-            mySQLCmd = New MySqlCommand(vstrSQL, gcApp.cMySQLConnection)
+            mySQLCmd = New MySqlCommand(vstrSQL, gcAppControler.MySQLConnection)
 
             mySQLReader = mySQLCmd.ExecuteReader
 
             If vblnAllowEmpty Then
                 myBindingList.Add(New KeyValuePair(Of Integer, String)(0, ""))
-            Else
-                'Do nothing
             End If
 
             While mySQLReader.Read
                 If Not IsDBNull(mySQLReader(vstrValueMember)) Then
                     myBindingList.Add(New KeyValuePair(Of Integer, String)(CInt(mySQLReader(vstrValueMember)), CStr(mySQLReader(vstrDisplayMember))))
-                Else
-                    'Do nothing
                 End If
             End While
 
@@ -38,7 +34,7 @@ Module mControlsFunctions
 
         Catch ex As Exception
             blnReturn = False
-            gcApp.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Close()
