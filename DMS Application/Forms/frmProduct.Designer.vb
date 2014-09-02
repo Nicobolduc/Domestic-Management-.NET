@@ -22,8 +22,8 @@ Partial Class frmProduct
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmProduct))
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.txtName = New System.Windows.Forms.TextBox()
@@ -31,7 +31,10 @@ Partial Class frmProduct
         Me.cboType = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.gbInfos = New System.Windows.Forms.GroupBox()
+        Me.btnRemoveLine = New System.Windows.Forms.Button()
+        Me.btnAddLine = New System.Windows.Forms.Button()
         Me.grdPrices = New System.Windows.Forms.DataGridView()
+        Me.cboCompany = New System.Windows.Forms.ComboBox()
         Me.myFormControler = New DMS_Application.ctlFormControler()
         Me.gbInfos.SuspendLayout()
         CType(Me.grdPrices, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -88,6 +91,9 @@ Partial Class frmProduct
         '
         'gbInfos
         '
+        Me.gbInfos.Controls.Add(Me.cboCompany)
+        Me.gbInfos.Controls.Add(Me.btnRemoveLine)
+        Me.gbInfos.Controls.Add(Me.btnAddLine)
         Me.gbInfos.Controls.Add(Me.grdPrices)
         Me.gbInfos.Location = New System.Drawing.Point(5, 109)
         Me.gbInfos.Name = "gbInfos"
@@ -96,6 +102,26 @@ Partial Class frmProduct
         Me.gbInfos.TabStop = False
         Me.gbInfos.Text = "Prix"
         '
+        'btnRemoveLine
+        '
+        Me.btnRemoveLine.BackgroundImage = CType(resources.GetObject("btnRemoveLine.BackgroundImage"), System.Drawing.Image)
+        Me.btnRemoveLine.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.btnRemoveLine.Location = New System.Drawing.Point(326, 59)
+        Me.btnRemoveLine.Name = "btnRemoveLine"
+        Me.btnRemoveLine.Size = New System.Drawing.Size(35, 35)
+        Me.btnRemoveLine.TabIndex = 3
+        Me.btnRemoveLine.UseVisualStyleBackColor = True
+        '
+        'btnAddLine
+        '
+        Me.btnAddLine.BackgroundImage = CType(resources.GetObject("btnAddLine.BackgroundImage"), System.Drawing.Image)
+        Me.btnAddLine.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.btnAddLine.Location = New System.Drawing.Point(326, 18)
+        Me.btnAddLine.Name = "btnAddLine"
+        Me.btnAddLine.Size = New System.Drawing.Size(35, 35)
+        Me.btnAddLine.TabIndex = 2
+        Me.btnAddLine.UseVisualStyleBackColor = True
+        '
         'grdPrices
         '
         Me.grdPrices.AllowUserToAddRows = False
@@ -103,21 +129,31 @@ Partial Class frmProduct
         Me.grdPrices.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised
         Me.grdPrices.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.grdPrices.EnableHeadersVisualStyles = False
-        Me.grdPrices.Location = New System.Drawing.Point(6, 19)
+        Me.grdPrices.Location = New System.Drawing.Point(6, 18)
         Me.grdPrices.MultiSelect = False
         Me.grdPrices.Name = "grdPrices"
         Me.grdPrices.RowHeadersWidth = 10
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.White
-        Me.grdPrices.RowsDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle2.BackColor = System.Drawing.Color.White
+        Me.grdPrices.RowsDefaultCellStyle = DataGridViewCellStyle2
         Me.grdPrices.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.grdPrices.Size = New System.Drawing.Size(354, 131)
+        Me.grdPrices.Size = New System.Drawing.Size(316, 131)
         Me.grdPrices.TabIndex = 1
         Me.grdPrices.Tag = "9"
+        '
+        'cboCompany
+        '
+        Me.cboCompany.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboCompany.FormattingEnabled = True
+        Me.cboCompany.Location = New System.Drawing.Point(22, 113)
+        Me.cboCompany.Name = "cboCompany"
+        Me.cboCompany.Size = New System.Drawing.Size(76, 21)
+        Me.cboCompany.TabIndex = 18
+        Me.cboCompany.Visible = False
         '
         'myFormControler
         '
         Me.myFormControler.FormIsLoading = False
-        Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.LOADED
+        Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.CONSULT_MODE
         Me.myFormControler.Item_ID = 0
         Me.myFormControler.Location = New System.Drawing.Point(0, 267)
         Me.myFormControler.Name = "myFormControler"
@@ -129,7 +165,7 @@ Partial Class frmProduct
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(375, 299)
+        Me.ClientSize = New System.Drawing.Size(376, 299)
         Me.Controls.Add(Me.myFormControler)
         Me.Controls.Add(Me.gbInfos)
         Me.Controls.Add(Me.cboType)
@@ -143,7 +179,6 @@ Partial Class frmProduct
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "frmProduct"
-        Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Produit"
         Me.gbInfos.ResumeLayout(False)
@@ -161,4 +196,7 @@ Partial Class frmProduct
     Friend WithEvents gbInfos As System.Windows.Forms.GroupBox
     Public WithEvents myFormControler As DMS_Application.ctlFormControler
     Friend WithEvents grdPrices As System.Windows.Forms.DataGridView
+    Friend WithEvents btnRemoveLine As System.Windows.Forms.Button
+    Friend WithEvents btnAddLine As System.Windows.Forms.Button
+    Friend WithEvents cboCompany As System.Windows.Forms.ComboBox
 End Class

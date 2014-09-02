@@ -30,7 +30,7 @@ Partial Class frmCompany
         'myFormControler
         '
         Me.myFormControler.FormIsLoading = False
-        Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.LOADED
+        Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.CONSULT_MODE
         Me.myFormControler.Item_ID = 0
         Me.myFormControler.Location = New System.Drawing.Point(0, 27)
         Me.myFormControler.Name = "myFormControler"

@@ -67,13 +67,13 @@
             mcSQL.bln_BeginTransaction()
 
             Select Case myFormControler.FormMode
-                Case clsConstants.Form_Modes.INSERT
+                Case clsConstants.Form_Modes.INSERT_MODE
                     blnReturn = blnProductCategory_Insert()
 
-                Case clsConstants.Form_Modes.UPDATE
+                Case clsConstants.Form_Modes.UPDATE_MODE
                     blnReturn = blnProductCategory_Update()
 
-                Case clsConstants.Form_Modes.DELETE
+                Case clsConstants.Form_Modes.DELETE_MODE
                     blnReturn = blnProductCategory_Delete()
 
             End Select
@@ -158,7 +158,7 @@
 
         Select Case False
             Case blnCboType_Load()
-            Case myFormControler.FormMode <> clsConstants.Form_Modes.INSERT
+            Case myFormControler.FormMode <> clsConstants.Form_Modes.INSERT_MODE
                 blnReturn = True
             Case blnLoadData()
             Case Else

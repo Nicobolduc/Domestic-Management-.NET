@@ -63,30 +63,30 @@ Public Class frmGeneralList
             End If
 
             Select Case vFormMode
-                Case clsConstants.Form_Modes.INSERT
+                Case clsConstants.Form_Modes.INSERT_MODE
                     frmToOpen.myFormControler.ShowForm(vFormMode, 0, True)
 
-                Case clsConstants.Form_Modes.UPDATE
+                Case clsConstants.Form_Modes.UPDATE_MODE
                     intSelectedRow = grdList.SelectedRows(0).Index
                     frmToOpen.myFormControler.ShowForm(vFormMode, intItem_ID, True)
 
-                Case clsConstants.Form_Modes.DELETE
+                Case clsConstants.Form_Modes.DELETE_MODE
                     gcAppControler.DisableAllControls(frmToOpen)
                     frmToOpen.myFormControler.ShowForm(vFormMode, intItem_ID, True)
 
             End Select
 
-            myFormManager.LoadFormData()
+            myFormControler.LoadFormData()
 
             Select Case vFormMode
-                Case clsConstants.Form_Modes.INSERT
+                Case clsConstants.Form_Modes.INSERT_MODE
                     For intRowIndex = 0 To grdList.Rows.Count - 1
                         If CInt(grdList.Rows(intRowIndex).Cells.Item(mintItem_ID_col).Value) = intItem_ID Then
                             intSelectedRow = intRowIndex
                         End If
                     Next
 
-                Case clsConstants.Form_Modes.DELETE
+                Case clsConstants.Form_Modes.DELETE_MODE
                     intSelectedRow = 0
 
             End Select
@@ -124,25 +124,19 @@ Public Class frmGeneralList
 
 #Region "Private events"
 
-    Private Sub btnQuit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Me.Dispose()
-        Finalize()
-        Me.Close()
-    End Sub
-
     Private Sub mcGrid_SetDisplay() Handles mcGrdList.SetDisplay
 
         grdList.ReadOnly = True
 
         grdList.Columns(grdList.Columns.Count - 1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
 
-        grdList.AutoSizeColumnsMode = CType(DataGridViewAutoSizeColumnMode.Fill, DataGridViewAutoSizeColumnsMode)
+        grdList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnMode.Fill
     End Sub
 
     Private Sub btnAdd_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAdd.Click
 
         Try
-            blnOpenForm(clsConstants.Form_Modes.INSERT)
+            blnOpenForm(clsConstants.Form_Modes.INSERT_MODE)
 
         Catch ex As Exception
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
@@ -153,7 +147,7 @@ Public Class frmGeneralList
 
         Try
             If grdList.Rows.Count > 0 Then
-                blnOpenForm(clsConstants.Form_Modes.UPDATE)
+                blnOpenForm(clsConstants.Form_Modes.UPDATE_MODE)
             End If
 
         Catch ex As Exception
@@ -167,7 +161,7 @@ Public Class frmGeneralList
 
         Try
             If grdList.Rows.Count > 0 Then
-                blnOpenForm(clsConstants.Form_Modes.DELETE)
+                blnOpenForm(clsConstants.Form_Modes.DELETE_MODE)
             End If
 
         Catch ex As Exception
@@ -178,17 +172,17 @@ Public Class frmGeneralList
 
     Private Sub grdList_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdList.DoubleClick
         If grdList.Rows.Count > 0 And grdList.SelectedRows.Count > 0 Then
-            blnOpenForm(clsConstants.Form_Modes.UPDATE)
+            blnOpenForm(clsConstants.Form_Modes.UPDATE_MODE)
         End If
     End Sub
 
     Private Sub grdList_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles grdList.KeyPress
         If grdList.Rows.Count > 0 And grdList.SelectedRows.Count > 0 And e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
-            blnOpenForm(clsConstants.Form_Modes.UPDATE)
+            blnOpenForm(clsConstants.Form_Modes.UPDATE_MODE)
         End If
     End Sub
 
-    Private Sub myFormManager_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormManager.LoadData
+    Private Sub myFormManager_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
         Dim blnReturn As Boolean
 
         mcGrdList = New clsDataGridView
@@ -210,7 +204,4 @@ Public Class frmGeneralList
 
 #End Region
     
-    Protected Overrides Sub Finalize()
-        MyBase.Finalize()
-    End Sub
 End Class

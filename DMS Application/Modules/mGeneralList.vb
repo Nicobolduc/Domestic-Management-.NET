@@ -72,7 +72,7 @@
                     frmGenList.Text = frmGenList.Text & strListName
                     frmGenList.MdiParent = My.Forms.mdiGeneral
 
-                    frmGenList.myFormManager.ShowForm(clsConstants.Form_Modes.LOADED)
+                    frmGenList.myFormControler.ShowForm(clsConstants.Form_Modes.CONSULT_MODE)
                 End If
 
             Catch ex As Exception

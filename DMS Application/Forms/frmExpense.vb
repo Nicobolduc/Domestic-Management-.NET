@@ -69,13 +69,13 @@
             mcSQL.bln_BeginTransaction()
 
             Select Case myFormControler.FormMode
-                Case clsConstants.Form_Modes.INSERT
+                Case clsConstants.Form_Modes.INSERT_MODE
                     blnReturn = blnExpense_Insert()
 
-                Case clsConstants.Form_Modes.UPDATE
+                Case clsConstants.Form_Modes.UPDATE_MODE
                     blnReturn = blnExense_Update()
 
-                Case clsConstants.Form_Modes.DELETE
+                Case clsConstants.Form_Modes.DELETE_MODE
                     blnReturn = blnExpense_Delete()
 
             End Select
@@ -160,7 +160,7 @@
 
         Select Case False
             Case blnCboInterval_Load()
-            Case myFormControler.FormMode <> clsConstants.Form_Modes.INSERT
+            Case myFormControler.FormMode <> clsConstants.Form_Modes.INSERT_MODE
                 blnReturn = True
             Case blnLoadData()
             Case Else

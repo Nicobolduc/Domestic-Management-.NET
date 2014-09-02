@@ -125,18 +125,18 @@ Public Class ctlFormControler
 
     Private Sub SetButtonsReadRights()
         Select Case mintFormMode
-            Case clsConstants.Form_Modes.INSERT
+            Case clsConstants.Form_Modes.INSERT_MODE
                 btnApply.Text = "Enregistrer"
                 imgFormMode.Image = My.Resources.Add
 
-            Case clsConstants.Form_Modes.UPDATE
+            Case clsConstants.Form_Modes.UPDATE_MODE
                 btnApply.Text = "Appliquer"
                 imgFormMode.Image = My.Resources.Update
 
         End Select
 
         Select Case mintFormMode
-            Case clsConstants.Form_Modes.INSERT, clsConstants.Form_Modes.UPDATE
+            Case clsConstants.Form_Modes.INSERT_MODE, clsConstants.Form_Modes.UPDATE_MODE
                 If mblnChangeMade Then
                     btnApply.Enabled = True
                     btnCancel.Enabled = True
@@ -147,7 +147,7 @@ Public Class ctlFormControler
                     btnQuit.Enabled = True
                 End If
 
-            Case clsConstants.Form_Modes.DELETE
+            Case clsConstants.Form_Modes.DELETE_MODE
                 btnApply.Enabled = True
                 btnCancel.Enabled = False
                 btnQuit.Enabled = True
@@ -208,14 +208,14 @@ Public Class ctlFormControler
                 ChangeMade = False
 
                 Select Case mintFormMode
-                    Case clsConstants.Form_Modes.INSERT
-                        FormMode = clsConstants.Form_Modes.UPDATE
+                    Case clsConstants.Form_Modes.INSERT_MODE
+                        FormMode = clsConstants.Form_Modes.UPDATE_MODE
                         LoadFormData()
 
-                    Case clsConstants.Form_Modes.UPDATE
+                    Case clsConstants.Form_Modes.UPDATE_MODE
                         LoadFormData()
 
-                    Case clsConstants.Form_Modes.DELETE
+                    Case clsConstants.Form_Modes.DELETE_MODE
                         mfrmParent.Close()
 
                 End Select

@@ -32,7 +32,7 @@ Partial Class frmGeneralList
         Me.btnUpdate = New System.Windows.Forms.Button()
         Me.btnAdd = New System.Windows.Forms.Button()
         Me.ToolTips = New System.Windows.Forms.ToolTip(Me.components)
-        Me.myFormManager = New DMS_Application.ctlFormControler()
+        Me.myFormControler = New DMS_Application.ctlFormControler()
         CType(Me.grdList, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -104,23 +104,23 @@ Partial Class frmGeneralList
         '
         Me.ToolTips.IsBalloon = True
         '
-        'myFormManager
+        'myFormControler
         '
-        Me.myFormManager.FormIsLoading = False
-        Me.myFormManager.FormMode = DMS_Application.clsConstants.Form_Modes.LOADED
-        Me.myFormManager.Item_ID = 0
-        Me.myFormManager.Location = New System.Drawing.Point(494, 513)
-        Me.myFormManager.Name = "myFormManager"
-        Me.myFormManager.ShowButtonQuitOnly = True
-        Me.myFormManager.Size = New System.Drawing.Size(85, 33)
-        Me.myFormManager.TabIndex = 4
+        Me.myFormControler.FormIsLoading = False
+        Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.CONSULT_MODE
+        Me.myFormControler.Item_ID = 0
+        Me.myFormControler.Location = New System.Drawing.Point(494, 515)
+        Me.myFormControler.Name = "myFormControler"
+        Me.myFormControler.ShowButtonQuitOnly = True
+        Me.myFormControler.Size = New System.Drawing.Size(85, 33)
+        Me.myFormControler.TabIndex = 4
         '
         'frmGeneralList
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(579, 546)
-        Me.Controls.Add(Me.myFormManager)
+        Me.Controls.Add(Me.myFormControler)
         Me.Controls.Add(Me.btnAdd)
         Me.Controls.Add(Me.btnUpdate)
         Me.Controls.Add(Me.btnDelete)
@@ -144,5 +144,5 @@ Partial Class frmGeneralList
     Friend WithEvents btnUpdate As System.Windows.Forms.Button
     Friend WithEvents btnAdd As System.Windows.Forms.Button
     Friend WithEvents ToolTips As System.Windows.Forms.ToolTip
-    Public WithEvents myFormManager As DMS_Application.ctlFormControler
+    Public WithEvents myFormControler As DMS_Application.ctlFormControler
 End Class

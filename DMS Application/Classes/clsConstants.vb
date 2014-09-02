@@ -17,10 +17,10 @@
     End Enum
 
     Public Enum Form_Modes
-        LOADED = 0
-        INSERT = 1
-        UPDATE = 2
-        DELETE = 3
+        CONSULT_MODE = 0
+        INSERT_MODE = 1
+        UPDATE_MODE = 2
+        DELETE_MODE = 3
     End Enum
 
     Public Enum Error_Messages

@@ -11,7 +11,7 @@
 
     'Private class members
     Private mcSQL As clsSQL_Transactions
-    Private mcGrdPrices As clsDataGridView
+    Private WithEvents mcGrdPrices As clsDataGridView
 
 
 #Region "Functions / Subs"
@@ -65,7 +65,7 @@
         Dim strSQL As String = vbNullString
 
         Try
-            strSQL = strSQL & "  SELECT 0 AS Action, " & vbCrLf
+            strSQL = strSQL & "  SELECT " & clsDataGridView.GridRowActions.CONSULT_ACTION & " AS Action, " & vbCrLf
             strSQL = strSQL & "         Company.Cy_ID, " & vbCrLf
             strSQL = strSQL & "         Company.Cy_Name, " & vbCrLf
             strSQL = strSQL & "         ProductBrand.ProB_ID, " & vbCrLf
@@ -141,13 +141,13 @@
             mcSQL.bln_BeginTransaction()
 
             Select Case myFormControler.FormMode
-                Case clsConstants.Form_Modes.INSERT
+                Case clsConstants.Form_Modes.INSERT_MODE
                     blnReturn = blnProduct_Insert()
 
-                Case clsConstants.Form_Modes.UPDATE
+                Case clsConstants.Form_Modes.UPDATE_MODE
                     blnReturn = blnProduct_Update()
 
-                Case clsConstants.Form_Modes.DELETE
+                Case clsConstants.Form_Modes.DELETE_MODE
                     blnReturn = blnProduct_Delete()
 
             End Select
@@ -172,6 +172,7 @@
                 Case mcSQL.bln_AddField("ProT_ID", CStr(cboType.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
                 Case mcSQL.bln_AddField("ProC_ID", CStr(cboCategory.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
                 Case mcSQL.bln_ADOInsert("Product", myFormControler.Item_ID)
+                Case myFormControler.Item_ID > 0
                 Case Else
                     blnReturn = True
             End Select
@@ -223,6 +224,57 @@
         Return blnReturn
     End Function
 
+    Private Function blnGrdPrices_SaveData() As Boolean
+        Dim blnReturn As Boolean
+        Dim intRowCpt As Integer
+
+        Try
+            For intRowCpt = 0 To grdPrices.Rows.Count - 1
+
+                Select Case CInt(grdPrices.Rows(intRowCpt).Cells(mintGrdPrices_Action_col).Value)
+                    Case clsDataGridView.GridRowActions.INSERT_ACTION
+                        blnReturn = blnProductPrice_Insert(intRowCpt)
+
+                    Case clsDataGridView.GridRowActions.UPDATE_ACTION
+
+
+                    Case clsDataGridView.GridRowActions.DELETE_ACTION
+
+
+                End Select
+            Next
+
+        Catch ex As Exception
+            blnReturn = False
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnReturn
+
+    End Function
+
+    Private Function blnProductPrice_Insert(ByVal intRowIndex As Integer) As Boolean
+        Dim blnReturn As Boolean
+
+        Try
+            Select Case False
+                Case mcSQL.bln_AddField("Cy_ID", grdPrices.Rows(intRowIndex).Cells(mintGrdPrices_Cy_ID_col).Value.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("ProB_ID", grdPrices.Rows(intRowIndex).Cells(mintGrdPrices_ProB_ID_col).Value.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Pro_ID", myFormControler.Item_ID.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_ADOInsert("ProductPrice", myFormControler.Item_ID)
+                Case myFormControler.Item_ID > 0
+                Case Else
+                    blnReturn = True
+            End Select
+
+        Catch ex As Exception
+            blnReturn = False
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnReturn
+    End Function
+
 #End Region
 
 
@@ -251,7 +303,7 @@
             Case mcGrdPrices.bln_Init(grdPrices)
             Case blnCboType_Load()
             Case blnGrdPrices_Load()
-            Case myFormControler.FormMode <> clsConstants.Form_Modes.INSERT
+            Case myFormControler.FormMode <> clsConstants.Form_Modes.INSERT_MODE
                 blnReturn = True
             Case blnLoadData()
             Case Else
@@ -278,11 +330,10 @@
 
     Private Sub myFormControler_SetReadRights() Handles myFormControler.SetReadRights
         Select Case myFormControler.FormMode
-            Case clsConstants.Form_Modes.INSERT
+            Case clsConstants.Form_Modes.INSERT_MODE
                 cboCategory.Enabled = False
 
         End Select
-
     End Sub
 
     Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles myFormControler.SaveData
@@ -311,6 +362,39 @@
         End Select
     End Sub
 
+    Private Sub btnAddLine_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAddLine.Click
+        mcGrdPrices.AddLine()
+        grdPrices.Rows(0).Cells(mintGrdPrices_Price_col).ValueType = GetType(Double)
+    End Sub
+
+    Private Sub btnRemoveLine_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnRemoveLine.Click
+        mcGrdPrices.RemoveLine()
+    End Sub
+
+    Private Sub mcGrdPrices_SetDisplay() Handles mcGrdPrices.SetDisplay
+
+        grdPrices.AutoGenerateColumns = False
+        grdPrices.DataSource = Nothing
+        grdPrices.AutoSizeColumnsMode = CType(DataGridViewAutoSizeColumnMode.Fill, DataGridViewAutoSizeColumnsMode)
+
+    End Sub
+
+    Private Sub grdPrices_CellFormatting(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellFormattingEventArgs) Handles grdPrices.CellFormatting
+        grdPrices.Columns(mintGrdPrices_Price_col).DefaultCellStyle.Format = gstrCurrencyFormat
+    End Sub
+
 #End Region
     
+    
+    Private Sub grdPrices_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdPrices.DoubleClick
+        Dim cellRectangle As Rectangle
+
+        cellRectangle = grdPrices.GetCellDisplayRectangle(5, grdPrices.Rows(0).Index, True)
+     
+        cboCompany.Location = New Point(cellRectangle.Location.X + 6, cellRectangle.Location.Y + (cellRectangle.Size.Height - 4))
+
+        cboCompany.Size = cellRectangle.Size
+
+        cboCompany.Visible = True
+    End Sub
 End Class

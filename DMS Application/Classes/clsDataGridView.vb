@@ -7,11 +7,22 @@ Public Class clsDataGridView
 
     'Public events
     Public Event SetDisplay()
+    Public Event SaveGridData()
+    'Public Event AddLineButtonClick()
+    'Public Event RemoveLineButtonClick()
+
+    'Public enum
+    Public Enum GridRowActions
+        CONSULT_ACTION = 0
+        INSERT_ACTION = 1
+        UPDATE_ACTION = 2
+        DELETE_ACTION = 3
+    End Enum
 
 
 #Region "Functions / Subs"
 
-    Public Function bln_Init(ByRef rgrdGrid As DataGridView) As Boolean
+    Public Function bln_Init(ByRef rgrdGrid As DataGridView, Optional ByRef rbtnAddLine As Button = Nothing, Optional ByRef rbtnRemoveLine As Button = Nothing) As Boolean
         Dim blnReturn As Boolean = True
         Dim columnsHeaderStyle As New DataGridViewCellStyle
         Dim rowsHeaderStyle As New DataGridViewCellStyle
@@ -98,6 +109,50 @@ Public Class clsDataGridView
 
         Return blnReturn
     End Function
+
+    Public Sub AddLine()
+
+        Try
+            grdGrid.Rows.Add()
+
+            grdGrid.Rows(grdGrid.Rows.Count - 1).Selected = True
+
+            grdGrid.Rows(grdGrid.Rows.Count - 1).DefaultCellStyle.BackColor = Color.LightGreen
+
+            grdGrid.Rows(grdGrid.Rows.Count - 1).Cells(0).Value = GridRowActions.INSERT_ACTION
+
+        Catch ex As Exception
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+    End Sub
+
+    Public Sub RemoveLine()
+        Dim intSelectedRow As Integer
+
+        Try
+            If grdGrid.Rows.Count > 0 Then
+
+                intSelectedRow = grdGrid.SelectedRows(0).Index
+
+                If CInt(grdGrid.Rows(intSelectedRow).Cells(0).Value) = GridRowActions.INSERT_ACTION Then
+                    grdGrid.Rows.RemoveAt(intSelectedRow)
+
+                    If grdGrid.Rows.Count > 0 Then
+                        grdGrid.Rows(intSelectedRow - 1).Selected = True
+                    End If
+                Else
+                    grdGrid.Rows(intSelectedRow).DefaultCellStyle.BackColor = Color.Red
+
+                    grdGrid.Rows(intSelectedRow).Cells(0).Value = GridRowActions.DELETE_ACTION
+                End If
+            End If
+
+        Catch ex As Exception
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+    End Sub
 
 #End Region
 

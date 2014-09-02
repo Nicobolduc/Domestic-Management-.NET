@@ -3,6 +3,7 @@
 
     Public gcAppControler As clsApplicationControler
 
+    Public gstrCurrencyFormat As String = "##,#.00$"
 
     Sub main()
 
