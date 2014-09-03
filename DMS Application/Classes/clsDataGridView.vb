@@ -3,7 +3,7 @@
 Public Class clsDataGridView
 
     'Private class members
-    Private grdGrid As DataGridView
+    Private WithEvents grdGrid As DataGridView
 
     'Public events
     Public Event SetDisplay()
@@ -25,13 +25,13 @@ Public Class clsDataGridView
     Public Function bln_Init(ByRef rgrdGrid As DataGridView, Optional ByRef rbtnAddLine As Button = Nothing, Optional ByRef rbtnRemoveLine As Button = Nothing) As Boolean
         Dim blnReturn As Boolean = True
         Dim columnsHeaderStyle As New DataGridViewCellStyle
-        Dim rowsHeaderStyle As New DataGridViewCellStyle
 
         Try
             grdGrid = rgrdGrid
 
-            rowsHeaderStyle.BackColor = Color.Lime
-            grdGrid.RowHeadersDefaultCellStyle = rowsHeaderStyle
+            grdGrid.AutoGenerateColumns = False
+            grdGrid.RowHeadersDefaultCellStyle.BackColor = SystemColors.Control
+            grdGrid.RowHeadersDefaultCellStyle.SelectionBackColor = SystemColors.Control
             grdGrid.RowHeadersWidth = 8
             grdGrid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing
 
@@ -40,7 +40,6 @@ Public Class clsDataGridView
             grdGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing
 
             grdGrid.AllowUserToResizeRows = False
-            grdGrid.DefaultCellStyle.SelectionBackColor = Color.LightSteelBlue
 
         Catch ex As Exception
             blnReturn = False
@@ -57,8 +56,13 @@ Public Class clsDataGridView
         Dim myDataTable As DataTable = New DataTable
         Dim strGridCaption As String = vbNullString
         Dim lstColumns As String()
+        Dim newDGVCol As DataGridViewColumn
+        Dim newDGVCell As DataGridViewCell
 
         Try
+            grdGrid.Rows.Clear()
+            grdGrid.Columns.Clear()
+
             strGridCaption = gcAppControler.str_GetCaption(CInt(grdGrid.Tag), 1)
 
             lstColumns = Split(strGridCaption, "|")
@@ -69,28 +73,37 @@ Public Class clsDataGridView
 
             myDataTable.Load(mySQLReader)
 
-            grdGrid.DataSource = myDataTable
+            For intColIndex As Integer = 0 To myDataTable.Columns.Count - 1
+                newDGVCol = New DataGridViewColumn()
+                newDGVCell = New DataGridViewTextBoxCell()
+                newDGVCol.DataPropertyName = myDataTable.Columns(intColIndex).ColumnName
+                newDGVCol.CellTemplate = newDGVCell
+                newDGVCol.Name = myDataTable.Columns(intColIndex).ColumnName
 
-            For intIndex As Short = 0 To CShort(lstColumns.Length - 1)
+                grdGrid.Columns.Add(newDGVCol)
 
-                If lstColumns(intIndex) = vbNullString Then
-                    grdGrid.Columns(intIndex).Visible = False
+                If lstColumns(intColIndex) = vbNullString Then
+                    grdGrid.Columns(intColIndex).Visible = False
                 Else
 
-                    grdGrid.Columns(intIndex).HeaderText = Right(lstColumns(intIndex), lstColumns(intIndex).Length - 1)
+                    grdGrid.Columns(intColIndex).HeaderText = Right(lstColumns(intColIndex), lstColumns(intColIndex).Length - 1)
 
-                    Select Case lstColumns(intIndex).Chars(0)
+                    Select Case lstColumns(intColIndex).Chars(0)
                         Case CChar("<")
-                            grdGrid.Columns(intIndex).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+                            grdGrid.Columns(intColIndex).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
 
                         Case CChar("^")
-                            grdGrid.Columns(intIndex).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+                            grdGrid.Columns(intColIndex).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
 
                         Case CChar(">")
-                            grdGrid.Columns(intIndex).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+                            grdGrid.Columns(intColIndex).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
 
                     End Select
                 End If
+            Next
+
+            For intRowIndex As Integer = 0 To myDataTable.Rows.Count - 1
+                grdGrid.Rows.Add(myDataTable.Rows(intRowIndex).ItemArray)
             Next
 
             RaiseEvent SetDisplay()
@@ -117,6 +130,10 @@ Public Class clsDataGridView
 
             grdGrid.Rows(grdGrid.Rows.Count - 1).Selected = True
 
+            grdGrid.SelectedRows(0).HeaderCell.Style.BackColor = Color.LightGreen
+
+            grdGrid.SelectedRows(0).HeaderCell.Style.SelectionBackColor = Color.LightGreen
+
             grdGrid.Rows(grdGrid.Rows.Count - 1).DefaultCellStyle.BackColor = Color.LightGreen
 
             grdGrid.Rows(grdGrid.Rows.Count - 1).Cells(0).Value = GridRowActions.INSERT_ACTION
@@ -142,6 +159,10 @@ Public Class clsDataGridView
                         grdGrid.Rows(intSelectedRow - 1).Selected = True
                     End If
                 Else
+                    grdGrid.SelectedRows(0).HeaderCell.Style.BackColor = Color.Red
+
+                    grdGrid.SelectedRows(0).HeaderCell.Style.SelectionBackColor = Color.Red
+
                     grdGrid.Rows(intSelectedRow).DefaultCellStyle.BackColor = Color.Red
 
                     grdGrid.Rows(intSelectedRow).Cells(0).Value = GridRowActions.DELETE_ACTION

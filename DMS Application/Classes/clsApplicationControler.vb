@@ -160,6 +160,9 @@ Public Class clsApplicationControler
                     Case "GroupBox"
                         DisableAllControls(Nothing, Nothing, objControl)
 
+                    Case "DataGridView"
+                        DirectCast(objControl, DataGridView).ReadOnly = True
+
                     Case "TabControl"
                         For Each tp As TabPage In DirectCast(objControl, TabControl).TabPages
                             DisableAllControls(Nothing, tp)

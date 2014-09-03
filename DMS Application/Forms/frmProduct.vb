@@ -1,12 +1,15 @@
-﻿Public Class frmProduct
+﻿Option Strict Off
+
+Public Class frmProduct
 
     'Private members
     Private mintGrdPrices_Action_col As Short = 0
-    Private mintGrdPrices_Cy_ID_col As Short = 1
-    Private mintGrdPrices_Cy_Name_col As Short = 2
-    Private mintGrdPrices_ProB_ID_col As Short = 3
-    Private mintGrdPrices_ProB_Name_col As Short = 4
-    Private mintGrdPrices_Price_col As Short = 5
+    Private mintGrdPrices_ProP_ID_col As Short = 1
+    Private mintGrdPrices_Cy_ID_col As Short = 2
+    Private mintGrdPrices_Cy_Name_col As Short = 3
+    Private mintGrdPrices_ProB_ID_col As Short = 4
+    Private mintGrdPrices_ProB_Name_col As Short = 5
+    Private mintGrdPrices_Price_col As Short = 6
 
 
     'Private class members
@@ -25,8 +28,7 @@
         Try
             strSQL = strSQL & " SELECT Product.Pro_Name, " & vbCrLf
             strSQL = strSQL & "        Product.ProT_ID, " & vbCrLf
-            strSQL = strSQL & "        Product.ProC_ID, " & vbCrLf
-            strSQL = strSQL & "        Product.Bra_ID " & vbCrLf
+            strSQL = strSQL & "        Product.ProC_ID " & vbCrLf
             strSQL = strSQL & " FROM Product " & vbCrLf
             strSQL = strSQL & " WHERE Product.Pro_ID = " & myFormControler.Item_ID & vbCrLf
 
@@ -66,11 +68,12 @@
 
         Try
             strSQL = strSQL & "  SELECT " & clsDataGridView.GridRowActions.CONSULT_ACTION & " AS Action, " & vbCrLf
+            strSQL = strSQL & "         ProductPrice.ProP_ID, " & vbCrLf
             strSQL = strSQL & "         Company.Cy_ID, " & vbCrLf
             strSQL = strSQL & "         Company.Cy_Name, " & vbCrLf
             strSQL = strSQL & "         ProductBrand.ProB_ID, " & vbCrLf
             strSQL = strSQL & "         ProductBrand.ProB_Name, " & vbCrLf
-            strSQL = strSQL & "         ProductPrice.ProP_ID " & vbCrLf
+            strSQL = strSQL & "         ProductPrice.ProP_Price " & vbCrLf
             strSQL = strSQL & "  FROM ProductPrice " & vbCrLf
             strSQL = strSQL & "     INNER JOIN Company ON Company.Cy_ID = ProductPrice.Cy_ID " & vbCrLf
             strSQL = strSQL & "     INNER JOIN ProductBrand ON ProductBrand.ProB_ID = ProductPrice.ProB_ID " & vbCrLf
@@ -107,13 +110,51 @@
         Return blnReturn
     End Function
 
+    Private Function blnCboProductBrand_Load() As Boolean
+        Dim blnReturn As Boolean
+        Dim strSQL As String = vbNullString
+
+        Try
+            strSQL = strSQL & " SELECT ProductBrand.ProB_ID, " & vbCrLf
+            strSQL = strSQL & "        ProductBrand.ProB_Name " & vbCrLf
+            strSQL = strSQL & " FROM ProductBrand " & vbCrLf
+            strSQL = strSQL & " ORDER BY ProductBrand.ProB_Name " & vbCrLf
+
+            blnReturn = blnComboBox_LoadFromSQL(strSQL, "ProB_ID", "ProB_Name", False, cboProductBrand)
+
+        Catch ex As Exception
+            blnReturn = False
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnReturn
+    End Function
+
+    Private Function blnCboCompany_Load() As Boolean
+        Dim blnReturn As Boolean
+        Dim strSQL As String = vbNullString
+
+        Try
+            strSQL = strSQL & " SELECT Company.Cy_ID, " & vbCrLf
+            strSQL = strSQL & "        Company.Cy_Name " & vbCrLf
+            strSQL = strSQL & " FROM Company " & vbCrLf
+            strSQL = strSQL & " ORDER BY Company.Cy_Name " & vbCrLf
+
+            blnReturn = blnComboBox_LoadFromSQL(strSQL, "Cy_ID", "Cy_Name", False, cboCompany)
+
+        Catch ex As Exception
+            blnReturn = False
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnReturn
+    End Function
+
     Private Function blnCboCategory_Load(Optional ByVal vintSelectedValue As Integer = 0) As Boolean
         Dim blnReturn As Boolean
         Dim strSQL As String = vbNullString
 
         Try
-            cboCategory.Enabled = True
-
             strSQL = strSQL & " SELECT ProductCategory.ProC_ID, " & vbCrLf
             strSQL = strSQL & "        ProductCategory.ProC_Name " & vbCrLf
             strSQL = strSQL & " FROM ProductCategory " & vbCrLf
@@ -123,6 +164,10 @@
             blnReturn = blnComboBox_LoadFromSQL(strSQL, "ProC_ID", "ProC_Name", True, cboCategory)
 
             cboCategory.SelectedValue = vintSelectedValue
+
+            If myFormControler.FormMode <> clsConstants.Form_Modes.DELETE_MODE Then
+                cboCategory.Enabled = True
+            End If
 
         Catch ex As Exception
             blnReturn = False
@@ -151,6 +196,10 @@
                     blnReturn = blnProduct_Delete()
 
             End Select
+
+            If blnReturn Then
+                blnReturn = blnGrdPrices_SaveData()
+            End If
 
         Catch ex As Exception
             blnReturn = False
@@ -236,10 +285,10 @@
                         blnReturn = blnProductPrice_Insert(intRowCpt)
 
                     Case clsDataGridView.GridRowActions.UPDATE_ACTION
-
+                        blnReturn = blnProductPrice_Update(intRowCpt)
 
                     Case clsDataGridView.GridRowActions.DELETE_ACTION
-
+                        blnReturn = blnProductPrice_Delete(intRowCpt)
 
                 End Select
             Next
@@ -253,19 +302,98 @@
 
     End Function
 
-    Private Function blnProductPrice_Insert(ByVal intRowIndex As Integer) As Boolean
+    Private Function blnProductPrice_Insert(ByVal vintRowIndex As Integer) As Boolean
         Dim blnReturn As Boolean
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Cy_ID", grdPrices.Rows(intRowIndex).Cells(mintGrdPrices_Cy_ID_col).Value.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("ProB_ID", grdPrices.Rows(intRowIndex).Cells(mintGrdPrices_ProB_ID_col).Value.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Cy_ID", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_Cy_ID_col).Value.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("ProB_ID", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_ProB_ID_col).Value.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
                 Case mcSQL.bln_AddField("Pro_ID", myFormControler.Item_ID.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_ADOInsert("ProductPrice", myFormControler.Item_ID)
-                Case myFormControler.Item_ID > 0
+                Case mcSQL.bln_AddField("ProP_Price", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_Price_col).Value.ToString, clsConstants.MySQL_FieldTypes.DOUBLE_TYPE)
+                Case mcSQL.bln_ADOInsert("ProductPrice")
                 Case Else
                     blnReturn = True
             End Select
+
+        Catch ex As Exception
+            blnReturn = False
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnReturn
+    End Function
+
+    Private Function blnProductPrice_Update(ByVal vintRowIndex As Integer) As Boolean
+        Dim blnReturn As Boolean
+
+        Try
+            Select Case False
+                Case mcSQL.bln_AddField("Cy_ID", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_Cy_ID_col).Value.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("ProB_ID", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_ProB_ID_col).Value.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Pro_ID", myFormControler.Item_ID.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("ProP_Price", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_Price_col).Value.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_ADOUpdate("ProductPrice", "ProP_ID = " & grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_ProP_ID_col).Value)
+                Case Else
+                    blnReturn = True
+            End Select
+
+        Catch ex As Exception
+            blnReturn = False
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnReturn
+    End Function
+
+    Private Function blnProductPrice_Delete(ByVal vintRowIndex As Integer) As Boolean
+        Dim blnReturn As Boolean
+
+        Try
+            Select Case False
+                Case mcSQL.bln_ADODelete("ProductPrice", "ProP_ID = " & grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_ProP_ID_col).Value)
+                Case Else
+                    blnReturn = True
+            End Select
+
+        Catch ex As Exception
+            blnReturn = False
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnReturn
+    End Function
+
+    Private Function blnGrdPrices_ShowComboBox(ByVal vintRowIndex As Integer, ByVal vintColIndex As Integer) As Boolean
+        Dim blnReturn As Boolean
+
+        Try
+            If myFormControler.FormMode <> clsConstants.Form_Modes.DELETE_MODE Then
+
+                Dim cellRectangle As Rectangle = grdPrices.GetCellDisplayRectangle(vintColIndex, vintRowIndex, True)
+
+                Select Case vintColIndex
+                    Case mintGrdPrices_Cy_Name_col
+
+                        cboCompany.Location = New Point(cellRectangle.Location.X + 6, cellRectangle.Location.Y + (cellRectangle.Size.Height - 4))
+
+                        cboCompany.Size = cellRectangle.Size
+
+                        cboCompany.Visible = True
+
+                        cboCompany.Focus()
+
+                    Case mintGrdPrices_ProB_Name_col
+                        cboProductBrand.Location = New Point(cellRectangle.Location.X + 6, cellRectangle.Location.Y + (cellRectangle.Size.Height - 4))
+
+                        cboProductBrand.Size = cellRectangle.Size
+
+                        cboProductBrand.Visible = True
+
+                        cboProductBrand.Focus()
+
+                End Select
+            End If
 
         Catch ex As Exception
             blnReturn = False
@@ -302,6 +430,8 @@
         Select Case False
             Case mcGrdPrices.bln_Init(grdPrices)
             Case blnCboType_Load()
+            Case blnCboCompany_Load()
+            Case blnCboProductBrand_Load()
             Case blnGrdPrices_Load()
             Case myFormControler.FormMode <> clsConstants.Form_Modes.INSERT_MODE
                 blnReturn = True
@@ -333,6 +463,9 @@
             Case clsConstants.Form_Modes.INSERT_MODE
                 cboCategory.Enabled = False
 
+            Case clsConstants.Form_Modes.DELETE_MODE
+                grdPrices.ClearSelection()
+
         End Select
     End Sub
 
@@ -341,6 +474,8 @@
     End Sub
 
     Private Sub myFormControler_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles myFormControler.ValidateRules
+        Dim intRowIndex As Integer
+
         Select Case False
             Case txtName.Text <> vbNullString
                 gcAppControler.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
@@ -360,41 +495,93 @@
                 eventArgs.IsValid = True
 
         End Select
+
+        If eventArgs.IsValid And grdPrices.Rows.Count > 0 Then
+
+            For intRowIndex = 0 To grdPrices.Rows.Count - 1
+
+                eventArgs.IsValid = False
+
+                Select Case False
+                    Case Not IsDBNull(grdPrices.Rows(intRowIndex).Cells(mintGrdPrices_Cy_ID_col).Value)
+                        gcAppControler.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                        blnGrdPrices_ShowComboBox(intRowIndex, mintGrdPrices_Cy_Name_col)
+
+                    Case Not IsDBNull(grdPrices.Rows(intRowIndex).Cells(mintGrdPrices_ProB_ID_col).Value)
+                        gcAppControler.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                        blnGrdPrices_ShowComboBox(intRowIndex, mintGrdPrices_ProB_Name_col)
+
+                    Case Not IsDBNull(grdPrices.Rows(intRowIndex).Cells(mintGrdPrices_Price_col).Value)
+                        gcAppControler.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                        grdPrices.CurrentCell = grdPrices.Rows(intRowIndex).Cells(mintGrdPrices_Price_col)
+                        grdPrices.BeginEdit(True)
+
+                    Case Else
+                        eventArgs.IsValid = True
+                End Select
+
+                If Not eventArgs.IsValid Then Exit For
+            Next
+
+        End If
     End Sub
 
     Private Sub btnAddLine_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAddLine.Click
         mcGrdPrices.AddLine()
-        grdPrices.Rows(0).Cells(mintGrdPrices_Price_col).ValueType = GetType(Double)
+        myFormControler.ChangeMade = True
     End Sub
 
     Private Sub btnRemoveLine_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnRemoveLine.Click
         mcGrdPrices.RemoveLine()
+        myFormControler.ChangeMade = True
     End Sub
 
     Private Sub mcGrdPrices_SetDisplay() Handles mcGrdPrices.SetDisplay
 
-        grdPrices.AutoGenerateColumns = False
-        grdPrices.DataSource = Nothing
         grdPrices.AutoSizeColumnsMode = CType(DataGridViewAutoSizeColumnMode.Fill, DataGridViewAutoSizeColumnsMode)
 
-    End Sub
+        grdPrices.Columns(mintGrdPrices_ProP_ID_col).ReadOnly = True
+        grdPrices.Columns(mintGrdPrices_Cy_Name_col).ReadOnly = True
+        grdPrices.Columns(mintGrdPrices_ProB_Name_col).ReadOnly = True
 
-    Private Sub grdPrices_CellFormatting(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellFormattingEventArgs) Handles grdPrices.CellFormatting
+        grdPrices.Columns(mintGrdPrices_Price_col).ValueType = GetType(Double)
+
         grdPrices.Columns(mintGrdPrices_Price_col).DefaultCellStyle.Format = gstrCurrencyFormat
     End Sub
 
-#End Region
-    
-    
-    Private Sub grdPrices_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdPrices.DoubleClick
-        Dim cellRectangle As Rectangle
+    Private Sub grdPrices_CellValidating(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellValidatingEventArgs) Handles grdPrices.CellValidating
+        If e.ColumnIndex = mintGrdPrices_Price_col And grdPrices.SelectedRows.Count > 0 Then
 
-        cellRectangle = grdPrices.GetCellDisplayRectangle(5, grdPrices.Rows(0).Index, True)
-     
-        cboCompany.Location = New Point(cellRectangle.Location.X + 6, cellRectangle.Location.Y + (cellRectangle.Size.Height - 4))
+            If Not IsNumeric(grdPrices.SelectedRows(0).Cells(mintGrdPrices_Price_col).EditedFormattedValue) And grdPrices.SelectedRows(0).Cells(mintGrdPrices_Price_col).EditedFormattedValue <> String.Empty Then
 
-        cboCompany.Size = cellRectangle.Size
+                gcAppControler.ShowMessage(clsConstants.Validation_Messages.NUMERIC_VALUE, MsgBoxStyle.Information)
 
-        cboCompany.Visible = True
+                e.Cancel = True
+            End If
+        End If
     End Sub
+
+    Private Sub grdPrices_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdPrices.DoubleClick
+        If grdPrices.SelectedRows.Count > 0 Then
+            blnGrdPrices_ShowComboBox(grdPrices.SelectedRows(0).Index, grdPrices.CurrentCell.ColumnIndex)
+        End If
+    End Sub
+
+    Private Sub cboCompany_LostFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboCompany.Leave
+        grdPrices.SelectedRows(0).Cells(mintGrdPrices_Cy_ID_col).Value = cboCompany.SelectedValue
+        grdPrices.SelectedRows(0).Cells(mintGrdPrices_Cy_Name_col).Value = cboCompany.SelectedItem.Value
+
+        cboCompany.Visible = False
+    End Sub
+
+    Private Sub cboProductBrand_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboProductBrand.Leave
+        grdPrices.SelectedRows(0).Cells(mintGrdPrices_ProB_ID_col).Value = cboProductBrand.SelectedValue
+        grdPrices.SelectedRows(0).Cells(mintGrdPrices_ProB_Name_col).Value = cboProductBrand.SelectedItem.Value
+
+        cboProductBrand.Visible = False
+    End Sub
+
+#End Region
+
+
 End Class

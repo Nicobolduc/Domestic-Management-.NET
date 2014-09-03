@@ -163,9 +163,9 @@ Public Class ctlFormControler
 
         ChangeMade = False
 
-        RaiseEvent SetReadRights()
-
         RaiseEvent LoadData(New LoadDataEventArgs(mintItem_ID))
+
+        RaiseEvent SetReadRights()
 
         FormIsLoading = False
     End Sub

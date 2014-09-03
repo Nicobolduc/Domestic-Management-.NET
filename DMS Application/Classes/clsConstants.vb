@@ -29,6 +29,7 @@
 
     Public Enum Validation_Messages
         MANDATORY_VALUE = 6
+        NUMERIC_VALUE = 10
     End Enum
 
 End Class
