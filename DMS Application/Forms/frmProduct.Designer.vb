@@ -98,9 +98,9 @@ Partial Class frmProduct
         Me.gbInfos.Controls.Add(Me.btnRemoveLine)
         Me.gbInfos.Controls.Add(Me.btnAddLine)
         Me.gbInfos.Controls.Add(Me.grdPrices)
-        Me.gbInfos.Location = New System.Drawing.Point(5, 93)
+        Me.gbInfos.Location = New System.Drawing.Point(5, 92)
         Me.gbInfos.Name = "gbInfos"
-        Me.gbInfos.Size = New System.Drawing.Size(366, 156)
+        Me.gbInfos.Size = New System.Drawing.Size(366, 160)
         Me.gbInfos.TabIndex = 14
         Me.gbInfos.TabStop = False
         Me.gbInfos.Text = "Prix"
@@ -167,7 +167,7 @@ Partial Class frmProduct
         DataGridViewCellStyle2.BackColor = System.Drawing.Color.White
         Me.grdPrices.RowsDefaultCellStyle = DataGridViewCellStyle2
         Me.grdPrices.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.grdPrices.Size = New System.Drawing.Size(316, 131)
+        Me.grdPrices.Size = New System.Drawing.Size(316, 135)
         Me.grdPrices.TabIndex = 1
         Me.grdPrices.Tag = "9"
         '
@@ -176,7 +176,7 @@ Partial Class frmProduct
         Me.myFormControler.FormIsLoading = False
         Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.CONSULT_MODE
         Me.myFormControler.Item_ID = 0
-        Me.myFormControler.Location = New System.Drawing.Point(0, 251)
+        Me.myFormControler.Location = New System.Drawing.Point(0, 256)
         Me.myFormControler.Name = "myFormControler"
         Me.myFormControler.ShowButtonQuitOnly = False
         Me.myFormControler.Size = New System.Drawing.Size(376, 33)
@@ -186,7 +186,7 @@ Partial Class frmProduct
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(376, 282)
+        Me.ClientSize = New System.Drawing.Size(376, 287)
         Me.Controls.Add(Me.myFormControler)
         Me.Controls.Add(Me.gbInfos)
         Me.Controls.Add(Me.cboType)

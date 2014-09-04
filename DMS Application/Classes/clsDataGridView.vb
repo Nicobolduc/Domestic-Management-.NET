@@ -3,6 +3,8 @@
 Public Class clsDataGridView
 
     'Private class members
+    Private Const mintDefaultActionCol As Short = 0
+
     Private WithEvents grdGrid As DataGridView
 
     'Public events
@@ -136,7 +138,7 @@ Public Class clsDataGridView
 
             grdGrid.Rows(grdGrid.Rows.Count - 1).DefaultCellStyle.BackColor = Color.LightGreen
 
-            grdGrid.Rows(grdGrid.Rows.Count - 1).Cells(0).Value = GridRowActions.INSERT_ACTION
+            grdGrid.Rows(grdGrid.Rows.Count - 1).Cells(mintDefaultActionCol).Value = GridRowActions.INSERT_ACTION
 
         Catch ex As Exception
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
@@ -152,7 +154,7 @@ Public Class clsDataGridView
 
                 intSelectedRow = grdGrid.SelectedRows(0).Index
 
-                If CInt(grdGrid.Rows(intSelectedRow).Cells(0).Value) = GridRowActions.INSERT_ACTION Then
+                If CInt(grdGrid.Rows(intSelectedRow).Cells(mintDefaultActionCol).Value) = GridRowActions.INSERT_ACTION Then
                     grdGrid.Rows.RemoveAt(intSelectedRow)
 
                     If grdGrid.Rows.Count > 0 Then
@@ -165,7 +167,7 @@ Public Class clsDataGridView
 
                     grdGrid.Rows(intSelectedRow).DefaultCellStyle.BackColor = Color.Red
 
-                    grdGrid.Rows(intSelectedRow).Cells(0).Value = GridRowActions.DELETE_ACTION
+                    grdGrid.Rows(intSelectedRow).Cells(mintDefaultActionCol).Value = GridRowActions.DELETE_ACTION
                 End If
             End If
 
@@ -175,6 +177,39 @@ Public Class clsDataGridView
 
     End Sub
 
+    Public Function CellIsEmpty(ByVal vintRow As Integer, ByVal vintCol As Integer) As Boolean
+        Dim blnIsEmpty As Boolean = True
+
+        Try
+            Select Case False
+                Case Not IsDBNull(grdGrid.Rows(vintRow).Cells(vintCol).Value)
+                Case Not IsNothing(grdGrid.Rows(vintRow).Cells(vintCol).Value)
+                Case Not String.IsNullOrEmpty(Trim(grdGrid.Rows(vintRow).Cells(vintCol).Value.ToString))
+                Case Else
+                    blnIsEmpty = False
+            End Select
+
+        Catch ex As Exception
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnIsEmpty
+    End Function
+
+    Private Sub grdGrid_CellValueChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellEventArgs) Handles grdGrid.CellValueChanged
+        If grdGrid.Rows.Count > 0 Then
+
+            If CShort(grdGrid.Rows(e.RowIndex).Cells(mintDefaultActionCol).Value) = GridRowActions.CONSULT_ACTION Then
+                grdGrid.Rows(e.RowIndex).HeaderCell.Style.SelectionBackColor = Color.Yellow
+                grdGrid.Rows(e.RowIndex).HeaderCell.Style.BackColor = Color.Yellow
+                grdGrid.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.Yellow
+
+                grdGrid.Rows(e.RowIndex).Cells(mintDefaultActionCol).Value = GridRowActions.UPDATE_ACTION
+            End If
+        End If
+    End Sub
+
 #End Region
 
+    
 End Class

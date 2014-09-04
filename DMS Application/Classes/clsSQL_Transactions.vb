@@ -134,6 +134,8 @@ Public Class clsSQL_Transactions
 
             rintNewItem_ID = CInt(mMySQLCmd.ExecuteScalar)
 
+            mColFields.Clear()
+
             blnReturn = True
 
         Catch ex As Exception
@@ -163,6 +165,8 @@ Public Class clsSQL_Transactions
 
             mMySQLCmd.ExecuteNonQuery()
 
+            mColFields.Clear()
+
             blnReturn = True
 
         Catch ex As Exception
@@ -185,6 +189,8 @@ Public Class clsSQL_Transactions
             mMySQLCmd.CommandText = strSQL & " WHERE " & vstrWhere
 
             mMySQLCmd.ExecuteNonQuery()
+
+            mColFields.Clear()
 
             blnReturn = True
 

@@ -205,11 +205,11 @@ Public Class clsApplicationControler
                         DirectCast(objControl, ComboBox).Items.Clear()
 
                     Case "GroupBox"
-                        DisableAllControls(Nothing, Nothing, objControl)
+                        ClearAllControls(Nothing, Nothing, objControl)
 
                     Case "TabControl"
                         For Each tp As TabPage In DirectCast(objControl, TabControl).TabPages
-                            DisableAllControls(Nothing, tp)
+                            ClearAllControls(Nothing, tp)
                         Next
 
                     Case Else

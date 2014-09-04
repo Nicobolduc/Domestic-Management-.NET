@@ -3,13 +3,13 @@
 Public Class frmProduct
 
     'Private members
-    Private mintGrdPrices_Action_col As Short = 0
-    Private mintGrdPrices_ProP_ID_col As Short = 1
-    Private mintGrdPrices_Cy_ID_col As Short = 2
-    Private mintGrdPrices_Cy_Name_col As Short = 3
-    Private mintGrdPrices_ProB_ID_col As Short = 4
-    Private mintGrdPrices_ProB_Name_col As Short = 5
-    Private mintGrdPrices_Price_col As Short = 6
+    Private Const mintGrdPrices_Action_col As Short = 0
+    Private Const mintGrdPrices_ProP_ID_col As Short = 1
+    Private Const mintGrdPrices_Cy_ID_col As Short = 2
+    Private Const mintGrdPrices_Cy_Name_col As Short = 3
+    Private Const mintGrdPrices_ProB_ID_col As Short = 4
+    Private Const mintGrdPrices_ProB_Name_col As Short = 5
+    Private Const mintGrdPrices_Price_col As Short = 6
 
 
     'Private class members
@@ -197,7 +197,7 @@ Public Class frmProduct
 
             End Select
 
-            If blnReturn Then
+            If blnReturn And myFormControler.FormMode <> clsConstants.Form_Modes.DELETE_MODE Then
                 blnReturn = blnGrdPrices_SaveData()
             End If
 
@@ -260,6 +260,7 @@ Public Class frmProduct
 
         Try
             Select Case False
+                Case mcSQL.bln_ADODelete("ProductPrice", "Pro_ID = " & myFormControler.Item_ID)
                 Case mcSQL.bln_ADODelete("Product", "Pro_ID = " & myFormControler.Item_ID)
                 Case Else
                     blnReturn = True
@@ -290,6 +291,8 @@ Public Class frmProduct
                     Case clsDataGridView.GridRowActions.DELETE_ACTION
                         blnReturn = blnProductPrice_Delete(intRowCpt)
 
+                    Case Else
+                        blnReturn = True
                 End Select
             Next
 
@@ -374,6 +377,9 @@ Public Class frmProduct
 
                 Select Case vintColIndex
                     Case mintGrdPrices_Cy_Name_col
+                        If Not mcGrdPrices.CellIsEmpty(vintRowIndex, vintColIndex) Then
+                            cboCompany.SelectedValue = grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_Cy_ID_col).Value
+                        End If
 
                         cboCompany.Location = New Point(cellRectangle.Location.X + 6, cellRectangle.Location.Y + (cellRectangle.Size.Height - 4))
 
@@ -384,6 +390,10 @@ Public Class frmProduct
                         cboCompany.Focus()
 
                     Case mintGrdPrices_ProB_Name_col
+                        If Not mcGrdPrices.CellIsEmpty(vintRowIndex, vintColIndex) Then
+                            cboProductBrand.SelectedValue = grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_ProB_ID_col).Value
+                        End If
+
                         cboProductBrand.Location = New Point(cellRectangle.Location.X + 6, cellRectangle.Location.Y + (cellRectangle.Size.Height - 4))
 
                         cboProductBrand.Size = cellRectangle.Size
@@ -502,22 +512,23 @@ Public Class frmProduct
 
                 eventArgs.IsValid = False
 
-                Select Case False
-                    Case Not IsDBNull(grdPrices.Rows(intRowIndex).Cells(mintGrdPrices_Cy_ID_col).Value)
+                Select Case True
+                    Case mcGrdPrices.CellIsEmpty(intRowIndex, mintGrdPrices_Cy_ID_col)
                         gcAppControler.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                         blnGrdPrices_ShowComboBox(intRowIndex, mintGrdPrices_Cy_Name_col)
 
-                    Case Not IsDBNull(grdPrices.Rows(intRowIndex).Cells(mintGrdPrices_ProB_ID_col).Value)
+                    Case mcGrdPrices.CellIsEmpty(intRowIndex, mintGrdPrices_ProB_ID_col)
                         gcAppControler.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                         blnGrdPrices_ShowComboBox(intRowIndex, mintGrdPrices_ProB_Name_col)
 
-                    Case Not IsDBNull(grdPrices.Rows(intRowIndex).Cells(mintGrdPrices_Price_col).Value)
+                    Case mcGrdPrices.CellIsEmpty(intRowIndex, mintGrdPrices_Price_col)
                         gcAppControler.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                         grdPrices.CurrentCell = grdPrices.Rows(intRowIndex).Cells(mintGrdPrices_Price_col)
                         grdPrices.BeginEdit(True)
 
                     Case Else
                         eventArgs.IsValid = True
+
                 End Select
 
                 If Not eventArgs.IsValid Then Exit For
@@ -559,11 +570,24 @@ Public Class frmProduct
                 e.Cancel = True
             End If
         End If
+
+        If Not e.Cancel Then
+            myFormControler.ChangeMade = True
+        End If
     End Sub
 
     Private Sub grdPrices_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdPrices.DoubleClick
         If grdPrices.SelectedRows.Count > 0 Then
-            blnGrdPrices_ShowComboBox(grdPrices.SelectedRows(0).Index, grdPrices.CurrentCell.ColumnIndex)
+
+            Select Case grdPrices.CurrentCell.ColumnIndex
+                Case mintGrdPrices_Cy_Name_col, mintGrdPrices_ProB_Name_col
+                    blnGrdPrices_ShowComboBox(grdPrices.SelectedRows(0).Index, grdPrices.CurrentCell.ColumnIndex)
+
+                Case Else
+                    grdPrices.BeginEdit(True)
+
+            End Select
+
         End If
     End Sub
 
