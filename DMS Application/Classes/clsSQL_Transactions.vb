@@ -83,17 +83,20 @@ Public Class clsSQL_Transactions
         Dim blnReturn As Boolean
 
         Try
+            If String.IsNullOrEmpty(vstrValue) Then
+                vstrValue = "NULL"
+            Else
+                Select Case vintDBType
+                    Case clsConstants.MySQL_FieldTypes.VARCHAR_TYPE, clsConstants.MySQL_FieldTypes.DATETIME_TYPE
+                        vstrValue = gcAppControler.str_FixStringForSQL(vstrValue)
 
-            Select Case vintDBType
-                Case clsConstants.MySQL_FieldTypes.VARCHAR_TYPE, clsConstants.MySQL_FieldTypes.DATETIME_TYPE
-                    vstrValue = gcAppControler.str_FixStringForSQL(vstrValue)
+                    Case clsConstants.MySQL_FieldTypes.INT_TYPE
+                        If vstrValue = "0" Then
+                            vstrValue = "NULL"
+                        End If
 
-                Case clsConstants.MySQL_FieldTypes.INT_TYPE
-                    If vstrValue = vbNullString Or vstrValue = "0" Then
-                        vstrValue = "NULL"
-                    End If
-
-            End Select
+                End Select
+            End If
 
             mColFields.Add(vstrField, vstrValue)
 

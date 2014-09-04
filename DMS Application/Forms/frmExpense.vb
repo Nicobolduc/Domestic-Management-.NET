@@ -13,6 +13,7 @@
 
         Try
             strSQL = strSQL & " SELECT Expense.Exp_Code, " & vbCrLf
+            strSQL = strSQL & "        Expense.Exp_BillingDate, " & vbCrLf
             strSQL = strSQL & "        Expense.Per_ID " & vbCrLf
             strSQL = strSQL & " FROM Expense " & vbCrLf
             strSQL = strSQL & " WHERE Expense.Exp_ID = " & myFormControler.Item_ID & vbCrLf
@@ -21,6 +22,10 @@
 
             While mySQLReader.Read
                 txtCode.Text = mySQLReader.Item("Exp_Code").ToString
+
+                If Not IsDBNull(mySQLReader.Item("Exp_BillingDate")) Then
+                    dtpBillDate.Value = CDate(mySQLReader.Item("Exp_BillingDate"))
+                End If
 
                 cboInterval.SelectedValue = CInt(mySQLReader.Item("Per_ID"))
             End While
@@ -97,6 +102,7 @@
         Try
             Select Case False
                 Case mcSQL.bln_AddField("Exp_Code", txtCode.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("Exp_BillingDate", CStr(IIf(IsDBNull(dtpBillDate.Value), "", dtpBillDate.Value.ToString)), clsConstants.MySQL_FieldTypes.DATETIME_TYPE)
                 Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
                 Case mcSQL.bln_ADOInsert("Expense", myFormControler.Item_ID)
                 Case myFormControler.Item_ID > 0
@@ -157,6 +163,8 @@
 
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
         Dim blnReturn As Boolean
+
+        dtpBillDate.Value = DateTime.Today
 
         Select Case False
             Case blnCboInterval_Load()
