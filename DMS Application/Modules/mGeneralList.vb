@@ -76,7 +76,7 @@
                 End If
 
             Catch ex As Exception
-                gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             End Try
 
         End Sub

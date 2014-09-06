@@ -39,17 +39,17 @@ Public Class clsSQL_Transactions
         Dim blnReturn As Boolean
 
         Try
-            mMySQLTransaction = gcAppControler.MySQLConnection.BeginTransaction(IsolationLevel.ReadCommitted)
+            mMySQLTransaction = gcApplication.MySQLConnection.BeginTransaction(IsolationLevel.ReadCommitted)
             mblnTransactionStarted = True
             mMySQLCmd.Transaction = mMySQLTransaction
-            mMySQLCmd.Connection = gcAppControler.MySQLConnection
+            mMySQLCmd.Connection = gcApplication.MySQLConnection
             mMySQLCmd.CommandType = CommandType.Text
 
             blnReturn = True
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -69,7 +69,7 @@ Public Class clsSQL_Transactions
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mblnTransactionStarted = False
             mMySQLTransaction.Dispose()
@@ -87,8 +87,12 @@ Public Class clsSQL_Transactions
                 vstrValue = "NULL"
             Else
                 Select Case vintDBType
-                    Case clsConstants.MySQL_FieldTypes.VARCHAR_TYPE, clsConstants.MySQL_FieldTypes.DATETIME_TYPE
-                        vstrValue = gcAppControler.str_FixStringForSQL(vstrValue)
+                    Case clsConstants.MySQL_FieldTypes.VARCHAR_TYPE
+                        vstrValue = gcApplication.str_FixStringForSQL(vstrValue)
+
+                    Case clsConstants.MySQL_FieldTypes.DATETIME_TYPE
+                        vstrValue = Format(CDate(vstrValue), gcApplication.str_GetServerDateTimeFormat)
+                        vstrValue = gcApplication.str_FixStringForSQL(vstrValue)
 
                     Case clsConstants.MySQL_FieldTypes.INT_TYPE
                         If vstrValue = "0" Then
@@ -104,7 +108,7 @@ Public Class clsSQL_Transactions
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -143,7 +147,7 @@ Public Class clsSQL_Transactions
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -174,7 +178,7 @@ Public Class clsSQL_Transactions
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mColFields.Clear()
         End Try
@@ -199,7 +203,7 @@ Public Class clsSQL_Transactions
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn

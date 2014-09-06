@@ -71,7 +71,8 @@ Public Class frmGeneralList
                     frmToOpen.myFormControler.ShowForm(vFormMode, intItem_ID, True)
 
                 Case clsConstants.Form_Modes.DELETE_MODE
-                    gcAppControler.DisableAllControls(frmToOpen)
+                    intSelectedRow = grdList.SelectedRows(0).Index
+                    gcApplication.DisableAllControls(frmToOpen)
                     frmToOpen.myFormControler.ShowForm(vFormMode, intItem_ID, True)
 
             End Select
@@ -86,9 +87,6 @@ Public Class frmGeneralList
                         End If
                     Next
 
-                Case clsConstants.Form_Modes.DELETE_MODE
-                    intSelectedRow = 0
-
             End Select
 
             If intSelectedRow >= 0 And grdList.Rows.Count > 0 Then
@@ -98,7 +96,7 @@ Public Class frmGeneralList
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -113,7 +111,7 @@ Public Class frmGeneralList
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -139,7 +137,7 @@ Public Class frmGeneralList
             blnOpenForm(clsConstants.Form_Modes.INSERT_MODE)
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
     End Sub
 
@@ -151,7 +149,7 @@ Public Class frmGeneralList
             End If
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -165,7 +163,7 @@ Public Class frmGeneralList
             End If
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub

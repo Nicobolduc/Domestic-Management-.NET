@@ -1,13 +1,13 @@
 ﻿Module mMain
 
 
-    Public gcAppControler As clsApplicationControler
+    Public gcApplication As clsApplication
 
-    Public gstrCurrencyFormat As String = "##,#.00$"
+    Public gstrCurrencyFormat As String = "##,0.00$"
 
     Sub main()
 
-        gcAppControler = New clsApplicationControler
+        gcApplication = New clsApplication
 
     End Sub
 

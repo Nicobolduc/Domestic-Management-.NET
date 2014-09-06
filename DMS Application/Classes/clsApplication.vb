@@ -1,6 +1,6 @@
 ﻿Imports MySql.Data.MySqlClient
 
-Public Class clsApplicationControler
+Public Class clsApplication
 
     'Private class members
     Private mdiGeneral As mdiGeneral
@@ -30,13 +30,13 @@ Public Class clsApplicationControler
         End Get
     End Property
 
-    Public ReadOnly Property str_GetDateFormat As String
+    Public ReadOnly Property str_GetPCDateFormat As String
         Get
             Return "dd-MMMM-yyyy"
         End Get
     End Property
 
-    Public ReadOnly Property str_GetDateTimeFormat As String
+    Public ReadOnly Property str_GetPCDateTimeFormat As String
         Get
             Return "dd-MMMM-yyyy hh:mm"
         End Get
@@ -85,6 +85,19 @@ Public Class clsApplicationControler
         Return blnReturn
     End Function
 
+    Public Function str_GetServerDateTimeFormat() As String
+        Dim strFormat As String = vbNullString
+
+        Try
+            strFormat = "yyyy-MM-dd hh:mm:ss"
+
+        Catch ex As MySqlException
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return strFormat
+    End Function
+
     Public Function bln_CTLBindCaption(ByRef rControl As System.Windows.Forms.Control) As Boolean
         Dim blnReturn As Boolean
         Dim strCaption As String = vbNullString
@@ -99,7 +112,7 @@ Public Class clsApplicationControler
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -115,7 +128,7 @@ Public Class clsApplicationControler
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return strCaption
@@ -131,12 +144,12 @@ Public Class clsApplicationControler
         Dim strMessage As String = vbNullString
 
         Try
-            strMessage = gcAppControler.str_GetCaption(vintCaption_ID, mcUser.GetLanguage)
+            strMessage = gcApplication.str_GetCaption(vintCaption_ID, mcUser.GetLanguage)
 
             MsgBox(strMessage, vmsgType)
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -176,7 +189,7 @@ Public Class clsApplicationControler
             Next objControl
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -220,7 +233,7 @@ Public Class clsApplicationControler
             Next objControl
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub

@@ -23,6 +23,7 @@ Partial Class frmManageBudget
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmManageBudget))
         Me.grdBudget = New System.Windows.Forms.DataGridView()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -44,6 +45,7 @@ Partial Class frmManageBudget
         '
         'grdBudget
         '
+        Me.grdBudget.AllowUserToAddRows = False
         Me.grdBudget.AllowUserToOrderColumns = True
         Me.grdBudget.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised
         Me.grdBudget.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
@@ -52,27 +54,32 @@ Partial Class frmManageBudget
         Me.grdBudget.Location = New System.Drawing.Point(12, 131)
         Me.grdBudget.MultiSelect = False
         Me.grdBudget.Name = "grdBudget"
+        Me.grdBudget.ReadOnly = True
         Me.grdBudget.RowHeadersWidth = 10
         DataGridViewCellStyle1.BackColor = System.Drawing.Color.White
         Me.grdBudget.RowsDefaultCellStyle = DataGridViewCellStyle1
         Me.grdBudget.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.grdBudget.Size = New System.Drawing.Size(1026, 481)
         Me.grdBudget.TabIndex = 2
+        Me.grdBudget.Tag = "11"
         '
         'Column1
         '
         Me.Column1.HeaderText = "Column1"
         Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
         '
         'Column3
         '
         Me.Column3.HeaderText = "Column3"
         Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
         '
         'Column2
         '
         Me.Column2.HeaderText = "Column2"
         Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
         '
         'gbFilter
         '
@@ -184,7 +191,7 @@ Partial Class frmManageBudget
         'btnQuit
         '
         Me.btnQuit.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnQuit.Location = New System.Drawing.Point(963, 618)
+        Me.btnQuit.Location = New System.Drawing.Point(972, 618)
         Me.btnQuit.Name = "btnQuit"
         Me.btnQuit.Size = New System.Drawing.Size(75, 23)
         Me.btnQuit.TabIndex = 4
@@ -195,11 +202,12 @@ Partial Class frmManageBudget
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1050, 653)
+        Me.ClientSize = New System.Drawing.Size(1050, 645)
         Me.Controls.Add(Me.btnQuit)
         Me.Controls.Add(Me.gbFilter)
         Me.Controls.Add(Me.grdBudget)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmManageBudget"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Budget"

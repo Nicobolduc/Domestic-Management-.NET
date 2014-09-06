@@ -34,7 +34,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Close()
@@ -59,7 +59,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -87,7 +87,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mcSQL.bln_EndTransaction(blnReturn)
             mcSQL = Nothing
@@ -112,7 +112,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -132,7 +132,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -150,7 +150,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -192,11 +192,11 @@
     Private Sub myFormControler_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles myFormControler.ValidateRules
         Select Case False
             Case txtCode.Text <> vbNullString
-                gcAppControler.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcApplication.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtCode.Focus()
 
             Case cboInterval.SelectedIndex > -1
-                gcAppControler.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcApplication.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 cboInterval.DroppedDown = True
                 cboInterval.Focus()
 
@@ -206,6 +206,11 @@
         End Select
     End Sub
 
+    Private Sub dtpBillDate_ValueChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles dtpBillDate.ValueChanged
+        myFormControler.ChangeMade = True
+    End Sub
+
 #End Region
     
+
 End Class

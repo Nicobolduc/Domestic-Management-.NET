@@ -86,7 +86,7 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\clsApplicationControler.vb" />
+    <Compile Include="Classes\clsApplication.vb" />
     <Compile Include="Classes\clsConstants.vb" />
     <Compile Include="Classes\clsDataGridView.vb" />
     <Compile Include="Classes\clsErrorsLog.vb" />
@@ -100,6 +100,12 @@
     </Compile>
     <Compile Include="Controls\ctlFormControler.vb">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\frmGrocery.Designer.vb">
+      <DependentUpon>frmGrocery.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmGrocery.vb">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmProductBrand.Designer.vb">
       <DependentUpon>frmProductBrand.vb</DependentUpon>
@@ -179,6 +185,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Controls\ctlFormControler.resx">
       <DependentUpon>ctlFormControler.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmGrocery.resx">
+      <DependentUpon>frmGrocery.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmProductBrand.resx">
       <DependentUpon>frmProductBrand.vb</DependentUpon>

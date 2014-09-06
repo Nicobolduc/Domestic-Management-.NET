@@ -35,12 +35,12 @@ Partial Class mdiGeneral
         Me.mnuiProductType = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiProductCategory = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiBrand = New System.Windows.Forms.ToolStripMenuItem()
+        Me.EntitéeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CompagnieToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuWindows = New System.Windows.Forms.ToolStripMenuItem()
         Me.statusBar = New System.Windows.Forms.StatusStrip()
         Me.lblStatusUser = New System.Windows.Forms.ToolStripStatusLabel()
         Me.lblStatusBD = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.EntitéeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CompagnieToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMain.SuspendLayout()
         Me.statusBar.SuspendLayout()
         Me.SuspendLayout()
@@ -125,6 +125,19 @@ Partial Class mdiGeneral
         Me.mnuiBrand.Size = New System.Drawing.Size(179, 22)
         Me.mnuiBrand.Text = "Marque de produit"
         '
+        'EntitéeToolStripMenuItem
+        '
+        Me.EntitéeToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CompagnieToolStripMenuItem})
+        Me.EntitéeToolStripMenuItem.Name = "EntitéeToolStripMenuItem"
+        Me.EntitéeToolStripMenuItem.Size = New System.Drawing.Size(55, 20)
+        Me.EntitéeToolStripMenuItem.Text = "Entitée"
+        '
+        'CompagnieToolStripMenuItem
+        '
+        Me.CompagnieToolStripMenuItem.Name = "CompagnieToolStripMenuItem"
+        Me.CompagnieToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
+        Me.CompagnieToolStripMenuItem.Text = "Compagnie"
+        '
         'mnuWindows
         '
         Me.mnuWindows.Name = "mnuWindows"
@@ -153,19 +166,6 @@ Partial Class mdiGeneral
         Me.lblStatusBD.Name = "lblStatusBD"
         Me.lblStatusBD.Size = New System.Drawing.Size(25, 17)
         Me.lblStatusBD.Text = "BD:"
-        '
-        'EntitéeToolStripMenuItem
-        '
-        Me.EntitéeToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CompagnieToolStripMenuItem})
-        Me.EntitéeToolStripMenuItem.Name = "EntitéeToolStripMenuItem"
-        Me.EntitéeToolStripMenuItem.Size = New System.Drawing.Size(55, 20)
-        Me.EntitéeToolStripMenuItem.Text = "Entitée"
-        '
-        'CompagnieToolStripMenuItem
-        '
-        Me.CompagnieToolStripMenuItem.Name = "CompagnieToolStripMenuItem"
-        Me.CompagnieToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.CompagnieToolStripMenuItem.Text = "Compagnie"
         '
         'mdiGeneral
         '

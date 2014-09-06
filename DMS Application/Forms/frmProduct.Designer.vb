@@ -38,6 +38,7 @@ Partial Class frmProduct
         Me.btnAddLine = New System.Windows.Forms.Button()
         Me.grdPrices = New System.Windows.Forms.DataGridView()
         Me.myFormControler = New DMS_Application.ctlFormControler()
+        Me.chkTaxable = New System.Windows.Forms.CheckBox()
         Me.gbInfos.SuspendLayout()
         CType(Me.grdPrices, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -63,7 +64,7 @@ Partial Class frmProduct
         Me.txtName.Location = New System.Drawing.Point(72, 6)
         Me.txtName.Name = "txtName"
         Me.txtName.Size = New System.Drawing.Size(299, 20)
-        Me.txtName.TabIndex = 1
+        Me.txtName.TabIndex = 0
         '
         'cboCategory
         '
@@ -72,7 +73,7 @@ Partial Class frmProduct
         Me.cboCategory.Location = New System.Drawing.Point(72, 55)
         Me.cboCategory.Name = "cboCategory"
         Me.cboCategory.Size = New System.Drawing.Size(299, 21)
-        Me.cboCategory.TabIndex = 3
+        Me.cboCategory.TabIndex = 2
         '
         'cboType
         '
@@ -81,7 +82,7 @@ Partial Class frmProduct
         Me.cboType.Location = New System.Drawing.Point(72, 30)
         Me.cboType.Name = "cboType"
         Me.cboType.Size = New System.Drawing.Size(299, 21)
-        Me.cboType.TabIndex = 2
+        Me.cboType.TabIndex = 1
         '
         'Label1
         '
@@ -98,7 +99,7 @@ Partial Class frmProduct
         Me.gbInfos.Controls.Add(Me.btnRemoveLine)
         Me.gbInfos.Controls.Add(Me.btnAddLine)
         Me.gbInfos.Controls.Add(Me.grdPrices)
-        Me.gbInfos.Location = New System.Drawing.Point(5, 92)
+        Me.gbInfos.Location = New System.Drawing.Point(5, 104)
         Me.gbInfos.Name = "gbInfos"
         Me.gbInfos.Size = New System.Drawing.Size(366, 160)
         Me.gbInfos.TabIndex = 14
@@ -132,7 +133,7 @@ Partial Class frmProduct
         Me.btnRemoveLine.Location = New System.Drawing.Point(326, 59)
         Me.btnRemoveLine.Name = "btnRemoveLine"
         Me.btnRemoveLine.Size = New System.Drawing.Size(35, 35)
-        Me.btnRemoveLine.TabIndex = 3
+        Me.btnRemoveLine.TabIndex = 2
         Me.btnRemoveLine.UseVisualStyleBackColor = True
         '
         'btnAddLine
@@ -142,7 +143,7 @@ Partial Class frmProduct
         Me.btnAddLine.Location = New System.Drawing.Point(326, 18)
         Me.btnAddLine.Name = "btnAddLine"
         Me.btnAddLine.Size = New System.Drawing.Size(35, 35)
-        Me.btnAddLine.TabIndex = 2
+        Me.btnAddLine.TabIndex = 1
         Me.btnAddLine.UseVisualStyleBackColor = True
         '
         'grdPrices
@@ -168,7 +169,7 @@ Partial Class frmProduct
         Me.grdPrices.RowsDefaultCellStyle = DataGridViewCellStyle2
         Me.grdPrices.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.grdPrices.Size = New System.Drawing.Size(316, 135)
-        Me.grdPrices.TabIndex = 1
+        Me.grdPrices.TabIndex = 0
         Me.grdPrices.Tag = "9"
         '
         'myFormControler
@@ -176,17 +177,30 @@ Partial Class frmProduct
         Me.myFormControler.FormIsLoading = False
         Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.CONSULT_MODE
         Me.myFormControler.Item_ID = 0
-        Me.myFormControler.Location = New System.Drawing.Point(0, 256)
+        Me.myFormControler.Location = New System.Drawing.Point(0, 268)
         Me.myFormControler.Name = "myFormControler"
         Me.myFormControler.ShowButtonQuitOnly = False
         Me.myFormControler.Size = New System.Drawing.Size(376, 33)
-        Me.myFormControler.TabIndex = 15
+        Me.myFormControler.TabIndex = 4
+        '
+        'chkTaxable
+        '
+        Me.chkTaxable.Location = New System.Drawing.Point(11, 84)
+        Me.chkTaxable.Margin = New System.Windows.Forms.Padding(0, 3, 3, 3)
+        Me.chkTaxable.Name = "chkTaxable"
+        Me.chkTaxable.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.chkTaxable.Size = New System.Drawing.Size(76, 17)
+        Me.chkTaxable.TabIndex = 3
+        Me.chkTaxable.Text = "Taxable"
+        Me.chkTaxable.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.chkTaxable.UseVisualStyleBackColor = True
         '
         'frmProduct
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(376, 287)
+        Me.ClientSize = New System.Drawing.Size(376, 299)
+        Me.Controls.Add(Me.chkTaxable)
         Me.Controls.Add(Me.myFormControler)
         Me.Controls.Add(Me.gbInfos)
         Me.Controls.Add(Me.cboType)
@@ -221,4 +235,5 @@ Partial Class frmProduct
     Friend WithEvents btnAddLine As System.Windows.Forms.Button
     Friend WithEvents cboCompany As System.Windows.Forms.ComboBox
     Friend WithEvents cboProductBrand As System.Windows.Forms.ComboBox
+    Friend WithEvents chkTaxable As System.Windows.Forms.CheckBox
 End Class

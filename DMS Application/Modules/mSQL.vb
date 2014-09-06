@@ -7,12 +7,12 @@
         Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
-            mySQLCmd = New MySqlCommand(vstrSQL, gcAppControler.MySQLConnection)
+            mySQLCmd = New MySqlCommand(vstrSQL, gcApplication.MySQLConnection)
 
             mySQLReader = mySQLCmd.ExecuteReader
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLCmd) Then
                 mySQLCmd.Dispose()
@@ -31,7 +31,7 @@
         Try
             strSQL = "SELECT " & vstrField & " FROM " & vstrTable & " WHERE " & vstrWhere
 
-            mySQLCmd = New MySqlCommand(strSQL, gcAppControler.MySQLConnection)
+            mySQLCmd = New MySqlCommand(strSQL, gcApplication.MySQLConnection)
 
             mySQLReader = mySQLCmd.ExecuteReader
 
@@ -42,7 +42,7 @@
             mySQLCmd.Dispose()
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Close()

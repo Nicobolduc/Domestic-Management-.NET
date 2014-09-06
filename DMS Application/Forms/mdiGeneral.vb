@@ -1,14 +1,14 @@
 ﻿Public Class mdiGeneral
 
     Private Sub mdiGeneral_Disposed(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Disposed
-        gcAppControler.MySQLConnection.Close()
-        gcAppControler.MySQLConnection.Dispose()
+        gcApplication.MySQLConnection.Close()
+        gcApplication.MySQLConnection.Dispose()
     End Sub
 
     Private Sub mdiGeneral_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         main()
 
-        lblStatusBD.Text = gcAppControler.MySQLConnection.Database
+        lblStatusBD.Text = gcApplication.MySQLConnection.Database
         lblStatusUser.Text = "Nicolas"
     End Sub
 

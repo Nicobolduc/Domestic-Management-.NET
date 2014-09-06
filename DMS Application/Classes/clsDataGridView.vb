@@ -31,6 +31,8 @@ Public Class clsDataGridView
         Try
             grdGrid = rgrdGrid
 
+            grdGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect
+
             grdGrid.AutoGenerateColumns = False
             grdGrid.RowHeadersDefaultCellStyle.BackColor = SystemColors.Control
             grdGrid.RowHeadersDefaultCellStyle.SelectionBackColor = SystemColors.Control
@@ -45,7 +47,7 @@ Public Class clsDataGridView
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -65,11 +67,11 @@ Public Class clsDataGridView
             grdGrid.Rows.Clear()
             grdGrid.Columns.Clear()
 
-            strGridCaption = gcAppControler.str_GetCaption(CInt(grdGrid.Tag), 1)
+            strGridCaption = gcApplication.str_GetCaption(CInt(grdGrid.Tag), 1)
 
             lstColumns = Split(strGridCaption, "|")
 
-            sqlCmd = New MySqlCommand(vstrSQL, gcAppControler.MySQLConnection)
+            sqlCmd = New MySqlCommand(vstrSQL, gcApplication.MySQLConnection)
 
             mySQLReader = sqlCmd.ExecuteReader
 
@@ -114,7 +116,7 @@ Public Class clsDataGridView
 
         Catch ex As Exception
             blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Close()
@@ -141,7 +143,7 @@ Public Class clsDataGridView
             grdGrid.Rows(grdGrid.Rows.Count - 1).Cells(mintDefaultActionCol).Value = GridRowActions.INSERT_ACTION
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -172,7 +174,7 @@ Public Class clsDataGridView
             End If
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -190,7 +192,7 @@ Public Class clsDataGridView
             End Select
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnIsEmpty
