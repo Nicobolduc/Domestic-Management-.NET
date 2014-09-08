@@ -557,8 +557,6 @@ Public Class frmProduct
 
     Private Sub mcGrdPrices_SetDisplay() Handles mcGrdPrices.SetDisplay
 
-        grdPrices.AutoSizeColumnsMode = CType(DataGridViewAutoSizeColumnMode.Fill, DataGridViewAutoSizeColumnsMode)
-
         grdPrices.Columns(mintGrdPrices_ProP_ID_col).ReadOnly = True
         grdPrices.Columns(mintGrdPrices_Cy_Name_col).ReadOnly = True
         grdPrices.Columns(mintGrdPrices_ProB_Name_col).ReadOnly = True

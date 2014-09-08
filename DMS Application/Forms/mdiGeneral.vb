@@ -8,8 +8,8 @@
     Private Sub mdiGeneral_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         main()
 
-        lblStatusBD.Text = gcApplication.MySQLConnection.Database
-        lblStatusUser.Text = "Nicolas"
+        lblStatusBD.Text = lblStatusBD.Text & gcApplication.MySQLConnection.Database
+        lblStatusUser.Text = lblStatusUser.Text & " Nicolas"
     End Sub
 
     Private Sub mnuiBudget_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiBudget.Click
@@ -20,7 +20,7 @@
         frmGestionBudget.Width = 1024
         frmGestionBudget.Height = 768
 
-        frmGestionBudget.Show()
+        frmGestionBudget.myFormControler.ShowForm(clsConstants.Form_Modes.CONSULT_MODE)
     End Sub
 
     Private Sub mnuiExpenseToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiExpense.Click
@@ -45,5 +45,13 @@
 
     Private Sub CompagnieToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CompagnieToolStripMenuItem.Click
         mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.COMPANY_LIST_ID)
+    End Sub
+
+    Private Sub ÉpicerieToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ÉpicerieToolStripMenuItem.Click
+        Dim frmGestionBudget As New frmGrocery
+
+        frmGestionBudget.MdiParent = Me
+
+        frmGestionBudget.myFormControler.ShowForm(clsConstants.Form_Modes.CONSULT_MODE)
     End Sub
 End Class

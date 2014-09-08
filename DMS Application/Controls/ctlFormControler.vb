@@ -42,7 +42,7 @@ Public Class ctlFormControler
         End Get
         Set(ByVal value As clsConstants.Form_Modes)
             mintFormMode = value
-            SetButtonsReadRights()
+            SetVisualStyle()
         End Set
     End Property
 
@@ -54,7 +54,7 @@ Public Class ctlFormControler
                 mblnChangeMade = False
             End If
 
-            SetButtonsReadRights()
+            SetVisualStyle()
         End Set
     End Property
 
@@ -101,7 +101,7 @@ Public Class ctlFormControler
         Try
             mfrmParent = MyBase.FindForm()
 
-            SetButtonsReadRights()
+            SetVisualStyle()
 
             LoadFormData()
 
@@ -123,7 +123,7 @@ Public Class ctlFormControler
 
     End Sub
 
-    Private Sub SetButtonsReadRights()
+    Private Sub SetVisualStyle()
         Select Case mintFormMode
             Case clsConstants.Form_Modes.INSERT_MODE
                 btnApply.Text = "Enregistrer"
@@ -146,6 +146,9 @@ Public Class ctlFormControler
                     btnCancel.Enabled = False
                     btnQuit.Enabled = True
                 End If
+
+            Case clsConstants.Form_Modes.CONSULT_MODE
+                imgFormMode.Image = My.Resources.Consult
 
             Case clsConstants.Form_Modes.DELETE_MODE
                 btnApply.Enabled = True

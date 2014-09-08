@@ -48,7 +48,6 @@ Partial Class frmGeneralList
         'grdList
         '
         Me.grdList.AllowUserToAddRows = False
-        Me.grdList.AllowUserToOrderColumns = True
         Me.grdList.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised
         Me.grdList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.grdList.EnableHeadersVisualStyles = False
@@ -59,7 +58,7 @@ Partial Class frmGeneralList
         DataGridViewCellStyle1.BackColor = System.Drawing.Color.White
         Me.grdList.RowsDefaultCellStyle = DataGridViewCellStyle1
         Me.grdList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.grdList.Size = New System.Drawing.Size(507, 474)
+        Me.grdList.Size = New System.Drawing.Size(507, 486)
         Me.grdList.TabIndex = 0
         Me.grdList.Tag = ""
         '
@@ -109,7 +108,7 @@ Partial Class frmGeneralList
         Me.myFormControler.FormIsLoading = False
         Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.CONSULT_MODE
         Me.myFormControler.Item_ID = 0
-        Me.myFormControler.Location = New System.Drawing.Point(494, 515)
+        Me.myFormControler.Location = New System.Drawing.Point(494, 527)
         Me.myFormControler.Name = "myFormControler"
         Me.myFormControler.ShowButtonQuitOnly = True
         Me.myFormControler.Size = New System.Drawing.Size(85, 33)
@@ -119,7 +118,7 @@ Partial Class frmGeneralList
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(579, 546)
+        Me.ClientSize = New System.Drawing.Size(579, 559)
         Me.Controls.Add(Me.myFormControler)
         Me.Controls.Add(Me.btnAdd)
         Me.Controls.Add(Me.btnUpdate)

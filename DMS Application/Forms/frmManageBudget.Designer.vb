@@ -29,7 +29,7 @@ Partial Class frmManageBudget
         Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.gbFilter = New System.Windows.Forms.GroupBox()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.btnRefresh = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.dtpTo = New System.Windows.Forms.DateTimePicker()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -38,7 +38,7 @@ Partial Class frmManageBudget
         Me.rbtnBiMensuel = New System.Windows.Forms.RadioButton()
         Me.rbtnMensuelle = New System.Windows.Forms.RadioButton()
         Me.dtpFrom = New System.Windows.Forms.DateTimePicker()
-        Me.btnQuit = New System.Windows.Forms.Button()
+        Me.myFormControler = New DMS_Application.ctlFormControler()
         CType(Me.grdBudget, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.gbFilter.SuspendLayout()
         Me.SuspendLayout()
@@ -46,7 +46,9 @@ Partial Class frmManageBudget
         'grdBudget
         '
         Me.grdBudget.AllowUserToAddRows = False
-        Me.grdBudget.AllowUserToOrderColumns = True
+        Me.grdBudget.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+                    Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grdBudget.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised
         Me.grdBudget.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.grdBudget.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column3, Me.Column2})
@@ -59,7 +61,7 @@ Partial Class frmManageBudget
         DataGridViewCellStyle1.BackColor = System.Drawing.Color.White
         Me.grdBudget.RowsDefaultCellStyle = DataGridViewCellStyle1
         Me.grdBudget.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.grdBudget.Size = New System.Drawing.Size(1026, 481)
+        Me.grdBudget.Size = New System.Drawing.Size(711, 481)
         Me.grdBudget.TabIndex = 2
         Me.grdBudget.Tag = "11"
         '
@@ -85,7 +87,7 @@ Partial Class frmManageBudget
         '
         Me.gbFilter.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
                     Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.gbFilter.Controls.Add(Me.Button1)
+        Me.gbFilter.Controls.Add(Me.btnRefresh)
         Me.gbFilter.Controls.Add(Me.Label2)
         Me.gbFilter.Controls.Add(Me.dtpTo)
         Me.gbFilter.Controls.Add(Me.Label1)
@@ -96,19 +98,20 @@ Partial Class frmManageBudget
         Me.gbFilter.Controls.Add(Me.dtpFrom)
         Me.gbFilter.Location = New System.Drawing.Point(12, 12)
         Me.gbFilter.Name = "gbFilter"
-        Me.gbFilter.Size = New System.Drawing.Size(1026, 113)
+        Me.gbFilter.Size = New System.Drawing.Size(711, 113)
         Me.gbFilter.TabIndex = 3
         Me.gbFilter.TabStop = False
         Me.gbFilter.Text = "Filtres"
         '
-        'Button1
+        'btnRefresh
         '
-        Me.Button1.Location = New System.Drawing.Point(512, 44)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 9
-        Me.Button1.Text = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.btnRefresh.BackgroundImage = CType(resources.GetObject("btnRefresh.BackgroundImage"), System.Drawing.Image)
+        Me.btnRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.btnRefresh.Location = New System.Drawing.Point(664, 20)
+        Me.btnRefresh.Name = "btnRefresh"
+        Me.btnRefresh.Size = New System.Drawing.Size(40, 40)
+        Me.btnRefresh.TabIndex = 9
+        Me.btnRefresh.UseVisualStyleBackColor = True
         '
         'Label2
         '
@@ -188,24 +191,26 @@ Partial Class frmManageBudget
         Me.dtpFrom.Size = New System.Drawing.Size(144, 20)
         Me.dtpFrom.TabIndex = 0
         '
-        'btnQuit
+        'myFormControler
         '
-        Me.btnQuit.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnQuit.Location = New System.Drawing.Point(972, 618)
-        Me.btnQuit.Name = "btnQuit"
-        Me.btnQuit.Size = New System.Drawing.Size(75, 23)
-        Me.btnQuit.TabIndex = 4
-        Me.btnQuit.Text = "Fermer"
-        Me.btnQuit.UseVisualStyleBackColor = True
+        Me.myFormControler.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.myFormControler.FormIsLoading = False
+        Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.CONSULT_MODE
+        Me.myFormControler.Item_ID = 0
+        Me.myFormControler.Location = New System.Drawing.Point(638, 613)
+        Me.myFormControler.Name = "myFormControler"
+        Me.myFormControler.ShowButtonQuitOnly = True
+        Me.myFormControler.Size = New System.Drawing.Size(85, 33)
+        Me.myFormControler.TabIndex = 4
         '
         'frmManageBudget
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1050, 645)
-        Me.Controls.Add(Me.btnQuit)
+        Me.ClientSize = New System.Drawing.Size(735, 645)
         Me.Controls.Add(Me.gbFilter)
         Me.Controls.Add(Me.grdBudget)
+        Me.Controls.Add(Me.myFormControler)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmManageBudget"
@@ -224,13 +229,13 @@ Partial Class frmManageBudget
     Friend WithEvents rbtnBiMensuel As System.Windows.Forms.RadioButton
     Friend WithEvents rbtnMensuelle As System.Windows.Forms.RadioButton
     Friend WithEvents dtpFrom As System.Windows.Forms.DateTimePicker
-    Friend WithEvents btnQuit As System.Windows.Forms.Button
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents dtpTo As System.Windows.Forms.DateTimePicker
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents Column1 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column3 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column2 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents btnRefresh As System.Windows.Forms.Button
+    Public WithEvents myFormControler As DMS_Application.ctlFormControler
 
 End Class

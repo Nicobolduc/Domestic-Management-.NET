@@ -30,6 +30,9 @@ Partial Class frmExpense
         Me.Label3 = New System.Windows.Forms.Label()
         Me.dtpBillDate = New System.Windows.Forms.DateTimePicker()
         Me.myFormControler = New DMS_Application.ctlFormControler()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.txtAmount = New System.Windows.Forms.TextBox()
+        Me.Label5 = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'Label1
@@ -38,18 +41,18 @@ Partial Class frmExpense
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(35, 13)
         Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Code:"
+        Me.Label1.Text = "Nom:"
         '
         'txtCode
         '
-        Me.txtCode.Location = New System.Drawing.Point(45, 6)
+        Me.txtCode.Location = New System.Drawing.Point(73, 6)
         Me.txtCode.Name = "txtCode"
-        Me.txtCode.Size = New System.Drawing.Size(256, 20)
-        Me.txtCode.TabIndex = 1
+        Me.txtCode.Size = New System.Drawing.Size(228, 20)
+        Me.txtCode.TabIndex = 0
         '
         'Label2
         '
-        Me.Label2.Location = New System.Drawing.Point(206, 45)
+        Me.Label2.Location = New System.Drawing.Point(206, 56)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(71, 13)
         Me.Label2.TabIndex = 3
@@ -59,14 +62,14 @@ Partial Class frmExpense
         '
         Me.cboInterval.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboInterval.FormattingEnabled = True
-        Me.cboInterval.Location = New System.Drawing.Point(274, 42)
+        Me.cboInterval.Location = New System.Drawing.Point(274, 53)
         Me.cboInterval.Name = "cboInterval"
         Me.cboInterval.Size = New System.Drawing.Size(163, 21)
-        Me.cboInterval.TabIndex = 2
+        Me.cboInterval.TabIndex = 3
         '
         'Label3
         '
-        Me.Label3.Location = New System.Drawing.Point(4, 45)
+        Me.Label3.Location = New System.Drawing.Point(4, 56)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(128, 13)
         Me.Label3.TabIndex = 5
@@ -76,11 +79,11 @@ Partial Class frmExpense
         '
         Me.dtpBillDate.CustomFormat = "dd/MM"
         Me.dtpBillDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpBillDate.Location = New System.Drawing.Point(129, 42)
+        Me.dtpBillDate.Location = New System.Drawing.Point(129, 53)
         Me.dtpBillDate.Name = "dtpBillDate"
         Me.dtpBillDate.ShowCheckBox = True
         Me.dtpBillDate.Size = New System.Drawing.Size(71, 20)
-        Me.dtpBillDate.TabIndex = 6
+        Me.dtpBillDate.TabIndex = 2
         Me.dtpBillDate.Value = New Date(2014, 9, 4, 1, 12, 37, 0)
         '
         'myFormControler
@@ -94,11 +97,37 @@ Partial Class frmExpense
         Me.myFormControler.Size = New System.Drawing.Size(445, 33)
         Me.myFormControler.TabIndex = 4
         '
+        'Label4
+        '
+        Me.Label4.Location = New System.Drawing.Point(4, 31)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(54, 13)
+        Me.Label4.TabIndex = 7
+        Me.Label4.Text = "Montant:"
+        '
+        'txtAmount
+        '
+        Me.txtAmount.Location = New System.Drawing.Point(73, 28)
+        Me.txtAmount.Name = "txtAmount"
+        Me.txtAmount.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.txtAmount.Size = New System.Drawing.Size(75, 20)
+        Me.txtAmount.TabIndex = 1
+        '
+        'Label5
+        '
+        Me.Label5.Location = New System.Drawing.Point(148, 31)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(35, 13)
+        Me.Label5.TabIndex = 9
+        Me.Label5.Text = "$"
+        '
         'frmExpense
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(444, 117)
+        Me.Controls.Add(Me.txtAmount)
+        Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.cboInterval)
         Me.Controls.Add(Me.dtpBillDate)
         Me.Controls.Add(Me.Label3)
@@ -106,6 +135,7 @@ Partial Class frmExpense
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.txtCode)
         Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.Label5)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
@@ -124,4 +154,7 @@ Partial Class frmExpense
     Public WithEvents myFormControler As DMS_Application.ctlFormControler
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents dtpBillDate As System.Windows.Forms.DateTimePicker
+    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents txtAmount As System.Windows.Forms.TextBox
+    Friend WithEvents Label5 As System.Windows.Forms.Label
 End Class

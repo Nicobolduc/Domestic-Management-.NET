@@ -26,6 +26,8 @@ Partial Class frmCompany
         Me.myFormControler = New DMS_Application.ctlFormControler()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtName = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.cboCompanyType = New System.Windows.Forms.ComboBox()
         Me.SuspendLayout()
         '
         'myFormControler
@@ -33,11 +35,11 @@ Partial Class frmCompany
         Me.myFormControler.FormIsLoading = False
         Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.CONSULT_MODE
         Me.myFormControler.Item_ID = 0
-        Me.myFormControler.Location = New System.Drawing.Point(0, 27)
+        Me.myFormControler.Location = New System.Drawing.Point(0, 49)
         Me.myFormControler.Name = "myFormControler"
         Me.myFormControler.ShowButtonQuitOnly = False
         Me.myFormControler.Size = New System.Drawing.Size(437, 33)
-        Me.myFormControler.TabIndex = 16
+        Me.myFormControler.TabIndex = 2
         '
         'Label1
         '
@@ -52,13 +54,32 @@ Partial Class frmCompany
         Me.txtName.Location = New System.Drawing.Point(58, 5)
         Me.txtName.Name = "txtName"
         Me.txtName.Size = New System.Drawing.Size(374, 20)
-        Me.txtName.TabIndex = 1
+        Me.txtName.TabIndex = 0
+        '
+        'Label2
+        '
+        Me.Label2.Location = New System.Drawing.Point(5, 30)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(47, 16)
+        Me.Label2.TabIndex = 23
+        Me.Label2.Text = "Type:"
+        '
+        'cboCompanyType
+        '
+        Me.cboCompanyType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboCompanyType.FormattingEnabled = True
+        Me.cboCompanyType.Location = New System.Drawing.Point(58, 27)
+        Me.cboCompanyType.Name = "cboCompanyType"
+        Me.cboCompanyType.Size = New System.Drawing.Size(213, 21)
+        Me.cboCompanyType.TabIndex = 1
         '
         'frmCompany
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(436, 58)
+        Me.ClientSize = New System.Drawing.Size(436, 81)
+        Me.Controls.Add(Me.cboCompanyType)
+        Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.txtName)
         Me.Controls.Add(Me.myFormControler)
@@ -76,4 +97,6 @@ Partial Class frmCompany
     Public WithEvents myFormControler As DMS_Application.ctlFormControler
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents txtName As System.Windows.Forms.TextBox
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents cboCompanyType As System.Windows.Forms.ComboBox
 End Class

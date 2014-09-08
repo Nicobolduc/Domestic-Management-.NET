@@ -10,6 +10,7 @@
             PRODUCT_CATEGORY_LIST_ID = 4
             PRODUCT_BRAND_LIST_ID = 5
             COMPANY_LIST_ID = 6
+            COMPANY_TYPE_ID = 7
         End Enum
 
         Public Enum GeneralList_AppCapID
@@ -90,7 +91,7 @@
             Dim strSQL As String = vbNullString
 
             strSQL = strSQL & "  SELECT Expense.Exp_ID, " & vbCrLf
-            strSQL = strSQL & "         Expense.Exp_Code, " & vbCrLf
+            strSQL = strSQL & "         Expense.Exp_Name, " & vbCrLf
             strSQL = strSQL & "         Period.Per_Desc " & vbCrLf
             strSQL = strSQL & "  FROM Expense " & vbCrLf
             strSQL = strSQL & "     INNER JOIN Period ON Period.Per_ID = Expense.Per_ID " & vbCrLf
@@ -100,7 +101,7 @@
 
             End If
 
-            strSQL = strSQL & "  ORDER BY Expense.Exp_Code " & vbCrLf
+            strSQL = strSQL & "  ORDER BY Expense.Exp_Name " & vbCrLf
 
             Return strSQL
         End Function

@@ -41,6 +41,7 @@ Partial Class mdiGeneral
         Me.statusBar = New System.Windows.Forms.StatusStrip()
         Me.lblStatusUser = New System.Windows.Forms.ToolStripStatusLabel()
         Me.lblStatusBD = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.ÉpicerieToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMain.SuspendLayout()
         Me.statusBar.SuspendLayout()
         Me.SuspendLayout()
@@ -70,7 +71,7 @@ Partial Class mdiGeneral
         '
         'mnuGestion
         '
-        Me.mnuGestion.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuiBudget})
+        Me.mnuGestion.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuiBudget, Me.ÉpicerieToolStripMenuItem})
         Me.mnuGestion.Name = "mnuGestion"
         Me.mnuGestion.Size = New System.Drawing.Size(59, 20)
         Me.mnuGestion.Text = "Gestion"
@@ -78,7 +79,7 @@ Partial Class mdiGeneral
         'mnuiBudget
         '
         Me.mnuiBudget.Name = "mnuiBudget"
-        Me.mnuiBudget.Size = New System.Drawing.Size(112, 22)
+        Me.mnuiBudget.Size = New System.Drawing.Size(152, 22)
         Me.mnuiBudget.Text = "Budget"
         '
         'mnuFacturation
@@ -167,6 +168,12 @@ Partial Class mdiGeneral
         Me.lblStatusBD.Size = New System.Drawing.Size(25, 17)
         Me.lblStatusBD.Text = "BD:"
         '
+        'ÉpicerieToolStripMenuItem
+        '
+        Me.ÉpicerieToolStripMenuItem.Name = "ÉpicerieToolStripMenuItem"
+        Me.ÉpicerieToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ÉpicerieToolStripMenuItem.Text = "Épicerie"
+        '
         'mdiGeneral
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -206,4 +213,5 @@ Partial Class mdiGeneral
     Friend WithEvents mnuWindows As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents EntitéeToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents CompagnieToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ÉpicerieToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 End Class

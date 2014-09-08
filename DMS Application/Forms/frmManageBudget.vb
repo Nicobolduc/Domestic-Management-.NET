@@ -1,5 +1,12 @@
 ﻿Public Class frmManageBudget
 
+    'Private members
+    Private mintGrdBudget_Exp_ID_col As Short = 0
+    Private mintGrdBudget_Exp_BillingDate_col As Short = 1
+    Private mintGrdBudget_Exp_Name_col As Short = 2
+    Private mintGrdBudget_Exp_Amount_col As Short = 3
+    Private mintGrdBudget_Exp_PaidOn_col As Short = 4
+
     'Private class members
     Private WithEvents mcGridBudget As clsDataGridView
     Private WithEvents mcSQL As clsSQL_Transactions
@@ -8,21 +15,14 @@
 #Region "Functions / Subs"
 
     Private Function blnLoadData() As Boolean
-        Dim blnReturn As Boolean = True
+        Dim blnReturn As Boolean
 
         Try
-            mcGridBudget = New clsDataGridView
 
             dtpFrom.Value = Date.Today
             dtpTo.Value = DateAdd(DateInterval.Day, 14, Date.Today)
 
-            Select Case False
-                Case blnLoadData()
-                Case mcGridBudget.bln_Init(grdBudget)
-                Case blnGrdBudget_Load()
-                Case Else
-
-            End Select
+            blnReturn = True
 
         Catch ex As Exception
             gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
@@ -36,13 +36,14 @@
         Dim blnReturn As Boolean
         Dim strSQL As String = vbNullString
 
-
-
         Try
             strSQL = strSQL & "  SELECT Expense.Exp_ID, " & vbCrLf
-            strSQL = strSQL & "         Expense.Exp_Name " & vbCrLf
+            strSQL = strSQL & "         Expense.Exp_BillingDate, " & vbCrLf
+            strSQL = strSQL & "         Expense.Exp_Name, " & vbCrLf
+            strSQL = strSQL & "         Expense.Exp_Amount, " & vbCrLf
+            strSQL = strSQL & "         NULL AS PaidOn " & vbCrLf
             strSQL = strSQL & "  FROM Expense " & vbCrLf
-            strSQL = strSQL & "  WHERE Expense.Exp_BillingDate BETWEEN "
+            'strSQL = strSQL & "  WHERE Expense.Exp_BillingDate BETWEEN " & dtpFrom.
 
             blnReturn = mcGridBudget.bln_FillData(strSQL)
 
@@ -61,24 +62,22 @@
 
     Private Sub mcGrid_SetDisplay() Handles mcGridBudget.SetDisplay
 
-        grdBudget.Rows.Add("20-08-2014", "Camping", "56.00$")
+        'grdBudget.Rows.Add("20-08-2014", "Camping", "56.00$")
 
-        grdBudget.Rows(0).DefaultCellStyle.BackColor = Color.Yellow
+        'grdBudget.Rows(0).DefaultCellStyle.BackColor = Color.Yellow
 
-        grdBudget.Rows.Add("20-08-2014", "Ass. Auto", "250.50$")
+        'grdBudget.Rows.Add("20-08-2014", "Ass. Auto", "250.50$")
 
-        grdBudget.Columns(0).HeaderText = "Échéance"
-        grdBudget.Columns(1).HeaderText = "Charge"
-        grdBudget.Columns(2).HeaderText = "Montant"
-
-
-        'grdBudget.ColumnHeadersDefaultCellStyle.Font = New Font(grdBudget.Font.Name, FontStyle.Bold)
+        'grdBudget.Columns(0).HeaderText = "Échéance"
+        'grdBudget.Columns(1).HeaderText = "Charge"
+        'grdBudget.Columns(2).HeaderText = "Montant"
 
 
-    End Sub
+        grdBudget.Columns(mintGrdBudget_Exp_Amount_col).ValueType = GetType(Double)
+        grdBudget.Columns(mintGrdBudget_Exp_BillingDate_col).ValueType = GetType(Date)
 
-    Private Sub btnQuit_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnQuit.Click
-        Me.Close()
+        grdBudget.Columns(mintGrdBudget_Exp_BillingDate_col).DefaultCellStyle.Format = gcApplication.str_GetPCDateFormat
+        grdBudget.Columns(mintGrdBudget_Exp_Amount_col).DefaultCellStyle.Format = gstrCurrencyFormat
     End Sub
 
     Private Sub rbtnHedo_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnHebdo.CheckedChanged
@@ -109,6 +108,24 @@
         End If
     End Sub
 
+    Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
+        Dim blnReturn As Boolean
+
+        mcGridBudget = New clsDataGridView
+
+        Select Case False
+            Case mcGridBudget.bln_Init(grdBudget)
+            Case blnGrdBudget_Load()
+            Case blnLoadData()
+            Case Else
+                blnReturn = True
+        End Select
+
+        If Not blnReturn Then
+            Me.Close()
+        End If
+    End Sub
+
 #End Region
-    
+
 End Class

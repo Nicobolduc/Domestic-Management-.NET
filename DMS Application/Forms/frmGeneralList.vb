@@ -126,9 +126,6 @@ Public Class frmGeneralList
 
         grdList.ReadOnly = True
 
-        grdList.Columns(grdList.Columns.Count - 1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-
-        grdList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnMode.Fill
     End Sub
 
     Private Sub btnAdd_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAdd.Click

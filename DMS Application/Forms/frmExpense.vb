@@ -12,8 +12,9 @@
         Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
-            strSQL = strSQL & " SELECT Expense.Exp_Code, " & vbCrLf
+            strSQL = strSQL & " SELECT Expense.Exp_Name, " & vbCrLf
             strSQL = strSQL & "        Expense.Exp_BillingDate, " & vbCrLf
+            strSQL = strSQL & "        Expense.Exp_Amount, " & vbCrLf
             strSQL = strSQL & "        Expense.Per_ID " & vbCrLf
             strSQL = strSQL & " FROM Expense " & vbCrLf
             strSQL = strSQL & " WHERE Expense.Exp_ID = " & myFormControler.Item_ID & vbCrLf
@@ -21,7 +22,9 @@
             mySQLReader = mSQL.ADOSelect(strSQL)
 
             While mySQLReader.Read
-                txtCode.Text = mySQLReader.Item("Exp_Code").ToString
+                txtCode.Text = mySQLReader.Item("Exp_Name").ToString
+
+                txtAmount.Text = mySQLReader.Item("Exp_Amount").ToString
 
                 If Not IsDBNull(mySQLReader.Item("Exp_BillingDate")) Then
                     dtpBillDate.Value = CDate(mySQLReader.Item("Exp_BillingDate"))
@@ -101,8 +104,9 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Exp_Code", txtCode.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("Exp_Name", txtCode.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
                 Case mcSQL.bln_AddField("Exp_BillingDate", CStr(IIf(IsDBNull(dtpBillDate.Value), "", dtpBillDate.Value.ToString)), clsConstants.MySQL_FieldTypes.DATETIME_TYPE)
+                Case mcSQL.bln_AddField("Exp_Amount", txtAmount.Text, clsConstants.MySQL_FieldTypes.DOUBLE_TYPE)
                 Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
                 Case mcSQL.bln_ADOInsert("Expense", myFormControler.Item_ID)
                 Case myFormControler.Item_ID > 0
@@ -123,7 +127,8 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Exp_Code", txtCode.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("Exp_Name", txtCode.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("Exp_Amount", txtAmount.Text, clsConstants.MySQL_FieldTypes.DOUBLE_TYPE)
                 Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
                 Case mcSQL.bln_ADOUpdate("Expense", "Exp_ID = " & myFormControler.Item_ID)
                 Case Else
@@ -181,7 +186,7 @@
         eventArgs.SaveSuccessful = blnSaveData()
     End Sub
 
-    Private Sub txtCode_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtCode.TextChanged
+    Private Sub txtCode_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtCode.TextChanged, txtAmount.TextChanged
         myFormControler.ChangeMade = True
     End Sub
 
@@ -194,6 +199,14 @@
             Case txtCode.Text <> vbNullString
                 gcApplication.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtCode.Focus()
+
+            Case txtAmount.Text <> vbNullString
+                gcApplication.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                txtAmount.Focus()
+
+            Case IsNumeric(txtAmount.Text)
+                gcApplication.ShowMessage(clsConstants.Validation_Messages.NUMERIC_VALUE, MsgBoxStyle.Information)
+                txtAmount.Focus()
 
             Case cboInterval.SelectedIndex > -1
                 gcApplication.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)

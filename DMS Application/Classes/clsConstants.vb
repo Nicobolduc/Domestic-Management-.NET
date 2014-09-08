@@ -32,4 +32,10 @@
         NUMERIC_VALUE = 10
     End Enum
 
+    Public Enum CompanyType
+        GROCERY_STORE = 1
+        SMALL_BUSINESS = 2
+        MEGASTORE = 3
+    End Enum
+
 End Class

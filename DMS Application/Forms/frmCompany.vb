@@ -12,7 +12,8 @@
         Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
-            strSQL = strSQL & " SELECT Company.Cy_Name " & vbCrLf
+            strSQL = strSQL & " SELECT Company.Cy_Name, " & vbCrLf
+            strSQL = strSQL & "        Company.CyT_ID " & vbCrLf
             strSQL = strSQL & " FROM Company " & vbCrLf
             strSQL = strSQL & " WHERE Company.Cy_ID = " & myFormControler.Item_ID & vbCrLf
 
@@ -21,6 +22,8 @@
             mySQLReader.Read()
 
             txtName.Text = mySQLReader.Item("Cy_Name").ToString
+
+            cboCompanyType.SelectedValue = mySQLReader.Item("CyT_ID")
 
             blnReturn = True
 
@@ -32,6 +35,26 @@
                 mySQLReader.Close()
                 mySQLReader.Dispose()
             End If
+        End Try
+
+        Return blnReturn
+    End Function
+
+    Private Function blnCboCompanyType_Load() As Boolean
+        Dim blnReturn As Boolean
+        Dim strSQL As String = vbNullString
+
+        Try
+            strSQL = strSQL & " SELECT CompanyType.CyT_ID, " & vbCrLf
+            strSQL = strSQL & "        CompanyType.CyT_Name " & vbCrLf
+            strSQL = strSQL & " FROM CompanyType " & vbCrLf
+            strSQL = strSQL & " ORDER BY CompanyType.CyT_Name " & vbCrLf
+
+            blnReturn = blnComboBox_LoadFromSQL(strSQL, "CyT_ID", "CyT_Name", False, cboCompanyType)
+
+        Catch ex As Exception
+            blnReturn = False
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -74,6 +97,7 @@
         Try
             Select Case False
                 Case mcSQL.bln_AddField("Cy_Name", txtName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("CyT_ID", cboCompanyType.SelectedValue.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
                 Case mcSQL.bln_ADOInsert("Company", myFormControler.Item_ID)
                 Case myFormControler.Item_ID > 0
                 Case Else
@@ -94,6 +118,7 @@
         Try
             Select Case False
                 Case mcSQL.bln_AddField("Cy_Name", txtName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("CyT_ID", cboCompanyType.SelectedValue.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
                 Case mcSQL.bln_ADOUpdate("Company", "Cy_ID = " & myFormControler.Item_ID)
                 Case Else
                     blnReturn = True
@@ -134,6 +159,7 @@
         Dim blnReturn As Boolean
 
         Select Case False
+            Case blnCboCompanyType_Load()
             Case myFormControler.FormMode <> clsConstants.Form_Modes.INSERT_MODE
                 blnReturn = True
             Case blnLoadData()
@@ -163,5 +189,11 @@
         myFormControler.ChangeMade = True
     End Sub
 
+    Private Sub cboCompanyType_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboCompanyType.SelectedIndexChanged
+        myFormControler.ChangeMade = True
+    End Sub
+
 #End Region
+
+
 End Class
