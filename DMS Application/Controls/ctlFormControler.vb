@@ -247,4 +247,11 @@ Public Class ctlFormControler
 
 #End Region
     
+    Private Sub mfrmParent_ResizeBegin(ByVal sender As Object, ByVal e As System.EventArgs) Handles mfrmParent.ResizeBegin
+        mfrmParent.SuspendLayout()
+    End Sub
+
+    Private Sub mfrmParent_ResizeEnd(ByVal sender As Object, ByVal e As System.EventArgs) Handles mfrmParent.ResizeEnd
+        mfrmParent.ResumeLayout()
+    End Sub
 End Class

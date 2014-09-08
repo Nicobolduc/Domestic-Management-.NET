@@ -36,6 +36,7 @@
         GROCERY_STORE = 1
         SMALL_BUSINESS = 2
         MEGASTORE = 3
+        PHARMACY = 4
     End Enum
 
 End Class

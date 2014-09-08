@@ -199,4 +199,14 @@ Public Class frmGeneralList
 
 #End Region
     
+    Private Sub txtFiltre_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtFilter.TextChanged
+        'grdList.RowFilter = "name like '" & txtFiltre.Text & "*'"
+        'grdList.row()
+        For Each row As DataGridViewRow In grdList.Rows
+            If row.Cells(grdList.CurrentCell.ColumnIndex).Value.ToString.Contains(txtFilter.Text) Then
+            Else
+                row.Visible = False
+            End If
+        Next
+    End Sub
 End Class

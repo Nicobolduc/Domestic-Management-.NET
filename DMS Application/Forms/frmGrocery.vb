@@ -11,7 +11,7 @@
     Private Const mintGrdGrocery_ProB_ID_col As Short = 7
     Private Const mintGrdGrocery_ProB_Name_col As Short = 8
     Private Const mintGrdGrocery_ProP_Price_col As Short = 9
-    Private Const mintGrdGrocery_ProP_Sel_col As Short = 10
+    Private Const mintGrdGrocery_Sel_col As Short = 10
 
     'Private class members
     Private WithEvents mcGrdGrocery As clsDataGridView
@@ -23,7 +23,7 @@
         Dim strSQL As String = vbNullString
 
         Try
-            
+
 
             blnReturn = True
 
@@ -92,7 +92,7 @@
 
         Try
             For Each row As DataGridViewRow In grdGrocery.Rows
-                row.Cells(mintGrdGrocery_ProP_Sel_col).Value = vblnCheckAll
+                row.Cells(mintGrdGrocery_Sel_col).Value = vblnCheckAll
             Next
 
         Catch ex As Exception
@@ -136,15 +136,31 @@
 
         grdGrocery.Columns(mintGrdGrocery_ProP_Price_col).DefaultCellStyle.Format = gstrCurrencyFormat
 
-        grdGrocery.Columns(mintGrdGrocery_Pro_Name_col).Width = 135
-        grdGrocery.Columns(mintGrdGrocery_Pro_Taxable_col).Width = 63
-
         grdGrocery.Columns.Add(New DataGridViewCheckBoxColumn())
-        grdGrocery.Columns(mintGrdGrocery_ProP_Sel_col).HeaderText = "Sél."
-        grdGrocery.Columns(mintGrdGrocery_ProP_Sel_col).ReadOnly = False
-        grdGrocery.Columns(mintGrdGrocery_ProP_Sel_col).Width = 36
+        grdGrocery.Columns(mintGrdGrocery_Sel_col).SortMode = DataGridViewColumnSortMode.Automatic
+        grdGrocery.Columns(mintGrdGrocery_Sel_col).HeaderText = "Sél."
+        grdGrocery.Columns(mintGrdGrocery_Sel_col).ReadOnly = False
+        grdGrocery.Columns(mintGrdGrocery_Sel_col).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+
+        For Each column As DataGridViewColumn In grdGrocery.Columns
+            If column.Index <> mintGrdGrocery_Sel_col Then
+                column.ReadOnly = True
+            End If
+        Next
 
         CheckUncheckAll(True)
+
+        grdGrocery.Columns(mintGrdGrocery_Pro_Name_col).Width = 200
+        grdGrocery.Columns(mintGrdGrocery_Pro_Taxable_col).Width = 63
+        grdGrocery.Columns(mintGrdGrocery_Sel_col).Width = 36
+    End Sub
+
+    Private Sub btnSelectAll_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSelectAll.Click
+        CheckUncheckAll(True)
+    End Sub
+
+    Private Sub btnUnselectAll_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnUnselectAll.Click
+        CheckUncheckAll(False)
     End Sub
 
     Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnPrint.Click
@@ -153,6 +169,7 @@
         'PrintDGV.Print_DataGridView(grdGrocery)
         'Print()
     End Sub
+
 
 #End Region
 

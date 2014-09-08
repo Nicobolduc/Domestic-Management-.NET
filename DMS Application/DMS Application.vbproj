@@ -246,6 +246,7 @@
     <None Include="Resources\Delete.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Icons\Consult.png" />
     <Content Include="Resources\Consult.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

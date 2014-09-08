@@ -23,11 +23,11 @@ Partial Class frmGeneralList
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmGeneralList))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.grdList = New System.Windows.Forms.DataGridView()
-        Me.txtFiltre = New System.Windows.Forms.TextBox()
+        Me.txtFilter = New System.Windows.Forms.TextBox()
         Me.btnDelete = New System.Windows.Forms.Button()
         Me.btnUpdate = New System.Windows.Forms.Button()
         Me.btnAdd = New System.Windows.Forms.Button()
@@ -55,19 +55,19 @@ Partial Class frmGeneralList
         Me.grdList.MultiSelect = False
         Me.grdList.Name = "grdList"
         Me.grdList.RowHeadersWidth = 10
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.White
-        Me.grdList.RowsDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle2.BackColor = System.Drawing.Color.White
+        Me.grdList.RowsDefaultCellStyle = DataGridViewCellStyle2
         Me.grdList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.grdList.Size = New System.Drawing.Size(507, 486)
         Me.grdList.TabIndex = 0
         Me.grdList.Tag = ""
         '
-        'txtFiltre
+        'txtFilter
         '
-        Me.txtFiltre.Location = New System.Drawing.Point(53, 9)
-        Me.txtFiltre.Name = "txtFiltre"
-        Me.txtFiltre.Size = New System.Drawing.Size(142, 20)
-        Me.txtFiltre.TabIndex = 1
+        Me.txtFilter.Location = New System.Drawing.Point(53, 9)
+        Me.txtFilter.Name = "txtFilter"
+        Me.txtFilter.Size = New System.Drawing.Size(142, 20)
+        Me.txtFilter.TabIndex = 1
         '
         'btnDelete
         '
@@ -123,7 +123,7 @@ Partial Class frmGeneralList
         Me.Controls.Add(Me.btnAdd)
         Me.Controls.Add(Me.btnUpdate)
         Me.Controls.Add(Me.btnDelete)
-        Me.Controls.Add(Me.txtFiltre)
+        Me.Controls.Add(Me.txtFilter)
         Me.Controls.Add(Me.grdList)
         Me.Controls.Add(Me.Label1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
@@ -138,7 +138,7 @@ Partial Class frmGeneralList
     End Sub
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents grdList As System.Windows.Forms.DataGridView
-    Friend WithEvents txtFiltre As System.Windows.Forms.TextBox
+    Friend WithEvents txtFilter As System.Windows.Forms.TextBox
     Friend WithEvents btnDelete As System.Windows.Forms.Button
     Friend WithEvents btnUpdate As System.Windows.Forms.Button
     Friend WithEvents btnAdd As System.Windows.Forms.Button

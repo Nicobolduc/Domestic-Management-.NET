@@ -94,6 +94,7 @@ Public Class clsDataGridView
                 newDGVCol.DataPropertyName = myDataTable.Columns(intColIndex).ColumnName
                 newDGVCol.CellTemplate = newDGVCell
                 newDGVCol.Name = myDataTable.Columns(intColIndex).ColumnName
+                newDGVCol.SortMode = DataGridViewColumnSortMode.Automatic
 
                 grdGrid.Columns.Add(newDGVCol)
 
