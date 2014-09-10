@@ -13,6 +13,9 @@
     Private Const mintGrdGrocery_ProP_Price_col As Short = 9
     Private Const mintGrdGrocery_Sel_col As Short = 10
 
+    Private mdblTaxe_TPS As Double
+    Private mdblTaxe_TVQ As Double
+
     'Private class members
     Private WithEvents mcGrdGrocery As clsDataGridView
 
@@ -23,7 +26,8 @@
         Dim strSQL As String = vbNullString
 
         Try
-
+            mdblTaxe_TPS = Val(mSQL.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_Name = 'TPS'"))
+            mdblTaxe_TVQ = Val(mSQL.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_Name = 'TVQ'"))
 
             blnReturn = True
 
@@ -52,12 +56,14 @@
             strSQL = strSQL & "         ProductPrice.ProP_Price " & vbCrLf
             strSQL = strSQL & " FROM Product " & vbCrLf
             strSQL = strSQL & "     INNER JOIN ProductType ON ProductType.ProT_ID = Product.ProT_ID " & vbCrLf
-            strSQL = strSQL & "     INNER JOIN ProductCategory ON ProductCategory.ProC_ID = Product.ProC_ID " & vbCrLf
+            strSQL = strSQL & "     LEFT JOIN ProductCategory ON ProductCategory.ProC_ID = Product.ProC_ID " & vbCrLf
             strSQL = strSQL & "     INNER JOIN ProductBrand ##ON ProductBrand.ProB_ID = 1 " & vbCrLf
             strSQL = strSQL & "     INNER JOIN ProductPrice ON ProductPrice.Pro_ID = Product.Pro_ID AND ProductPrice.ProB_ID = ProductBrand.ProB_ID AND ProductPrice.Cy_ID = " & cboGroceryStore.SelectedValue.ToString & vbCrLf
             strSQL = strSQL & " ORDER BY Product.Pro_Name, ProductType.ProT_Name, ProductCategory.ProC_Name " & vbCrLf
 
             blnReturn = mcGrdGrocery.bln_FillData(strSQL)
+
+            CalculTotals()
 
         Catch ex As Exception
             blnReturn = False
@@ -94,6 +100,41 @@
             For Each row As DataGridViewRow In grdGrocery.Rows
                 row.Cells(mintGrdGrocery_Sel_col).Value = vblnCheckAll
             Next
+
+            CalculTotals()
+
+        Catch ex As Exception
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+    End Sub
+
+    Private Sub CalculTotals()
+        Dim dblSubtotalTaxable As Double = 0.0
+        Dim dblSubtotalNotTaxable As Double = 0.0
+        Dim dblMontantAvecTPS As Double
+        Dim dblMontantAvecTVQ As Double
+
+        Try
+            For Each row As DataGridViewRow In grdGrocery.Rows
+
+                If row.Cells(mintGrdGrocery_Sel_col).EditedFormattedValue.ToString = "True" And row.Cells(mintGrdGrocery_Pro_Taxable_col).Value.ToString = "1" Then
+
+                    dblSubtotalTaxable = dblSubtotalTaxable + Val(row.Cells(mintGrdGrocery_ProP_Price_col).Value)
+
+                ElseIf row.Cells(mintGrdGrocery_Sel_col).EditedFormattedValue.ToString = "True" And row.Cells(mintGrdGrocery_Pro_Taxable_col).Value.ToString = "0" Then
+
+                    dblSubtotalNotTaxable = dblSubtotalNotTaxable + Val(row.Cells(mintGrdGrocery_ProP_Price_col).Value)
+
+                End If
+            Next
+
+            txtSubTotal.Text = Format(dblSubtotalNotTaxable + dblSubtotalTaxable, gstrCurrencyFormat)
+
+            dblMontantAvecTPS = dblSubtotalTaxable * mdblTaxe_TPS
+            dblMontantAvecTVQ = dblSubtotalTaxable * mdblTaxe_TVQ
+
+            txtTotal.Text = Format(dblMontantAvecTPS + dblMontantAvecTVQ + dblSubtotalNotTaxable + dblSubtotalTaxable, gstrCurrencyFormat)
 
         Catch ex As Exception
             gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
@@ -151,6 +192,7 @@
         CheckUncheckAll(True)
 
         grdGrocery.Columns(mintGrdGrocery_Pro_Name_col).Width = 200
+        grdGrocery.Columns(mintGrdGrocery_ProP_Price_col).Width = 80
         grdGrocery.Columns(mintGrdGrocery_Pro_Taxable_col).Width = 63
         grdGrocery.Columns(mintGrdGrocery_Sel_col).Width = 36
     End Sub
@@ -163,15 +205,73 @@
         CheckUncheckAll(False)
     End Sub
 
-    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnPrint.Click
-        'PrintDoc.Print()
-        'mcGrdGrocery.Printer_Init()
-        'PrintDGV.Print_DataGridView(grdGrocery)
-        'Print()
+    Private Sub btnPrint_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnPrint.Click
+        PrintPreviewDialog = New PrintPreviewDialog
+
+
+        Dim cPrinter As New clsPrinting
+
+        cPrinter.SetGridToPrint = grdGrocery
+
+        PrintPreviewDialog.Document = cPrinter
+        PrintPreviewDialog.ShowDialog()
     End Sub
 
+    Private Sub grdGrocery_CellMouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles grdGrocery.CellMouseUp
+        If e.ColumnIndex = mintGrdGrocery_Sel_col And e.RowIndex <> -1 Then
+            grdGrocery.EndEdit()
+        End If
+    End Sub
+
+    Private Sub grdGrocery_CellValueChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellEventArgs) Handles grdGrocery.CellValueChanged
+        If e.ColumnIndex = mintGrdGrocery_Sel_col And e.RowIndex <> -1 And Not myFormControler.FormIsLoading Then
+            CalculTotals()
+        End If
+    End Sub
+
+    'Private Sub frmGrocery_ResizeEnd(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.ResizeEnd
+    '    txtSubTotal.Location = New Point(grdGrocery.GetCellDisplayRectangle(mintGrdGrocery_ProP_Price_col, 0, True).X + 4, txtSubTotal.Location.Y)
+    'End Sub
 
 #End Region
 
+
+    Private Sub PrintDocument_PrintPage(ByVal sender As Object, ByVal e As System.Drawing.Printing.PrintPageEventArgs) Handles PrintDocument.PrintPage
+        Dim strTitle As String = "Epicerie"
+        Dim intXPos As Integer = 5
+        Dim intYPos As Integer = 100
+        Dim intRowIndex As Integer
+        Dim intColIndex As Integer
+        Dim blnDrawHeaderColText As Boolean = True
+
+        e.Graphics.DrawString(strTitle, New Font(New FontFamily("Arial"), 18, FontStyle.Bold And FontStyle.Underline), Brushes.Black, New PointF(CSng(e.PageBounds.Width / 2) - (strTitle.Length * 5), 20))
+
+
+        For intRowIndex = 0 To grdGrocery.Rows.Count - 1
+
+            For intColIndex = 0 To grdGrocery.Columns.Count - 1
+
+                If blnDrawHeaderColText And grdGrocery.Columns(intColIndex).Visible Then
+                    e.Graphics.DrawString(grdGrocery.Columns(intColIndex).HeaderText, New Font(New FontFamily("Arial"), 14, FontStyle.Bold), Brushes.Black, intXPos, intYPos)
+
+                    intXPos += CInt(grdGrocery.Columns(intColIndex).Width / 3)
+                ElseIf grdGrocery.Columns(intColIndex).Visible Then
+
+                    e.Graphics.DrawString(grdGrocery.Rows(intRowIndex).Cells(intColIndex).Value.ToString, New Font(New FontFamily("Arial"), 12, FontStyle.Regular), Brushes.Black, intXPos, intYPos)
+
+                    intXPos += CInt(grdGrocery.Columns(intColIndex).Width / 3)
+                End If
+
+            Next
+
+            blnDrawHeaderColText = False
+
+            intXPos = 10
+            intYPos += 15
+        Next
+
+        PrintDocument.DefaultPageSettings.Landscape = True
+
+    End Sub
 
 End Class

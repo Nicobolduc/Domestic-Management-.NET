@@ -22,17 +22,26 @@ Partial Class frmGrocery
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Me.components = New System.ComponentModel.Container()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmGrocery))
         Me.grdGrocery = New System.Windows.Forms.DataGridView()
         Me.cboGroceryStore = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.btnRefresh = New System.Windows.Forms.Button()
-        Me.myFormControler = New DMS_Application.ctlFormControler()
         Me.btnPrint = New System.Windows.Forms.Button()
         Me.btnSelectAll = New System.Windows.Forms.Button()
         Me.btnUnselectAll = New System.Windows.Forms.Button()
+        Me.PrintPreviewDialog = New System.Windows.Forms.PrintPreviewDialog()
+        Me.PrintDocument = New System.Drawing.Printing.PrintDocument()
+        Me.PageSetupDialog1 = New System.Windows.Forms.PageSetupDialog()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.txtSubTotal = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.txtTotal = New System.Windows.Forms.TextBox()
+        Me.formTootlTips = New System.Windows.Forms.ToolTip(Me.components)
+        Me.myFormControler = New DMS_Application.ctlFormControler()
         CType(Me.grdGrocery, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -45,23 +54,23 @@ Partial Class frmGrocery
                     Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grdGrocery.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised
         Me.grdGrocery.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.grdGrocery.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.grdGrocery.DefaultCellStyle = DataGridViewCellStyle1
         Me.grdGrocery.EnableHeadersVisualStyles = False
         Me.grdGrocery.Location = New System.Drawing.Point(5, 58)
         Me.grdGrocery.MultiSelect = False
         Me.grdGrocery.Name = "grdGrocery"
         Me.grdGrocery.RowHeadersWidth = 10
-        DataGridViewCellStyle4.BackColor = System.Drawing.Color.White
-        Me.grdGrocery.RowsDefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle2.BackColor = System.Drawing.Color.White
+        Me.grdGrocery.RowsDefaultCellStyle = DataGridViewCellStyle2
         Me.grdGrocery.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.grdGrocery.Size = New System.Drawing.Size(696, 367)
+        Me.grdGrocery.Size = New System.Drawing.Size(706, 466)
         Me.grdGrocery.TabIndex = 1
         Me.grdGrocery.Tag = "12"
         '
@@ -80,18 +89,114 @@ Partial Class frmGrocery
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(91, 13)
         Me.Label1.TabIndex = 11
-        Me.Label1.Text = "Nom de l'epicerie:"
+        Me.Label1.Text = "Nom du magasin:"
         '
         'btnRefresh
         '
         Me.btnRefresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnRefresh.BackgroundImage = CType(resources.GetObject("btnRefresh.BackgroundImage"), System.Drawing.Image)
         Me.btnRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.btnRefresh.Location = New System.Drawing.Point(707, 7)
+        Me.btnRefresh.Location = New System.Drawing.Point(717, 5)
         Me.btnRefresh.Name = "btnRefresh"
         Me.btnRefresh.Size = New System.Drawing.Size(40, 40)
         Me.btnRefresh.TabIndex = 12
+        Me.formTootlTips.SetToolTip(Me.btnRefresh, "Rafraichir")
         Me.btnRefresh.UseVisualStyleBackColor = True
+        '
+        'btnPrint
+        '
+        Me.btnPrint.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnPrint.BackgroundImage = CType(resources.GetObject("btnPrint.BackgroundImage"), System.Drawing.Image)
+        Me.btnPrint.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.btnPrint.Location = New System.Drawing.Point(717, 484)
+        Me.btnPrint.Name = "btnPrint"
+        Me.btnPrint.Size = New System.Drawing.Size(40, 40)
+        Me.btnPrint.TabIndex = 13
+        Me.formTootlTips.SetToolTip(Me.btnPrint, "Imprimer")
+        Me.btnPrint.UseVisualStyleBackColor = True
+        '
+        'btnSelectAll
+        '
+        Me.btnSelectAll.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSelectAll.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.btnSelectAll.Image = CType(resources.GetObject("btnSelectAll.Image"), System.Drawing.Image)
+        Me.btnSelectAll.Location = New System.Drawing.Point(721, 58)
+        Me.btnSelectAll.Name = "btnSelectAll"
+        Me.btnSelectAll.Size = New System.Drawing.Size(30, 30)
+        Me.btnSelectAll.TabIndex = 14
+        Me.formTootlTips.SetToolTip(Me.btnSelectAll, "Tout sélectionner")
+        Me.btnSelectAll.UseVisualStyleBackColor = True
+        '
+        'btnUnselectAll
+        '
+        Me.btnUnselectAll.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnUnselectAll.BackColor = System.Drawing.SystemColors.Control
+        Me.btnUnselectAll.Image = CType(resources.GetObject("btnUnselectAll.Image"), System.Drawing.Image)
+        Me.btnUnselectAll.Location = New System.Drawing.Point(721, 94)
+        Me.btnUnselectAll.Name = "btnUnselectAll"
+        Me.btnUnselectAll.Size = New System.Drawing.Size(30, 30)
+        Me.btnUnselectAll.TabIndex = 15
+        Me.formTootlTips.SetToolTip(Me.btnUnselectAll, "Tout déselectionner")
+        Me.btnUnselectAll.UseVisualStyleBackColor = False
+        '
+        'PrintPreviewDialog
+        '
+        Me.PrintPreviewDialog.AutoScrollMargin = New System.Drawing.Size(0, 0)
+        Me.PrintPreviewDialog.AutoScrollMinSize = New System.Drawing.Size(0, 0)
+        Me.PrintPreviewDialog.ClientSize = New System.Drawing.Size(400, 300)
+        Me.PrintPreviewDialog.Document = Me.PrintDocument
+        Me.PrintPreviewDialog.Enabled = True
+        Me.PrintPreviewDialog.Icon = CType(resources.GetObject("PrintPreviewDialog.Icon"), System.Drawing.Icon)
+        Me.PrintPreviewDialog.Name = "PrintPreviewDialog"
+        Me.PrintPreviewDialog.ShowIcon = False
+        Me.PrintPreviewDialog.Visible = False
+        '
+        'PrintDocument
+        '
+        '
+        'PageSetupDialog1
+        '
+        Me.PageSetupDialog1.Document = Me.PrintDocument
+        '
+        'Label2
+        '
+        Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.Location = New System.Drawing.Point(478, 531)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(82, 17)
+        Me.Label2.TabIndex = 16
+        Me.Label2.Text = "Sous-Total:"
+        '
+        'txtSubTotal
+        '
+        Me.txtSubTotal.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtSubTotal.Location = New System.Drawing.Point(566, 530)
+        Me.txtSubTotal.Name = "txtSubTotal"
+        Me.txtSubTotal.ReadOnly = True
+        Me.txtSubTotal.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.txtSubTotal.Size = New System.Drawing.Size(80, 20)
+        Me.txtSubTotal.TabIndex = 17
+        '
+        'Label3
+        '
+        Me.Label3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.Location = New System.Drawing.Point(478, 552)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(82, 17)
+        Me.Label3.TabIndex = 18
+        Me.Label3.Text = "Total:"
+        '
+        'txtTotal
+        '
+        Me.txtTotal.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtTotal.Location = New System.Drawing.Point(566, 551)
+        Me.txtTotal.Name = "txtTotal"
+        Me.txtTotal.ReadOnly = True
+        Me.txtTotal.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.txtTotal.Size = New System.Drawing.Size(80, 20)
+        Me.txtTotal.TabIndex = 19
         '
         'myFormControler
         '
@@ -100,50 +205,21 @@ Partial Class frmGrocery
         Me.myFormControler.FormIsLoading = False
         Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.CONSULT_MODE
         Me.myFormControler.Item_ID = 0
-        Me.myFormControler.Location = New System.Drawing.Point(0, 431)
+        Me.myFormControler.Location = New System.Drawing.Point(0, 570)
         Me.myFormControler.Name = "myFormControler"
         Me.myFormControler.ShowButtonQuitOnly = False
-        Me.myFormControler.Size = New System.Drawing.Size(750, 33)
+        Me.myFormControler.Size = New System.Drawing.Size(760, 33)
         Me.myFormControler.TabIndex = 0
-        '
-        'btnPrint
-        '
-        Me.btnPrint.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnPrint.BackgroundImage = CType(resources.GetObject("btnPrint.BackgroundImage"), System.Drawing.Image)
-        Me.btnPrint.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.btnPrint.Location = New System.Drawing.Point(707, 385)
-        Me.btnPrint.Name = "btnPrint"
-        Me.btnPrint.Size = New System.Drawing.Size(40, 40)
-        Me.btnPrint.TabIndex = 13
-        Me.btnPrint.UseVisualStyleBackColor = True
-        '
-        'btnSelectAll
-        '
-        Me.btnSelectAll.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSelectAll.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.btnSelectAll.Image = CType(resources.GetObject("btnSelectAll.Image"), System.Drawing.Image)
-        Me.btnSelectAll.Location = New System.Drawing.Point(711, 58)
-        Me.btnSelectAll.Name = "btnSelectAll"
-        Me.btnSelectAll.Size = New System.Drawing.Size(30, 30)
-        Me.btnSelectAll.TabIndex = 14
-        Me.btnSelectAll.UseVisualStyleBackColor = True
-        '
-        'btnUnselectAll
-        '
-        Me.btnUnselectAll.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnUnselectAll.BackColor = System.Drawing.SystemColors.Control
-        Me.btnUnselectAll.Image = CType(resources.GetObject("btnUnselectAll.Image"), System.Drawing.Image)
-        Me.btnUnselectAll.Location = New System.Drawing.Point(711, 94)
-        Me.btnUnselectAll.Name = "btnUnselectAll"
-        Me.btnUnselectAll.Size = New System.Drawing.Size(30, 30)
-        Me.btnUnselectAll.TabIndex = 15
-        Me.btnUnselectAll.UseVisualStyleBackColor = False
         '
         'frmGrocery
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(751, 463)
+        Me.ClientSize = New System.Drawing.Size(761, 602)
+        Me.Controls.Add(Me.txtTotal)
+        Me.Controls.Add(Me.Label3)
+        Me.Controls.Add(Me.txtSubTotal)
+        Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.btnUnselectAll)
         Me.Controls.Add(Me.btnSelectAll)
         Me.Controls.Add(Me.btnPrint)
@@ -152,6 +228,7 @@ Partial Class frmGrocery
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.grdGrocery)
         Me.Controls.Add(Me.myFormControler)
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
         Me.MinimumSize = New System.Drawing.Size(767, 501)
@@ -159,6 +236,7 @@ Partial Class frmGrocery
         Me.Text = "Épicerie"
         CType(Me.grdGrocery, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
     Friend WithEvents myFormControler As DMS_Application.ctlFormControler
@@ -169,4 +247,12 @@ Partial Class frmGrocery
     Friend WithEvents btnPrint As System.Windows.Forms.Button
     Friend WithEvents btnSelectAll As System.Windows.Forms.Button
     Friend WithEvents btnUnselectAll As System.Windows.Forms.Button
+    Friend WithEvents PrintPreviewDialog As System.Windows.Forms.PrintPreviewDialog
+    Friend WithEvents PrintDocument As System.Drawing.Printing.PrintDocument
+    Friend WithEvents PageSetupDialog1 As System.Windows.Forms.PageSetupDialog
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents txtSubTotal As System.Windows.Forms.TextBox
+    Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents txtTotal As System.Windows.Forms.TextBox
+    Friend WithEvents formTootlTips As System.Windows.Forms.ToolTip
 End Class
