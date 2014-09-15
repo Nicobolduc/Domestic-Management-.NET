@@ -111,8 +111,8 @@
 
             strSQL = strSQL & "  SELECT Product.Pro_ID, " & vbCrLf
             strSQL = strSQL & "         Product.Pro_Name, " & vbCrLf
-            strSQL = strSQL & "         ProductType.ProT_Name, " & vbCrLf
-            strSQL = strSQL & "         ProductCategory.ProC_Name " & vbCrLf
+            'strSQL = strSQL & "         ProductType.ProT_Name, " & vbCrLf
+            strSQL = strSQL & "         CASE WHEN ProductCategory.ProC_Name IS NULL THEN '' ELSE ProductCategory.ProC_Name END AS ProC_Name" & vbCrLf
             strSQL = strSQL & "  FROM Product " & vbCrLf
             strSQL = strSQL & "     LEFT JOIN ProductType ON ProductType.ProT_ID = Product.ProT_ID " & vbCrLf
             strSQL = strSQL & "     LEFT JOIN ProductCategory ON ProductCategory.ProC_ID = Product.ProC_ID AND ProductType.ProT_ID = ProductCategory.ProT_ID " & vbCrLf

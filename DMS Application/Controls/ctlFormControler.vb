@@ -241,12 +241,22 @@ Public Class ctlFormControler
         Me.Dispose()
     End Sub
 
+    Private Sub ctlFormControler_LocationChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.LocationChanged
+        If Not mfrmParent Is Nothing And Not FormIsLoading Then
+            mfrmParent.ResumeLayout()
+        End If
+    End Sub
+
+    Private Sub ctlFormControler_Move(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Move
+        If Not mfrmParent Is Nothing And Not FormIsLoading Then
+            mfrmParent.SuspendLayout()
+        End If
+    End Sub
+
     Private Sub ctlFormControler_PropertyChanged() Handles Me.PropertyChanged
         SetControlsVisility()
     End Sub
 
-#End Region
-    
     Private Sub mfrmParent_ResizeBegin(ByVal sender As Object, ByVal e As System.EventArgs) Handles mfrmParent.ResizeBegin
         mfrmParent.SuspendLayout()
     End Sub
@@ -254,4 +264,8 @@ Public Class ctlFormControler
     Private Sub mfrmParent_ResizeEnd(ByVal sender As Object, ByVal e As System.EventArgs) Handles mfrmParent.ResizeEnd
         mfrmParent.ResumeLayout()
     End Sub
+
+#End Region
+    
+
 End Class

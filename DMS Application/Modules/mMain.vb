@@ -5,6 +5,9 @@
 
     Public gstrCurrencyFormat As String = "##,0.00$"
 
+    Public gintGrid_Action_col As Integer = 0
+
+
     Sub main()
 
         gcApplication = New clsApplication

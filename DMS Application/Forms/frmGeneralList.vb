@@ -91,7 +91,7 @@ Public Class frmGeneralList
 
             If intSelectedRow >= 0 And grdList.Rows.Count > 0 Then
                 grdList.Rows(intSelectedRow).Selected = True
-                grdList.FirstDisplayedScrollingRowIndex = grdList.SelectedRows(0).Index
+                'grdList.FirstDisplayedScrollingRowIndex = grdList.SelectedRows(0).Index
             End If
 
         Catch ex As Exception
@@ -200,13 +200,23 @@ Public Class frmGeneralList
 #End Region
     
     Private Sub txtFiltre_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtFilter.TextChanged
-        'grdList.RowFilter = "name like '" & txtFiltre.Text & "*'"
-        'grdList.row()
+        Dim intSelectedColumn As Short
+
+        If Not IsNothing(grdList.CurrentCell) Then
+            intSelectedColumn = grdList.CurrentCell.ColumnIndex
+        Else
+            intSelectedColumn = 1
+        End If
+
         For Each row As DataGridViewRow In grdList.Rows
-            If row.Cells(grdList.CurrentCell.ColumnIndex).Value.ToString.Contains(txtFilter.Text) Then
+            If row.Cells(1).Value.ToString.ToUpper.Contains(txtFilter.Text.ToUpper) Then
+                row.Visible = True
             Else
                 row.Visible = False
             End If
         Next
+
+        intSelectedColumn = 1
+
     End Sub
 End Class

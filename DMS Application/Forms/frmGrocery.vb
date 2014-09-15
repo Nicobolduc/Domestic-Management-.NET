@@ -18,6 +18,7 @@
 
     'Private class members
     Private WithEvents mcGrdGrocery As clsDataGridView
+    Private mcPrinter As clsPrinting
 
 #Region "Functions / Subs"
 
@@ -191,10 +192,13 @@
 
         CheckUncheckAll(True)
 
-        grdGrocery.Columns(mintGrdGrocery_Pro_Name_col).Width = 200
-        grdGrocery.Columns(mintGrdGrocery_ProP_Price_col).Width = 80
-        grdGrocery.Columns(mintGrdGrocery_Pro_Taxable_col).Width = 63
-        grdGrocery.Columns(mintGrdGrocery_Sel_col).Width = 36
+        grdGrocery.Columns(mintGrdGrocery_Pro_Name_col).Width = 214
+        grdGrocery.Columns(mintGrdGrocery_ProT_Name_col).Width = 97
+        grdGrocery.Columns(mintGrdGrocery_ProC_Name_col).Width = 100
+        grdGrocery.Columns(mintGrdGrocery_Pro_Taxable_col).Width = 59
+        grdGrocery.Columns(mintGrdGrocery_ProB_Name_col).Width = 109
+        grdGrocery.Columns(mintGrdGrocery_ProP_Price_col).Width = 63
+        grdGrocery.Columns(mintGrdGrocery_Sel_col).Width = 37
     End Sub
 
     Private Sub btnSelectAll_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSelectAll.Click
@@ -206,15 +210,11 @@
     End Sub
 
     Private Sub btnPrint_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnPrint.Click
-        PrintPreviewDialog = New PrintPreviewDialog
+        mcPrinter = New clsPrinting("Épicerie du: " & Date.Today)
 
+        mcPrinter.SetGridToPrint(New Short() {mintGrdGrocery_Pro_Name_col, mintGrdGrocery_ProC_Name_col, mintGrdGrocery_ProB_Name_col, mintGrdGrocery_ProP_Price_col}) = grdGrocery()
 
-        Dim cPrinter As New clsPrinting
-
-        cPrinter.SetGridToPrint = grdGrocery
-
-        PrintPreviewDialog.Document = cPrinter
-        PrintPreviewDialog.ShowDialog()
+        mcPrinter.ShowPrintPreviewDialog()
     End Sub
 
     Private Sub grdGrocery_CellMouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles grdGrocery.CellMouseUp
@@ -234,44 +234,5 @@
     'End Sub
 
 #End Region
-
-
-    Private Sub PrintDocument_PrintPage(ByVal sender As Object, ByVal e As System.Drawing.Printing.PrintPageEventArgs) Handles PrintDocument.PrintPage
-        Dim strTitle As String = "Epicerie"
-        Dim intXPos As Integer = 5
-        Dim intYPos As Integer = 100
-        Dim intRowIndex As Integer
-        Dim intColIndex As Integer
-        Dim blnDrawHeaderColText As Boolean = True
-
-        e.Graphics.DrawString(strTitle, New Font(New FontFamily("Arial"), 18, FontStyle.Bold And FontStyle.Underline), Brushes.Black, New PointF(CSng(e.PageBounds.Width / 2) - (strTitle.Length * 5), 20))
-
-
-        For intRowIndex = 0 To grdGrocery.Rows.Count - 1
-
-            For intColIndex = 0 To grdGrocery.Columns.Count - 1
-
-                If blnDrawHeaderColText And grdGrocery.Columns(intColIndex).Visible Then
-                    e.Graphics.DrawString(grdGrocery.Columns(intColIndex).HeaderText, New Font(New FontFamily("Arial"), 14, FontStyle.Bold), Brushes.Black, intXPos, intYPos)
-
-                    intXPos += CInt(grdGrocery.Columns(intColIndex).Width / 3)
-                ElseIf grdGrocery.Columns(intColIndex).Visible Then
-
-                    e.Graphics.DrawString(grdGrocery.Rows(intRowIndex).Cells(intColIndex).Value.ToString, New Font(New FontFamily("Arial"), 12, FontStyle.Regular), Brushes.Black, intXPos, intYPos)
-
-                    intXPos += CInt(grdGrocery.Columns(intColIndex).Width / 3)
-                End If
-
-            Next
-
-            blnDrawHeaderColText = False
-
-            intXPos = 10
-            intYPos += 15
-        Next
-
-        PrintDocument.DefaultPageSettings.Landscape = True
-
-    End Sub
 
 End Class
