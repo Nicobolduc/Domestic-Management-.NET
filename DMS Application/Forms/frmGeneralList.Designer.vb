@@ -23,7 +23,7 @@ Partial Class frmGeneralList
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmGeneralList))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.grdList = New System.Windows.Forms.DataGridView()
@@ -55,8 +55,8 @@ Partial Class frmGeneralList
         Me.grdList.MultiSelect = False
         Me.grdList.Name = "grdList"
         Me.grdList.RowHeadersWidth = 10
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.White
-        Me.grdList.RowsDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.White
+        Me.grdList.RowsDefaultCellStyle = DataGridViewCellStyle1
         Me.grdList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.grdList.Size = New System.Drawing.Size(507, 486)
         Me.grdList.TabIndex = 0
@@ -130,6 +130,7 @@ Partial Class frmGeneralList
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
         Me.Name = "frmGeneralList"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.Manual
         Me.Text = "Liste générique"
         CType(Me.grdList, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)

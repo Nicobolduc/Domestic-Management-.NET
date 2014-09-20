@@ -94,6 +94,9 @@ Public Class frmGeneralList
                 'grdList.FirstDisplayedScrollingRowIndex = grdList.SelectedRows(0).Index
             End If
 
+            txtFilter.Focus()
+            txtFilter.SelectAll()
+
         Catch ex As Exception
             blnReturn = False
             gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
@@ -218,5 +221,15 @@ Public Class frmGeneralList
 
         intSelectedColumn = 1
 
+    End Sub
+
+    Protected Overrides Sub Finalize()
+        My.Forms.mdiGeneral.RemoveGenListHandle(Me.Handle.ToInt32)
+        MyBase.Finalize()
+    End Sub
+
+    Private Sub frmGeneralList_FormClosed(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosedEventArgs) Handles Me.FormClosed
+        My.Forms.mdiGeneral.RemoveGenListHandle(Me.Handle.ToInt32)
+        Me.Dispose()
     End Sub
 End Class

@@ -1,5 +1,34 @@
 ﻿Public Class mdiGeneral
 
+    Private mChildsFormsCol As Collection 'List(Of Int32)
+
+
+#Region "Properties"
+
+    Public ReadOnly Property GetGenListChildCount As Integer
+        Get
+            Return mChildsFormsCol.Count
+        End Get
+    End Property
+
+#End Region
+
+
+#Region "Public Functions/Subs"
+
+    Public Sub AddGenListHandle(ByRef rfrmGenListChild As Object, ByRef vintHandle As Int32)
+        mChildsFormsCol.Add(rfrmGenListChild, vintHandle.ToString)
+    End Sub
+
+    Public Sub RemoveGenListHandle(ByRef vintHandle As Int32)
+        mChildsFormsCol.Remove(vintHandle.ToString)
+    End Sub
+
+#End Region
+
+
+#Region "Private Events"
+
     Private Sub mdiGeneral_Disposed(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Disposed
         gcApplication.MySQLConnection.Close()
         gcApplication.MySQLConnection.Dispose()
@@ -7,6 +36,8 @@
 
     Private Sub mdiGeneral_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         main()
+
+        mChildsFormsCol = New Collection()
 
         lblStatusBD.Text = lblStatusBD.Text & gcApplication.MySQLConnection.Database
         lblStatusUser.Text = lblStatusUser.Text & " Nicolas"
@@ -54,4 +85,7 @@
 
         frmGestionBudget.myFormControler.ShowForm(clsConstants.Form_Modes.CONSULT_MODE)
     End Sub
+
+#End Region
+
 End Class

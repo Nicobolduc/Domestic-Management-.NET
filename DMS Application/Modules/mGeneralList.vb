@@ -31,6 +31,7 @@
             Dim frmGenList As New frmGeneralList(vList_ID)
 
             Try
+
                 Select Case vList_ID
                     Case mGeneralList.GeneralLists_ID.EXPENSES_LIST_ID
                         strSQL = strGetExpenseList_SQL()
@@ -74,6 +75,14 @@
                     frmGenList.MdiParent = My.Forms.mdiGeneral
 
                     frmGenList.myFormControler.ShowForm(clsConstants.Form_Modes.CONSULT_MODE)
+
+                    If My.Forms.mdiGeneral.GetGenListChildCount = 0 Then
+                        frmGenList.Location = New Point(0, 0)
+                    Else
+                        frmGenList.Location = New Point(My.Forms.mdiGeneral.GetGenListChildCount * 25, My.Forms.mdiGeneral.GetGenListChildCount * 25)
+                    End If
+
+                    My.Forms.mdiGeneral.AddGenListHandle(DirectCast(frmGenList, Object), frmGenList.Handle.ToInt32)
                 End If
 
             Catch ex As Exception

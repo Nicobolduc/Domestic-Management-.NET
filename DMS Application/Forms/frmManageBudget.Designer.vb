@@ -214,7 +214,7 @@ Partial Class frmManageBudget
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmManageBudget"
-        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.Manual
         Me.Text = "Budget"
         CType(Me.grdBudget, System.ComponentModel.ISupportInitialize).EndInit()
         Me.gbFilter.ResumeLayout(False)
