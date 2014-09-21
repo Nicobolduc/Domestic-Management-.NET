@@ -18,6 +18,7 @@
 
     'Private class members
     Private WithEvents mcGrdGrocery As clsDataGridView
+    Private mcSQL As clsSQL_Transactions
     Private mcPrinter As clsPrinting
 
 #Region "Functions / Subs"
@@ -25,10 +26,17 @@
     Private Function blnLoadData() As Boolean
         Dim blnReturn As Boolean
         Dim strSQL As String = vbNullString
+        Dim myDataReader As MySqlDataReader
 
         Try
             mdblTaxe_TPS = Val(mSQL.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_Name = 'TPS'"))
             mdblTaxe_TVQ = Val(mSQL.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_Name = 'TVQ'"))
+
+            strSQL = strSQL & " SELECT Pro_ID " & vbCrLf
+            strSQL = strSQL & " FROM Gro_Pro " & vbCrLf
+            strSQL = strSQL & " WHERE Gro_ID = " & myFormControler.Item_ID & vbCrLf
+
+            myDataReader = mSQL.ADOSelect(strSQL)
 
             blnReturn = True
 
@@ -50,7 +58,7 @@
             strSQL = strSQL & "         ProductType.ProT_ID, " & vbCrLf
             strSQL = strSQL & "         ProductType.ProT_Name, " & vbCrLf
             strSQL = strSQL & "         ProductCategory.ProC_ID, " & vbCrLf
-            strSQL = strSQL & "         ProductCategory.ProC_Name, " & vbCrLf
+            strSQL = strSQL & "         CASE WHEN ProductCategory.ProC_Name IS NULL THEN '' ELSE ProductCategory.ProC_Name END AS ProC_Name, " & vbCrLf
             strSQL = strSQL & "         Product.Pro_Taxable, " & vbCrLf
             strSQL = strSQL & "         ProductBrand.ProB_ID, " & vbCrLf
             strSQL = strSQL & "         ProductBrand.ProB_Name, " & vbCrLf
@@ -137,11 +145,156 @@
 
             txtTotal.Text = Format(dblMontantAvecTPS + dblMontantAvecTVQ + dblSubtotalNotTaxable + dblSubtotalTaxable, gstrCurrencyFormat)
 
+            myFormControler.ChangeMade = True
+
         Catch ex As Exception
             gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
+
+    Private Function blnSaveData() As Boolean
+        Dim blnReturn As Boolean
+
+        Try
+            mcSQL = New clsSQL_Transactions
+
+            mcSQL.bln_BeginTransaction()
+
+            Select Case myFormControler.FormMode
+                Case clsConstants.Form_Modes.INSERT_MODE
+                    blnReturn = blnGrocery_Insert()
+
+                Case clsConstants.Form_Modes.UPDATE_MODE
+                    blnReturn = blnGrocery_Update()
+
+                Case clsConstants.Form_Modes.DELETE_MODE
+                    blnReturn = blnGrocery_Delete()
+
+            End Select
+
+        Catch ex As Exception
+            blnReturn = False
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        Finally
+            mcSQL.bln_EndTransaction(blnReturn)
+            mcSQL = Nothing
+        End Try
+
+        Return blnReturn
+
+    End Function
+
+    Private Function blnGrocery_Insert() As Boolean
+        Dim blnReturn As Boolean
+
+        Try
+            Select Case False
+                Case mcSQL.bln_AddField("Gro_Name", txtName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_ADOInsert("Grocery", myFormControler.Item_ID)
+                Case myFormControler.Item_ID > 0
+                Case Else
+                    blnReturn = blnGro_Pro_Insert()
+            End Select
+
+        Catch ex As Exception
+            blnReturn = False
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnReturn
+    End Function
+
+    Private Function blnGrocery_Update() As Boolean
+        Dim blnReturn As Boolean
+
+        Try
+            Select Case False
+                Case mcSQL.bln_AddField("Gro_Name", txtName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_ADOUpdate("Grocery", "Gro_ID = " & myFormControler.Item_ID)
+                Case myFormControler.Item_ID > 0
+                Case Else
+                    blnReturn = blnGro_Pro_Insert()
+            End Select
+
+        Catch ex As Exception
+            blnReturn = False
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnReturn
+    End Function
+
+    Private Function blnGrocery_Delete() As Boolean
+        Dim blnReturn As Boolean
+
+        Try
+            Select Case False
+                Case blnGro_Pro_Delete()
+                Case mcSQL.bln_ADODelete("Grocery", "Gro_ID = " & myFormControler.Item_ID)
+                Case Else
+                    blnReturn = True
+            End Select
+
+        Catch ex As Exception
+            blnReturn = False
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnReturn
+    End Function
+
+    Private Function blnGro_Pro_Delete() As Boolean
+        Dim blnReturn As Boolean
+
+        Try
+            Select Case False
+                Case mcSQL.bln_ADODelete("Gro_Pro", "Gro_ID = " & myFormControler.Item_ID)
+                Case Else
+                    blnReturn = True
+            End Select
+
+        Catch ex As Exception
+            blnReturn = False
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnReturn
+    End Function
+
+    Private Function blnGro_Pro_Insert() As Boolean
+        Dim blnReturn As Boolean
+
+        Try
+            blnReturn = blnGro_Pro_Delete()
+
+            If blnReturn Then
+
+                For cpt As Integer = 0 To grdGrocery.Rows.Count - 1
+
+                    blnReturn = False
+                    Select Case False
+                        Case grdGrocery.Rows(cpt).Cells(mintGrdGrocery_Sel_col).Value.ToString = "True"
+                            blnReturn = True
+                        Case mcSQL.bln_AddField("Gro_ID", myFormControler.Item_ID.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
+                        Case mcSQL.bln_AddField("Pro_ID", grdGrocery.Rows(cpt).Cells(mintGrdGrocery_Pro_ID_col).Value.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
+                        Case mcSQL.bln_ADOInsert("Gro_Pro")
+                        Case Else
+                            blnReturn = True
+                    End Select
+
+                    If Not blnReturn Then Exit For
+                Next
+
+            End If
+
+        Catch ex As Exception
+            blnReturn = False
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnReturn
+    End Function
 
 #End Region
 
@@ -229,10 +382,20 @@
         End If
     End Sub
 
-    'Private Sub frmGrocery_ResizeEnd(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.ResizeEnd
-    '    txtSubTotal.Location = New Point(grdGrocery.GetCellDisplayRectangle(mintGrdGrocery_ProP_Price_col, 0, True).X + 4, txtSubTotal.Location.Y)
-    'End Sub
+    Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles myFormControler.SaveData
+        eventArgs.SaveSuccessful = blnSaveData()
+    End Sub
+
+    Private Sub txtName_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtName.TextChanged
+        myFormControler.ChangeMade = True
+    End Sub
+
+    Private Sub myFormControler_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles myFormControler.ValidateRules
+        eventArgs.IsValid = True
+    End Sub
 
 #End Region
+
+
 
 End Class

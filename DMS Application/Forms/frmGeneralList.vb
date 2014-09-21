@@ -55,6 +55,9 @@ Public Class frmGeneralList
                 Case mGeneralList.GeneralLists_ID.COMPANY_LIST_ID
                     frmToOpen = New frmCompany
 
+                Case mGeneralList.GeneralLists_ID.GROCERY_LIST_ID
+                    frmToOpen = New frmGrocery
+
             End Select
 
             If grdList.SelectedRows.Count > 0 Then

@@ -63,6 +63,7 @@ Public Class clsDataGridView
         Dim sqlCmd As MySqlCommand
         Dim mySQLReader As MySqlDataReader = Nothing
         Dim myDataTable As DataTable = New DataTable
+        'Dim myDataSet = New DataSet
         Dim strGridCaption As String = vbNullString
         Dim lstColumns As String()
         Dim newDGVCol As DataGridViewColumn
@@ -74,13 +75,16 @@ Public Class clsDataGridView
             grdGrid.Rows.Clear()
             grdGrid.Columns.Clear()
 
-            strGridCaption = gcApplication.str_GetCaption(CInt(grdGrid.Tag), 1)
+            strGridCaption = gcApplication.str_GetCaption(CInt(grdGrid.Tag), gcApplication.cUser.GetLanguage)
 
             lstColumns = Split(strGridCaption, "|")
 
             sqlCmd = New MySqlCommand(vstrSQL, gcApplication.MySQLConnection)
 
             mySQLReader = sqlCmd.ExecuteReader
+
+            'myDataSet.Tables.Add(myDataTable)
+            'myDataSet.EnforceConstraints = False
 
             myDataTable.Load(mySQLReader)
 

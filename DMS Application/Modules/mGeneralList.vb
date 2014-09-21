@@ -10,7 +10,8 @@
             PRODUCT_CATEGORY_LIST_ID = 4
             PRODUCT_BRAND_LIST_ID = 5
             COMPANY_LIST_ID = 6
-            COMPANY_TYPE_ID = 7
+            COMPANY_TYPE_LIST_ID = 7
+            GROCERY_LIST_ID = 8
         End Enum
 
         Public Enum GeneralList_AppCapID
@@ -20,6 +21,7 @@
             PRODUCT_CATEGORY_CAP = 4
             PRODUCT_BRAND_CAP = 7
             COMPANY_CAP = 8
+            GROCERY_CAP = 13
         End Enum
 
 
@@ -62,6 +64,11 @@
                         strSQL = strGetCompanyList_SQL()
                         strListName = " - Compagnies"
                         frmGenList.mintGridTag = CStr(GeneralList_AppCapID.COMPANY_CAP)
+
+                    Case mGeneralList.GeneralLists_ID.GROCERY_LIST_ID
+                        strSQL = strGetGroceryList_SQL()
+                        strListName = " - Épicerie"
+                        frmGenList.mintGridTag = CStr(GeneralList_AppCapID.GROCERY_CAP)
 
                     Case Else
                         'Do nothing
@@ -197,6 +204,27 @@
             End If
 
             strSQL = strSQL & "  ORDER BY Company.Cy_Name " & vbCrLf
+
+            Return strSQL
+        End Function
+
+        Private Function strGetGroceryList_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
+            Dim strSQL As String = vbNullString
+
+            strSQL = strSQL & "  SELECT Grocery.Gro_ID, " & vbCrLf
+            strSQL = strSQL & "         Grocery.Gro_Name, " & vbCrLf
+            strSQL = strSQL & "         CASE WHEN SUM(TProPrice.ProP_Price) = 0 THEN NULL ELSE ROUND(SUM(TProPrice.ProP_Price),2) END As TotalCost " & vbCrLf
+            strSQL = strSQL & "  FROM Gro_Pro " & vbCrLf
+            strSQL = strSQL & "     INNER JOIN Grocery ON Gro_Pro.Gro_ID = Gro_Pro.Gro_ID " & vbCrLf
+            strSQL = strSQL & "     INNER JOIN (SELECT ProP_Price, Pro_ID " & vbCrLf
+            strSQL = strSQL & "                 FROM ProductPrice " & vbCrLf
+            strSQL = strSQL & "                ) As TProPrice ON TProPrice.Pro_ID = Gro_Pro.Pro_ID  " & vbCrLf
+
+            If vstrWhere <> vbNullString Then
+
+            End If
+
+            strSQL = strSQL & "  ORDER BY Grocery.Gro_Name " & vbCrLf
 
             Return strSQL
         End Function

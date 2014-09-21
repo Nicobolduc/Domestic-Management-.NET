@@ -1,6 +1,6 @@
 ﻿Public Class mdiGeneral
 
-    Private mChildsFormsCol As Collection 'List(Of Int32)
+    Private mChildsFormsCol As Collection
 
 
 #Region "Properties"
@@ -79,11 +79,7 @@
     End Sub
 
     Private Sub ÉpicerieToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ÉpicerieToolStripMenuItem.Click
-        Dim frmGestionBudget As New frmGrocery
-
-        frmGestionBudget.MdiParent = Me
-
-        frmGestionBudget.myFormControler.ShowForm(clsConstants.Form_Modes.CONSULT_MODE)
+        mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.GROCERY_LIST_ID)
     End Sub
 
 #End Region

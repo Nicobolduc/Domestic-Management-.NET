@@ -33,8 +33,6 @@ Partial Class frmGrocery
         Me.btnPrint = New System.Windows.Forms.Button()
         Me.btnSelectAll = New System.Windows.Forms.Button()
         Me.btnUnselectAll = New System.Windows.Forms.Button()
-        Me.PrintPreviewDialog = New System.Windows.Forms.PrintPreviewDialog()
-        Me.PrintDocument = New System.Drawing.Printing.PrintDocument()
         Me.PageSetupDialog1 = New System.Windows.Forms.PageSetupDialog()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.txtSubTotal = New System.Windows.Forms.TextBox()
@@ -42,7 +40,11 @@ Partial Class frmGrocery
         Me.txtTotal = New System.Windows.Forms.TextBox()
         Me.formTootlTips = New System.Windows.Forms.ToolTip(Me.components)
         Me.myFormControler = New DMS_Application.ctlFormControler()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.txtName = New System.Windows.Forms.TextBox()
         CType(Me.grdGrocery, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
         '
         'grdGrocery
@@ -78,14 +80,14 @@ Partial Class frmGrocery
         '
         Me.cboGroceryStore.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboGroceryStore.FormattingEnabled = True
-        Me.cboGroceryStore.Location = New System.Drawing.Point(102, 7)
+        Me.cboGroceryStore.Location = New System.Drawing.Point(102, 14)
         Me.cboGroceryStore.Name = "cboGroceryStore"
         Me.cboGroceryStore.Size = New System.Drawing.Size(211, 21)
-        Me.cboGroceryStore.TabIndex = 10
+        Me.cboGroceryStore.TabIndex = 0
         '
         'Label1
         '
-        Me.Label1.Location = New System.Drawing.Point(5, 10)
+        Me.Label1.Location = New System.Drawing.Point(5, 17)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(91, 13)
         Me.Label1.TabIndex = 11
@@ -99,7 +101,7 @@ Partial Class frmGrocery
         Me.btnRefresh.Location = New System.Drawing.Point(717, 5)
         Me.btnRefresh.Name = "btnRefresh"
         Me.btnRefresh.Size = New System.Drawing.Size(40, 40)
-        Me.btnRefresh.TabIndex = 12
+        Me.btnRefresh.TabIndex = 1
         Me.formTootlTips.SetToolTip(Me.btnRefresh, "Rafraichir")
         Me.btnRefresh.UseVisualStyleBackColor = True
         '
@@ -111,7 +113,7 @@ Partial Class frmGrocery
         Me.btnPrint.Location = New System.Drawing.Point(717, 484)
         Me.btnPrint.Name = "btnPrint"
         Me.btnPrint.Size = New System.Drawing.Size(40, 40)
-        Me.btnPrint.TabIndex = 13
+        Me.btnPrint.TabIndex = 4
         Me.formTootlTips.SetToolTip(Me.btnPrint, "Imprimer")
         Me.btnPrint.UseVisualStyleBackColor = True
         '
@@ -123,7 +125,7 @@ Partial Class frmGrocery
         Me.btnSelectAll.Location = New System.Drawing.Point(721, 58)
         Me.btnSelectAll.Name = "btnSelectAll"
         Me.btnSelectAll.Size = New System.Drawing.Size(30, 30)
-        Me.btnSelectAll.TabIndex = 14
+        Me.btnSelectAll.TabIndex = 2
         Me.formTootlTips.SetToolTip(Me.btnSelectAll, "Tout sélectionner")
         Me.btnSelectAll.UseVisualStyleBackColor = True
         '
@@ -135,28 +137,9 @@ Partial Class frmGrocery
         Me.btnUnselectAll.Location = New System.Drawing.Point(721, 94)
         Me.btnUnselectAll.Name = "btnUnselectAll"
         Me.btnUnselectAll.Size = New System.Drawing.Size(30, 30)
-        Me.btnUnselectAll.TabIndex = 15
+        Me.btnUnselectAll.TabIndex = 3
         Me.formTootlTips.SetToolTip(Me.btnUnselectAll, "Tout déselectionner")
         Me.btnUnselectAll.UseVisualStyleBackColor = False
-        '
-        'PrintPreviewDialog
-        '
-        Me.PrintPreviewDialog.AutoScrollMargin = New System.Drawing.Size(0, 0)
-        Me.PrintPreviewDialog.AutoScrollMinSize = New System.Drawing.Size(0, 0)
-        Me.PrintPreviewDialog.ClientSize = New System.Drawing.Size(400, 300)
-        Me.PrintPreviewDialog.Document = Me.PrintDocument
-        Me.PrintPreviewDialog.Enabled = True
-        Me.PrintPreviewDialog.Icon = CType(resources.GetObject("PrintPreviewDialog.Icon"), System.Drawing.Icon)
-        Me.PrintPreviewDialog.Name = "PrintPreviewDialog"
-        Me.PrintPreviewDialog.ShowIcon = False
-        Me.PrintPreviewDialog.Visible = False
-        '
-        'PrintDocument
-        '
-        '
-        'PageSetupDialog1
-        '
-        Me.PageSetupDialog1.Document = Me.PrintDocument
         '
         'Label2
         '
@@ -209,13 +192,42 @@ Partial Class frmGrocery
         Me.myFormControler.Name = "myFormControler"
         Me.myFormControler.ShowButtonQuitOnly = False
         Me.myFormControler.Size = New System.Drawing.Size(760, 33)
-        Me.myFormControler.TabIndex = 0
+        Me.myFormControler.TabIndex = 5
+        '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.cboGroceryStore)
+        Me.GroupBox1.Controls.Add(Me.Label1)
+        Me.GroupBox1.Location = New System.Drawing.Point(368, 5)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(343, 47)
+        Me.GroupBox1.TabIndex = 20
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Filtres"
+        '
+        'Label4
+        '
+        Me.Label4.Location = New System.Drawing.Point(2, 19)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(39, 17)
+        Me.Label4.TabIndex = 21
+        Me.Label4.Text = "Nom:"
+        '
+        'txtName
+        '
+        Me.txtName.Location = New System.Drawing.Point(47, 16)
+        Me.txtName.Name = "txtName"
+        Me.txtName.Size = New System.Drawing.Size(253, 20)
+        Me.txtName.TabIndex = 0
         '
         'frmGrocery
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(761, 602)
+        Me.Controls.Add(Me.txtName)
+        Me.Controls.Add(Me.Label4)
+        Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.txtTotal)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.txtSubTotal)
@@ -224,8 +236,6 @@ Partial Class frmGrocery
         Me.Controls.Add(Me.btnSelectAll)
         Me.Controls.Add(Me.btnPrint)
         Me.Controls.Add(Me.btnRefresh)
-        Me.Controls.Add(Me.cboGroceryStore)
-        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.grdGrocery)
         Me.Controls.Add(Me.myFormControler)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
@@ -233,13 +243,14 @@ Partial Class frmGrocery
         Me.MaximizeBox = False
         Me.MinimumSize = New System.Drawing.Size(767, 501)
         Me.Name = "frmGrocery"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Épicerie"
         CType(Me.grdGrocery, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox1.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents myFormControler As DMS_Application.ctlFormControler
     Friend WithEvents grdGrocery As System.Windows.Forms.DataGridView
     Friend WithEvents cboGroceryStore As System.Windows.Forms.ComboBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
@@ -247,12 +258,14 @@ Partial Class frmGrocery
     Friend WithEvents btnPrint As System.Windows.Forms.Button
     Friend WithEvents btnSelectAll As System.Windows.Forms.Button
     Friend WithEvents btnUnselectAll As System.Windows.Forms.Button
-    Friend WithEvents PrintPreviewDialog As System.Windows.Forms.PrintPreviewDialog
-    Friend WithEvents PrintDocument As System.Drawing.Printing.PrintDocument
     Friend WithEvents PageSetupDialog1 As System.Windows.Forms.PageSetupDialog
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents txtSubTotal As System.Windows.Forms.TextBox
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents txtTotal As System.Windows.Forms.TextBox
     Friend WithEvents formTootlTips As System.Windows.Forms.ToolTip
+    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents txtName As System.Windows.Forms.TextBox
+    Public WithEvents myFormControler As DMS_Application.ctlFormControler
 End Class
