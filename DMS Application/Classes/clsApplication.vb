@@ -2,7 +2,7 @@
 
 Public Class clsApplication
 
-    'Private class memberstret
+    'Private class members
     Private mdiGeneral As mdiGeneral
     Private mcMySQLConnection As MySqlConnection
     Private mcErrorsLog As clsErrorsLog
