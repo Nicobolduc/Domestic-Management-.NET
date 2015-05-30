@@ -39,10 +39,10 @@ Partial Class frmGrocery
         Me.Label3 = New System.Windows.Forms.Label()
         Me.txtTotal = New System.Windows.Forms.TextBox()
         Me.formTootlTips = New System.Windows.Forms.ToolTip(Me.components)
-        Me.myFormControler = New DMS_Application.ctlFormControler()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.txtName = New System.Windows.Forms.TextBox()
+        Me.txtGroceryName = New System.Windows.Forms.TextBox()
+        Me.myFormControler = New DMS_Application.ctlFormControler()
         CType(Me.grdGrocery, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
@@ -181,19 +181,6 @@ Partial Class frmGrocery
         Me.txtTotal.Size = New System.Drawing.Size(80, 20)
         Me.txtTotal.TabIndex = 19
         '
-        'myFormControler
-        '
-        Me.myFormControler.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.myFormControler.FormIsLoading = False
-        Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.CONSULT_MODE
-        Me.myFormControler.Item_ID = 0
-        Me.myFormControler.Location = New System.Drawing.Point(0, 570)
-        Me.myFormControler.Name = "myFormControler"
-        Me.myFormControler.ShowButtonQuitOnly = False
-        Me.myFormControler.Size = New System.Drawing.Size(760, 33)
-        Me.myFormControler.TabIndex = 5
-        '
         'GroupBox1
         '
         Me.GroupBox1.Controls.Add(Me.cboGroceryStore)
@@ -213,19 +200,32 @@ Partial Class frmGrocery
         Me.Label4.TabIndex = 21
         Me.Label4.Text = "Nom:"
         '
-        'txtName
+        'txtGroceryName
         '
-        Me.txtName.Location = New System.Drawing.Point(47, 16)
-        Me.txtName.Name = "txtName"
-        Me.txtName.Size = New System.Drawing.Size(253, 20)
-        Me.txtName.TabIndex = 0
+        Me.txtGroceryName.Location = New System.Drawing.Point(47, 16)
+        Me.txtGroceryName.Name = "txtGroceryName"
+        Me.txtGroceryName.Size = New System.Drawing.Size(253, 20)
+        Me.txtGroceryName.TabIndex = 0
+        '
+        'myFormControler
+        '
+        Me.myFormControler.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.myFormControler.FormIsLoading = False
+        Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.CONSULT_MODE
+        Me.myFormControler.Item_ID = 0
+        Me.myFormControler.Location = New System.Drawing.Point(0, 570)
+        Me.myFormControler.Name = "myFormControler"
+        Me.myFormControler.ShowButtonQuitOnly = False
+        Me.myFormControler.Size = New System.Drawing.Size(762, 33)
+        Me.myFormControler.TabIndex = 5
         '
         'frmGrocery
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(761, 602)
-        Me.Controls.Add(Me.txtName)
+        Me.Controls.Add(Me.txtGroceryName)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.txtTotal)
@@ -266,6 +266,6 @@ Partial Class frmGrocery
     Friend WithEvents formTootlTips As System.Windows.Forms.ToolTip
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents Label4 As System.Windows.Forms.Label
-    Friend WithEvents txtName As System.Windows.Forms.TextBox
+    Friend WithEvents txtGroceryName As System.Windows.Forms.TextBox
     Public WithEvents myFormControler As DMS_Application.ctlFormControler
 End Class

@@ -2,7 +2,7 @@
 
 Public Class clsApplication
 
-    'Private class members
+    'Private class memberstret
     Private mdiGeneral As mdiGeneral
     Private mcMySQLConnection As MySqlConnection
     Private mcErrorsLog As clsErrorsLog
@@ -44,7 +44,6 @@ Public Class clsApplication
 
 #End Region
 
-
 #Region "Constructors"
 
     Public Sub New()
@@ -59,7 +58,6 @@ Public Class clsApplication
     End Sub
 
 #End Region
-
 
 #Region "Functions / Subs"
 
@@ -154,7 +152,7 @@ Public Class clsApplication
 
     End Sub
 
-    Public Sub DisableAllControls(Optional ByRef rForm As System.Windows.Forms.Form = Nothing, Optional ByRef rTabPage As TabPage = Nothing, Optional ByRef rControl As Control = Nothing)
+    Public Sub DisableAllFormControls(Optional ByRef rForm As System.Windows.Forms.Form = Nothing, Optional ByRef rTabPage As TabPage = Nothing, Optional ByRef rControl As Control = Nothing)
         Dim controlCollection As System.Windows.Forms.Control.ControlCollection
 
         Try
@@ -171,14 +169,14 @@ Public Class clsApplication
                         objControl.Enabled = False
 
                     Case "GroupBox"
-                        DisableAllControls(Nothing, Nothing, objControl)
+                        DisableAllFormControls(Nothing, Nothing, objControl)
 
                     Case "DataGridView"
                         DirectCast(objControl, DataGridView).ReadOnly = True
 
                     Case "TabControl"
                         For Each tp As TabPage In DirectCast(objControl, TabControl).TabPages
-                            DisableAllControls(Nothing, tp)
+                            DisableAllFormControls(Nothing, tp)
                         Next
 
                     Case Else

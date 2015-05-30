@@ -37,7 +37,7 @@
                 Select Case vList_ID
                     Case mGeneralList.GeneralLists_ID.EXPENSES_LIST_ID
                         strSQL = strGetExpenseList_SQL()
-                        strListName = " - Dépenses"
+                        strListName = " - Dépenses" 'TODO
                         frmGenList.mintGridTag = CStr(GeneralList_AppCapID.EXPENSES_CAP)
 
                     Case mGeneralList.GeneralLists_ID.PRODUCTS_LIST_ID
@@ -224,7 +224,8 @@
 
             End If
 
-            strSQL = strSQL & "  ORDER BY Grocery.Gro_Name " & vbCrLf
+            strSQL = strSQL & " HAVING TotalCost IS NOT NULL " & vbCrLf
+            strSQL = strSQL & " ORDER BY Grocery.Gro_Name " & vbCrLf
 
             Return strSQL
         End Function

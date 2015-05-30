@@ -75,7 +75,7 @@ Public Class frmGeneralList
 
                 Case clsConstants.Form_Modes.DELETE_MODE
                     intSelectedRow = grdList.SelectedRows(0).Index
-                    gcApplication.DisableAllControls(frmToOpen)
+                    gcApplication.DisableAllFormControls(frmToOpen)
                     frmToOpen.myFormControler.ShowForm(vFormMode, intItem_ID, True)
 
             End Select

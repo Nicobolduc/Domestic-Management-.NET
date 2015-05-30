@@ -74,11 +74,11 @@
         mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.PRODUCT_BRAND_LIST_ID)
     End Sub
 
-    Private Sub CompagnieToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CompagnieToolStripMenuItem.Click
+    Private Sub mnuiCompany_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiCompany.Click
         mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.COMPANY_LIST_ID)
     End Sub
 
-    Private Sub ÉpicerieToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ÉpicerieToolStripMenuItem.Click
+    Private Sub mnuiGrocery_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiGrocery.Click
         mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.GROCERY_LIST_ID)
     End Sub
 

@@ -58,6 +58,7 @@ Public Class frmProduct
             gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
+                mySQLReader.Close()
                 mySQLReader.Dispose()
             End If
         End Try

@@ -26,23 +26,35 @@
     Private Function blnLoadData() As Boolean
         Dim blnReturn As Boolean
         Dim strSQL As String = vbNullString
-        Dim myDataReader As MySqlDataReader
+        Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
             mdblTaxe_TPS = Val(mSQL.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_Name = 'TPS'"))
             mdblTaxe_TVQ = Val(mSQL.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_Name = 'TVQ'"))
 
-            strSQL = strSQL & " SELECT Pro_ID " & vbCrLf
-            strSQL = strSQL & " FROM Gro_Pro " & vbCrLf
+            strSQL = strSQL & " SELECT Grocery.Gro_Name " & vbCrLf
+            strSQL = strSQL & " FROM Grocery " & vbCrLf
             strSQL = strSQL & " WHERE Gro_ID = " & myFormControler.Item_ID & vbCrLf
 
-            myDataReader = mSQL.ADOSelect(strSQL)
+            mySQLReader = mSQL.ADOSelect(strSQL)
+
+            If mySQLReader.Read() Then
+
+                txtGroceryName.Text = mySQLReader.Item("Gro_Name").ToString
+            Else
+                'Do nothing
+            End If
 
             blnReturn = True
 
         Catch ex As Exception
             blnReturn = False
             gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        Finally
+            If Not IsNothing(mySQLReader) Then
+                mySQLReader.Close()
+                mySQLReader.Dispose()
+            End If
         End Try
 
         Return blnReturn
@@ -62,12 +74,16 @@
             strSQL = strSQL & "         Product.Pro_Taxable, " & vbCrLf
             strSQL = strSQL & "         ProductBrand.ProB_ID, " & vbCrLf
             strSQL = strSQL & "         ProductBrand.ProB_Name, " & vbCrLf
-            strSQL = strSQL & "         ProductPrice.ProP_Price " & vbCrLf
+            strSQL = strSQL & "         ProductPrice.ProP_Price, " & vbCrLf
+            strSQL = strSQL & "         CASE WHEN Gro_Pro.Pro_ID IS NOT NULL THEN True ELSE False END As " & mcGrdGrocery.getSelectionColName & vbCrLf
             strSQL = strSQL & " FROM Product " & vbCrLf
             strSQL = strSQL & "     INNER JOIN ProductType ON ProductType.ProT_ID = Product.ProT_ID " & vbCrLf
             strSQL = strSQL & "     LEFT JOIN ProductCategory ON ProductCategory.ProC_ID = Product.ProC_ID " & vbCrLf
             strSQL = strSQL & "     INNER JOIN ProductBrand ##ON ProductBrand.ProB_ID = 1 " & vbCrLf
-            strSQL = strSQL & "     INNER JOIN ProductPrice ON ProductPrice.Pro_ID = Product.Pro_ID AND ProductPrice.ProB_ID = ProductBrand.ProB_ID AND ProductPrice.Cy_ID = " & cboGroceryStore.SelectedValue.ToString & vbCrLf
+            strSQL = strSQL & "     INNER JOIN ProductPrice ON ProductPrice.Pro_ID = Product.Pro_ID " & vbCrLf
+            strSQL = strSQL & "                            AND ProductPrice.ProB_ID = ProductBrand.ProB_ID " & vbCrLf
+            strSQL = strSQL & "                            AND ProductPrice.Cy_ID = " & cboGroceryStore.SelectedValue.ToString & vbCrLf
+            strSQL = strSQL & "     LEFT JOIN Gro_Pro ON Gro_Pro.Gro_ID = " & myFormControler.Item_ID & " AND Gro_Pro.Pro_ID = Product.Pro_ID " & vbCrLf
             strSQL = strSQL & " ORDER BY Product.Pro_Name, ProductType.ProT_Name, ProductCategory.ProC_Name " & vbCrLf
 
             blnReturn = mcGrdGrocery.bln_FillData(strSQL)
@@ -190,7 +206,7 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Gro_Name", txtName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("Gro_Name", txtGroceryName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
                 Case mcSQL.bln_ADOInsert("Grocery", myFormControler.Item_ID)
                 Case myFormControler.Item_ID > 0
                 Case Else
@@ -210,7 +226,7 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Gro_Name", txtName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("Gro_Name", txtGroceryName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
                 Case mcSQL.bln_ADOUpdate("Grocery", "Gro_ID = " & myFormControler.Item_ID)
                 Case myFormControler.Item_ID > 0
                 Case Else
@@ -331,11 +347,11 @@
 
         grdGrocery.Columns(mintGrdGrocery_ProP_Price_col).DefaultCellStyle.Format = gstrCurrencyFormat
 
-        grdGrocery.Columns.Add(New DataGridViewCheckBoxColumn())
-        grdGrocery.Columns(mintGrdGrocery_Sel_col).SortMode = DataGridViewColumnSortMode.Automatic
-        grdGrocery.Columns(mintGrdGrocery_Sel_col).HeaderText = "Sél."
-        grdGrocery.Columns(mintGrdGrocery_Sel_col).ReadOnly = False
-        grdGrocery.Columns(mintGrdGrocery_Sel_col).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+        'grdGrocery.Columns.Add(New DataGridViewCheckBoxColumn())
+        'grdGrocery.Columns(mintGrdGrocery_Sel_col).SortMode = DataGridViewColumnSortMode.Automatic
+        'grdGrocery.Columns(mintGrdGrocery_Sel_col).HeaderText = "Sél."
+        'grdGrocery.Columns(mintGrdGrocery_Sel_col).ReadOnly = False
+        'grdGrocery.Columns(mintGrdGrocery_Sel_col).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
 
         For Each column As DataGridViewColumn In grdGrocery.Columns
             If column.Index <> mintGrdGrocery_Sel_col Then
@@ -386,12 +402,19 @@
         eventArgs.SaveSuccessful = blnSaveData()
     End Sub
 
-    Private Sub txtName_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtName.TextChanged
+    Private Sub txtName_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtGroceryName.TextChanged
         myFormControler.ChangeMade = True
     End Sub
 
     Private Sub myFormControler_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles myFormControler.ValidateRules
-        eventArgs.IsValid = True
+
+        Select Case False
+            Case txtGroceryName.Text <> vbNullString
+                txtGroceryName.Focus()
+                gcApplication.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+            Case Else
+                eventArgs.IsValid = True
+        End Select
     End Sub
 
 #End Region

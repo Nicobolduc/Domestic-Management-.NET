@@ -34,7 +34,7 @@ Module mControlsFunctions
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source & " - " & System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Close()

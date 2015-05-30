@@ -6,6 +6,7 @@ Public Class clsDataGridView
 
     'Private members
     Private Const mintDefaultActionCol As Short = 0
+    Private Const mstrSelectionColName As String = "SelCol"
 
     'Private class members
     Private WithEvents grdGrid As DataGridView
@@ -22,6 +23,15 @@ Public Class clsDataGridView
         DELETE_ACTION = 3
     End Enum
 
+#Region "Properties"
+
+    Public ReadOnly Property getSelectionColName As String
+        Get
+            Return mstrSelectionColName
+        End Get
+    End Property
+
+#End Region
 
 #Region "Functions / Subs"
 
@@ -89,9 +99,10 @@ Public Class clsDataGridView
             myDataTable.Load(mySQLReader)
 
             For intColIndex As Integer = 0 To myDataTable.Columns.Count - 1
+
                 newDGVCol = New DataGridViewColumn()
 
-                If myDataTable.Columns(intColIndex).DataType.Name = "Byte" Then
+                If myDataTable.Columns(intColIndex).DataType.Name = "Byte" Or myDataTable.Columns(intColIndex).ColumnName = getSelectionColName Then
                     newDGVCell = New DataGridViewCheckBoxCell()
                 Else
                     newDGVCell = New DataGridViewTextBoxCell()

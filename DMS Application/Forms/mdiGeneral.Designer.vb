@@ -28,6 +28,7 @@ Partial Class mdiGeneral
         Me.mnuiOptions = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuGestion = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiBudget = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuiGrocery = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuFacturation = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiExpense = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuProduit = New System.Windows.Forms.ToolStripMenuItem()
@@ -36,12 +37,11 @@ Partial Class mdiGeneral
         Me.mnuiProductCategory = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiBrand = New System.Windows.Forms.ToolStripMenuItem()
         Me.EntitéeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CompagnieToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuiCompany = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuWindows = New System.Windows.Forms.ToolStripMenuItem()
         Me.statusBar = New System.Windows.Forms.StatusStrip()
         Me.lblStatusUser = New System.Windows.Forms.ToolStripStatusLabel()
         Me.lblStatusBD = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.ÉpicerieToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMain.SuspendLayout()
         Me.statusBar.SuspendLayout()
         Me.SuspendLayout()
@@ -71,7 +71,7 @@ Partial Class mdiGeneral
         '
         'mnuGestion
         '
-        Me.mnuGestion.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuiBudget, Me.ÉpicerieToolStripMenuItem})
+        Me.mnuGestion.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuiBudget, Me.mnuiGrocery})
         Me.mnuGestion.Name = "mnuGestion"
         Me.mnuGestion.Size = New System.Drawing.Size(59, 20)
         Me.mnuGestion.Text = "Gestion"
@@ -79,8 +79,14 @@ Partial Class mdiGeneral
         'mnuiBudget
         '
         Me.mnuiBudget.Name = "mnuiBudget"
-        Me.mnuiBudget.Size = New System.Drawing.Size(152, 22)
+        Me.mnuiBudget.Size = New System.Drawing.Size(115, 22)
         Me.mnuiBudget.Text = "Budget"
+        '
+        'mnuiGrocery
+        '
+        Me.mnuiGrocery.Name = "mnuiGrocery"
+        Me.mnuiGrocery.Size = New System.Drawing.Size(115, 22)
+        Me.mnuiGrocery.Text = "Épicerie"
         '
         'mnuFacturation
         '
@@ -128,16 +134,16 @@ Partial Class mdiGeneral
         '
         'EntitéeToolStripMenuItem
         '
-        Me.EntitéeToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CompagnieToolStripMenuItem})
+        Me.EntitéeToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuiCompany})
         Me.EntitéeToolStripMenuItem.Name = "EntitéeToolStripMenuItem"
         Me.EntitéeToolStripMenuItem.Size = New System.Drawing.Size(55, 20)
         Me.EntitéeToolStripMenuItem.Text = "Entitée"
         '
-        'CompagnieToolStripMenuItem
+        'mnuiCompany
         '
-        Me.CompagnieToolStripMenuItem.Name = "CompagnieToolStripMenuItem"
-        Me.CompagnieToolStripMenuItem.Size = New System.Drawing.Size(136, 22)
-        Me.CompagnieToolStripMenuItem.Text = "Compagnie"
+        Me.mnuiCompany.Name = "mnuiCompany"
+        Me.mnuiCompany.Size = New System.Drawing.Size(152, 22)
+        Me.mnuiCompany.Text = "Compagnie"
         '
         'mnuWindows
         '
@@ -167,12 +173,6 @@ Partial Class mdiGeneral
         Me.lblStatusBD.Name = "lblStatusBD"
         Me.lblStatusBD.Size = New System.Drawing.Size(25, 17)
         Me.lblStatusBD.Text = "BD:"
-        '
-        'ÉpicerieToolStripMenuItem
-        '
-        Me.ÉpicerieToolStripMenuItem.Name = "ÉpicerieToolStripMenuItem"
-        Me.ÉpicerieToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.ÉpicerieToolStripMenuItem.Text = "Épicerie"
         '
         'mdiGeneral
         '
@@ -212,6 +212,6 @@ Partial Class mdiGeneral
     Friend WithEvents mnuiBrand As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuWindows As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents EntitéeToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents CompagnieToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ÉpicerieToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mnuiCompany As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mnuiGrocery As System.Windows.Forms.ToolStripMenuItem
 End Class

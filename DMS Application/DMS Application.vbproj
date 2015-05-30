@@ -249,8 +249,10 @@
     <None Include="Resources\Delete.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Icons\Consult.png" />
     <Content Include="Resources\Consult.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Icons\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
