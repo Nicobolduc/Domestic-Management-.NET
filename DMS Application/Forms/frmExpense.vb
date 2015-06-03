@@ -37,7 +37,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Close()
@@ -62,7 +62,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -77,20 +77,20 @@
             mcSQL.bln_BeginTransaction()
 
             Select Case myFormControler.FormMode
-                Case clsConstants.Form_Modes.INSERT_MODE
+                Case mConstants.Form_Modes.INSERT_MODE
                     blnReturn = blnExpense_Insert()
 
-                Case clsConstants.Form_Modes.UPDATE_MODE
+                Case mConstants.Form_Modes.UPDATE_MODE
                     blnReturn = blnExense_Update()
 
-                Case clsConstants.Form_Modes.DELETE_MODE
+                Case mConstants.Form_Modes.DELETE_MODE
                     blnReturn = blnExpense_Delete()
 
             End Select
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mcSQL.bln_EndTransaction(blnReturn)
             mcSQL = Nothing
@@ -104,10 +104,10 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Exp_Name", txtCode.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("Exp_BillingDate", CStr(IIf(IsDBNull(dtpBillDate.Value), "", dtpBillDate.Value.ToString)), clsConstants.MySQL_FieldTypes.DATETIME_TYPE)
-                Case mcSQL.bln_AddField("Exp_Amount", txtAmount.Text, clsConstants.MySQL_FieldTypes.DOUBLE_TYPE)
-                Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Exp_Name", txtCode.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("Exp_BillingDate", CStr(IIf(IsDBNull(dtpBillDate.Value), "", dtpBillDate.Value.ToString)), mConstants.MySQL_FieldTypes.DATETIME_TYPE)
+                Case mcSQL.bln_AddField("Exp_Amount", txtAmount.Text, mConstants.MySQL_FieldTypes.DOUBLE_TYPE)
+                Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedValue), mConstants.MySQL_FieldTypes.INT_TYPE)
                 Case mcSQL.bln_ADOInsert("Expense", myFormControler.Item_ID)
                 Case myFormControler.Item_ID > 0
                 Case Else
@@ -116,7 +116,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -127,9 +127,9 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Exp_Name", txtCode.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("Exp_Amount", txtAmount.Text, clsConstants.MySQL_FieldTypes.DOUBLE_TYPE)
-                Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Exp_Name", txtCode.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("Exp_Amount", txtAmount.Text, mConstants.MySQL_FieldTypes.DOUBLE_TYPE)
+                Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedValue), mConstants.MySQL_FieldTypes.INT_TYPE)
                 Case mcSQL.bln_ADOUpdate("Expense", "Exp_ID = " & myFormControler.Item_ID)
                 Case Else
                     blnReturn = True
@@ -137,7 +137,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -155,7 +155,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -173,7 +173,7 @@
 
         Select Case False
             Case blnCboInterval_Load()
-            Case myFormControler.FormMode <> clsConstants.Form_Modes.INSERT_MODE
+            Case myFormControler.FormMode <> mConstants.Form_Modes.INSERT_MODE
                 blnReturn = True
             Case blnLoadData()
             Case Else
@@ -197,19 +197,19 @@
     Private Sub myFormControler_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles myFormControler.ValidateRules
         Select Case False
             Case txtCode.Text <> vbNullString
-                gcApplication.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtCode.Focus()
 
             Case txtAmount.Text <> vbNullString
-                gcApplication.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtAmount.Focus()
 
             Case IsNumeric(txtAmount.Text)
-                gcApplication.ShowMessage(clsConstants.Validation_Messages.NUMERIC_VALUE, MsgBoxStyle.Information)
+                gcAppControler.ShowMessage(mConstants.Validation_Messages.NUMERIC_VALUE, MsgBoxStyle.Information)
                 txtAmount.Focus()
 
             Case cboInterval.SelectedIndex > -1
-                gcApplication.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 cboInterval.DroppedDown = True
                 cboInterval.Focus()
 

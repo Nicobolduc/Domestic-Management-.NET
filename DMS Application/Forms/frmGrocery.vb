@@ -32,7 +32,8 @@
             mdblTaxe_TPS = Val(mSQL.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_Name = 'TPS'"))
             mdblTaxe_TVQ = Val(mSQL.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_Name = 'TVQ'"))
 
-            strSQL = strSQL & " SELECT Grocery.Gro_Name " & vbCrLf
+            strSQL = strSQL & " SELECT  Grocery.Gro_Name " & vbCrLf
+
             strSQL = strSQL & " FROM Grocery " & vbCrLf
             strSQL = strSQL & " WHERE Gro_ID = " & myFormControler.Item_ID & vbCrLf
 
@@ -49,7 +50,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Close()
@@ -65,7 +66,7 @@
         Dim strSQL As String = vbNullString
 
         Try
-            strSQL = strSQL & "  SELECT Product.Pro_ID, " & vbCrLf
+            strSQL = strSQL & " SELECT  Product.Pro_ID, " & vbCrLf
             strSQL = strSQL & "         Product.Pro_Name, " & vbCrLf
             strSQL = strSQL & "         ProductType.ProT_ID, " & vbCrLf
             strSQL = strSQL & "         ProductType.ProT_Name, " & vbCrLf
@@ -75,7 +76,7 @@
             strSQL = strSQL & "         ProductBrand.ProB_ID, " & vbCrLf
             strSQL = strSQL & "         ProductBrand.ProB_Name, " & vbCrLf
             strSQL = strSQL & "         ProductPrice.ProP_Price, " & vbCrLf
-            strSQL = strSQL & "         CASE WHEN Gro_Pro.Pro_ID IS NOT NULL THEN True ELSE False END As " & mcGrdGrocery.getSelectionColName & vbCrLf
+            strSQL = strSQL & "         CASE WHEN Gro_Pro.Pro_ID IS NOT NULL THEN 1 ELSE 0 END As " & mcGrdGrocery.getSelectionColName & vbCrLf
             strSQL = strSQL & " FROM Product " & vbCrLf
             strSQL = strSQL & "     INNER JOIN ProductType ON ProductType.ProT_ID = Product.ProT_ID " & vbCrLf
             strSQL = strSQL & "     LEFT JOIN ProductCategory ON ProductCategory.ProC_ID = Product.ProC_ID " & vbCrLf
@@ -88,11 +89,11 @@
 
             blnReturn = mcGrdGrocery.bln_FillData(strSQL)
 
-            CalculTotals()
+            CalculateTotals()
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -105,15 +106,16 @@
         Try
             strSQL = strSQL & " SELECT Company.Cy_ID, " & vbCrLf
             strSQL = strSQL & "        Company.Cy_Name " & vbCrLf
+            'strSQL = strSQL & "        Grocery.Gro_Default_Cy " & vbCrLf
             strSQL = strSQL & " FROM Company " & vbCrLf
-            strSQL = strSQL & " WHERE Company.CyT_ID = " & clsConstants.CompanyType.GROCERY_STORE & vbCrLf
+            strSQL = strSQL & " WHERE Company.CyT_ID = " & mConstants.CompanyType.GROCERY_STORE & vbCrLf
             strSQL = strSQL & " ORDER BY Company.Cy_Name " & vbCrLf
 
             blnReturn = blnComboBox_LoadFromSQL(strSQL, "Cy_ID", "Cy_Name", False, cboGroceryStore)
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -126,15 +128,15 @@
                 row.Cells(mintGrdGrocery_Sel_col).Value = vblnCheckAll
             Next
 
-            CalculTotals()
+            CalculateTotals()
 
         Catch ex As Exception
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
 
-    Private Sub CalculTotals()
+    Private Sub CalculateTotals()
         Dim dblSubtotalTaxable As Double = 0.0
         Dim dblSubtotalNotTaxable As Double = 0.0
         Dim dblMontantAvecTPS As Double
@@ -164,7 +166,7 @@
             myFormControler.ChangeMade = True
 
         Catch ex As Exception
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -178,20 +180,20 @@
             mcSQL.bln_BeginTransaction()
 
             Select Case myFormControler.FormMode
-                Case clsConstants.Form_Modes.INSERT_MODE
+                Case mConstants.Form_Modes.INSERT_MODE
                     blnReturn = blnGrocery_Insert()
 
-                Case clsConstants.Form_Modes.UPDATE_MODE
+                Case mConstants.Form_Modes.UPDATE_MODE
                     blnReturn = blnGrocery_Update()
 
-                Case clsConstants.Form_Modes.DELETE_MODE
+                Case mConstants.Form_Modes.DELETE_MODE
                     blnReturn = blnGrocery_Delete()
 
             End Select
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mcSQL.bln_EndTransaction(blnReturn)
             mcSQL = Nothing
@@ -206,7 +208,7 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Gro_Name", txtGroceryName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("Gro_Name", txtGroceryName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
                 Case mcSQL.bln_ADOInsert("Grocery", myFormControler.Item_ID)
                 Case myFormControler.Item_ID > 0
                 Case Else
@@ -215,7 +217,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -226,7 +228,7 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Gro_Name", txtGroceryName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("Gro_Name", txtGroceryName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
                 Case mcSQL.bln_ADOUpdate("Grocery", "Gro_ID = " & myFormControler.Item_ID)
                 Case myFormControler.Item_ID > 0
                 Case Else
@@ -235,7 +237,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -254,7 +256,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -272,7 +274,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -292,8 +294,8 @@
                     Select Case False
                         Case grdGrocery.Rows(cpt).Cells(mintGrdGrocery_Sel_col).Value.ToString = "True"
                             blnReturn = True
-                        Case mcSQL.bln_AddField("Gro_ID", myFormControler.Item_ID.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
-                        Case mcSQL.bln_AddField("Pro_ID", grdGrocery.Rows(cpt).Cells(mintGrdGrocery_Pro_ID_col).Value.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
+                        Case mcSQL.bln_AddField("Gro_ID", myFormControler.Item_ID.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
+                        Case mcSQL.bln_AddField("Pro_ID", grdGrocery.Rows(cpt).Cells(mintGrdGrocery_Pro_ID_col).Value.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
                         Case mcSQL.bln_ADOInsert("Gro_Pro")
                         Case Else
                             blnReturn = True
@@ -306,7 +308,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -394,7 +396,7 @@
 
     Private Sub grdGrocery_CellValueChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellEventArgs) Handles grdGrocery.CellValueChanged
         If e.ColumnIndex = mintGrdGrocery_Sel_col And e.RowIndex <> -1 And Not myFormControler.FormIsLoading Then
-            CalculTotals()
+            CalculateTotals()
         End If
     End Sub
 
@@ -411,7 +413,7 @@
         Select Case False
             Case txtGroceryName.Text <> vbNullString
                 txtGroceryName.Focus()
-                gcApplication.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
             Case Else
                 eventArgs.IsValid = True
         End Select

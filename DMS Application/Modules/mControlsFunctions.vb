@@ -11,7 +11,7 @@ Module mControlsFunctions
         Try
             rcboToLoad.DataSource = Nothing
 
-            mySQLCmd = New MySqlCommand(vstrSQL, gcApplication.MySQLConnection)
+            mySQLCmd = New MySqlCommand(vstrSQL, gcAppControler.MySQLConnection)
 
             mySQLReader = mySQLCmd.ExecuteReader
 
@@ -34,7 +34,7 @@ Module mControlsFunctions
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source & " - " & System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source & " - " & System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Close()

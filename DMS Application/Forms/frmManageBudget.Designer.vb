@@ -195,7 +195,7 @@ Partial Class frmManageBudget
         '
         Me.myFormControler.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.myFormControler.FormIsLoading = False
-        Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.CONSULT_MODE
+        Me.myFormControler.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
         Me.myFormControler.Item_ID = 0
         Me.myFormControler.Location = New System.Drawing.Point(638, 613)
         Me.myFormControler.Name = "myFormControler"

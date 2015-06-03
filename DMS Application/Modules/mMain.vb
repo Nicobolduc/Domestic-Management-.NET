@@ -1,7 +1,7 @@
 ﻿Module mMain
 
 
-    Public gcApplication As clsApplication
+    Public gcAppControler As clsAppControler
 
     Public gstrCurrencyFormat As String = "##,0.00$"
 
@@ -10,7 +10,7 @@
 
     Sub main()
 
-        gcApplication = New clsApplication
+        gcAppControler = New clsAppControler
 
     End Sub
 

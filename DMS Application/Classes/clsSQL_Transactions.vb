@@ -39,17 +39,17 @@ Public Class clsSQL_Transactions
         Dim blnReturn As Boolean
 
         Try
-            mMySQLTransaction = gcApplication.MySQLConnection.BeginTransaction(IsolationLevel.ReadCommitted)
+            mMySQLTransaction = gcAppControler.MySQLConnection.BeginTransaction(IsolationLevel.ReadCommitted)
             mblnTransactionStarted = True
             mMySQLCmd.Transaction = mMySQLTransaction
-            mMySQLCmd.Connection = gcApplication.MySQLConnection
+            mMySQLCmd.Connection = gcAppControler.MySQLConnection
             mMySQLCmd.CommandType = CommandType.Text
 
             blnReturn = True
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -69,7 +69,7 @@ Public Class clsSQL_Transactions
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mblnTransactionStarted = False
             mMySQLTransaction.Dispose()
@@ -79,7 +79,7 @@ Public Class clsSQL_Transactions
         Return blnReturn
     End Function
 
-    Public Function bln_AddField(ByVal vstrField As String, ByVal vstrValue As String, ByVal vintDBType As clsConstants.MySQL_FieldTypes) As Boolean
+    Public Function bln_AddField(ByVal vstrField As String, ByVal vstrValue As String, ByVal vintDBType As mConstants.MySQL_FieldTypes) As Boolean
         Dim blnReturn As Boolean
 
         Try
@@ -87,14 +87,14 @@ Public Class clsSQL_Transactions
                 vstrValue = "NULL"
             Else
                 Select Case vintDBType
-                    Case clsConstants.MySQL_FieldTypes.VARCHAR_TYPE
-                        vstrValue = gcApplication.str_FixStringForSQL(vstrValue)
+                    Case mConstants.MySQL_FieldTypes.VARCHAR_TYPE
+                        vstrValue = gcAppControler.str_FixStringForSQL(vstrValue)
 
-                    Case clsConstants.MySQL_FieldTypes.DATETIME_TYPE
-                        vstrValue = Format(CDate(vstrValue), gcApplication.str_GetServerDateTimeFormat)
-                        vstrValue = gcApplication.str_FixStringForSQL(vstrValue)
+                    Case mConstants.MySQL_FieldTypes.DATETIME_TYPE
+                        vstrValue = Format(CDate(vstrValue), gcAppControler.str_GetServerDateTimeFormat)
+                        vstrValue = gcAppControler.str_FixStringForSQL(vstrValue)
 
-                    Case clsConstants.MySQL_FieldTypes.INT_TYPE
+                    Case mConstants.MySQL_FieldTypes.INT_TYPE
                         If vstrValue = "0" Then
                             vstrValue = "NULL"
                         End If
@@ -108,7 +108,7 @@ Public Class clsSQL_Transactions
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -147,7 +147,7 @@ Public Class clsSQL_Transactions
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -178,7 +178,7 @@ Public Class clsSQL_Transactions
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mColFields.Clear()
         End Try
@@ -203,7 +203,7 @@ Public Class clsSQL_Transactions
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn

@@ -9,7 +9,7 @@ Public Class clsDataGridView
     Private Const mstrSelectionColName As String = "SelCol"
 
     'Private class members
-    Private WithEvents grdGrid As DataGridView
+    Private WithEvents grdDGV As DataGridView
 
     'Public events
     Public Event SetDisplay()
@@ -42,27 +42,27 @@ Public Class clsDataGridView
         Try
             SetDoubleBuffered(rgrdGrid, True)
 
-            grdGrid = rgrdGrid
+            grdDGV = rgrdGrid
 
-            grdGrid.AutoSizeColumnsMode = CType(DataGridViewAutoSizeColumnMode.Fill, DataGridViewAutoSizeColumnsMode)
+            grdDGV.AutoSizeColumnsMode = CType(DataGridViewAutoSizeColumnMode.Fill, DataGridViewAutoSizeColumnsMode)
 
-            grdGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect
+            grdDGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect
 
-            grdGrid.AutoGenerateColumns = False
-            grdGrid.RowHeadersDefaultCellStyle.BackColor = SystemColors.Control
-            grdGrid.RowHeadersDefaultCellStyle.SelectionBackColor = SystemColors.Control
-            grdGrid.RowHeadersWidth = 8
-            grdGrid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing
+            grdDGV.AutoGenerateColumns = False
+            grdDGV.RowHeadersDefaultCellStyle.BackColor = SystemColors.Control
+            grdDGV.RowHeadersDefaultCellStyle.SelectionBackColor = SystemColors.Control
+            grdDGV.RowHeadersWidth = 8
+            grdDGV.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing
 
-            columnsHeaderStyle.Font = New Font(grdGrid.ColumnHeadersDefaultCellStyle.Font, FontStyle.Bold)
-            grdGrid.ColumnHeadersDefaultCellStyle = columnsHeaderStyle
-            grdGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+            columnsHeaderStyle.Font = New Font(grdDGV.ColumnHeadersDefaultCellStyle.Font, FontStyle.Bold)
+            grdDGV.ColumnHeadersDefaultCellStyle = columnsHeaderStyle
+            grdDGV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing
 
-            grdGrid.AllowUserToResizeRows = False
+            grdDGV.AllowUserToResizeRows = False
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -80,16 +80,16 @@ Public Class clsDataGridView
         Dim newDGVCell As DataGridViewCell
 
         Try
-            grdGrid.SuspendLayout()
+            grdDGV.SuspendLayout()
 
-            grdGrid.Rows.Clear()
-            grdGrid.Columns.Clear()
+            grdDGV.Rows.Clear()
+            grdDGV.Columns.Clear()
 
-            strGridCaption = gcApplication.str_GetCaption(CInt(grdGrid.Tag), gcApplication.cUser.GetLanguage)
+            strGridCaption = gcAppControler.str_GetCaption(CInt(grdDGV.Tag), gcAppControler.cUser.GetLanguage)
 
             lstColumns = Split(strGridCaption, "|")
 
-            sqlCmd = New MySqlCommand(vstrSQL, gcApplication.MySQLConnection)
+            sqlCmd = New MySqlCommand(vstrSQL, gcAppControler.MySQLConnection)
 
             mySQLReader = sqlCmd.ExecuteReader
 
@@ -113,44 +113,44 @@ Public Class clsDataGridView
                 newDGVCol.Name = myDataTable.Columns(intColIndex).ColumnName
                 newDGVCol.SortMode = DataGridViewColumnSortMode.Automatic
 
-                grdGrid.Columns.Add(newDGVCol)
+                grdDGV.Columns.Add(newDGVCol)
 
                 If lstColumns(intColIndex) = vbNullString Then
-                    grdGrid.Columns(intColIndex).Visible = False
+                    grdDGV.Columns(intColIndex).Visible = False
                 Else
 
-                    grdGrid.Columns(intColIndex).HeaderText = Right(lstColumns(intColIndex), lstColumns(intColIndex).Length - 1)
+                    grdDGV.Columns(intColIndex).HeaderText = Right(lstColumns(intColIndex), lstColumns(intColIndex).Length - 1)
 
                     Select Case lstColumns(intColIndex).Chars(0)
                         Case CChar("<")
-                            grdGrid.Columns(intColIndex).HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft
-                            grdGrid.Columns(intColIndex).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+                            grdDGV.Columns(intColIndex).HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft
+                            grdDGV.Columns(intColIndex).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
 
                         Case CChar("^")
-                            grdGrid.Columns(intColIndex).HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
-                            grdGrid.Columns(intColIndex).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+                            grdDGV.Columns(intColIndex).HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
+                            grdDGV.Columns(intColIndex).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
 
                         Case CChar(">")
-                            grdGrid.Columns(intColIndex).HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
-                            grdGrid.Columns(intColIndex).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+                            grdDGV.Columns(intColIndex).HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+                            grdDGV.Columns(intColIndex).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
 
                     End Select
                 End If
             Next
 
             For intRowIndex As Integer = 0 To myDataTable.Rows.Count - 1
-                grdGrid.Rows.Add(myDataTable.Rows(intRowIndex).ItemArray)
+                grdDGV.Rows.Add(myDataTable.Rows(intRowIndex).ItemArray)
             Next
 
             RaiseEvent SetDisplay()
 
-            grdGrid.ResumeLayout()
+            grdDGV.ResumeLayout()
 
             blnReturn = True
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Close()
@@ -164,20 +164,20 @@ Public Class clsDataGridView
     Public Sub AddLine()
 
         Try
-            grdGrid.Rows.Add()
+            grdDGV.Rows.Add()
 
-            grdGrid.Rows(grdGrid.Rows.Count - 1).Selected = True
+            grdDGV.Rows(grdDGV.Rows.Count - 1).Selected = True
 
-            grdGrid.SelectedRows(0).HeaderCell.Style.BackColor = Color.LightGreen
+            grdDGV.SelectedRows(0).HeaderCell.Style.BackColor = Color.LightGreen
 
-            grdGrid.SelectedRows(0).HeaderCell.Style.SelectionBackColor = Color.LightGreen
+            grdDGV.SelectedRows(0).HeaderCell.Style.SelectionBackColor = Color.LightGreen
 
-            grdGrid.Rows(grdGrid.Rows.Count - 1).DefaultCellStyle.BackColor = Color.LightGreen
+            grdDGV.Rows(grdDGV.Rows.Count - 1).DefaultCellStyle.BackColor = Color.LightGreen
 
-            grdGrid.Rows(grdGrid.Rows.Count - 1).Cells(mintDefaultActionCol).Value = GridRowActions.INSERT_ACTION
+            grdDGV.Rows(grdDGV.Rows.Count - 1).Cells(mintDefaultActionCol).Value = GridRowActions.INSERT_ACTION
 
         Catch ex As Exception
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -186,29 +186,29 @@ Public Class clsDataGridView
         Dim intSelectedRow As Integer
 
         Try
-            If grdGrid.Rows.Count > 0 Then
+            If grdDGV.Rows.Count > 0 Then
 
-                intSelectedRow = grdGrid.SelectedRows(0).Index
+                intSelectedRow = grdDGV.SelectedRows(0).Index
 
-                If CInt(grdGrid.Rows(intSelectedRow).Cells(mintDefaultActionCol).Value) = GridRowActions.INSERT_ACTION Then
-                    grdGrid.Rows.RemoveAt(intSelectedRow)
+                If CInt(grdDGV.Rows(intSelectedRow).Cells(mintDefaultActionCol).Value) = GridRowActions.INSERT_ACTION Then
+                    grdDGV.Rows.RemoveAt(intSelectedRow)
 
-                    If grdGrid.Rows.Count > 0 Then
-                        grdGrid.Rows(intSelectedRow - 1).Selected = True
+                    If grdDGV.Rows.Count > 0 Then
+                        grdDGV.Rows(intSelectedRow - 1).Selected = True
                     End If
                 Else
-                    grdGrid.SelectedRows(0).HeaderCell.Style.BackColor = Color.Red
+                    grdDGV.SelectedRows(0).HeaderCell.Style.BackColor = Color.Red
 
-                    grdGrid.SelectedRows(0).HeaderCell.Style.SelectionBackColor = Color.Red
+                    grdDGV.SelectedRows(0).HeaderCell.Style.SelectionBackColor = Color.Red
 
-                    grdGrid.Rows(intSelectedRow).DefaultCellStyle.BackColor = Color.Red
+                    grdDGV.Rows(intSelectedRow).DefaultCellStyle.BackColor = Color.Red
 
-                    grdGrid.Rows(intSelectedRow).Cells(mintDefaultActionCol).Value = GridRowActions.DELETE_ACTION
+                    grdDGV.Rows(intSelectedRow).Cells(mintDefaultActionCol).Value = GridRowActions.DELETE_ACTION
                 End If
             End If
 
         Catch ex As Exception
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -218,15 +218,15 @@ Public Class clsDataGridView
 
         Try
             Select Case False
-                Case Not IsDBNull(grdGrid.Rows(vintRow).Cells(vintCol).Value)
-                Case Not IsNothing(grdGrid.Rows(vintRow).Cells(vintCol).Value)
-                Case Not String.IsNullOrEmpty(Trim(grdGrid.Rows(vintRow).Cells(vintCol).Value.ToString))
+                Case Not IsDBNull(grdDGV.Rows(vintRow).Cells(vintCol).Value)
+                Case Not IsNothing(grdDGV.Rows(vintRow).Cells(vintCol).Value)
+                Case Not String.IsNullOrEmpty(Trim(grdDGV.Rows(vintRow).Cells(vintCol).Value.ToString))
                 Case Else
                     blnIsEmpty = False
             End Select
 
         Catch ex As Exception
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnIsEmpty
@@ -244,15 +244,15 @@ Public Class clsDataGridView
 
 #Region "Private Events"
 
-    Private Sub grdGrid_CellValueChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellEventArgs) Handles grdGrid.CellValueChanged
-        If grdGrid.Rows.Count > 0 And e.RowIndex >= 0 Then
+    Private Sub grdGrid_CellValueChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellEventArgs) Handles grdDGV.CellValueChanged
+        If grdDGV.Rows.Count > 0 And e.RowIndex >= 0 Then
 
-            If CShort(grdGrid.Rows(e.RowIndex).Cells(mintDefaultActionCol).Value) = GridRowActions.CONSULT_ACTION Then
-                grdGrid.Rows(e.RowIndex).HeaderCell.Style.SelectionBackColor = Color.Yellow
-                grdGrid.Rows(e.RowIndex).HeaderCell.Style.BackColor = Color.Yellow
-                grdGrid.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.Yellow
+            If CShort(grdDGV.Rows(e.RowIndex).Cells(mintDefaultActionCol).Value) = GridRowActions.CONSULT_ACTION Then
+                grdDGV.Rows(e.RowIndex).HeaderCell.Style.SelectionBackColor = Color.Yellow
+                grdDGV.Rows(e.RowIndex).HeaderCell.Style.BackColor = Color.Yellow
+                grdDGV.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.Yellow
 
-                grdGrid.Rows(e.RowIndex).Cells(mintDefaultActionCol).Value = GridRowActions.UPDATE_ACTION
+                grdDGV.Rows(e.RowIndex).Cells(mintDefaultActionCol).Value = GridRowActions.UPDATE_ACTION
             End If
         End If
     End Sub

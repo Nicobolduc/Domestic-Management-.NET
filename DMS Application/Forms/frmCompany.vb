@@ -29,7 +29,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Close()
@@ -54,7 +54,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -69,20 +69,20 @@
             mcSQL.bln_BeginTransaction()
 
             Select Case myFormControler.FormMode
-                Case clsConstants.Form_Modes.INSERT_MODE
+                Case mConstants.Form_Modes.INSERT_MODE
                     blnReturn = blnCompagny_Insert()
 
-                Case clsConstants.Form_Modes.UPDATE_MODE
+                Case mConstants.Form_Modes.UPDATE_MODE
                     blnReturn = blnCompagny_Update()
 
-                Case clsConstants.Form_Modes.DELETE_MODE
+                Case mConstants.Form_Modes.DELETE_MODE
                     blnReturn = blnCompagny_Delete()
 
             End Select
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mcSQL.bln_EndTransaction(blnReturn)
             mcSQL = Nothing
@@ -96,8 +96,8 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Cy_Name", txtName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("CyT_ID", cboCompanyType.SelectedValue.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Cy_Name", txtName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("CyT_ID", cboCompanyType.SelectedValue.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
                 Case mcSQL.bln_ADOInsert("Company", myFormControler.Item_ID)
                 Case myFormControler.Item_ID > 0
                 Case Else
@@ -106,7 +106,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -117,8 +117,8 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Cy_Name", txtName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("CyT_ID", cboCompanyType.SelectedValue.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Cy_Name", txtName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("CyT_ID", cboCompanyType.SelectedValue.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
                 Case mcSQL.bln_ADOUpdate("Company", "Cy_ID = " & myFormControler.Item_ID)
                 Case Else
                     blnReturn = True
@@ -126,7 +126,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -144,7 +144,7 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -160,7 +160,7 @@
 
         Select Case False
             Case blnCboCompanyType_Load()
-            Case myFormControler.FormMode <> clsConstants.Form_Modes.INSERT_MODE
+            Case myFormControler.FormMode <> mConstants.Form_Modes.INSERT_MODE
                 blnReturn = True
             Case blnLoadData()
             Case Else
@@ -176,7 +176,7 @@
     Private Sub myFormControler_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles myFormControler.ValidateRules
         Select Case False
             Case txtName.Text <> vbNullString
-                gcApplication.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtName.Focus()
 
             Case Else

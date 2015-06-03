@@ -1,4 +1,4 @@
-﻿Public Class clsConstants
+﻿Public Module mConstants
 
     Public Enum BillingInterval
         WEEKLY = 1
@@ -39,4 +39,4 @@
         PHARMACY = 4
     End Enum
 
-End Class
+End Module

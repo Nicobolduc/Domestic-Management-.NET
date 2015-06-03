@@ -81,7 +81,7 @@
                     frmGenList.Text = frmGenList.Text & strListName
                     frmGenList.MdiParent = My.Forms.mdiGeneral
 
-                    frmGenList.myFormControler.ShowForm(clsConstants.Form_Modes.CONSULT_MODE)
+                    frmGenList.myFormControler.ShowForm(mConstants.Form_Modes.CONSULT_MODE)
 
                     If My.Forms.mdiGeneral.GetGenListChildCount = 0 Then
                         frmGenList.Location = New Point(0, 0)
@@ -93,7 +93,7 @@
                 End If
 
             Catch ex As Exception
-                gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             End Try
 
         End Sub

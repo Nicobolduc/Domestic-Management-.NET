@@ -42,13 +42,14 @@ Partial Class mdiGeneral
         Me.statusBar = New System.Windows.Forms.StatusStrip()
         Me.lblStatusUser = New System.Windows.Forms.ToolStripStatusLabel()
         Me.lblStatusBD = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.TestsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMain.SuspendLayout()
         Me.statusBar.SuspendLayout()
         Me.SuspendLayout()
         '
         'mnuMain
         '
-        Me.mnuMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnUsager, Me.mnuGestion, Me.mnuFacturation, Me.mnuProduit, Me.EntitéeToolStripMenuItem, Me.mnuWindows})
+        Me.mnuMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnUsager, Me.mnuGestion, Me.mnuFacturation, Me.mnuProduit, Me.EntitéeToolStripMenuItem, Me.mnuWindows, Me.TestsToolStripMenuItem})
         Me.mnuMain.Location = New System.Drawing.Point(0, 0)
         Me.mnuMain.MdiWindowListItem = Me.mnuWindows
         Me.mnuMain.Name = "mnuMain"
@@ -142,7 +143,7 @@ Partial Class mdiGeneral
         'mnuiCompany
         '
         Me.mnuiCompany.Name = "mnuiCompany"
-        Me.mnuiCompany.Size = New System.Drawing.Size(152, 22)
+        Me.mnuiCompany.Size = New System.Drawing.Size(136, 22)
         Me.mnuiCompany.Text = "Compagnie"
         '
         'mnuWindows
@@ -154,25 +155,33 @@ Partial Class mdiGeneral
         'statusBar
         '
         Me.statusBar.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.lblStatusUser, Me.lblStatusBD})
-        Me.statusBar.Location = New System.Drawing.Point(0, 708)
+        Me.statusBar.Location = New System.Drawing.Point(0, 705)
         Me.statusBar.Name = "statusBar"
-        Me.statusBar.Size = New System.Drawing.Size(1008, 22)
+        Me.statusBar.Size = New System.Drawing.Size(1008, 25)
         Me.statusBar.TabIndex = 2
         Me.statusBar.Text = "StatusStrip1"
         '
         'lblStatusUser
         '
         Me.lblStatusUser.AutoSize = False
+        Me.lblStatusUser.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblStatusUser.Name = "lblStatusUser"
-        Me.lblStatusUser.Size = New System.Drawing.Size(300, 17)
+        Me.lblStatusUser.Size = New System.Drawing.Size(300, 20)
         Me.lblStatusUser.Text = "Utilisateur: "
         Me.lblStatusUser.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'lblStatusBD
         '
+        Me.lblStatusBD.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblStatusBD.Name = "lblStatusBD"
-        Me.lblStatusBD.Size = New System.Drawing.Size(25, 17)
+        Me.lblStatusBD.Size = New System.Drawing.Size(30, 20)
         Me.lblStatusBD.Text = "BD:"
+        '
+        'TestsToolStripMenuItem
+        '
+        Me.TestsToolStripMenuItem.Name = "TestsToolStripMenuItem"
+        Me.TestsToolStripMenuItem.Size = New System.Drawing.Size(46, 20)
+        Me.TestsToolStripMenuItem.Text = "Tests"
         '
         'mdiGeneral
         '
@@ -214,4 +223,5 @@ Partial Class mdiGeneral
     Friend WithEvents EntitéeToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuiCompany As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuiGrocery As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents TestsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 End Class

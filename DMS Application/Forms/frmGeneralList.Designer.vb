@@ -48,6 +48,9 @@ Partial Class frmGeneralList
         'grdList
         '
         Me.grdList.AllowUserToAddRows = False
+        Me.grdList.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grdList.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised
         Me.grdList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.grdList.EnableHeadersVisualStyles = False
@@ -66,11 +69,12 @@ Partial Class frmGeneralList
         '
         Me.txtFilter.Location = New System.Drawing.Point(53, 9)
         Me.txtFilter.Name = "txtFilter"
-        Me.txtFilter.Size = New System.Drawing.Size(142, 20)
+        Me.txtFilter.Size = New System.Drawing.Size(333, 20)
         Me.txtFilter.TabIndex = 1
         '
         'btnDelete
         '
+        Me.btnDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnDelete.Image = CType(resources.GetObject("btnDelete.Image"), System.Drawing.Image)
         Me.btnDelete.Location = New System.Drawing.Point(525, 146)
         Me.btnDelete.Name = "btnDelete"
@@ -81,6 +85,7 @@ Partial Class frmGeneralList
         '
         'btnUpdate
         '
+        Me.btnUpdate.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnUpdate.Image = CType(resources.GetObject("btnUpdate.Image"), System.Drawing.Image)
         Me.btnUpdate.Location = New System.Drawing.Point(525, 92)
         Me.btnUpdate.Name = "btnUpdate"
@@ -91,6 +96,7 @@ Partial Class frmGeneralList
         '
         'btnAdd
         '
+        Me.btnAdd.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnAdd.Image = CType(resources.GetObject("btnAdd.Image"), System.Drawing.Image)
         Me.btnAdd.Location = New System.Drawing.Point(525, 38)
         Me.btnAdd.Name = "btnAdd"
@@ -105,8 +111,9 @@ Partial Class frmGeneralList
         '
         'myFormControler
         '
+        Me.myFormControler.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.myFormControler.FormIsLoading = False
-        Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.CONSULT_MODE
+        Me.myFormControler.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
         Me.myFormControler.Item_ID = 0
         Me.myFormControler.Location = New System.Drawing.Point(494, 527)
         Me.myFormControler.Name = "myFormControler"
@@ -126,7 +133,6 @@ Partial Class frmGeneralList
         Me.Controls.Add(Me.txtFilter)
         Me.Controls.Add(Me.grdList)
         Me.Controls.Add(Me.Label1)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
         Me.Name = "frmGeneralList"

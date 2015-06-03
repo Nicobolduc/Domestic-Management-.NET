@@ -1,6 +1,6 @@
 ﻿Imports MySql.Data.MySqlClient
 
-Public Class clsApplication
+Public Class clsAppControler
 
     'Private class members
     Private mdiGeneral As mdiGeneral
@@ -66,8 +66,8 @@ Public Class clsApplication
 
         mcMySQLConnection = New MySqlConnection
 
-        'mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.112;Port=3306;userid=nicolas;password=root;database=dms_test"
-        mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests"
+        mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.106;Port=3306;userid=Nicolas;password=nicolas;database=dms_tests"
+        'mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests"
 
         Try
             mcMySQLConnection.Open()
@@ -77,6 +77,7 @@ Public Class clsApplication
         Catch ex As MySqlException
             blnReturn = False
             MessageBox.Show("La connexion au serveur a échouée.")
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             mcMySQLConnection.Dispose()
         End Try
 
@@ -90,7 +91,7 @@ Public Class clsApplication
             strFormat = "yyyy-MM-dd hh:mm:ss"
 
         Catch ex As MySqlException
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return strFormat
@@ -110,7 +111,7 @@ Public Class clsApplication
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -126,7 +127,7 @@ Public Class clsApplication
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return strCaption
@@ -142,12 +143,12 @@ Public Class clsApplication
         Dim strMessage As String = vbNullString
 
         Try
-            strMessage = gcApplication.str_GetCaption(vintCaption_ID, mcUser.GetLanguage)
+            strMessage = gcAppControler.str_GetCaption(vintCaption_ID, mcUser.GetLanguage)
 
             MsgBox(strMessage, vmsgType)
 
         Catch ex As Exception
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -187,7 +188,7 @@ Public Class clsApplication
             Next objControl
 
         Catch ex As Exception
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -231,7 +232,7 @@ Public Class clsApplication
             Next objControl
 
         Catch ex As Exception
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub

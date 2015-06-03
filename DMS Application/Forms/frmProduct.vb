@@ -55,7 +55,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Close()
@@ -88,7 +88,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -108,7 +108,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -128,7 +128,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -148,7 +148,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -169,7 +169,7 @@ Public Class frmProduct
 
             cboCategory.SelectedValue = vintSelectedValue
 
-            If myFormControler.FormMode <> clsConstants.Form_Modes.DELETE_MODE And vintSelectedValue >= 0 And cboCategory.Items.Count > 1 Then
+            If myFormControler.FormMode <> mConstants.Form_Modes.DELETE_MODE And vintSelectedValue >= 0 And cboCategory.Items.Count > 1 Then
                 cboCategory.Enabled = True
             Else
                 cboCategory.Enabled = False
@@ -177,7 +177,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -192,24 +192,24 @@ Public Class frmProduct
             mcSQL.bln_BeginTransaction()
 
             Select Case myFormControler.FormMode
-                Case clsConstants.Form_Modes.INSERT_MODE
+                Case mConstants.Form_Modes.INSERT_MODE
                     blnReturn = blnProduct_Insert()
 
-                Case clsConstants.Form_Modes.UPDATE_MODE
+                Case mConstants.Form_Modes.UPDATE_MODE
                     blnReturn = blnProduct_Update()
 
-                Case clsConstants.Form_Modes.DELETE_MODE
+                Case mConstants.Form_Modes.DELETE_MODE
                     blnReturn = blnProduct_Delete()
 
             End Select
 
-            If blnReturn And myFormControler.FormMode <> clsConstants.Form_Modes.DELETE_MODE Then
+            If blnReturn And myFormControler.FormMode <> mConstants.Form_Modes.DELETE_MODE Then
                 blnReturn = blnGrdPrices_SaveData()
             End If
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mcSQL.bln_EndTransaction(blnReturn)
             mcSQL = Nothing
@@ -223,10 +223,10 @@ Public Class frmProduct
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Pro_Name", txtName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("ProT_ID", CStr(cboType.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("ProC_ID", CStr(cboCategory.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("Pro_Taxable", CStr(chkTaxable.Checked), clsConstants.MySQL_FieldTypes.TINYINT_TYPE)
+                Case mcSQL.bln_AddField("Pro_Name", txtName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("ProT_ID", CStr(cboType.SelectedValue), mConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("ProC_ID", CStr(cboCategory.SelectedValue), mConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Pro_Taxable", CStr(chkTaxable.Checked), mConstants.MySQL_FieldTypes.TINYINT_TYPE)
                 Case mcSQL.bln_ADOInsert("Product", myFormControler.Item_ID)
                 Case myFormControler.Item_ID > 0
                 Case Else
@@ -235,7 +235,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -246,10 +246,10 @@ Public Class frmProduct
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Pro_Name", txtName.Text, clsConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("ProT_ID", CStr(cboType.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("ProC_ID", CStr(cboCategory.SelectedValue), clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("Pro_Taxable", CStr(chkTaxable.Checked), clsConstants.MySQL_FieldTypes.TINYINT_TYPE)
+                Case mcSQL.bln_AddField("Pro_Name", txtName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("ProT_ID", CStr(cboType.SelectedValue), mConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("ProC_ID", CStr(cboCategory.SelectedValue), mConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Pro_Taxable", CStr(chkTaxable.Checked), mConstants.MySQL_FieldTypes.TINYINT_TYPE)
                 Case mcSQL.bln_ADOUpdate("Product", "Pro_ID = " & myFormControler.Item_ID)
                 Case Else
                     blnReturn = True
@@ -257,7 +257,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -276,7 +276,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -306,7 +306,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -318,10 +318,10 @@ Public Class frmProduct
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Cy_ID", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_Cy_ID_col).Value.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("ProB_ID", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_ProB_ID_col).Value.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("Pro_ID", myFormControler.Item_ID.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("ProP_Price", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_Price_col).Value.ToString, clsConstants.MySQL_FieldTypes.DOUBLE_TYPE)
+                Case mcSQL.bln_AddField("Cy_ID", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_Cy_ID_col).Value.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("ProB_ID", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_ProB_ID_col).Value.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Pro_ID", myFormControler.Item_ID.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("ProP_Price", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_Price_col).Value.ToString, mConstants.MySQL_FieldTypes.DOUBLE_TYPE)
                 Case mcSQL.bln_ADOInsert("ProductPrice")
                 Case Else
                     blnReturn = True
@@ -329,7 +329,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -340,10 +340,10 @@ Public Class frmProduct
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Cy_ID", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_Cy_ID_col).Value.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("ProB_ID", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_ProB_ID_col).Value.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("Pro_ID", myFormControler.Item_ID.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("ProP_Price", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_Price_col).Value.ToString, clsConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Cy_ID", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_Cy_ID_col).Value.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("ProB_ID", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_ProB_ID_col).Value.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Pro_ID", myFormControler.Item_ID.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("ProP_Price", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_Price_col).Value.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
                 Case mcSQL.bln_ADOUpdate("ProductPrice", "ProP_ID = " & grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_ProP_ID_col).Value)
                 Case Else
                     blnReturn = True
@@ -351,7 +351,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -369,7 +369,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -379,7 +379,7 @@ Public Class frmProduct
         Dim blnReturn As Boolean
 
         Try
-            If myFormControler.FormMode <> clsConstants.Form_Modes.DELETE_MODE Then
+            If myFormControler.FormMode <> mConstants.Form_Modes.DELETE_MODE Then
 
                 Dim cellRectangle As Rectangle = grdPrices.GetCellDisplayRectangle(vintColIndex, vintRowIndex, True)
 
@@ -415,7 +415,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
@@ -452,7 +452,7 @@ Public Class frmProduct
             Case blnCboCompany_Load()
             Case blnCboProductBrand_Load()
             Case blnGrdPrices_Load()
-            Case myFormControler.FormMode <> clsConstants.Form_Modes.INSERT_MODE
+            Case myFormControler.FormMode <> mConstants.Form_Modes.INSERT_MODE
                 blnReturn = True
             Case blnLoadData()
             Case Else
@@ -479,10 +479,10 @@ Public Class frmProduct
 
     Private Sub myFormControler_SetReadRights() Handles myFormControler.SetReadRights
         Select Case myFormControler.FormMode
-            Case clsConstants.Form_Modes.INSERT_MODE
+            Case mConstants.Form_Modes.INSERT_MODE
 
 
-            Case clsConstants.Form_Modes.DELETE_MODE
+            Case mConstants.Form_Modes.DELETE_MODE
                 grdPrices.ClearSelection()
 
         End Select
@@ -497,16 +497,16 @@ Public Class frmProduct
 
         Select Case False
             Case txtName.Text <> vbNullString
-                gcApplication.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtName.Focus()
 
             Case cboType.SelectedIndex > -1
-                gcApplication.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 cboType.DroppedDown = True
                 cboType.Focus()
 
             Case cboCategory.SelectedIndex > -1
-                gcApplication.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 cboType.DroppedDown = True
                 cboType.Focus()
 
@@ -523,15 +523,15 @@ Public Class frmProduct
 
                 Select Case True
                     Case mcGrdPrices.CellIsEmpty(intRowIndex, mintGrdPrices_Cy_ID_col)
-                        gcApplication.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                        gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                         blnGrdPrices_ShowComboBox(intRowIndex, mintGrdPrices_Cy_Name_col)
 
                     Case mcGrdPrices.CellIsEmpty(intRowIndex, mintGrdPrices_ProB_ID_col)
-                        gcApplication.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                        gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                         blnGrdPrices_ShowComboBox(intRowIndex, mintGrdPrices_ProB_Name_col)
 
                     Case mcGrdPrices.CellIsEmpty(intRowIndex, mintGrdPrices_Price_col)
-                        gcApplication.ShowMessage(clsConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                        gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                         grdPrices.CurrentCell = grdPrices.Rows(intRowIndex).Cells(mintGrdPrices_Price_col)
                         grdPrices.BeginEdit(True)
 
@@ -572,7 +572,7 @@ Public Class frmProduct
 
             If Not IsNumeric(grdPrices.SelectedRows(0).Cells(mintGrdPrices_Price_col).EditedFormattedValue) And grdPrices.SelectedRows(0).Cells(mintGrdPrices_Price_col).EditedFormattedValue <> String.Empty Then
 
-                gcApplication.ShowMessage(clsConstants.Validation_Messages.NUMERIC_VALUE, MsgBoxStyle.Information)
+                gcAppControler.ShowMessage(mConstants.Validation_Messages.NUMERIC_VALUE, MsgBoxStyle.Information)
 
                 e.Cancel = True
             End If

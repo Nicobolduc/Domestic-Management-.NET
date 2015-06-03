@@ -30,8 +30,8 @@
 #Region "Private Events"
 
     Private Sub mdiGeneral_Disposed(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Disposed
-        gcApplication.MySQLConnection.Close()
-        gcApplication.MySQLConnection.Dispose()
+        gcAppControler.MySQLConnection.Close()
+        gcAppControler.MySQLConnection.Dispose()
     End Sub
 
     Private Sub mdiGeneral_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -39,7 +39,7 @@
 
         mChildsFormsCol = New Collection()
 
-        lblStatusBD.Text = lblStatusBD.Text & gcApplication.MySQLConnection.Database
+        lblStatusBD.Text = lblStatusBD.Text & gcAppControler.MySQLConnection.Database
         lblStatusUser.Text = lblStatusUser.Text & " Nicolas"
     End Sub
 
@@ -51,7 +51,7 @@
         frmGestionBudget.Width = 1024
         frmGestionBudget.Height = 768
 
-        frmGestionBudget.myFormControler.ShowForm(clsConstants.Form_Modes.CONSULT_MODE)
+        frmGestionBudget.myFormControler.ShowForm(mConstants.Form_Modes.CONSULT_MODE)
     End Sub
 
     Private Sub mnuiExpenseToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiExpense.Click
@@ -84,4 +84,9 @@
 
 #End Region
 
+    Private Sub TestsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestsToolStripMenuItem.Click
+        Dim test = New test
+
+        test.Show()
+    End Sub
 End Class

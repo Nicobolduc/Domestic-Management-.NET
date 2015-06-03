@@ -25,7 +25,7 @@
             blnReturn = True
 
         Catch ex As Exception
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             blnReturn = False
         End Try
 
@@ -49,14 +49,14 @@
 
         Catch ex As Exception
             blnReturn = False
-            gcApplication.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnReturn
     End Function
 
 #End Region
-   
+
 
 #Region "Private events"
 
@@ -76,34 +76,34 @@
         grdBudget.Columns(mintGrdBudget_Exp_Amount_col).ValueType = GetType(Double)
         grdBudget.Columns(mintGrdBudget_Exp_BillingDate_col).ValueType = GetType(Date)
 
-        grdBudget.Columns(mintGrdBudget_Exp_BillingDate_col).DefaultCellStyle.Format = gcApplication.str_GetPCDateFormat
+        grdBudget.Columns(mintGrdBudget_Exp_BillingDate_col).DefaultCellStyle.Format = gcAppControler.str_GetPCDateFormat
         grdBudget.Columns(mintGrdBudget_Exp_Amount_col).DefaultCellStyle.Format = gstrCurrencyFormat
     End Sub
 
     Private Sub rbtnHedo_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnHebdo.CheckedChanged
         If rbtnHebdo.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcApplication.str_GetPCDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppControler.str_GetPCDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Day, 7, dtpFrom.Value)
         End If
     End Sub
 
     Private Sub rbtnBiMensuel_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnBiMensuel.CheckedChanged
         If rbtnBiMensuel.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcApplication.str_GetPCDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppControler.str_GetPCDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Day, 14, dtpFrom.Value)
         End If
     End Sub
 
     Private Sub rbtnMensuelle_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnMensuelle.CheckedChanged
         If rbtnMensuelle.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcApplication.str_GetPCDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppControler.str_GetPCDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Month, 1, dtpFrom.Value)
         End If
     End Sub
 
     Private Sub rbtnDeuxMois_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnDeuxMois.CheckedChanged
         If rbtnDeuxMois.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcApplication.str_GetPCDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppControler.str_GetPCDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Month, 2, dtpFrom.Value)
         End If
     End Sub

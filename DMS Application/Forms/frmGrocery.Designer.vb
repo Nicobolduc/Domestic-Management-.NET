@@ -40,6 +40,7 @@ Partial Class frmGrocery
         Me.txtTotal = New System.Windows.Forms.TextBox()
         Me.formTootlTips = New System.Windows.Forms.ToolTip(Me.components)
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.chkDefaultCy = New System.Windows.Forms.CheckBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.txtGroceryName = New System.Windows.Forms.TextBox()
         Me.myFormControler = New DMS_Application.ctlFormControler()
@@ -52,8 +53,8 @@ Partial Class frmGrocery
         Me.grdGrocery.AllowUserToAddRows = False
         Me.grdGrocery.AllowUserToOrderColumns = True
         Me.grdGrocery.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grdGrocery.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised
         Me.grdGrocery.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
@@ -82,7 +83,7 @@ Partial Class frmGrocery
         Me.cboGroceryStore.FormattingEnabled = True
         Me.cboGroceryStore.Location = New System.Drawing.Point(102, 14)
         Me.cboGroceryStore.Name = "cboGroceryStore"
-        Me.cboGroceryStore.Size = New System.Drawing.Size(211, 21)
+        Me.cboGroceryStore.Size = New System.Drawing.Size(225, 21)
         Me.cboGroceryStore.TabIndex = 0
         '
         'Label1
@@ -183,14 +184,24 @@ Partial Class frmGrocery
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.chkDefaultCy)
         Me.GroupBox1.Controls.Add(Me.cboGroceryStore)
         Me.GroupBox1.Controls.Add(Me.Label1)
-        Me.GroupBox1.Location = New System.Drawing.Point(368, 5)
+        Me.GroupBox1.Location = New System.Drawing.Point(306, 5)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(343, 47)
+        Me.GroupBox1.Size = New System.Drawing.Size(405, 47)
         Me.GroupBox1.TabIndex = 20
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Filtres"
+        '
+        'chkDefaultCy
+        '
+        Me.chkDefaultCy.Location = New System.Drawing.Point(333, 16)
+        Me.chkDefaultCy.Name = "chkDefaultCy"
+        Me.chkDefaultCy.Size = New System.Drawing.Size(66, 17)
+        Me.chkDefaultCy.TabIndex = 12
+        Me.chkDefaultCy.Text = "Defaut"
+        Me.chkDefaultCy.UseVisualStyleBackColor = True
         '
         'Label4
         '
@@ -210,9 +221,9 @@ Partial Class frmGrocery
         'myFormControler
         '
         Me.myFormControler.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.myFormControler.FormIsLoading = False
-        Me.myFormControler.FormMode = DMS_Application.clsConstants.Form_Modes.CONSULT_MODE
+        Me.myFormControler.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
         Me.myFormControler.Item_ID = 0
         Me.myFormControler.Location = New System.Drawing.Point(0, 570)
         Me.myFormControler.Name = "myFormControler"
@@ -268,4 +279,5 @@ Partial Class frmGrocery
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents txtGroceryName As System.Windows.Forms.TextBox
     Public WithEvents myFormControler As DMS_Application.ctlFormControler
+    Friend WithEvents chkDefaultCy As System.Windows.Forms.CheckBox
 End Class
