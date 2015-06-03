@@ -64,6 +64,8 @@
     Private Function blnGrdGrocery_Load() As Boolean
         Dim blnReturn As Boolean
         Dim strSQL As String = vbNullString
+        Dim intRow As Integer
+        Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
             strSQL = strSQL & " SELECT  Product.Pro_ID, " & vbCrLf
@@ -76,7 +78,7 @@
             strSQL = strSQL & "         ProductBrand.ProB_ID, " & vbCrLf
             strSQL = strSQL & "         ProductBrand.ProB_Name, " & vbCrLf
             strSQL = strSQL & "         ProductPrice.ProP_Price, " & vbCrLf
-            strSQL = strSQL & "         CASE WHEN Gro_Pro.Pro_ID IS NOT NULL THEN 1 ELSE 0 END As " & mcGrdGrocery.getSelectionColName & vbCrLf
+            strSQL = strSQL & "         0 As SelCol " & vbCrLf
             strSQL = strSQL & " FROM Product " & vbCrLf
             strSQL = strSQL & "     INNER JOIN ProductType ON ProductType.ProT_ID = Product.ProT_ID " & vbCrLf
             strSQL = strSQL & "     LEFT JOIN ProductCategory ON ProductCategory.ProC_ID = Product.ProC_ID " & vbCrLf
@@ -84,16 +86,43 @@
             strSQL = strSQL & "     INNER JOIN ProductPrice ON ProductPrice.Pro_ID = Product.Pro_ID " & vbCrLf
             strSQL = strSQL & "                            AND ProductPrice.ProB_ID = ProductBrand.ProB_ID " & vbCrLf
             strSQL = strSQL & "                            AND ProductPrice.Cy_ID = " & cboGroceryStore.SelectedValue.ToString & vbCrLf
-            strSQL = strSQL & "     LEFT JOIN Gro_Pro ON Gro_Pro.Gro_ID = " & myFormControler.Item_ID & " AND Gro_Pro.Pro_ID = Product.Pro_ID " & vbCrLf
             strSQL = strSQL & " ORDER BY Product.Pro_Name, ProductType.ProT_Name, ProductCategory.ProC_Name " & vbCrLf
 
             blnReturn = mcGrdGrocery.bln_FillData(strSQL)
 
-            CalculateTotals()
+            If blnReturn Then
+
+                strSQL = vbNullString
+                strSQL = strSQL & " SELECT Gro_Pro.Pro_ID " & vbCrLf
+                strSQL = strSQL & " FROM Gro_Pro " & vbCrLf
+                strSQL = strSQL & " WHERE Gro_Pro.Gro_ID = " & myFormControler.Item_ID & vbCrLf
+
+                mySQLReader = mSQL.ADOSelect(strSQL)
+
+                While mySQLReader.Read And grdGrocery.Rows.Count > 0
+
+                    For intRow = 0 To grdGrocery.Rows.Count - 1
+
+                        If mySQLReader.Item("Pro_ID").ToString = grdGrocery.Item(mintGrdGrocery_Pro_ID_col, intRow).Value.ToString Then
+
+                            grdGrocery.Item(mintGrdGrocery_Sel_col, intRow).Value = False
+                        End If
+                    Next
+
+                End While
+
+                CalculateTotals()
+
+            End If
 
         Catch ex As Exception
             blnReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        Finally
+            If Not IsNothing(mySQLReader) Then
+                mySQLReader.Close()
+                mySQLReader.Dispose()
+            End If
         End Try
 
         Return blnReturn

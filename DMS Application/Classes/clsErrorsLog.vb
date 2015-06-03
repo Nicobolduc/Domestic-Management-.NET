@@ -10,6 +10,7 @@ Public Class clsErrorsLog
     Public Sub WriteToErrorLog(ByVal strErrorMessage As String, ByVal strStackTrace As String, ByVal strTitle As String)
         Dim myFileStream As FileStream = New FileStream(Application.StartupPath & "\Log.txt", FileMode.Append, FileAccess.Write)
         Dim myStreamWriter As StreamWriter = New StreamWriter(myFileStream)
+        Dim strMessageToShow As String = vbNullString
 
         If Not System.IO.Directory.Exists(Application.StartupPath & "\") Then
             System.IO.Directory.CreateDirectory(Application.StartupPath & "\")
@@ -23,6 +24,14 @@ Public Class clsErrorsLog
 
         myStreamWriter.Close()
         myFileStream.Close()
+
+#If DEBUG Then
+        strMessageToShow = strTitle & vbCrLf
+        strMessageToShow = strMessageToShow & strErrorMessage & vbCrLf
+        strMessageToShow = strMessageToShow & strStackTrace & vbCrLf
+
+        MsgBox(strMessageToShow, MsgBoxStyle.Critical, "An error occurred")
+#End If
 
     End Sub
 

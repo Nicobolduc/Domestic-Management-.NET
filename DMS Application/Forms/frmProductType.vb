@@ -18,10 +18,10 @@
 
             mySQLReader = mSQL.ADOSelect(strSQL)
 
-            While mySQLReader.Read
+            If mySQLReader.Read Then
 
                 txtName.Text = mySQLReader.Item("ProT_Name").ToString
-            End While
+            End If
 
             blnReturn = True
 

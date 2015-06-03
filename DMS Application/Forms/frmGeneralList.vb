@@ -203,8 +203,6 @@ Public Class frmGeneralList
 
     End Sub
 
-#End Region
-    
     Private Sub txtFiltre_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtFilter.TextChanged
         Dim intSelectedColumn As Short
 
@@ -235,4 +233,11 @@ Public Class frmGeneralList
         My.Forms.mdiGeneral.RemoveGenListHandle(Me.Handle.ToInt32)
         Me.Dispose()
     End Sub
+
+    Private Sub btnRefresh_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnRefresh.Click
+        blnGrdList_Load()
+    End Sub
+
+#End Region
+    
 End Class
