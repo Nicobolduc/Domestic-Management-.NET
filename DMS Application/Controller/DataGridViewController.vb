@@ -2,7 +2,7 @@
 Imports System.Drawing
 Imports System.Drawing.Printing
 
-Public Class clsDataGridView
+Public Class DataGridViewController
 
     'Private members
     Private Const mintDefaultActionCol As Short = 0

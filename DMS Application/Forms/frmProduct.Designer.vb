@@ -37,7 +37,7 @@ Partial Class frmProduct
         Me.btnRemoveLine = New System.Windows.Forms.Button()
         Me.btnAddLine = New System.Windows.Forms.Button()
         Me.grdPrices = New System.Windows.Forms.DataGridView()
-        Me.myFormControler = New DMS_Application.ctlFormControler()
+        Me.myFormControler = New DMS_Application.ctlFormController()
         Me.chkTaxable = New System.Windows.Forms.CheckBox()
         Me.gbInfos.SuspendLayout()
         CType(Me.grdPrices, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -229,7 +229,7 @@ Partial Class frmProduct
     Friend WithEvents cboType As System.Windows.Forms.ComboBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents gbInfos As System.Windows.Forms.GroupBox
-    Public WithEvents myFormControler As DMS_Application.ctlFormControler
+    Public WithEvents myFormControler As DMS_Application.ctlFormController
     Friend WithEvents grdPrices As System.Windows.Forms.DataGridView
     Friend WithEvents btnRemoveLine As System.Windows.Forms.Button
     Friend WithEvents btnAddLine As System.Windows.Forms.Button

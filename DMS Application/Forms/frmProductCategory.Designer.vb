@@ -25,7 +25,7 @@ Partial Class frmProductCategory
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmProductCategory))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtName = New System.Windows.Forms.TextBox()
-        Me.myFormControler = New DMS_Application.ctlFormControler()
+        Me.myFormControler = New DMS_Application.ctlFormController()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.cboType = New System.Windows.Forms.ComboBox()
         Me.SuspendLayout()
@@ -96,7 +96,7 @@ Partial Class frmProductCategory
     End Sub
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents txtName As System.Windows.Forms.TextBox
-    Public WithEvents myFormControler As DMS_Application.ctlFormControler
+    Public WithEvents myFormControler As DMS_Application.ctlFormController
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents cboType As System.Windows.Forms.ComboBox
 End Class

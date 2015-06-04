@@ -13,8 +13,8 @@ Public Class frmProduct
 
 
     'Private class members
-    Private mcSQL As clsSQL_Transactions
-    Private WithEvents mcGrdPrices As clsDataGridView
+    Private mcSQL As MySQLController
+    Private WithEvents mcGrdPrices As DataGridViewController
 
 
 #Region "Functions / Subs"
@@ -33,7 +33,7 @@ Public Class frmProduct
             strSQL = strSQL & " FROM Product " & vbCrLf
             strSQL = strSQL & " WHERE Product.Pro_ID = " & myFormControler.Item_ID & vbCrLf
 
-            mySQLReader = mSQL.ADOSelect(strSQL)
+            mySQLReader = MySQLController.ADOSelect(strSQL)
 
             mySQLReader.Read()
 
@@ -71,7 +71,7 @@ Public Class frmProduct
         Dim strSQL As String = vbNullString
 
         Try
-            strSQL = strSQL & "  SELECT " & clsDataGridView.GridRowActions.CONSULT_ACTION & " AS Action, " & vbCrLf
+            strSQL = strSQL & "  SELECT " & DataGridViewController.GridRowActions.CONSULT_ACTION & " AS Action, " & vbCrLf
             strSQL = strSQL & "         ProductPrice.ProP_ID, " & vbCrLf
             strSQL = strSQL & "         Company.Cy_ID, " & vbCrLf
             strSQL = strSQL & "         Company.Cy_Name, " & vbCrLf
@@ -187,7 +187,7 @@ Public Class frmProduct
         Dim blnReturn As Boolean
 
         Try
-            mcSQL = New clsSQL_Transactions
+            mcSQL = New MySQLController
 
             mcSQL.bln_BeginTransaction()
 
@@ -290,13 +290,13 @@ Public Class frmProduct
             For intRowCpt = 0 To grdPrices.Rows.Count - 1
 
                 Select Case CInt(grdPrices.Rows(intRowCpt).Cells(mintGrdPrices_Action_col).Value)
-                    Case clsDataGridView.GridRowActions.INSERT_ACTION
+                    Case DataGridViewController.GridRowActions.INSERT_ACTION
                         blnReturn = blnProductPrice_Insert(intRowCpt)
 
-                    Case clsDataGridView.GridRowActions.UPDATE_ACTION
+                    Case DataGridViewController.GridRowActions.UPDATE_ACTION
                         blnReturn = blnProductPrice_Update(intRowCpt)
 
-                    Case clsDataGridView.GridRowActions.DELETE_ACTION
+                    Case DataGridViewController.GridRowActions.DELETE_ACTION
                         blnReturn = blnProductPrice_Delete(intRowCpt)
 
                     Case Else
@@ -443,7 +443,7 @@ Public Class frmProduct
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
         Dim blnReturn As Boolean
 
-        mcGrdPrices = New clsDataGridView
+        mcGrdPrices = New DataGridViewController
 
         Select Case False
             Case mcGrdPrices.bln_Init(grdPrices)

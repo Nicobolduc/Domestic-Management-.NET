@@ -12,7 +12,7 @@ Public Class frmGeneralList
     Public mstrGridSQL As String = vbNullString
 
     'Private class members
-    Private WithEvents mcGrdList As clsDataGridView
+    Private WithEvents mcGrdList As DataGridViewController
 
 
 #Region "Constructor"
@@ -186,7 +186,7 @@ Public Class frmGeneralList
     Private Sub myFormManager_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
         Dim blnReturn As Boolean
 
-        mcGrdList = New clsDataGridView
+        mcGrdList = New DataGridViewController
 
         grdList.Tag = mintGridTag
 

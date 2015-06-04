@@ -1,5 +1,5 @@
 ﻿
-Public Class clsFlexGridControler
+Public Class C1FlexGridController
 
     'Private members
     Private Const mintDefaultActionCol As Short = 0
@@ -33,16 +33,21 @@ Public Class clsFlexGridControler
         Dim columnsHeaderStyle As New DataGridViewCellStyle
 
         Try
-            rgrdGrid = New C1FlexGrid()
+            'rgrdGrid = New C1FlexGrid()
+
+            grdFlexGrid = rgrdGrid
 
             grdFlexGrid.BeginInit()
 
-            SetDoubleBuffered(rgrdGrid, True)
+            'SetDoubleBuffered(rgrdGrid, True)
+
+            grdFlexGrid.Cols(0).Width = 10
+            grdFlexGrid.Rows.Fixed = 3
 
             grdFlexGrid = rgrdGrid
 
             grdFlexGrid.AllowResizing = AllowResizingEnum.Columns
-            '            grdFlexGrid.Rows(1).Item(1)
+            'grdFlexGrid.Rows(1).Item(1)
             grdFlexGrid.SelectionMode = SelectionModeEnum.Row
 
             grdFlexGrid.AutoGenerateColumns = False
@@ -61,7 +66,7 @@ Public Class clsFlexGridControler
         Dim dgvType As Type = vgrdGrid.GetType()
         Dim propInfos As Reflection.PropertyInfo = dgvType.GetProperty("DoubleBuffered", Reflection.BindingFlags.Instance Or Reflection.BindingFlags.NonPublic)
 
-        propInfos.SetValue(vgrdGrid, vblnIsDoubleBuffered, Nothing)
+        'propInfos.SetValue(vgrdGrid, vblnIsDoubleBuffered, Nothing)
     End Sub
 
 #End Region

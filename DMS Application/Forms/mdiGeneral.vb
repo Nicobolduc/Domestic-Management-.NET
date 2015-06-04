@@ -85,8 +85,8 @@
 #End Region
 
     Private Sub TestsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestsToolStripMenuItem.Click
-        'Dim test = New test
+        Dim test = New test
 
-        'test.Show()
+        test.Show()
     End Sub
 End Class

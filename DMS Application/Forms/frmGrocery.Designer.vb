@@ -43,7 +43,7 @@ Partial Class frmGrocery
         Me.chkDefaultCy = New System.Windows.Forms.CheckBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.txtGroceryName = New System.Windows.Forms.TextBox()
-        Me.myFormControler = New DMS_Application.ctlFormControler()
+        Me.myFormControler = New DMS_Application.ctlFormController()
         CType(Me.grdGrocery, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
@@ -278,6 +278,6 @@ Partial Class frmGrocery
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents txtGroceryName As System.Windows.Forms.TextBox
-    Public WithEvents myFormControler As DMS_Application.ctlFormControler
+    Public WithEvents myFormControler As DMS_Application.ctlFormController
     Friend WithEvents chkDefaultCy As System.Windows.Forms.CheckBox
 End Class

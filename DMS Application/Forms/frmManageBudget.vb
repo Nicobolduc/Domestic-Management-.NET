@@ -8,8 +8,8 @@
     Private mintGrdBudget_Exp_PaidOn_col As Short = 4
 
     'Private class members
-    Private WithEvents mcGridBudget As clsDataGridView
-    Private WithEvents mcSQL As clsSQL_Transactions
+    Private WithEvents mcGridBudget As DataGridViewController
+    Private WithEvents mcSQL As MySQLController
 
 
 #Region "Functions / Subs"
@@ -111,7 +111,7 @@
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
         Dim blnReturn As Boolean
 
-        mcGridBudget = New clsDataGridView
+        mcGridBudget = New DataGridViewController
 
         Select Case False
             Case mcGridBudget.bln_Init(grdBudget)

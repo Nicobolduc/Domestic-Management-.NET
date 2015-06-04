@@ -8,10 +8,12 @@ Public Class test
 
 
     Private Sub test_Activated(sender As Object, e As EventArgs) Handles Button1.Click
-        grid1.BorderStyle = BorderStyle.None
-        grid1.ColumnsCount = 4
+        grid1.BorderStyle = BorderStyle.Fixed3D
+        grid1.ColumnsCount = 10
         grid1.FixedRows = 1
         grid1.Rows.Insert(0)
+
+        grid1.Width = 521
 
         Dim cbEditor As SourceGrid.Cells.Editors.ComboBox = New SourceGrid.Cells.Editors.ComboBox(GetType(System.String))
 
@@ -107,7 +109,7 @@ Public Class test
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        Dim lol As New clsFlexGridControler()
+        Dim lol As New C1FlexGridController()
 
         lol.bln_Init(C1FlexGrid1)
 
@@ -115,4 +117,5 @@ Public Class test
 
         C1FlexGrid1.Rows.Add(10)
     End Sub
+
 End Class

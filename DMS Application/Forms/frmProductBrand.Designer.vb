@@ -23,7 +23,7 @@ Partial Class frmProductBrand
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmProductBrand))
-        Me.myFormControler = New DMS_Application.ctlFormControler()
+        Me.myFormControler = New DMS_Application.ctlFormController()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtName = New System.Windows.Forms.TextBox()
         Me.SuspendLayout()
@@ -75,5 +75,5 @@ Partial Class frmProductBrand
     End Sub
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents txtName As System.Windows.Forms.TextBox
-    Public WithEvents myFormControler As DMS_Application.ctlFormControler
+    Public WithEvents myFormControler As DMS_Application.ctlFormController
 End Class

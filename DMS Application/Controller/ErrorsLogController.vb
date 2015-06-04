@@ -3,7 +3,7 @@ Imports System.Text
 
 
 <CLSCompliant(True)> _
-Public Class clsErrorsLog
+Public Class ErrorsLogController
 
 #Region "Functions / Subs"
 
@@ -36,5 +36,5 @@ Public Class clsErrorsLog
     End Sub
 
 #End Region
-    
+
 End Class

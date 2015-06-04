@@ -38,7 +38,7 @@ Partial Class frmManageBudget
         Me.rbtnBiMensuel = New System.Windows.Forms.RadioButton()
         Me.rbtnMensuelle = New System.Windows.Forms.RadioButton()
         Me.dtpFrom = New System.Windows.Forms.DateTimePicker()
-        Me.myFormControler = New DMS_Application.ctlFormControler()
+        Me.myFormControler = New DMS_Application.ctlFormController()
         CType(Me.grdBudget, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.gbFilter.SuspendLayout()
         Me.SuspendLayout()
@@ -236,6 +236,6 @@ Partial Class frmManageBudget
     Friend WithEvents Column3 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column2 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents btnRefresh As System.Windows.Forms.Button
-    Public WithEvents myFormControler As DMS_Application.ctlFormControler
+    Public WithEvents myFormControler As DMS_Application.ctlFormController
 
 End Class

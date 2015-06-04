@@ -1,7 +1,7 @@
 ﻿Public Class frmExpense
 
     'Private members
-    Private mcSQL As clsSQL_Transactions
+    Private mcSQL As MySQLController
 
 
 #Region "Functions / Subs"
@@ -19,7 +19,7 @@
             strSQL = strSQL & " FROM Expense " & vbCrLf
             strSQL = strSQL & " WHERE Expense.Exp_ID = " & myFormControler.Item_ID & vbCrLf
 
-            mySQLReader = mSQL.ADOSelect(strSQL)
+            mySQLReader = MySQLController.ADOSelect(strSQL)
 
             While mySQLReader.Read
                 txtCode.Text = mySQLReader.Item("Exp_Name").ToString
@@ -72,7 +72,7 @@
         Dim blnReturn As Boolean
 
         Try
-            mcSQL = New clsSQL_Transactions
+            mcSQL = New MySQLController
 
             mcSQL.bln_BeginTransaction()
 

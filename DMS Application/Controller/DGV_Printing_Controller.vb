@@ -1,4 +1,4 @@
-﻿Public Class clsPrinting
+﻿Public Class DGV_Printing_Controller
     Inherits System.Drawing.Printing.PrintDocument
 
     'Private class members
@@ -216,5 +216,5 @@
     End Sub
 
 #End Region
-    
+
 End Class

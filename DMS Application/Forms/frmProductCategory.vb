@@ -1,7 +1,7 @@
 ﻿Public Class frmProductCategory
 
     'Private class members
-    Private mcSQL As clsSQL_Transactions
+    Private mcSQL As MySQLController
 
 
 #Region "Functions / Subs"
@@ -17,7 +17,7 @@
             strSQL = strSQL & " FROM ProductCategory " & vbCrLf
             strSQL = strSQL & " WHERE ProductCategory.ProC_ID = " & myFormControler.Item_ID & vbCrLf
 
-            mySQLReader = mSQL.ADOSelect(strSQL)
+            mySQLReader = MySQLController.ADOSelect(strSQL)
 
             mySQLReader.Read()
 
@@ -62,7 +62,7 @@
         Dim blnReturn As Boolean
 
         Try
-            mcSQL = New clsSQL_Transactions
+            mcSQL = New MySQLController
 
             mcSQL.bln_BeginTransaction()
 

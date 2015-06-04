@@ -17,9 +17,9 @@
     Private mdblTaxe_TVQ As Double
 
     'Private class members
-    Private WithEvents mcGrdGrocery As clsDataGridView
-    Private mcSQL As clsSQL_Transactions
-    Private mcPrinter As clsPrinting
+    Private WithEvents mcGrdGrocery As DataGridViewController
+    Private mcSQL As MySQLController
+    Private mcPrinter As DGV_Printing_Controller
 
 #Region "Functions / Subs"
 
@@ -29,15 +29,15 @@
         Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
-            mdblTaxe_TPS = Val(mSQL.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_Name = 'TPS'"))
-            mdblTaxe_TVQ = Val(mSQL.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_Name = 'TVQ'"))
+            mdblTaxe_TPS = Val(MySQLController.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_Name = 'TPS'"))
+            mdblTaxe_TVQ = Val(MySQLController.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_Name = 'TVQ'"))
 
             strSQL = strSQL & " SELECT  Grocery.Gro_Name " & vbCrLf
 
             strSQL = strSQL & " FROM Grocery " & vbCrLf
             strSQL = strSQL & " WHERE Gro_ID = " & myFormControler.Item_ID & vbCrLf
 
-            mySQLReader = mSQL.ADOSelect(strSQL)
+            mySQLReader = MySQLController.ADOSelect(strSQL)
 
             If mySQLReader.Read() Then
 
@@ -97,7 +97,7 @@
                 strSQL = strSQL & " FROM Gro_Pro " & vbCrLf
                 strSQL = strSQL & " WHERE Gro_Pro.Gro_ID = " & myFormControler.Item_ID & vbCrLf
 
-                mySQLReader = mSQL.ADOSelect(strSQL)
+                mySQLReader = MySQLController.ADOSelect(strSQL)
 
                 While mySQLReader.Read And grdGrocery.Rows.Count > 0
 
@@ -204,7 +204,7 @@
         Dim blnReturn As Boolean
 
         Try
-            mcSQL = New clsSQL_Transactions
+            mcSQL = New MySQLController
 
             mcSQL.bln_BeginTransaction()
 
@@ -351,7 +351,7 @@
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
         Dim blnReturn As Boolean
 
-        mcGrdGrocery = New clsDataGridView
+        mcGrdGrocery = New DataGridViewController
 
         Select Case False
             Case mcGrdGrocery.bln_Init(grdGrocery)
@@ -410,7 +410,7 @@
     End Sub
 
     Private Sub btnPrint_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnPrint.Click
-        mcPrinter = New clsPrinting("Épicerie du: " & Date.Today)
+        mcPrinter = New DGV_Printing_Controller("Épicerie du: " & Date.Today)
 
         mcPrinter.SetGridToPrint(New Short() {mintGrdGrocery_Pro_Name_col, mintGrdGrocery_ProC_Name_col, mintGrdGrocery_ProB_Name_col, mintGrdGrocery_ProP_Price_col}) = grdGrocery()
 

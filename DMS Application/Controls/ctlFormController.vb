@@ -1,7 +1,7 @@
 ﻿Imports System.ComponentModel
 
 
-Public Class ctlFormControler
+Public Class ctlFormController
     Inherits System.Windows.Forms.UserControl
     Implements INotifyPropertyChanged
 
@@ -266,6 +266,58 @@ Public Class ctlFormControler
     End Sub
 
 #End Region
-    
 
 End Class
+
+#Region "Custom events"
+
+Public Class LoadDataEventArgs
+    Inherits System.EventArgs
+
+    Private mintItem_ID As Integer
+
+    Public ReadOnly Property Item_ID As Integer
+        Get
+            Return mintItem_ID
+        End Get
+    End Property
+
+    Public Sub New(ByVal vintItem_ID As Integer)
+        mintItem_ID = vintItem_ID
+    End Sub
+
+End Class
+
+Public Class SaveDataEventArgs
+    Inherits System.EventArgs
+
+    Private mblnSaveSuccessful As Boolean
+
+    Public Property SaveSuccessful As Boolean
+        Get
+            Return mblnSaveSuccessful
+        End Get
+        Set(ByVal value As Boolean)
+            mblnSaveSuccessful = value
+        End Set
+    End Property
+
+End Class
+
+Public Class ValidateRulesEventArgs
+    Inherits System.EventArgs
+
+    Private mblnIsValid As Boolean
+
+    Public Property IsValid As Boolean
+        Get
+            Return mblnIsValid
+        End Get
+        Set(ByVal value As Boolean)
+            mblnIsValid = value
+        End Set
+    End Property
+
+End Class
+
+#End Region

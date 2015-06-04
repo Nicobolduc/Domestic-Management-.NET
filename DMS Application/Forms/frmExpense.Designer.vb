@@ -29,7 +29,7 @@ Partial Class frmExpense
         Me.cboInterval = New System.Windows.Forms.ComboBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.dtpBillDate = New System.Windows.Forms.DateTimePicker()
-        Me.myFormControler = New DMS_Application.ctlFormControler()
+        Me.myFormControler = New DMS_Application.ctlFormController()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.txtAmount = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -151,7 +151,7 @@ Partial Class frmExpense
     Friend WithEvents txtCode As System.Windows.Forms.TextBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents cboInterval As System.Windows.Forms.ComboBox
-    Public WithEvents myFormControler As DMS_Application.ctlFormControler
+    Public WithEvents myFormControler As DMS_Application.ctlFormController
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents dtpBillDate As System.Windows.Forms.DateTimePicker
     Friend WithEvents Label4 As System.Windows.Forms.Label

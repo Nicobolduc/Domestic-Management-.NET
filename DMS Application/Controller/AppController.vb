@@ -1,12 +1,12 @@
 ﻿Imports MySql.Data.MySqlClient
 
-Public Class clsAppControler
+Public Class AppController
 
     'Private class members
     Private mdiGeneral As mdiGeneral
     Private mcMySQLConnection As MySqlConnection
-    Private mcErrorsLog As clsErrorsLog
-    Private mcUser As clsUser
+    Private mcErrorsLog As ErrorsLogController
+    Private mcUser As User
     Private mcStringCleaner As System.Text.RegularExpressions.Regex = New System.Text.RegularExpressions.Regex("'", System.Text.RegularExpressions.RegexOptions.Compiled Or System.Text.RegularExpressions.RegexOptions.CultureInvariant Or System.Text.RegularExpressions.RegexOptions.IgnoreCase)
 
 
@@ -18,13 +18,13 @@ Public Class clsAppControler
         End Get
     End Property
 
-    Public ReadOnly Property cErrorsLog As clsErrorsLog
+    Public ReadOnly Property cErrorsLog As ErrorsLogController
         Get
             Return Me.mcErrorsLog
         End Get
     End Property
 
-    Public ReadOnly Property cUser As clsUser
+    Public ReadOnly Property cUser As User
         Get
             Return Me.mcUser
         End Get
@@ -32,13 +32,15 @@ Public Class clsAppControler
 
     Public ReadOnly Property str_GetPCDateFormat As String
         Get
-            Return "dd-MMMM-yyyy"
+            'Return "dd-MMMM-yyyy"
+            Return System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern()
         End Get
     End Property
 
     Public ReadOnly Property str_GetPCDateTimeFormat As String
         Get
-            Return "dd-MMMM-yyyy hh:mm"
+            'Return "dd-MMMM-yyyy hh:mm"
+            Return System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern & " " & System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortTimePattern
         End Get
     End Property
 
@@ -48,9 +50,9 @@ Public Class clsAppControler
 
     Public Sub New()
 
-        mcErrorsLog = New clsErrorsLog
+        mcErrorsLog = New ErrorsLogController
 
-        mcUser = New clsUser
+        mcUser = New User
 
         blnSetMySQLConnection()
 
@@ -66,8 +68,8 @@ Public Class clsAppControler
 
         mcMySQLConnection = New MySqlConnection
 
-        'mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.106;Port=3306;userid=Nicolas;password=nicolas;database=dms_tests"
-        mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests"
+        mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.110;Port=3306;userid=Nicolas;password=nicolas;database=dms_tests"
+        'mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests"
 
         Try
             mcMySQLConnection.Open()
@@ -77,7 +79,7 @@ Public Class clsAppControler
         Catch ex As MySqlException
             blnReturn = False
             MessageBox.Show("La connexion au serveur a échouée.")
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            Me.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             mcMySQLConnection.Dispose()
         End Try
 
@@ -107,7 +109,7 @@ Public Class clsAppControler
 
             End Select
 
-            mSQL.str_ADOSingleLookUp("ApC_Text", "AppCaption", "ApC_ID = " & CStr(rControl.Tag))
+            MySQLController.str_ADOSingleLookUp("ApC_Text", "AppCaption", "ApC_ID = " & CStr(rControl.Tag))
 
         Catch ex As Exception
             blnReturn = False
@@ -123,7 +125,7 @@ Public Class clsAppControler
 
         Try
 
-            strCaption = mSQL.str_ADOSingleLookUp("ApC_Text", "AppCaption", "ApC_No = " & intCaptionID.ToString & " AND ApL_ID = " & intLanguage)
+            strCaption = MySQLController.str_ADOSingleLookUp("ApC_Text", "AppCaption", "ApC_No = " & intCaptionID.ToString & " AND ApL_ID = " & intLanguage)
 
         Catch ex As Exception
             blnReturn = False

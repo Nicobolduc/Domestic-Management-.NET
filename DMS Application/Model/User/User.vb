@@ -1,5 +1,5 @@
 ﻿
-Public Class clsUser
+Public Class User
 
     'Private members
     Private mintLanguage As Short = 1
