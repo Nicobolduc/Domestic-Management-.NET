@@ -66,7 +66,7 @@
         Dim strSQL As String = vbNullString
         Dim intRow As Integer
         Dim mySQLReader As MySqlDataReader = Nothing
-
+        'http://www.codeproject.com/Articles/383153/The-Model-View-Controller-MVC-Pattern-with-Csharp
         Try
             strSQL = strSQL & " SELECT  Product.Pro_ID, " & vbCrLf
             strSQL = strSQL & "         Product.Pro_Name, " & vbCrLf

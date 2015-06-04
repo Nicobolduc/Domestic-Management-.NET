@@ -1,3 +1,7 @@
-﻿Public Class ProductType
+﻿Namespace Model
 
-End Class
+    Public Class ProductType
+
+    End Class
+
+End Namespace

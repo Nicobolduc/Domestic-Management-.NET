@@ -99,22 +99,23 @@
   <ItemGroup>
     <Compile Include="Controller\AppController.vb" />
     <Compile Include="Controller\C1FlexGridController.vb" />
-    <Compile Include="Controls\ctlGridTextBox.Designer.vb">
+    <Compile Include="Controller\Model Controllers\ProductController.vb" />
+    <Compile Include="View\User Controls\ctlGridTextBox.Designer.vb">
       <DependentUpon>ctlGridTextBox.vb</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ctlGridTextBox.vb">
+    <Compile Include="View\User Controls\ctlGridTextBox.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\test.Designer.vb">
+    <Compile Include="View\Forms\test.Designer.vb">
       <DependentUpon>test.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\test.vb">
+    <Compile Include="View\Forms\test.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Model\Product\Product.vb" />
     <Compile Include="Model\Product\ProductCategory.vb" />
     <Compile Include="Model\Product\ProductType.vb" />
-    <Compile Include="Model\Template.vb" />
+    <Compile Include="Template.vb" />
     <Compile Include="Model\Modules\mConstants.vb" />
     <Compile Include="Controller\DataGridViewController.vb" />
     <Compile Include="Controller\ErrorsLogController.vb" />
@@ -123,76 +124,76 @@
     </Compile>
     <Compile Include="Controller\MySQLController.vb" />
     <Compile Include="Model\User\User.vb" />
-    <Compile Include="Controls\ctlFormController.Designer.vb">
+    <Compile Include="View\User Controls\ctlFormController.Designer.vb">
       <DependentUpon>ctlFormController.vb</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ctlFormController.vb">
+    <Compile Include="View\User Controls\ctlFormController.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\frmGrocery.Designer.vb">
+    <Compile Include="View\Forms\frmGrocery.Designer.vb">
       <DependentUpon>frmGrocery.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmGrocery.vb">
+    <Compile Include="View\Forms\frmGrocery.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmProductBrand.Designer.vb">
+    <Compile Include="View\Forms\frmProductBrand.Designer.vb">
       <DependentUpon>frmProductBrand.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmProductBrand.vb">
+    <Compile Include="View\Forms\frmProductBrand.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmExpense.Designer.vb">
+    <Compile Include="View\Forms\frmExpense.Designer.vb">
       <DependentUpon>frmExpense.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmExpense.vb">
+    <Compile Include="View\Forms\frmExpense.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmGeneralList.Designer.vb">
+    <Compile Include="View\Forms\frmGeneralList.Designer.vb">
       <DependentUpon>frmGeneralList.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmGeneralList.vb">
+    <Compile Include="View\Forms\frmGeneralList.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmManageBudget.vb">
+    <Compile Include="View\Forms\frmManageBudget.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmManageBudget.Designer.vb">
+    <Compile Include="View\Forms\frmManageBudget.Designer.vb">
       <DependentUpon>frmManageBudget.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmProductType.Designer.vb">
+    <Compile Include="View\Forms\frmProductType.Designer.vb">
       <DependentUpon>frmProductType.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmProductType.vb">
+    <Compile Include="View\Forms\frmProductType.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmProduct.Designer.vb">
+    <Compile Include="View\Forms\frmProduct.Designer.vb">
       <DependentUpon>frmProduct.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmProduct.vb">
+    <Compile Include="View\Forms\frmProduct.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmCompany.Designer.vb">
+    <Compile Include="View\Forms\frmCompany.Designer.vb">
       <DependentUpon>frmCompany.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmCompany.vb">
+    <Compile Include="View\Forms\frmCompany.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\mdiGeneral.Designer.vb">
+    <Compile Include="View\Forms\mdiGeneral.Designer.vb">
       <DependentUpon>mdiGeneral.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\mdiGeneral.vb">
+    <Compile Include="View\Forms\mdiGeneral.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmProductCategory.Designer.vb">
+    <Compile Include="View\Forms\frmProductCategory.Designer.vb">
       <DependentUpon>frmProductCategory.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmProductCategory.vb">
+    <Compile Include="View\Forms\frmProductCategory.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Model\Modules\mControlsFunctions.vb" />
+    <Compile Include="Controller\Modules\mWinControlsFunctions.vb" />
     <Compile Include="Model\Modules\mGeneralList.vb" />
-    <Compile Include="Model\Modules\mMain.vb" />
+    <Compile Include="Controller\Modules\mMain.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -210,45 +211,45 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Controls\ctlFormController.resx">
+    <EmbeddedResource Include="View\User Controls\ctlFormController.resx">
       <DependentUpon>ctlFormController.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ctlGridTextBox.resx">
+    <EmbeddedResource Include="View\User Controls\ctlGridTextBox.resx">
       <DependentUpon>ctlGridTextBox.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmGrocery.resx">
+    <EmbeddedResource Include="View\Forms\frmGrocery.resx">
       <DependentUpon>frmGrocery.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmProductBrand.resx">
+    <EmbeddedResource Include="View\Forms\frmProductBrand.resx">
       <DependentUpon>frmProductBrand.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmExpense.resx">
+    <EmbeddedResource Include="View\Forms\frmExpense.resx">
       <DependentUpon>frmExpense.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmGeneralList.resx">
+    <EmbeddedResource Include="View\Forms\frmGeneralList.resx">
       <DependentUpon>frmGeneralList.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmManageBudget.resx">
+    <EmbeddedResource Include="View\Forms\frmManageBudget.resx">
       <DependentUpon>frmManageBudget.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmProductType.resx">
+    <EmbeddedResource Include="View\Forms\frmProductType.resx">
       <DependentUpon>frmProductType.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmProduct.resx">
+    <EmbeddedResource Include="View\Forms\frmProduct.resx">
       <DependentUpon>frmProduct.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmCompany.resx">
+    <EmbeddedResource Include="View\Forms\frmCompany.resx">
       <DependentUpon>frmCompany.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\mdiGeneral.resx">
+    <EmbeddedResource Include="View\Forms\mdiGeneral.resx">
       <DependentUpon>mdiGeneral.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmProductCategory.resx">
+    <EmbeddedResource Include="View\Forms\frmProductCategory.resx">
       <DependentUpon>frmProductCategory.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\test.resx">
+    <EmbeddedResource Include="View\Forms\test.resx">
       <DependentUpon>test.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\licenses.licx" />
@@ -283,9 +284,7 @@
     <Content Include="Resources\Consult.png" />
     <None Include="Resources\MagnifyGlass.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="View\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,17 +1,20 @@
-﻿
-Public Class User
+﻿Namespace Model
 
-    'Private members
-    Private mintLanguage As Short = 1
+    Public Class User
+
+        'Private members
+        Private mintLanguage As Short = 1
 
 #Region "Properties"
 
-    Public ReadOnly Property GetLanguage As Short
-        Get
-            Return mintLanguage
-        End Get
-    End Property
+        Public ReadOnly Property GetLanguage As Short
+            Get
+                Return mintLanguage
+            End Get
+        End Property
 
 #End Region
 
-End Class
+    End Class
+
+End Namespace

@@ -24,6 +24,7 @@ Public Class frmProduct
         Dim strSQL As String = vbNullString
         Dim intProC_ID As Integer
         Dim mySQLReader As MySqlDataReader = Nothing
+        Dim proController As New ProductController
 
         Try
             strSQL = strSQL & " SELECT Product.Pro_Name, " & vbCrLf

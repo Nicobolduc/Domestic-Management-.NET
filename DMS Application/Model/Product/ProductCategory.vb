@@ -1,3 +1,7 @@
-﻿Public Class ProductCategory
+﻿Namespace Model
 
-End Class
+    Public Class ProductCategory
+
+    End Class
+
+End Namespace

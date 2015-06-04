@@ -1,4 +1,5 @@
 ﻿Imports MySql.Data.MySqlClient
+Imports DMS_Application.Model
 
 Public Class AppController
 
