@@ -56,10 +56,10 @@ Public Class MySQLController
     End Function
 
     Public Shared Function str_ADOSingleLookUp(ByVal vstrField As String, ByVal vstrTable As String, ByVal vstrWhere As String) As String
-        Dim strReturnValue As String = vbNullString
+        Dim strReturnValue As String = String.Empty
         Dim mySQLCmd As MySqlCommand = Nothing
         Dim mySQLReader As MySqlDataReader = Nothing
-        Dim strSQL As String = vbNullString
+        Dim strSQL As String = String.Empty
 
         Try
             strSQL = "SELECT " & vstrField & " FROM " & vstrTable & " WHERE " & vstrWhere
@@ -94,7 +94,7 @@ Public Class MySQLController
 
 
     Public Function bln_BeginTransaction() As Boolean
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         Try
             mMySQLTransaction = gcAppControler.MySQLConnection.BeginTransaction(IsolationLevel.ReadCommitted)
@@ -103,18 +103,18 @@ Public Class MySQLController
             mMySQLCmd.Connection = gcAppControler.MySQLConnection
             mMySQLCmd.CommandType = CommandType.Text
 
-            blnReturn = True
+            blnValidReturn = True
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Public Function bln_EndTransaction(ByVal vblnCommitChanges As Boolean) As Boolean
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         Try
             If vblnCommitChanges Then
@@ -123,10 +123,10 @@ Public Class MySQLController
                 mMySQLTransaction.Rollback()
             End If
 
-            blnReturn = True
+            blnValidReturn = True
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mblnTransactionStarted = False
@@ -134,11 +134,14 @@ Public Class MySQLController
             mMySQLCmd.Dispose()
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
-    Public Function bln_AddField(ByVal vstrField As String, ByVal vstrValue As String, ByVal vintDBType As mConstants.MySQL_FieldTypes) As Boolean
-        Dim blnReturn As Boolean
+    Public Function bln_AddField(ByVal vstrField As String, ByVal vobjValue As Object, ByVal vintDBType As mConstants.MySQL_FieldTypes) As Boolean
+        Dim blnValidReturn As Boolean = True
+        Dim vstrValue As String = String.Empty
+
+        vstrValue = vobjValue.ToString
 
         Try
             If String.IsNullOrEmpty(vstrValue) Then
@@ -152,9 +155,23 @@ Public Class MySQLController
                         vstrValue = Format(CDate(vstrValue), gcAppControler.str_GetServerDateTimeFormat)
                         vstrValue = gcAppControler.str_FixStringForSQL(vstrValue)
 
+                    Case mConstants.MySQL_FieldTypes.DOUBLE_TYPE, mConstants.MySQL_FieldTypes.INT_TYPE
+                        vstrValue = vstrValue.ToString
+
                     Case mConstants.MySQL_FieldTypes.INT_TYPE
                         If vstrValue = "0" Then
                             vstrValue = "NULL"
+                        Else
+                            vstrValue = vstrValue.ToString
+                        End If
+
+                    Case mConstants.MySQL_FieldTypes.TINYINT_TYPE
+                        If vstrValue = True.ToString Then
+                            vstrValue = "1"
+                        ElseIf vstrValue = False.ToString Then
+                            vstrValue = "0"
+                        Else
+                            blnValidReturn = False
                         End If
 
                 End Select
@@ -162,30 +179,28 @@ Public Class MySQLController
 
             mColFields.Add(vstrField, vstrValue)
 
-            blnReturn = True
-
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Public Function bln_ADOInsert(ByVal vstrTable As String, Optional ByRef rintNewItem_ID As Integer = 0) As Boolean
-        Dim blnReturn As Boolean
-        Dim strSQL As String = vbNullString
-        Dim strFields As String = vbNullString
-        Dim strValues As String = vbNullString
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
+        Dim strFields As String = String.Empty
+        Dim strValues As String = String.Empty
 
         strSQL = " INSERT INTO " & vstrTable & vbCrLf
 
         Try
             For Each strKey As String In mColFields.Keys
 
-                strFields = strFields & CStr(IIf(strFields = vbNullString, " (", ",")) & strKey
+                strFields = strFields & CStr(IIf(strFields = String.Empty, " (", ",")) & strKey
 
-                strValues = strValues & CStr(IIf(strValues = vbNullString, " VALUES (", ",")) & mColFields.Item(strKey).ToString()
+                strValues = strValues & CStr(IIf(strValues = String.Empty, " VALUES (", ",")) & mColFields.Item(strKey).ToString()
             Next
 
             strFields = strFields & ") " & vbCrLf
@@ -201,20 +216,20 @@ Public Class MySQLController
 
             mColFields.Clear()
 
-            blnReturn = True
+            blnValidReturn = True
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Public Function bln_ADOUpdate(ByVal vstrTable As String, ByVal vstrWhere As String) As Boolean
-        Dim blnReturn As Boolean
-        Dim strSQL As String = vbNullString
-        Dim strFields As String = vbNullString
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
+        Dim strFields As String = String.Empty
 
         strSQL = "          UPDATE " & vstrTable & vbCrLf
         strSQL = strSQL & " SET "
@@ -223,7 +238,7 @@ Public Class MySQLController
             For Each strKey As String In mColFields.Keys
                 mColFields.Item(strKey).ToString()
 
-                strFields = strFields & CStr(IIf(strFields = vbNullString, vbNullString, ",")) & strKey & "=" & mColFields.Item(strKey).ToString()
+                strFields = strFields & CStr(IIf(strFields = String.Empty, String.Empty, ",")) & strKey & "=" & mColFields.Item(strKey).ToString()
             Next
 
             mMySQLCmd.CommandText = strSQL & strFields & " WHERE " & vstrWhere
@@ -232,21 +247,21 @@ Public Class MySQLController
 
             mColFields.Clear()
 
-            blnReturn = True
+            blnValidReturn = True
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mColFields.Clear()
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Public Function bln_ADODelete(ByVal vstrTable As String, ByVal vstrWhere As String) As Boolean
-        Dim blnReturn As Boolean
-        Dim strSQL As String = vbNullString
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
 
         strSQL = " DELETE FROM " & vstrTable & vbCrLf
 
@@ -257,14 +272,14 @@ Public Class MySQLController
 
             mColFields.Clear()
 
-            blnReturn = True
+            blnValidReturn = True
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
 #End Region

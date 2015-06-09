@@ -10,7 +10,7 @@ Public Class ErrorsLogController
     Public Sub WriteToErrorLog(ByVal strErrorMessage As String, ByVal strStackTrace As String, ByVal strTitle As String)
         Dim myFileStream As FileStream = New FileStream(Application.StartupPath & "\Log.txt", FileMode.Append, FileAccess.Write)
         Dim myStreamWriter As StreamWriter = New StreamWriter(myFileStream)
-        Dim strMessageToShow As String = vbNullString
+        Dim strMessageToShow As String = String.Empty
 
         If Not System.IO.Directory.Exists(Application.StartupPath & "\") Then
             System.IO.Directory.CreateDirectory(Application.StartupPath & "\")

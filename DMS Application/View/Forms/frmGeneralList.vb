@@ -8,8 +8,8 @@ Public Class frmGeneralList
 
     Private mListToOpen As mGeneralList.GeneralLists_ID
 
-    Public mintGridTag As String = vbNullString
-    Public mstrGridSQL As String = vbNullString
+    Public mintGridTag As String = String.Empty
+    Public mstrGridSQL As String = String.Empty
 
     'Private class members
     Private WithEvents mcGrdList As DataGridViewController
@@ -29,11 +29,12 @@ Public Class frmGeneralList
 #Region "Functions / Subs"
 
     Private Function blnOpenForm(ByVal vFormMode As mConstants.Form_Modes) As Boolean
-        Dim blnReturn As Boolean = True
+        Dim blnValidReturn As Boolean = True
         Dim frmToOpen As Object = Nothing
         Dim intItem_ID As Integer
         Dim intRowIndex As Integer
         Dim intSelectedRow As Integer
+        Dim selectedRows As GridRangeInfo
 
         Try
             Select Case mListToOpen
@@ -60,7 +61,7 @@ Public Class frmGeneralList
 
             End Select
 
-            If grdList.SelectedRows.Count > 0 Then
+            If selectedRows.Top > 0 Then
                 intSelectedRow = grdList.SelectedRows(0).Index
                 intItem_ID = CInt(grdList.SelectedRows(0).Cells(mintItem_ID_col).Value)
             End If
@@ -91,8 +92,8 @@ Public Class frmGeneralList
                     Next
 
             End Select
-
-            If intSelectedRow >= 0 And grdList.Rows.Count > 0 Then
+            grdList.Selections.GetSelectedRows(True, False)
+            If intSelectedRow >= 0 And grdList.RowCount > 0 Then
                 grdList.Rows(intSelectedRow).Selected = True
                 'grdList.FirstDisplayedScrollingRowIndex = grdList.SelectedRows(0).Index
             End If
@@ -101,26 +102,26 @@ Public Class frmGeneralList
             txtFilter.SelectAll()
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnGrdList_Load() As Boolean
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         Try
 
-            blnReturn = mcGrdList.bln_FillData(mstrGridSQL)
+            blnValidReturn = mcGrdList.bln_FillData(mstrGridSQL)
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
 #End Region
@@ -171,20 +172,20 @@ Public Class frmGeneralList
 
     End Sub
 
-    Private Sub grdList_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdList.DoubleClick
+    Private Sub grdList_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs)
         If grdList.Rows.Count > 0 And grdList.SelectedRows.Count > 0 Then
             blnOpenForm(mConstants.Form_Modes.UPDATE_MODE)
         End If
     End Sub
 
-    Private Sub grdList_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles grdList.KeyPress
+    Private Sub grdList_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs)
         If grdList.Rows.Count > 0 And grdList.SelectedRows.Count > 0 And e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
             blnOpenForm(mConstants.Form_Modes.UPDATE_MODE)
         End If
     End Sub
 
     Private Sub myFormManager_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         mcGrdList = New DataGridViewController
 
@@ -194,10 +195,10 @@ Public Class frmGeneralList
             Case mcGrdList.bln_Init(grdList)
             Case blnGrdList_Load()
             Case Else
-                blnReturn = True
+                blnValidReturn = True
         End Select
 
-        If Not blnReturn Then
+        If Not blnValidReturn Then
             Me.Close()
         End If
 

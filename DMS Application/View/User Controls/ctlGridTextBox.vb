@@ -22,8 +22,8 @@ Public Class ctlGridTextBox
 
     Private Sub ResetControl()
 
-        txtTexte.Text = vbNullString
-        myToolTip.SetToolTip(txtTexte, vbNullString)
+        txtTexte.Text = String.Empty
+        myToolTip.SetToolTip(txtTexte, String.Empty)
         mintItem_ID = 0
 
     End Sub

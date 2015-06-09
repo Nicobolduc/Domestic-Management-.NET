@@ -12,7 +12,7 @@
     Private pageNumber As Short
     Private mlstColsToPrint() As Short
     Private mintGrid_Selection_col As Integer
-    Private mstrDocumentTitle As String = vbNullString
+    Private mstrDocumentTitle As String = String.Empty
     Private Const mintXDetailStartPosition As Integer = 15
     Private Const mintYDetailStartPosition As Integer = 50
 

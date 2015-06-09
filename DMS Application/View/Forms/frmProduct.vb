@@ -11,65 +11,40 @@ Public Class frmProduct
     Private Const mintGrdPrices_ProB_Name_col As Short = 5
     Private Const mintGrdPrices_Price_col As Short = 6
 
-
     'Private class members
-    Private mcSQL As MySQLController
+
     Private WithEvents mcGrdPrices As DataGridViewController
+    Private mcProductModel As Model.Product
 
 
 #Region "Functions / Subs"
 
     Private Function blnLoadData() As Boolean
-        Dim blnReturn As Boolean
-        Dim strSQL As String = vbNullString
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
         Dim intProC_ID As Integer
-        Dim mySQLReader As MySqlDataReader = Nothing
-        Dim proController As New ProductController
 
         Try
-            strSQL = strSQL & " SELECT Product.Pro_Name, " & vbCrLf
-            strSQL = strSQL & "        Product.ProT_ID, " & vbCrLf
-            strSQL = strSQL & "        Product.ProC_ID, " & vbCrLf
-            strSQL = strSQL & "        Product.Pro_Taxable " & vbCrLf
-            strSQL = strSQL & " FROM Product " & vbCrLf
-            strSQL = strSQL & " WHERE Product.Pro_ID = " & myFormControler.Item_ID & vbCrLf
+            mcProductModel = gcAppControler.CoreModelController.ProductController.GetProductFromID(myFormControler.Item_ID)
 
-            mySQLReader = MySQLController.ADOSelect(strSQL)
-
-            mySQLReader.Read()
-
-            txtName.Text = mySQLReader.Item("Pro_Name").ToString
-
-            chkTaxable.Checked = mySQLReader.Item("Pro_Taxable")
-
-            cboType.SelectedValue = CInt(mySQLReader.Item("ProT_ID"))
-
-            If Not IsDBNull(mySQLReader.Item("ProC_ID")) Then
-                intProC_ID = CInt(mySQLReader.Item("ProC_ID"))
-            Else
-                intProC_ID = 0
-            End If
-
-            mySQLReader.Close()
-
-            blnReturn = blnCboCategory_Load(intProC_ID)
+            Select Case False
+                Case Not mcProductModel Is Nothing
+                Case blnCboCategory_Load(intProC_ID)
+                Case Else
+                    blnValidReturn = True
+            End Select
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        Finally
-            If Not IsNothing(mySQLReader) Then
-                mySQLReader.Close()
-                mySQLReader.Dispose()
-            End If
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnGrdPrices_Load() As Boolean
-        Dim blnReturn As Boolean
-        Dim strSQL As String = vbNullString
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
 
         Try
             strSQL = strSQL & "  SELECT " & DataGridViewController.GridRowActions.CONSULT_ACTION & " AS Action, " & vbCrLf
@@ -85,19 +60,19 @@ Public Class frmProduct
             strSQL = strSQL & "  WHERE ProductPrice.Pro_ID = " & myFormControler.Item_ID & vbCrLf
             strSQL = strSQL & "  ORDER BY Company.Cy_name " & vbCrLf
 
-            blnReturn = mcGrdPrices.bln_FillData(strSQL)
+            blnValidReturn = mcGrdPrices.bln_FillData(strSQL)
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnCboType_Load() As Boolean
-        Dim blnReturn As Boolean
-        Dim strSQL As String = vbNullString
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
 
         Try
             strSQL = strSQL & " SELECT ProductType.ProT_ID, " & vbCrLf
@@ -105,19 +80,19 @@ Public Class frmProduct
             strSQL = strSQL & " FROM ProductType " & vbCrLf
             strSQL = strSQL & " ORDER BY ProductType.ProT_Name " & vbCrLf
 
-            blnReturn = blnComboBox_LoadFromSQL(strSQL, "ProT_ID", "ProT_Name", False, cboType)
+            blnValidReturn = mWinControlsFunctions.blnComboBox_LoadFromSQL(strSQL, "ProT_ID", "ProT_Name", False, cboType)
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnCboProductBrand_Load() As Boolean
-        Dim blnReturn As Boolean
-        Dim strSQL As String = vbNullString
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
 
         Try
             strSQL = strSQL & " SELECT ProductBrand.ProB_ID, " & vbCrLf
@@ -125,19 +100,19 @@ Public Class frmProduct
             strSQL = strSQL & " FROM ProductBrand " & vbCrLf
             strSQL = strSQL & " ORDER BY ProductBrand.ProB_Name " & vbCrLf
 
-            blnReturn = blnComboBox_LoadFromSQL(strSQL, "ProB_ID", "ProB_Name", False, cboProductBrand)
+            blnValidReturn = mWinControlsFunctions.blnComboBox_LoadFromSQL(strSQL, "ProB_ID", "ProB_Name", False, cboProductBrand)
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnCboCompany_Load() As Boolean
-        Dim blnReturn As Boolean
-        Dim strSQL As String = vbNullString
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
 
         Try
             strSQL = strSQL & " SELECT Company.Cy_ID, " & vbCrLf
@@ -145,19 +120,19 @@ Public Class frmProduct
             strSQL = strSQL & " FROM Company " & vbCrLf
             strSQL = strSQL & " ORDER BY Company.Cy_Name " & vbCrLf
 
-            blnReturn = blnComboBox_LoadFromSQL(strSQL, "Cy_ID", "Cy_Name", False, cboCompany)
+            blnValidReturn = mWinControlsFunctions.blnComboBox_LoadFromSQL(strSQL, "Cy_ID", "Cy_Name", False, cboCompany)
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnCboCategory_Load(Optional ByVal vintSelectedValue As Integer = 0) As Boolean
-        Dim blnReturn As Boolean
-        Dim strSQL As String = vbNullString
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
 
         Try
             strSQL = strSQL & " SELECT ProductCategory.ProC_ID, " & vbCrLf
@@ -166,7 +141,7 @@ Public Class frmProduct
             strSQL = strSQL & " WHERE ProductCategory.ProT_ID = " & CInt(cboType.SelectedValue) & vbCrLf
             strSQL = strSQL & " ORDER BY ProductCategory.ProC_Name " & vbCrLf
 
-            blnReturn = blnComboBox_LoadFromSQL(strSQL, "ProC_ID", "ProC_Name", True, cboCategory)
+            blnValidReturn = mWinControlsFunctions.blnComboBox_LoadFromSQL(strSQL, "ProC_ID", "ProC_Name", True, cboCategory)
 
             cboCategory.SelectedValue = vintSelectedValue
 
@@ -177,114 +152,33 @@ Public Class frmProduct
             End If
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnSaveData() As Boolean
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         Try
-            mcSQL = New MySQLController
+            blnValidReturn = mcProductModel.blnProduct_Save(myFormControler.FormMode)
 
-            mcSQL.bln_BeginTransaction()
-
-            Select Case myFormControler.FormMode
-                Case mConstants.Form_Modes.INSERT_MODE
-                    blnReturn = blnProduct_Insert()
-
-                Case mConstants.Form_Modes.UPDATE_MODE
-                    blnReturn = blnProduct_Update()
-
-                Case mConstants.Form_Modes.DELETE_MODE
-                    blnReturn = blnProduct_Delete()
-
-            End Select
-
-            If blnReturn And myFormControler.FormMode <> mConstants.Form_Modes.DELETE_MODE Then
-                blnReturn = blnGrdPrices_SaveData()
+            If blnValidReturn And myFormControler.FormMode <> mConstants.Form_Modes.DELETE_MODE Then
+                blnValidReturn = blnGrdPrices_SaveData()
             End If
 
         Catch ex As Exception
-            blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        Finally
-            mcSQL.bln_EndTransaction(blnReturn)
-            mcSQL = Nothing
-        End Try
-
-        Return blnReturn
-    End Function
-
-    Private Function blnProduct_Insert() As Boolean
-        Dim blnReturn As Boolean
-
-        Try
-            Select Case False
-                Case mcSQL.bln_AddField("Pro_Name", txtName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("ProT_ID", CStr(cboType.SelectedValue), mConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("ProC_ID", CStr(cboCategory.SelectedValue), mConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("Pro_Taxable", CStr(chkTaxable.Checked), mConstants.MySQL_FieldTypes.TINYINT_TYPE)
-                Case mcSQL.bln_ADOInsert("Product", myFormControler.Item_ID)
-                Case myFormControler.Item_ID > 0
-                Case Else
-                    blnReturn = True
-            End Select
-
-        Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
-    End Function
-
-    Private Function blnProduct_Update() As Boolean
-        Dim blnReturn As Boolean
-
-        Try
-            Select Case False
-                Case mcSQL.bln_AddField("Pro_Name", txtName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("ProT_ID", CStr(cboType.SelectedValue), mConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("ProC_ID", CStr(cboCategory.SelectedValue), mConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("Pro_Taxable", CStr(chkTaxable.Checked), mConstants.MySQL_FieldTypes.TINYINT_TYPE)
-                Case mcSQL.bln_ADOUpdate("Product", "Pro_ID = " & myFormControler.Item_ID)
-                Case Else
-                    blnReturn = True
-            End Select
-
-        Catch ex As Exception
-            blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
-
-        Return blnReturn
-    End Function
-
-    Private Function blnProduct_Delete() As Boolean
-        Dim blnReturn As Boolean
-
-        Try
-            Select Case False
-                Case mcSQL.bln_ADODelete("ProductPrice", "Pro_ID = " & myFormControler.Item_ID)
-                Case mcSQL.bln_ADODelete("Product", "Pro_ID = " & myFormControler.Item_ID)
-                Case Else
-                    blnReturn = True
-            End Select
-
-        Catch ex As Exception
-            blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
-
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnGrdPrices_SaveData() As Boolean
-        Dim blnReturn As Boolean = True
+        Dim blnValidReturn As Boolean = True
         Dim intRowCpt As Integer
 
         Try
@@ -292,92 +186,31 @@ Public Class frmProduct
 
                 Select Case CInt(grdPrices.Rows(intRowCpt).Cells(mintGrdPrices_Action_col).Value)
                     Case DataGridViewController.GridRowActions.INSERT_ACTION
-                        blnReturn = blnProductPrice_Insert(intRowCpt)
+                        'blnValidReturn = blnProductPrice_Insert(intRowCpt)
+
 
                     Case DataGridViewController.GridRowActions.UPDATE_ACTION
-                        blnReturn = blnProductPrice_Update(intRowCpt)
+                        'blnValidReturn = blnProductPrice_Update(intRowCpt)
 
                     Case DataGridViewController.GridRowActions.DELETE_ACTION
-                        blnReturn = blnProductPrice_Delete(intRowCpt)
+                        'blnValidReturn = blnProductPrice_Delete(intRowCpt)
 
                     Case Else
-                        blnReturn = True
+                        blnValidReturn = True
+
                 End Select
             Next
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
-
+        Return blnValidReturn
     End Function
 
-    Private Function blnProductPrice_Insert(ByVal vintRowIndex As Integer) As Boolean
-        Dim blnReturn As Boolean
-
-        Try
-            Select Case False
-                Case mcSQL.bln_AddField("Cy_ID", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_Cy_ID_col).Value.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("ProB_ID", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_ProB_ID_col).Value.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("Pro_ID", myFormControler.Item_ID.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("ProP_Price", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_Price_col).Value.ToString, mConstants.MySQL_FieldTypes.DOUBLE_TYPE)
-                Case mcSQL.bln_ADOInsert("ProductPrice")
-                Case Else
-                    blnReturn = True
-            End Select
-
-        Catch ex As Exception
-            blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
-
-        Return blnReturn
-    End Function
-
-    Private Function blnProductPrice_Update(ByVal vintRowIndex As Integer) As Boolean
-        Dim blnReturn As Boolean
-
-        Try
-            Select Case False
-                Case mcSQL.bln_AddField("Cy_ID", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_Cy_ID_col).Value.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("ProB_ID", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_ProB_ID_col).Value.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("Pro_ID", myFormControler.Item_ID.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("ProP_Price", grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_Price_col).Value.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_ADOUpdate("ProductPrice", "ProP_ID = " & grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_ProP_ID_col).Value)
-                Case Else
-                    blnReturn = True
-            End Select
-
-        Catch ex As Exception
-            blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
-
-        Return blnReturn
-    End Function
-
-    Private Function blnProductPrice_Delete(ByVal vintRowIndex As Integer) As Boolean
-        Dim blnReturn As Boolean
-
-        Try
-            Select Case False
-                Case mcSQL.bln_ADODelete("ProductPrice", "ProP_ID = " & grdPrices.Rows(vintRowIndex).Cells(mintGrdPrices_ProP_ID_col).Value)
-                Case Else
-                    blnReturn = True
-            End Select
-
-        Catch ex As Exception
-            blnReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
-
-        Return blnReturn
-    End Function
-
-    Private Function blnGrdPrices_ShowComboBox(ByVal vintRowIndex As Integer, ByVal vintColIndex As Integer) As Boolean
-        Dim blnReturn As Boolean
+    Private Function blnGrdPrices_Cbo_Show(ByVal vintRowIndex As Integer, ByVal vintColIndex As Integer) As Boolean
+        Dim blnValidReturn As Boolean
 
         Try
             If myFormControler.FormMode <> mConstants.Form_Modes.DELETE_MODE Then
@@ -415,11 +248,11 @@ Public Class frmProduct
             End If
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
 #End Region
@@ -442,9 +275,10 @@ Public Class frmProduct
     End Sub
 
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         mcGrdPrices = New DataGridViewController
+        mcProductModel = New Model.Product
 
         Select Case False
             Case mcGrdPrices.bln_Init(grdPrices)
@@ -454,13 +288,13 @@ Public Class frmProduct
             Case blnCboProductBrand_Load()
             Case blnGrdPrices_Load()
             Case myFormControler.FormMode <> mConstants.Form_Modes.INSERT_MODE
-                blnReturn = True
+                blnValidReturn = True
             Case blnLoadData()
             Case Else
-                blnReturn = True
+                blnValidReturn = True
         End Select
 
-        If Not blnReturn Then
+        If Not blnValidReturn Then
             Me.Close()
         End If
 
@@ -497,7 +331,7 @@ Public Class frmProduct
         Dim intRowIndex As Integer
 
         Select Case False
-            Case txtName.Text <> vbNullString
+            Case txtName.Text <> String.Empty
                 gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtName.Focus()
 
@@ -525,11 +359,11 @@ Public Class frmProduct
                 Select Case True
                     Case mcGrdPrices.CellIsEmpty(intRowIndex, mintGrdPrices_Cy_ID_col)
                         gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
-                        blnGrdPrices_ShowComboBox(intRowIndex, mintGrdPrices_Cy_Name_col)
+                        blnGrdPrices_Cbo_Show(intRowIndex, mintGrdPrices_Cy_Name_col)
 
                     Case mcGrdPrices.CellIsEmpty(intRowIndex, mintGrdPrices_ProB_ID_col)
                         gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
-                        blnGrdPrices_ShowComboBox(intRowIndex, mintGrdPrices_ProB_Name_col)
+                        blnGrdPrices_Cbo_Show(intRowIndex, mintGrdPrices_ProB_Name_col)
 
                     Case mcGrdPrices.CellIsEmpty(intRowIndex, mintGrdPrices_Price_col)
                         gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
@@ -589,7 +423,7 @@ Public Class frmProduct
 
             Select Case grdPrices.CurrentCell.ColumnIndex
                 Case mintGrdPrices_Cy_Name_col, mintGrdPrices_ProB_Name_col
-                    blnGrdPrices_ShowComboBox(grdPrices.SelectedRows(0).Index, grdPrices.CurrentCell.ColumnIndex)
+                    blnGrdPrices_Cbo_Show(grdPrices.SelectedRows(0).Index, grdPrices.CurrentCell.ColumnIndex)
 
                 Case Else
                     grdPrices.BeginEdit(True)

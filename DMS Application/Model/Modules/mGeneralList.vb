@@ -28,8 +28,8 @@
 #Region "Functions / Subs"
 
         Public Sub ShowGenList(ByVal vList_ID As mGeneralList.GeneralLists_ID)
-            Dim strListName As String = vbNullString
-            Dim strSQL As String = vbNullString
+            Dim strListName As String = String.Empty
+            Dim strSQL As String = String.Empty
             Dim frmGenList As New frmGeneralList(vList_ID)
 
             Try
@@ -75,7 +75,7 @@
 
                 End Select
 
-                If strSQL <> vbNullString Then
+                If strSQL <> String.Empty Then
 
                     frmGenList.mstrGridSQL = strSQL
                     frmGenList.Text = frmGenList.Text & strListName
@@ -103,8 +103,8 @@
 
 #Region "SQL Queries"
 
-        Private Function strGetExpenseList_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
-            Dim strSQL As String = vbNullString
+        Private Function strGetExpenseList_SQL(Optional ByVal vstrWhere As String = Nothing) As String
+            Dim strSQL As String = String.Empty
 
             strSQL = strSQL & "  SELECT Expense.Exp_ID, " & vbCrLf
             strSQL = strSQL & "         Expense.Exp_Name, " & vbCrLf
@@ -112,7 +112,7 @@
             strSQL = strSQL & "  FROM Expense " & vbCrLf
             strSQL = strSQL & "     INNER JOIN Period ON Period.Per_ID = Expense.Per_ID " & vbCrLf
 
-            If vstrWhere <> vbNullString Then
+            If vstrWhere <> String.Empty Then
 
 
             End If
@@ -122,8 +122,8 @@
             Return strSQL
         End Function
 
-        Private Function strGetProductsList_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
-            Dim strSQL As String = vbNullString
+        Private Function strGetProductsList_SQL(Optional ByVal vstrWhere As String = Nothing) As String
+            Dim strSQL As String = String.Empty
 
             strSQL = strSQL & "  SELECT Product.Pro_ID, " & vbCrLf
             strSQL = strSQL & "         Product.Pro_Name, " & vbCrLf
@@ -133,7 +133,7 @@
             strSQL = strSQL & "     LEFT JOIN ProductType ON ProductType.ProT_ID = Product.ProT_ID " & vbCrLf
             strSQL = strSQL & "     LEFT JOIN ProductCategory ON ProductCategory.ProC_ID = Product.ProC_ID AND ProductType.ProT_ID = ProductCategory.ProT_ID " & vbCrLf
 
-            If vstrWhere <> vbNullString Then
+            If vstrWhere <> String.Empty Then
 
 
             End If
@@ -143,14 +143,14 @@
             Return strSQL
         End Function
 
-        Private Function strGetProductTypeList_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
-            Dim strSQL As String = vbNullString
+        Private Function strGetProductTypeList_SQL(Optional ByVal vstrWhere As String = Nothing) As String
+            Dim strSQL As String = String.Empty
 
             strSQL = strSQL & "  SELECT ProductType.ProT_ID, " & vbCrLf
             strSQL = strSQL & "         ProductType.ProT_Name " & vbCrLf
             strSQL = strSQL & "  FROM ProductType " & vbCrLf
 
-            If vstrWhere <> vbNullString Then
+            If vstrWhere <> String.Empty Then
 
             End If
 
@@ -159,14 +159,14 @@
             Return strSQL
         End Function
 
-        Private Function strGetProductCategoryList_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
-            Dim strSQL As String = vbNullString
+        Private Function strGetProductCategoryList_SQL(Optional ByVal vstrWhere As String = Nothing) As String
+            Dim strSQL As String = String.Empty
 
             strSQL = strSQL & "  SELECT ProductCategory.ProC_ID, " & vbCrLf
             strSQL = strSQL & "         ProductCategory.ProC_Name " & vbCrLf
             strSQL = strSQL & "  FROM ProductCategory " & vbCrLf
 
-            If vstrWhere <> vbNullString Then
+            If vstrWhere <> String.Empty Then
 
 
             End If
@@ -176,14 +176,14 @@
             Return strSQL
         End Function
 
-        Private Function strGetProductBrandList_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
-            Dim strSQL As String = vbNullString
+        Private Function strGetProductBrandList_SQL(Optional ByVal vstrWhere As String = Nothing) As String
+            Dim strSQL As String = String.Empty
 
             strSQL = strSQL & "  SELECT ProductBrand.ProB_ID, " & vbCrLf
             strSQL = strSQL & "         ProductBrand.ProB_Name " & vbCrLf
             strSQL = strSQL & "  FROM ProductBrand " & vbCrLf
 
-            If vstrWhere <> vbNullString Then
+            If vstrWhere <> String.Empty Then
 
             End If
 
@@ -192,14 +192,14 @@
             Return strSQL
         End Function
 
-        Private Function strGetCompanyList_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
-            Dim strSQL As String = vbNullString
+        Private Function strGetCompanyList_SQL(Optional ByVal vstrWhere As String = Nothing) As String
+            Dim strSQL As String = String.Empty
 
             strSQL = strSQL & "  SELECT Company.Cy_ID, " & vbCrLf
             strSQL = strSQL & "         Company.Cy_Name " & vbCrLf
             strSQL = strSQL & "  FROM Company " & vbCrLf
 
-            If vstrWhere <> vbNullString Then
+            If vstrWhere <> String.Empty Then
 
             End If
 
@@ -208,8 +208,8 @@
             Return strSQL
         End Function
 
-        Private Function strGetGroceryList_SQL(Optional ByVal vstrWhere As String = vbNullString) As String
-            Dim strSQL As String = vbNullString
+        Private Function strGetGroceryList_SQL(Optional ByVal vstrWhere As String = Nothing) As String
+            Dim strSQL As String = String.Empty
 
             strSQL = strSQL & "  SELECT Grocery.Gro_ID, " & vbCrLf
             strSQL = strSQL & "         Grocery.Gro_Name, " & vbCrLf
@@ -220,7 +220,7 @@
             strSQL = strSQL & "                 FROM ProductPrice " & vbCrLf
             strSQL = strSQL & "                ) As TProPrice ON TProPrice.Pro_ID = Gro_Pro.Pro_ID  " & vbCrLf
 
-            If vstrWhere <> vbNullString Then
+            If vstrWhere <> String.Empty Then
 
             End If
 

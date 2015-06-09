@@ -23,10 +23,8 @@ Partial Class frmGeneralList
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmGeneralList))
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.grdList = New System.Windows.Forms.DataGridView()
         Me.txtFilter = New System.Windows.Forms.TextBox()
         Me.btnDelete = New System.Windows.Forms.Button()
         Me.btnUpdate = New System.Windows.Forms.Button()
@@ -34,6 +32,7 @@ Partial Class frmGeneralList
         Me.ToolTips = New System.Windows.Forms.ToolTip(Me.components)
         Me.myFormControler = New DMS_Application.ctlFormController()
         Me.btnRefresh = New System.Windows.Forms.Button()
+        Me.grdList = New Syncfusion.Windows.Forms.Grid.GridControl()
         CType(Me.grdList, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -45,26 +44,6 @@ Partial Class frmGeneralList
         Me.Label1.Size = New System.Drawing.Size(35, 13)
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "Filtre: "
-        '
-        'grdList
-        '
-        Me.grdList.AllowUserToAddRows = False
-        Me.grdList.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grdList.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised
-        Me.grdList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.grdList.EnableHeadersVisualStyles = False
-        Me.grdList.Location = New System.Drawing.Point(12, 65)
-        Me.grdList.MultiSelect = False
-        Me.grdList.Name = "grdList"
-        Me.grdList.RowHeadersWidth = 10
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.White
-        Me.grdList.RowsDefaultCellStyle = DataGridViewCellStyle2
-        Me.grdList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.grdList.Size = New System.Drawing.Size(507, 486)
-        Me.grdList.TabIndex = 0
-        Me.grdList.Tag = ""
         '
         'txtFilter
         '
@@ -114,7 +93,7 @@ Partial Class frmGeneralList
         '
         Me.myFormControler.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.myFormControler.FormIsLoading = False
-        Me.myFormControler.FormMode = DMS_Application.mConstants.mConstants.Form_Modes.CONSULT_MODE
+        Me.myFormControler.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
         Me.myFormControler.Item_ID = 0
         Me.myFormControler.Location = New System.Drawing.Point(494, 554)
         Me.myFormControler.Name = "myFormControler"
@@ -133,18 +112,29 @@ Partial Class frmGeneralList
         Me.btnRefresh.TabIndex = 5
         Me.btnRefresh.UseVisualStyleBackColor = True
         '
+        'grdList
+        '
+        Me.grdList.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.grdList.Location = New System.Drawing.Point(12, 35)
+        Me.grdList.Name = "grdList"
+        Me.grdList.SerializeCellsBehavior = Syncfusion.Windows.Forms.Grid.GridSerializeCellsBehavior.SerializeAsRangeStylesIntoCode
+        Me.grdList.Size = New System.Drawing.Size(507, 513)
+        Me.grdList.SmartSizeBox = False
+        Me.grdList.TabIndex = 6
+        Me.grdList.UseRightToLeftCompatibleTextBox = True
+        '
         'frmGeneralList
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(579, 586)
+        Me.Controls.Add(Me.grdList)
         Me.Controls.Add(Me.btnRefresh)
         Me.Controls.Add(Me.myFormControler)
         Me.Controls.Add(Me.btnAdd)
         Me.Controls.Add(Me.btnUpdate)
         Me.Controls.Add(Me.btnDelete)
         Me.Controls.Add(Me.txtFilter)
-        Me.Controls.Add(Me.grdList)
         Me.Controls.Add(Me.Label1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
@@ -157,7 +147,6 @@ Partial Class frmGeneralList
 
     End Sub
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents grdList As System.Windows.Forms.DataGridView
     Friend WithEvents txtFilter As System.Windows.Forms.TextBox
     Friend WithEvents btnDelete As System.Windows.Forms.Button
     Friend WithEvents btnUpdate As System.Windows.Forms.Button
@@ -165,4 +154,5 @@ Partial Class frmGeneralList
     Friend WithEvents ToolTips As System.Windows.Forms.ToolTip
     Public WithEvents myFormControler As DMS_Application.ctlFormController
     Friend WithEvents btnRefresh As System.Windows.Forms.Button
+    Friend WithEvents grdList As Syncfusion.Windows.Forms.Grid.GridControl
 End Class

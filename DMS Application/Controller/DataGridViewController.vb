@@ -17,10 +17,10 @@ Public Class DataGridViewController
 
     'Public enum
     Public Enum GridRowActions
-        CONSULT_ACTION = 0
-        INSERT_ACTION = 1
-        UPDATE_ACTION = 2
-        DELETE_ACTION = 3
+        CONSULT_ACTION = mConstants.Form_Modes.CONSULT_MODE
+        INSERT_ACTION = mConstants.Form_Modes.INSERT_MODE
+        UPDATE_ACTION = mConstants.Form_Modes.UPDATE_MODE
+        DELETE_ACTION = mConstants.Form_Modes.DELETE_MODE
     End Enum
 
 #Region "Properties"
@@ -33,10 +33,11 @@ Public Class DataGridViewController
 
 #End Region
 
+
 #Region "Functions / Subs"
 
     Public Function bln_Init(ByRef rgrdGrid As DataGridView, Optional ByRef rbtnAddLine As Button = Nothing, Optional ByRef rbtnRemoveLine As Button = Nothing) As Boolean
-        Dim blnReturn As Boolean = True
+        Dim blnValidReturn As Boolean = True
         Dim columnsHeaderStyle As New DataGridViewCellStyle
 
         Try
@@ -61,26 +62,27 @@ Public Class DataGridViewController
             grdDGV.AllowUserToResizeRows = False
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Public Function bln_FillData(ByVal vstrSQL As String) As Boolean
-        Dim blnReturn As Boolean = True
+        Dim blnValidReturn As Boolean = True
         Dim sqlCmd As MySqlCommand
         Dim mySQLReader As MySqlDataReader = Nothing
         Dim myDataTable As DataTable = New DataTable
         'Dim myDataSet = New DataSet
-        Dim strGridCaption As String = vbNullString
+        Dim strGridCaption As String = String.Empty
         Dim lstColumns As String()
         Dim newDGVCol As DataGridViewColumn
         Dim newDGVCell As DataGridViewCell
 
         Try
             grdDGV.SuspendLayout()
+            'grdDGV.VirtualMode = True
 
             grdDGV.Rows.Clear()
             grdDGV.Columns.Clear()
@@ -115,7 +117,7 @@ Public Class DataGridViewController
 
                 grdDGV.Columns.Add(newDGVCol)
 
-                If lstColumns(intColIndex) = vbNullString Then
+                If lstColumns(intColIndex) = String.Empty Then
                     grdDGV.Columns(intColIndex).Visible = False
                 Else
 
@@ -146,10 +148,10 @@ Public Class DataGridViewController
 
             grdDGV.ResumeLayout()
 
-            blnReturn = True
+            blnValidReturn = True
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
@@ -158,7 +160,7 @@ Public Class DataGridViewController
             End If
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Public Sub AddLine()

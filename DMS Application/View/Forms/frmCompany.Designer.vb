@@ -23,13 +23,12 @@ Partial Class frmCompany
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmCompany))
-        Me.myFormControler = New DMS_Application.ctlFormController()
+        Me.myFormControler = New Global.DMS_Application.ctlFormController()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtName = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.cboCompanyType = New System.Windows.Forms.ComboBox()
         Me.SuspendLayout()
-        '
         'myFormControler
         '
         Me.myFormControler.FormIsLoading = False

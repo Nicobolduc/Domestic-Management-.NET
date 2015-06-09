@@ -7,8 +7,8 @@
 #Region "Functions / Subs"
 
     Private Function blnLoadData() As Boolean
-        Dim blnReturn As Boolean
-        Dim strSQL As String = vbNullString
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
         Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
@@ -26,7 +26,7 @@
             cboType.SelectedValue = CInt(mySQLReader.Item("ProT_ID"))
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
@@ -35,12 +35,12 @@
             End If
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnCboType_Load() As Boolean
-        Dim blnReturn As Boolean
-        Dim strSQL As String = vbNullString
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
 
         Try
             strSQL = strSQL & " SELECT ProductType.ProT_ID, " & vbCrLf
@@ -48,18 +48,18 @@
             strSQL = strSQL & " FROM ProductType " & vbCrLf
             strSQL = strSQL & " ORDER BY ProductType.ProT_Name " & vbCrLf
 
-            blnReturn = blnComboBox_LoadFromSQL(strSQL, "ProT_ID", "ProT_Name", False, cboType)
+            blnValidReturn = mWinControlsFunctions.blnComboBox_LoadFromSQL(strSQL, "ProT_ID", "ProT_Name", False, cboType)
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnSaveData() As Boolean
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         Try
             mcSQL = New MySQLController
@@ -68,29 +68,29 @@
 
             Select Case myFormControler.FormMode
                 Case mConstants.Form_Modes.INSERT_MODE
-                    blnReturn = blnProductCategory_Insert()
+                    blnValidReturn = blnProductCategory_Insert()
 
                 Case mConstants.Form_Modes.UPDATE_MODE
-                    blnReturn = blnProductCategory_Update()
+                    blnValidReturn = blnProductCategory_Update()
 
                 Case mConstants.Form_Modes.DELETE_MODE
-                    blnReturn = blnProductCategory_Delete()
+                    blnValidReturn = blnProductCategory_Delete()
 
             End Select
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
-            mcSQL.bln_EndTransaction(blnReturn)
+            mcSQL.bln_EndTransaction(blnValidReturn)
             mcSQL = Nothing
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnProductCategory_Insert() As Boolean
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         Try
             Select Case False
@@ -99,19 +99,19 @@
                 Case mcSQL.bln_ADOInsert("ProductCategory", myFormControler.Item_ID)
                 Case myFormControler.Item_ID > 0
                 Case Else
-                    blnReturn = True
+                    blnValidReturn = True
             End Select
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnProductCategory_Update() As Boolean
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         Try
             Select Case False
@@ -119,33 +119,33 @@
                 Case mcSQL.bln_AddField("ProT_ID", CStr(cboType.SelectedValue), mConstants.MySQL_FieldTypes.INT_TYPE)
                 Case mcSQL.bln_ADOUpdate("ProductCategory", "ProC_ID = " & myFormControler.Item_ID)
                 Case Else
-                    blnReturn = True
+                    blnValidReturn = True
             End Select
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnProductCategory_Delete() As Boolean
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         Try
             Select Case False
                 Case mcSQL.bln_ADODelete("ProductCategory", "ProC_ID = " & myFormControler.Item_ID)
                 Case Else
-                    blnReturn = True
+                    blnValidReturn = True
             End Select
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
 #End Region
@@ -154,15 +154,15 @@
 #Region "Private events"
 
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         Select Case False
             Case blnCboType_Load()
             Case myFormControler.FormMode <> mConstants.Form_Modes.INSERT_MODE
-                blnReturn = True
+                blnValidReturn = True
             Case blnLoadData()
             Case Else
-                blnReturn = True
+                blnValidReturn = True
         End Select
     End Sub
 
@@ -172,7 +172,7 @@
 
     Private Sub myFormControler_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles myFormControler.ValidateRules
         Select Case False
-            Case txtName.Text <> vbNullString
+            Case txtName.Text <> String.Empty
                 gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtName.Focus()
 

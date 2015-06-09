@@ -28,7 +28,11 @@ Partial Class test
         Me.Button2 = New System.Windows.Forms.Button()
         Me.C1FlexGrid1 = New C1.Win.C1FlexGrid.C1FlexGrid()
         Me.Button3 = New System.Windows.Forms.Button()
+        Me.Button4 = New System.Windows.Forms.Button()
+        Me.grdSync = New Syncfusion.Windows.Forms.Grid.GridControl()
+        Me.Button5 = New System.Windows.Forms.Button()
         CType(Me.C1FlexGrid1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.grdSync, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'grid1
@@ -96,11 +100,46 @@ Partial Class test
         Me.Button3.Text = "C1 Grid"
         Me.Button3.UseVisualStyleBackColor = True
         '
+        'Button4
+        '
+        Me.Button4.Location = New System.Drawing.Point(1092, 387)
+        Me.Button4.Name = "Button4"
+        Me.Button4.Size = New System.Drawing.Size(66, 40)
+        Me.Button4.TabIndex = 10
+        Me.Button4.Text = "TEst 1"
+        Me.Button4.UseVisualStyleBackColor = True
+        '
+        'grdSync
+        '
+        Me.grdSync.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.grdSync.GridVisualStyles = Syncfusion.Windows.Forms.GridVisualStyles.Office2010Blue
+        Me.grdSync.Location = New System.Drawing.Point(625, 387)
+        Me.grdSync.Name = "grdSync"
+        Me.grdSync.SerializeCellsBehavior = Syncfusion.Windows.Forms.Grid.GridSerializeCellsBehavior.SerializeAsRangeStylesIntoCode
+        Me.grdSync.Size = New System.Drawing.Size(461, 391)
+        Me.grdSync.SmartSizeBox = False
+        Me.grdSync.TabIndex = 11
+        Me.grdSync.Tag = "9"
+        Me.grdSync.Text = "GridControl1"
+        Me.grdSync.UseRightToLeftCompatibleTextBox = True
+        '
+        'Button5
+        '
+        Me.Button5.Location = New System.Drawing.Point(1092, 433)
+        Me.Button5.Name = "Button5"
+        Me.Button5.Size = New System.Drawing.Size(66, 40)
+        Me.Button5.TabIndex = 12
+        Me.Button5.Text = "Test 2"
+        Me.Button5.UseVisualStyleBackColor = True
+        '
         'test
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1178, 819)
+        Me.Controls.Add(Me.Button5)
+        Me.Controls.Add(Me.grdSync)
+        Me.Controls.Add(Me.Button4)
         Me.Controls.Add(Me.Button3)
         Me.Controls.Add(Me.C1FlexGrid1)
         Me.Controls.Add(Me.Button2)
@@ -110,6 +149,7 @@ Partial Class test
         Me.Name = "test"
         Me.Text = "test"
         CType(Me.C1FlexGrid1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.grdSync, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -119,4 +159,7 @@ Partial Class test
     Friend WithEvents Button2 As System.Windows.Forms.Button
     Friend WithEvents C1FlexGrid1 As C1.Win.C1FlexGrid.C1FlexGrid
     Friend WithEvents Button3 As System.Windows.Forms.Button
+    Friend WithEvents Button4 As System.Windows.Forms.Button
+    Friend WithEvents grdSync As Syncfusion.Windows.Forms.Grid.GridControl
+    Friend WithEvents Button5 As System.Windows.Forms.Button
 End Class

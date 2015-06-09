@@ -21,11 +21,12 @@
     Private mcSQL As MySQLController
     Private mcPrinter As DGV_Printing_Controller
 
+
 #Region "Functions / Subs"
 
     Private Function blnLoadData() As Boolean
-        Dim blnReturn As Boolean
-        Dim strSQL As String = vbNullString
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
         Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
@@ -46,10 +47,10 @@
                 'Do nothing
             End If
 
-            blnReturn = True
+            blnValidReturn = True
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
@@ -58,15 +59,15 @@
             End If
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnGrdGrocery_Load() As Boolean
-        Dim blnReturn As Boolean
-        Dim strSQL As String = vbNullString
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
         Dim intRow As Integer
         Dim mySQLReader As MySqlDataReader = Nothing
-        'http://www.codeproject.com/Articles/383153/The-Model-View-Controller-MVC-Pattern-with-Csharp
+
         Try
             strSQL = strSQL & " SELECT  Product.Pro_ID, " & vbCrLf
             strSQL = strSQL & "         Product.Pro_Name, " & vbCrLf
@@ -88,11 +89,11 @@
             strSQL = strSQL & "                            AND ProductPrice.Cy_ID = " & cboGroceryStore.SelectedValue.ToString & vbCrLf
             strSQL = strSQL & " ORDER BY Product.Pro_Name, ProductType.ProT_Name, ProductCategory.ProC_Name " & vbCrLf
 
-            blnReturn = mcGrdGrocery.bln_FillData(strSQL)
+            blnValidReturn = mcGrdGrocery.bln_FillData(strSQL)
 
-            If blnReturn Then
+            If blnValidReturn Then
 
-                strSQL = vbNullString
+                strSQL = String.Empty
                 strSQL = strSQL & " SELECT Gro_Pro.Pro_ID " & vbCrLf
                 strSQL = strSQL & " FROM Gro_Pro " & vbCrLf
                 strSQL = strSQL & " WHERE Gro_Pro.Gro_ID = " & myFormControler.Item_ID & vbCrLf
@@ -116,7 +117,7 @@
             End If
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
@@ -125,12 +126,12 @@
             End If
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnCboGroceryStore_Load() As Boolean
-        Dim blnReturn As Boolean
-        Dim strSQL As String = vbNullString
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
 
         Try
             strSQL = strSQL & " SELECT Company.Cy_ID, " & vbCrLf
@@ -140,14 +141,14 @@
             strSQL = strSQL & " WHERE Company.CyT_ID = " & mConstants.CompanyType.GROCERY_STORE & vbCrLf
             strSQL = strSQL & " ORDER BY Company.Cy_Name " & vbCrLf
 
-            blnReturn = blnComboBox_LoadFromSQL(strSQL, "Cy_ID", "Cy_Name", False, cboGroceryStore)
+            blnValidReturn = mWinControlsFunctions.blnComboBox_LoadFromSQL(strSQL, "Cy_ID", "Cy_Name", False, cboGroceryStore)
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Sub CheckUncheckAll(ByVal vblnCheckAll As Boolean)
@@ -201,7 +202,7 @@
     End Sub
 
     Private Function blnSaveData() As Boolean
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         Try
             mcSQL = New MySQLController
@@ -210,30 +211,30 @@
 
             Select Case myFormControler.FormMode
                 Case mConstants.Form_Modes.INSERT_MODE
-                    blnReturn = blnGrocery_Insert()
+                    blnValidReturn = blnGrocery_Insert()
 
                 Case mConstants.Form_Modes.UPDATE_MODE
-                    blnReturn = blnGrocery_Update()
+                    blnValidReturn = blnGrocery_Update()
 
                 Case mConstants.Form_Modes.DELETE_MODE
-                    blnReturn = blnGrocery_Delete()
+                    blnValidReturn = blnGrocery_Delete()
 
             End Select
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
-            mcSQL.bln_EndTransaction(blnReturn)
+            mcSQL.bln_EndTransaction(blnValidReturn)
             mcSQL = Nothing
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
 
     End Function
 
     Private Function blnGrocery_Insert() As Boolean
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         Try
             Select Case False
@@ -241,19 +242,19 @@
                 Case mcSQL.bln_ADOInsert("Grocery", myFormControler.Item_ID)
                 Case myFormControler.Item_ID > 0
                 Case Else
-                    blnReturn = blnGro_Pro_Insert()
+                    blnValidReturn = blnGro_Pro_Insert()
             End Select
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnGrocery_Update() As Boolean
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         Try
             Select Case False
@@ -261,86 +262,86 @@
                 Case mcSQL.bln_ADOUpdate("Grocery", "Gro_ID = " & myFormControler.Item_ID)
                 Case myFormControler.Item_ID > 0
                 Case Else
-                    blnReturn = blnGro_Pro_Insert()
+                    blnValidReturn = blnGro_Pro_Insert()
             End Select
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnGrocery_Delete() As Boolean
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         Try
             Select Case False
                 Case blnGro_Pro_Delete()
                 Case mcSQL.bln_ADODelete("Grocery", "Gro_ID = " & myFormControler.Item_ID)
                 Case Else
-                    blnReturn = True
+                    blnValidReturn = True
             End Select
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnGro_Pro_Delete() As Boolean
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         Try
             Select Case False
                 Case mcSQL.bln_ADODelete("Gro_Pro", "Gro_ID = " & myFormControler.Item_ID)
                 Case Else
-                    blnReturn = True
+                    blnValidReturn = True
             End Select
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnGro_Pro_Insert() As Boolean
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         Try
-            blnReturn = blnGro_Pro_Delete()
+            blnValidReturn = blnGro_Pro_Delete()
 
-            If blnReturn Then
+            If blnValidReturn Then
 
                 For cpt As Integer = 0 To grdGrocery.Rows.Count - 1
 
-                    blnReturn = False
+                    blnValidReturn = False
                     Select Case False
                         Case grdGrocery.Rows(cpt).Cells(mintGrdGrocery_Sel_col).Value.ToString = "True"
-                            blnReturn = True
+                            blnValidReturn = True
                         Case mcSQL.bln_AddField("Gro_ID", myFormControler.Item_ID.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
                         Case mcSQL.bln_AddField("Pro_ID", grdGrocery.Rows(cpt).Cells(mintGrdGrocery_Pro_ID_col).Value.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
                         Case mcSQL.bln_ADOInsert("Gro_Pro")
                         Case Else
-                            blnReturn = True
+                            blnValidReturn = True
                     End Select
 
-                    If Not blnReturn Then Exit For
+                    If Not blnValidReturn Then Exit For
                 Next
 
             End If
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
 #End Region
@@ -349,7 +350,7 @@
 #Region "Private Events"
 
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         mcGrdGrocery = New DataGridViewController
 
@@ -359,10 +360,10 @@
             Case blnGrdGrocery_Load()
             Case blnLoadData()
             Case Else
-                blnReturn = True
+                blnValidReturn = True
         End Select
 
-        If Not blnReturn Then
+        If Not blnValidReturn Then
             Me.Close()
         End If
     End Sub
@@ -440,7 +441,7 @@
     Private Sub myFormControler_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles myFormControler.ValidateRules
 
         Select Case False
-            Case txtGroceryName.Text <> vbNullString
+            Case txtGroceryName.Text <> String.Empty
                 txtGroceryName.Focus()
                 gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
             Case Else

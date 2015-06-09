@@ -15,26 +15,26 @@
 #Region "Functions / Subs"
 
     Private Function blnLoadData() As Boolean
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         Try
 
             dtpFrom.Value = Date.Today
             dtpTo.Value = DateAdd(DateInterval.Day, 14, Date.Today)
 
-            blnReturn = True
+            blnValidReturn = True
 
         Catch ex As Exception
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-            blnReturn = False
+            blnValidReturn = False
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Private Function blnGrdBudget_Load() As Boolean
-        Dim blnReturn As Boolean
-        Dim strSQL As String = vbNullString
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
 
         Try
             strSQL = strSQL & "  SELECT Expense.Exp_ID, " & vbCrLf
@@ -45,14 +45,14 @@
             strSQL = strSQL & "  FROM Expense " & vbCrLf
             'strSQL = strSQL & "  WHERE Expense.Exp_BillingDate BETWEEN " & dtpFrom.
 
-            blnReturn = mcGridBudget.bln_FillData(strSQL)
+            blnValidReturn = mcGridBudget.bln_FillData(strSQL)
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
 #End Region
@@ -109,7 +109,7 @@
     End Sub
 
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
-        Dim blnReturn As Boolean
+        Dim blnValidReturn As Boolean
 
         mcGridBudget = New DataGridViewController
 
@@ -118,10 +118,10 @@
             Case blnGrdBudget_Load()
             Case blnLoadData()
             Case Else
-                blnReturn = True
+                blnValidReturn = True
         End Select
 
-        If Not blnReturn Then
+        If Not blnValidReturn Then
             Me.Close()
         End If
     End Sub

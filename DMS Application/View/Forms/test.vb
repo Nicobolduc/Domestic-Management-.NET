@@ -6,7 +6,6 @@ Public Class test
     Dim lol As New SourceGrid.Grid
 
 
-
     Private Sub test_Activated(sender As Object, e As EventArgs) Handles Button1.Click
         grid1.BorderStyle = BorderStyle.Fixed3D
         grid1.ColumnsCount = 10
@@ -109,13 +108,161 @@ Public Class test
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        Dim lol As New C1FlexGridController()
+        Dim lol As New SyncfusionGridController()
 
-        lol.bln_Init(C1FlexGrid1)
-
-
+        'lol.bln_Init(C1FlexGrid1)
 
         C1FlexGrid1.Rows.Add(10)
     End Sub
 
+    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+        Dim sqlCmd As MySqlCommand
+        Dim mySQLReader As MySqlDataReader = Nothing
+        Dim myDataTable As DataTable = New DataTable
+        Dim strSQL As String
+        Dim strGridCaption As String
+        Dim dataTableArray(,) As Object
+        Dim gridController As New SyncfusionGridController
+
+        Dim headerStyle As GridStyleInfo
+        Dim individualColStyle As GridStyleInfo
+        Dim lstColumns As String()
+
+        gridController.bln_Init(grdSync)
+
+        strSQL = "  SELECT " & DataGridViewController.GridRowActions.CONSULT_ACTION & " AS Action, " & vbCrLf
+        strSQL = strSQL & "         ProductPrice.ProP_ID, " & vbCrLf
+        strSQL = strSQL & "         Company.Cy_ID, " & vbCrLf
+        strSQL = strSQL & "         Company.Cy_Name, " & vbCrLf
+        strSQL = strSQL & "         ProductBrand.ProB_ID, " & vbCrLf
+        strSQL = strSQL & "         ProductBrand.ProB_Name, " & vbCrLf
+        strSQL = strSQL & "         ProductPrice.ProP_Price " & vbCrLf
+        strSQL = strSQL & "  FROM ProductPrice " & vbCrLf
+        strSQL = strSQL & "     INNER JOIN Company ON Company.Cy_ID = ProductPrice.Cy_ID_Seller " & vbCrLf
+        strSQL = strSQL & "     INNER JOIN ProductBrand ON ProductBrand.ProB_ID = ProductPrice.ProB_ID " & vbCrLf
+        strSQL = strSQL & "  WHERE ProductPrice.Pro_ID = " & 42 & vbCrLf
+        strSQL = strSQL & "  ORDER BY Company.Cy_name " & vbCrLf
+        'Get the grid data
+        sqlCmd = New MySqlCommand(strSQL, gcAppControler.MySQLConnection)
+
+        mySQLReader = sqlCmd.ExecuteReader
+
+        myDataTable.Load(mySQLReader)
+
+        dataTableArray = New Object(myDataTable.Rows.Count - 1, myDataTable.Columns.Count) {}
+
+        strGridCaption = gcAppControler.str_GetCaption(9, gcAppControler.cUser.GetLanguage)
+
+        lstColumns = Split(strGridCaption.Insert(0, "|"), "|")
+
+        'Reset the grid
+        grdSync.ResetVolatileData()
+        grdSync.RowCount = myDataTable.Rows.Count
+        grdSync.ColCount = lstColumns.Count - 1
+
+        'Definition of columns
+        For colHeaderCpt As Integer = 1 To lstColumns.Count - 1
+
+            'grdSync.ColCount += 1
+
+            individualColStyle = New GridStyleInfo
+            individualColStyle.HorizontalAlignment = GridHorizontalAlignment.Center
+
+            If lstColumns(colHeaderCpt) = String.Empty Then
+                grdSync.SetColHidden(colHeaderCpt, colHeaderCpt, True)
+            Else
+
+                grdSync(0, colHeaderCpt).Text = Microsoft.VisualBasic.Right(lstColumns(colHeaderCpt), lstColumns(colHeaderCpt).Length - 1)
+
+                Select Case lstColumns(colHeaderCpt).Chars(0)
+                    Case CChar("<")
+                        'grdSync(0, colHeaderCpt).HorizontalAlignment = GridHorizontalAlignment.Left
+                        individualColStyle.HorizontalAlignment = GridHorizontalAlignment.Left
+
+
+                    Case CChar("^")
+                        individualColStyle.HorizontalAlignment = GridHorizontalAlignment.Center
+                        'grdSync(0, colHeaderCpt).HorizontalAlignment = GridHorizontalAlignment.Center
+
+                    Case CChar(">")
+                        individualColStyle.HorizontalAlignment = GridHorizontalAlignment.Right
+                        'grdSync(0, colHeaderCpt).HorizontalAlignment = GridHorizontalAlignment.Right
+
+                End Select
+
+                grdSync.ChangeCells(GridRangeInfo.Cells(0, colHeaderCpt, grdSync.RowCount, colHeaderCpt), individualColStyle)
+            End If
+
+        Next
+        
+        'Set the grid data
+        grdSync.BeginUpdate()
+
+        For intRowIndex As Integer = 0 To myDataTable.Rows.Count - 1
+
+            For intColIndex As Integer = 0 To myDataTable.Columns.Count - 1
+
+                dataTableArray(intRowIndex, intColIndex) = myDataTable.Rows(intRowIndex)(intColIndex)
+            Next
+        Next
+
+        grdSync.Model.PopulateValues(GridRangeInfo.Cells(1, 1, myDataTable.Rows.Count, myDataTable.Columns.Count), dataTableArray)
+
+        'Definition of visual styles
+        headerStyle = New GridStyleInfo
+
+        headerStyle.BackColor = Color.WhiteSmoke
+
+        grdSync.ChangeCells(GridRangeInfo.Cells(0, 0, 0, grdSync.ColCount), headerStyle, Syncfusion.Styles.StyleModifyType.ApplyNew)
+        grdSync.ChangeCells(GridRangeInfo.Cells(0, 0, grdSync.RowCount, 0), headerStyle)
+
+        'grdSync.Item(1, 0).CellType = Syncfusion.Windows.Forms.Grid.GridCellTypeName.CheckBox
+
+        grdSync.EndUpdate()
+
+        grdSync.Refresh()
+    End Sub
+
+    Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
+        Dim strSQL As String = String.Empty
+        Dim gridControlelr As New SyncfusionGridController
+
+        gridControlelr.bln_Init(grdSync)
+
+        strSQL = "  SELECT " & DataGridViewController.GridRowActions.CONSULT_ACTION & " AS Action, " & vbCrLf
+        strSQL = strSQL & "         ProductPrice.ProP_ID, " & vbCrLf
+        strSQL = strSQL & "         Company.Cy_ID, " & vbCrLf
+        strSQL = strSQL & "         Company.Cy_Name, " & vbCrLf
+        strSQL = strSQL & "         ProductBrand.ProB_ID, " & vbCrLf
+        strSQL = strSQL & "         ProductBrand.ProB_Name, " & vbCrLf
+        strSQL = strSQL & "         ProductPrice.ProP_Price " & vbCrLf
+        strSQL = strSQL & "  FROM ProductPrice " & vbCrLf
+        strSQL = strSQL & "     INNER JOIN Company ON Company.Cy_ID = ProductPrice.Cy_ID_Seller " & vbCrLf
+        strSQL = strSQL & "     INNER JOIN ProductBrand ON ProductBrand.ProB_ID = ProductPrice.ProB_ID " & vbCrLf
+        strSQL = strSQL & "  WHERE ProductPrice.Pro_ID = " & 42 & vbCrLf
+        strSQL = strSQL & "  ORDER BY Company.Cy_name " & vbCrLf
+
+        gridControlelr.bln_FillData(strSQL)
+    End Sub
+
+    Private Function getArray() As Integer(,)
+        Dim numArrayCols As Integer = 7
+        Dim numArrayRows As Integer = 1
+        Dim intArray(,) As Integer
+        Dim r As Random = New Random
+        Dim i As Integer = 0
+
+        intArray = New Integer((numArrayRows) - 1, numArrayCols) {}
+
+        Do While (i < numArrayRows)
+            Dim j As Integer = 0
+            Do While (j < numArrayCols)
+                intArray(i, j) = r.Next(10000)
+                j = (j + 1)
+            Loop
+            i = (i + 1)
+        Loop
+
+        Return intArray
+    End Function
 End Class

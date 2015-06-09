@@ -15,7 +15,7 @@
     End Sub
 
     'Public Sub CreateFormFromString(ByVal vstrFormToOpenName As String)
-    '    Dim strFormName As String = vbNullString
+    '    Dim strFormName As String = String.Empty
     '    Dim frmTemp As System.Windows.Forms.Form = Nothing
 
     '    strFormName = System.Reflection.Assembly.GetEntryAssembly.GetName.Name & "." & vstrFormToOpenName

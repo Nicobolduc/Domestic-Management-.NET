@@ -7,6 +7,7 @@ Public Class AppController
     Private mdiGeneral As mdiGeneral
     Private mcMySQLConnection As MySqlConnection
     Private mcErrorsLog As ErrorsLogController
+    Private mcCoreModelController As DMS_Application.CoreModelController.CoreModelController
     Private mcUser As User
     Private mcStringCleaner As System.Text.RegularExpressions.Regex = New System.Text.RegularExpressions.Regex("'", System.Text.RegularExpressions.RegexOptions.Compiled Or System.Text.RegularExpressions.RegexOptions.CultureInvariant Or System.Text.RegularExpressions.RegexOptions.IgnoreCase)
 
@@ -33,15 +34,19 @@ Public Class AppController
 
     Public ReadOnly Property str_GetPCDateFormat As String
         Get
-            'Return "dd-MMMM-yyyy"
             Return System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern()
         End Get
     End Property
 
     Public ReadOnly Property str_GetPCDateTimeFormat As String
         Get
-            'Return "dd-MMMM-yyyy hh:mm"
             Return System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern & " " & System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortTimePattern
+        End Get
+    End Property
+
+    Public ReadOnly Property CoreModelController As DMS_Application.CoreModelController.CoreModelController
+        Get
+            Return mcCoreModelController
         End Get
     End Property
 
@@ -55,7 +60,7 @@ Public Class AppController
 
         mcUser = New User
 
-        blnSetMySQLConnection()
+        blnOpenMySQLConnection()
 
         mdiGeneral = New mdiGeneral
     End Sub
@@ -64,31 +69,31 @@ Public Class AppController
 
 #Region "Functions / Subs"
 
-    Private Function blnSetMySQLConnection() As Boolean
-        Dim blnReturn As Boolean
+    Private Function blnOpenMySQLConnection() As Boolean
+        Dim blnValidReturn As Boolean
 
         mcMySQLConnection = New MySqlConnection
 
-        mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.110;Port=3306;userid=Nicolas;password=nicolas;database=dms_tests"
+        mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.101;Port=3306;userid=Nicolas;password=nicolas;database=dms_tests"
         'mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests"
 
         Try
             mcMySQLConnection.Open()
 
-            blnReturn = True
+            blnValidReturn = True
 
         Catch ex As MySqlException
-            blnReturn = False
+            blnValidReturn = False
             MessageBox.Show("La connexion au serveur a échouée.")
             Me.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             mcMySQLConnection.Dispose()
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Public Function str_GetServerDateTimeFormat() As String
-        Dim strFormat As String = vbNullString
+        Dim strFormat As String = String.Empty
 
         Try
             strFormat = "yyyy-MM-dd hh:mm:ss"
@@ -101,8 +106,8 @@ Public Class AppController
     End Function
 
     Public Function bln_CTLBindCaption(ByRef rControl As System.Windows.Forms.Control) As Boolean
-        Dim blnReturn As Boolean
-        Dim strCaption As String = vbNullString
+        Dim blnValidReturn As Boolean
+        Dim strCaption As String = String.Empty
 
         Try
             Select Case rControl.GetType
@@ -113,23 +118,23 @@ Public Class AppController
             MySQLController.str_ADOSingleLookUp("ApC_Text", "AppCaption", "ApC_ID = " & CStr(rControl.Tag))
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
-        Return blnReturn
+        Return blnValidReturn
     End Function
 
     Public Function str_GetCaption(ByVal intCaptionID As Integer, ByVal intLanguage As Short) As String
-        Dim blnReturn As Boolean
-        Dim strCaption As String = vbNullString
+        Dim blnValidReturn As Boolean
+        Dim strCaption As String = String.Empty
 
         Try
 
             strCaption = MySQLController.str_ADOSingleLookUp("ApC_Text", "AppCaption", "ApC_No = " & intCaptionID.ToString & " AND ApL_ID = " & intLanguage)
 
         Catch ex As Exception
-            blnReturn = False
+            blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
@@ -143,7 +148,7 @@ Public Class AppController
     End Function
 
     Public Sub ShowMessage(ByVal vintCaption_ID As Integer, ByVal vmsgType As MsgBoxStyle)
-        Dim strMessage As String = vbNullString
+        Dim strMessage As String = String.Empty
 
         Try
             strMessage = gcAppControler.str_GetCaption(vintCaption_ID, mcUser.GetLanguage)
@@ -210,7 +215,7 @@ Public Class AppController
 
                 Select Case objControl.GetType.Name
                     Case "TextBox"
-                        objControl.Text = vbNullString
+                        objControl.Text = String.Empty
 
                     Case "CheckBox", "RadioButton"
                         DirectCast(objControl, CheckBox).Checked = False
@@ -239,7 +244,13 @@ Public Class AppController
         End Try
 
     End Sub
+    Protected Overrides Sub Finalize()
+        mcMySQLConnection.Close()
+        mcMySQLConnection.Dispose()
+        MyBase.Finalize()
+    End Sub
 
 #End Region
+
 
 End Class

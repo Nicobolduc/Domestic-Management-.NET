@@ -4,10 +4,14 @@
 
         'Private members
         Private _intProduct_ID As Integer
-        Private _strProduct_Name As String = vbNullString
-        Private _intProduct_Type_ID As Integer
-        Private _intProduct_Category_ID As Integer
-        Private _blnProduct_IsTaxable As Boolean
+        Private _strName As String = String.Empty
+        Private _intType_ID As Integer
+        Private _intCategory_ID As Integer
+        Private _blnIsTaxable As Boolean
+
+        'Private class members
+        Private mLstProductPrice As List(Of ProductPrice)
+        Private mcSQL As MySQLController
 
 
 #Region "Properties"
@@ -20,13 +24,13 @@
 
         Public Property Name As String
             Get
-                Return _strProduct_Name
+                Return _strName
             End Get
 
             Set(value As String)
 
                 If Not value = String.Empty Then
-                    _strProduct_Name = value
+                    _strName = value
                 Else
                     'Non valide
                 End If
@@ -35,12 +39,12 @@
 
         Public Property Type_ID As Integer
             Get
-                Return _intProduct_Type_ID
+                Return _intType_ID
             End Get
 
             Set(value As Integer)
                 If value > 0 Then
-                    _intProduct_Type_ID = value
+                    _intType_ID = value
                 Else
                     'Non valide
                 End If
@@ -49,21 +53,21 @@
 
         Public Property Category_ID As Integer
             Get
-                Return _intProduct_Category_ID
+                Return _intCategory_ID
             End Get
 
             Set(value As Integer)
-                _intProduct_Category_ID = value
+                _intCategory_ID = value
             End Set
         End Property
 
         Public Property isTaxable As Boolean
             Get
-                Return _blnProduct_IsTaxable
+                Return _blnIsTaxable
             End Get
 
             Set(value As Boolean)
-                _blnProduct_IsTaxable = value
+                _blnIsTaxable = value
             End Set
         End Property
 
@@ -73,7 +77,7 @@
 #Region "Constructors"
 
         Public Sub New()
-
+            mLstProductPrice = New List(Of ProductPrice)
         End Sub
 
 #End Region
@@ -81,48 +85,117 @@
 
 #Region "Functions / Subs"
 
-        Public Function blnLoadProduct(ByVal vintProduct_ID As Integer) As Boolean
-            Dim blnReturn As Boolean
-            Dim strSQL As String = vbNullString
-            Dim mySQLReader As MySqlDataReader = Nothing
-            Dim lol As Product
-            _intProduct_ID = vintProduct_ID
+        Public Function blnProduct_Save(ByVal vFormMode As mConstants.Form_Modes) As Boolean
+            Dim blnValidReturn As Boolean
 
             Try
-                strSQL = strSQL & " SELECT Product.Pro_Name, " & vbCrLf
-                strSQL = strSQL & "        Product.ProT_ID, " & vbCrLf
-                strSQL = strSQL & "        Product.ProC_ID, " & vbCrLf
-                strSQL = strSQL & "        Product.Pro_Taxable " & vbCrLf
-                strSQL = strSQL & " FROM Product " & vbCrLf
-                strSQL = strSQL & " WHERE Product.Pro_ID = " & _intProduct_ID & vbCrLf
+                mcSQL = New MySQLController
 
-                mySQLReader = MySQLController.ADOSelect(strSQL)
+                If mcSQL.bln_BeginTransaction() Then
 
-                mySQLReader.Read()
+                    Select Case vFormMode
+                        Case mConstants.Form_Modes.INSERT_MODE
+                            blnValidReturn = blnProduct_Insert()
 
-                _strProduct_Name = mySQLReader.Item("Pro_Name").ToString
+                        Case mConstants.Form_Modes.UPDATE_MODE
+                            blnValidReturn = blnProduct_Update()
 
-                _blnProduct_IsTaxable = CBool(mySQLReader.Item("Pro_Taxable"))
+                        Case mConstants.Form_Modes.DELETE_MODE
+                            blnValidReturn = blnProduct_Delete()
 
-                _intProduct_Type_ID = CInt(mySQLReader.Item("ProT_ID"))
-
-                If Not IsDBNull(mySQLReader.Item("ProC_ID")) Then
-                    _intProduct_Category_ID = CInt(mySQLReader.Item("ProC_ID"))
+                    End Select
                 Else
-                    _intProduct_Category_ID = 0
+                    'Error
                 End If
 
             Catch ex As Exception
-                blnReturn = False
+                blnValidReturn = False
                 gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             Finally
-                If Not IsNothing(mySQLReader) Then
-                    mySQLReader.Close()
-                    mySQLReader.Dispose()
-                End If
+                mcSQL.bln_EndTransaction(blnValidReturn)
+                mcSQL = Nothing
             End Try
 
-            Return blnReturn
+            Return blnValidReturn
+        End Function
+
+        Private Function blnProduct_AddFields() As Boolean
+            Dim blnValidReturn As Boolean
+
+            Try
+                Select Case False
+                    Case mcSQL.bln_AddField("Pro_Name", _strName, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                    Case mcSQL.bln_AddField("ProT_ID", _intType_ID.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
+                    Case mcSQL.bln_AddField("ProC_ID", _intCategory_ID.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
+                    Case mcSQL.bln_AddField("Pro_Taxable", _blnIsTaxable.ToString, mConstants.MySQL_FieldTypes.TINYINT_TYPE)
+                    Case Else
+                        blnValidReturn = True
+                End Select
+
+            Catch ex As Exception
+                blnValidReturn = False
+                gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            End Try
+
+            Return blnValidReturn
+        End Function
+
+        Private Function blnProduct_Insert() As Boolean
+            Dim blnValidReturn As Boolean
+
+            Try
+                Select Case False
+                    Case blnProduct_AddFields
+                    Case mcSQL.bln_ADOInsert("Product", _intProduct_ID)
+                    Case _intProduct_ID > 0
+                    Case Else
+                        blnValidReturn = True
+                End Select
+
+            Catch ex As Exception
+                blnValidReturn = False
+                gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            End Try
+
+            Return blnValidReturn
+        End Function
+
+        Private Function blnProduct_Update() As Boolean
+            Dim blnValidReturn As Boolean
+
+            Try
+                Select Case False
+                    Case blnProduct_AddFields
+                    Case mcSQL.bln_ADOUpdate("Product", "Pro_ID = " & _intProduct_ID)
+                    Case Else
+                        blnValidReturn = True
+                End Select
+
+            Catch ex As Exception
+                blnValidReturn = False
+                gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            End Try
+
+            Return blnValidReturn
+        End Function
+
+        Private Function blnProduct_Delete() As Boolean
+            Dim blnValidReturn As Boolean
+
+            Try
+                Select Case False
+                    Case mcSQL.bln_ADODelete("ProductPrice", "Pro_ID = " & _intProduct_ID)
+                    Case mcSQL.bln_ADODelete("Product", "Pro_ID = " & _intProduct_ID)
+                    Case Else
+                        blnValidReturn = True
+                End Select
+
+            Catch ex As Exception
+                blnValidReturn = False
+                gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            End Try
+
+            Return blnValidReturn
         End Function
 
 #End Region
