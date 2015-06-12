@@ -22,9 +22,7 @@ Partial Class test
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.grid1 = New SourceGrid.Grid()
         Me.Grid2 = New FlexCell.Grid()
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.C1FlexGrid1 = New C1.Win.C1FlexGrid.C1FlexGrid()
         Me.Button3 = New System.Windows.Forms.Button()
@@ -34,24 +32,6 @@ Partial Class test
         CType(Me.C1FlexGrid1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.grdSync, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        '
-        'grid1
-        '
-        Me.grid1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grid1.AutoStretchColumnsToFitWidth = True
-        Me.grid1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.grid1.ClipboardMode = SourceGrid.ClipboardMode.Copy
-        Me.grid1.EnableSort = True
-        Me.grid1.Location = New System.Drawing.Point(4, 3)
-        Me.grid1.Name = "grid1"
-        Me.grid1.OptimizeMode = SourceGrid.CellOptimizeMode.ForRows
-        Me.grid1.SelectionMode = SourceGrid.GridSelectionMode.Row
-        Me.grid1.Size = New System.Drawing.Size(521, 378)
-        Me.grid1.TabIndex = 1
-        Me.grid1.TabStop = True
-        Me.grid1.ToolTipText = ""
         '
         'Grid2
         '
@@ -63,15 +43,6 @@ Partial Class test
         Me.Grid2.Size = New System.Drawing.Size(562, 378)
         Me.Grid2.TabIndex = 5
         Me.Grid2.UncheckedImage = Nothing
-        '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(1100, 21)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(66, 40)
-        Me.Button1.TabIndex = 4
-        Me.Button1.Text = "SourceGrid"
-        Me.Button1.UseVisualStyleBackColor = True
         '
         'Button2
         '
@@ -143,9 +114,7 @@ Partial Class test
         Me.Controls.Add(Me.Button3)
         Me.Controls.Add(Me.C1FlexGrid1)
         Me.Controls.Add(Me.Button2)
-        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.Grid2)
-        Me.Controls.Add(Me.grid1)
         Me.Name = "test"
         Me.Text = "test"
         CType(Me.C1FlexGrid1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -153,9 +122,8 @@ Partial Class test
         Me.ResumeLayout(False)
 
     End Sub
-    Private WithEvents grid1 As SourceGrid.Grid
+
     Friend WithEvents Grid2 As FlexCell.Grid
-    Friend WithEvents Button1 As System.Windows.Forms.Button
     Friend WithEvents Button2 As System.Windows.Forms.Button
     Friend WithEvents C1FlexGrid1 As C1.Win.C1FlexGrid.C1FlexGrid
     Friend WithEvents Button3 As System.Windows.Forms.Button

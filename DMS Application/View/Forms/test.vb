@@ -1,43 +1,7 @@
-﻿Imports SourceGrid
-Imports FlexCell
+﻿Imports FlexCell
 
 Public Class test
 
-    Dim lol As New SourceGrid.Grid
-
-
-    Private Sub test_Activated(sender As Object, e As EventArgs) Handles Button1.Click
-        grid1.BorderStyle = BorderStyle.Fixed3D
-        grid1.ColumnsCount = 10
-        grid1.FixedRows = 1
-        grid1.Rows.Insert(0)
-
-        grid1.Width = 521
-
-        Dim cbEditor As SourceGrid.Cells.Editors.ComboBox = New SourceGrid.Cells.Editors.ComboBox(GetType(System.String))
-
-        cbEditor.StandardValues = New String() {"Value 1", "Value 2", "Value 3"}
-        cbEditor.EditableMode = (SourceGrid.EditableMode.Focus _
-                    Or (SourceGrid.EditableMode.SingleClick Or SourceGrid.EditableMode.AnyKey))
-        grid1(0, 0) = New SourceGrid.Cells.ColumnHeader("String")
-        grid1(0, 1) = New SourceGrid.Cells.ColumnHeader("DateTime")
-        grid1(0, 2) = New SourceGrid.Cells.ColumnHeader("CheckBox")
-        grid1(0, 3) = New SourceGrid.Cells.ColumnHeader("ComboBox")
-
-        Dim r As Integer = 1
-
-        Do While (r < 10)
-            grid1.Rows.Insert(r)
-            grid1(r, 0) = New SourceGrid.Cells.Cell(("Hello " + r.ToString), GetType(System.String))
-            grid1(r, 1) = New SourceGrid.Cells.Cell(DateTime.Today, GetType(DateTime))
-            grid1(r, 2) = New SourceGrid.Cells.CheckBox(Nothing, True)
-            grid1(r, 3) = New SourceGrid.Cells.Cell("Value 1", cbEditor)
-            grid1(r, 3).View = SourceGrid.Cells.Views.ComboBox.Default
-            r = (r + 1)
-        Loop
-
-        ' grid1.AutoSizeCells()
-    End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         With Grid2

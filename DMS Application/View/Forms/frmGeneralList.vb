@@ -4,7 +4,7 @@ Public Class frmGeneralList
     Inherits System.Windows.Forms.Form
 
     'Private members
-    Private Const mintItem_ID_col As Integer = 0
+    Private Const mintItem_ID_col As Integer = 1
 
     Private mListToOpen As mGeneralList.GeneralLists_ID
 
@@ -12,7 +12,7 @@ Public Class frmGeneralList
     Public mstrGridSQL As String = String.Empty
 
     'Private class members
-    Private WithEvents mcGrdList As DataGridViewController
+    Private WithEvents mcGrdList As SyncfusionGridController
 
 
 #Region "Constructor"
@@ -21,6 +21,9 @@ Public Class frmGeneralList
         InitializeComponent()
 
         mListToOpen = vstrGenList_ID
+
+        grdList.Model.Options.ActivateCurrentCellBehavior = GridCellActivateAction.None
+
     End Sub
 
 #End Region
@@ -34,7 +37,7 @@ Public Class frmGeneralList
         Dim intItem_ID As Integer
         Dim intRowIndex As Integer
         Dim intSelectedRow As Integer
-        Dim selectedRows As GridRangeInfo
+        Dim selectedRows As GridRangeInfoList = grdList.Selections.GetSelectedRows(True, True)
 
         Try
             Select Case mListToOpen
@@ -61,9 +64,9 @@ Public Class frmGeneralList
 
             End Select
 
-            If selectedRows.Top > 0 Then
-                intSelectedRow = grdList.SelectedRows(0).Index
-                intItem_ID = CInt(grdList.SelectedRows(0).Cells(mintItem_ID_col).Value)
+            If selectedRows.Count > 0 Then
+                intSelectedRow = selectedRows.Item(0).Top
+                intItem_ID = CInt(grdList(intSelectedRow, mintItem_ID_col).CellValue)
             End If
 
             Select Case vFormMode
@@ -71,11 +74,9 @@ Public Class frmGeneralList
                     frmToOpen.myFormControler.ShowForm(vFormMode, 0, True)
 
                 Case mConstants.Form_Modes.UPDATE_MODE
-                    intSelectedRow = grdList.SelectedRows(0).Index
                     frmToOpen.myFormControler.ShowForm(vFormMode, intItem_ID, True)
 
                 Case mConstants.Form_Modes.DELETE_MODE
-                    intSelectedRow = grdList.SelectedRows(0).Index
                     gcAppControler.DisableAllFormControls(frmToOpen)
                     frmToOpen.myFormControler.ShowForm(vFormMode, intItem_ID, True)
 
@@ -85,17 +86,17 @@ Public Class frmGeneralList
 
             Select Case vFormMode
                 Case mConstants.Form_Modes.INSERT_MODE
-                    For intRowIndex = 0 To grdList.Rows.Count - 1
-                        If CInt(grdList.Rows(intRowIndex).Cells.Item(mintItem_ID_col).Value) = intItem_ID Then
-                            intSelectedRow = intRowIndex
-                        End If
+                    For intRowIndex = 1 To grdList.RowCount
+                        'If CInt(grdList(intRowIndex, mintItem_ID_col).CellValue) = intItem_ID Then
+                        '    intSelectedRow = intRowIndex
+                        'End If
                     Next
 
             End Select
-            grdList.Selections.GetSelectedRows(True, False)
+
             If intSelectedRow >= 0 And grdList.RowCount > 0 Then
-                grdList.Rows(intSelectedRow).Selected = True
-                'grdList.FirstDisplayedScrollingRowIndex = grdList.SelectedRows(0).Index
+                '    grdList.Rows(intSelectedRow).Selected = True
+                '    'grdList.FirstDisplayedScrollingRowIndex = grdList.SelectedRows(0).Index
             End If
 
             txtFilter.Focus()
@@ -113,7 +114,6 @@ Public Class frmGeneralList
         Dim blnValidReturn As Boolean
 
         Try
-
             blnValidReturn = mcGrdList.bln_FillData(mstrGridSQL)
 
         Catch ex As Exception
@@ -148,7 +148,7 @@ Public Class frmGeneralList
     Private Sub btnUpdate_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnUpdate.Click
 
         Try
-            If grdList.Rows.Count > 0 Then
+            If grdList.RowCount > 0 Then
                 blnOpenForm(mConstants.Form_Modes.UPDATE_MODE)
             End If
 
@@ -162,7 +162,7 @@ Public Class frmGeneralList
         Dim frmToOpen As System.Windows.Forms.Form = Nothing
 
         Try
-            If grdList.Rows.Count > 0 Then
+            If grdList.RowCount > 0 Then
                 blnOpenForm(mConstants.Form_Modes.DELETE_MODE)
             End If
 
@@ -172,14 +172,14 @@ Public Class frmGeneralList
 
     End Sub
 
-    Private Sub grdList_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs)
-        If grdList.Rows.Count > 0 And grdList.SelectedRows.Count > 0 Then
+    Private Sub grdList_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdList.DoubleClick
+        If grdList.RowCount > 0 And grdList.Selections.GetSelectedRows(True, True).Count > 0 Then
             blnOpenForm(mConstants.Form_Modes.UPDATE_MODE)
         End If
     End Sub
 
-    Private Sub grdList_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs)
-        If grdList.Rows.Count > 0 And grdList.SelectedRows.Count > 0 And e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
+    Private Sub grdList_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles grdList.KeyPress
+        If grdList.RowCount > 0 And mcGrdList.GetSelectedRowsCount > 0 And e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
             blnOpenForm(mConstants.Form_Modes.UPDATE_MODE)
         End If
     End Sub
@@ -187,7 +187,9 @@ Public Class frmGeneralList
     Private Sub myFormManager_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
         Dim blnValidReturn As Boolean
 
-        mcGrdList = New DataGridViewController
+        If mcGrdList Is Nothing Then
+            mcGrdList = New SyncfusionGridController
+        End If
 
         grdList.Tag = mintGridTag
 
@@ -195,6 +197,8 @@ Public Class frmGeneralList
             Case mcGrdList.bln_Init(grdList)
             Case blnGrdList_Load()
             Case Else
+                mcGrdList.SetColsSizeBehavior = ColsSizeBehaviorsController.colsSizeBehaviors.EXTEND_LAST_COL
+
                 blnValidReturn = True
         End Select
 
@@ -208,18 +212,18 @@ Public Class frmGeneralList
         Dim intSelectedColumn As Short
 
         If Not IsNothing(grdList.CurrentCell) Then
-            intSelectedColumn = grdList.CurrentCell.ColumnIndex
+            'intSelectedColumn = grdList.CurrentCell.ColumnIndex
         Else
             intSelectedColumn = 1
         End If
 
-        For Each row As DataGridViewRow In grdList.Rows
-            If row.Cells(1).Value.ToString.ToUpper.Contains(txtFilter.Text.ToUpper) Then
-                row.Visible = True
-            Else
-                row.Visible = False
-            End If
-        Next
+        'For Each row As GridModelRowColOperations In grdList.Rows.GetCells(1, grdList.RowCount).Item()
+        '    If row.Cells(1).Value.ToString.ToUpper.Contains(txtFilter.Text.ToUpper) Then
+        '        row.Visible = True
+        '    Else
+        '        row.Visible = False
+        '    End If
+        'Next
 
         intSelectedColumn = 1
 
@@ -239,6 +243,18 @@ Public Class frmGeneralList
         blnGrdList_Load()
     End Sub
 
+    'Private Sub grdList_QueryColWidth(sender As Object, e As GridRowColSizeEventArgs) Handles grdList.QueryColWidth
+    'Dim dblLastColSize As Integer
+
+    ''Resizes the last column to client size.
+    'If e.Index > grdList.ColCount - 1 Then
+
+    '    dblLastColSize = grdList.Model.ColWidths.GetTotal(0, grdList.ColCount - 1)
+    '    e.Size = grdList.ClientSize.Width - dblLastColSize
+    '    e.Handled = True
+    'End If
+    'End Sub
+
 #End Region
-    
+
 End Class
