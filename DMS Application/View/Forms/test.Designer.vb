@@ -28,7 +28,8 @@ Partial Class test
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Button4 = New System.Windows.Forms.Button()
         Me.grdSync = New Syncfusion.Windows.Forms.Grid.GridControl()
-        Me.Button5 = New System.Windows.Forms.Button()
+        Me.Populate = New System.Windows.Forms.Button()
+        Me.Button1 = New System.Windows.Forms.Button()
         CType(Me.C1FlexGrid1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.grdSync, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -94,21 +95,31 @@ Partial Class test
         Me.grdSync.Text = "GridControl1"
         Me.grdSync.UseRightToLeftCompatibleTextBox = True
         '
-        'Button5
+        'Populate
         '
-        Me.Button5.Location = New System.Drawing.Point(1092, 433)
-        Me.Button5.Name = "Button5"
-        Me.Button5.Size = New System.Drawing.Size(66, 40)
-        Me.Button5.TabIndex = 12
-        Me.Button5.Text = "Test 2"
-        Me.Button5.UseVisualStyleBackColor = True
+        Me.Populate.Location = New System.Drawing.Point(1092, 433)
+        Me.Populate.Name = "Populate"
+        Me.Populate.Size = New System.Drawing.Size(66, 40)
+        Me.Populate.TabIndex = 12
+        Me.Populate.Text = "Feed Test"
+        Me.Populate.UseVisualStyleBackColor = True
+        '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(1092, 479)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(66, 40)
+        Me.Button1.TabIndex = 13
+        Me.Button1.Text = "Feed DB"
+        Me.Button1.UseVisualStyleBackColor = True
         '
         'test
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1178, 819)
-        Me.Controls.Add(Me.Button5)
+        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.Populate)
         Me.Controls.Add(Me.grdSync)
         Me.Controls.Add(Me.Button4)
         Me.Controls.Add(Me.Button3)
@@ -129,5 +140,6 @@ Partial Class test
     Friend WithEvents Button3 As System.Windows.Forms.Button
     Friend WithEvents Button4 As System.Windows.Forms.Button
     Friend WithEvents grdSync As Syncfusion.Windows.Forms.Grid.GridControl
-    Friend WithEvents Button5 As System.Windows.Forms.Button
+    Friend WithEvents Populate As System.Windows.Forms.Button
+    Friend WithEvents Button1 As System.Windows.Forms.Button
 End Class

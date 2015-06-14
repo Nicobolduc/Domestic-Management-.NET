@@ -23,8 +23,6 @@ Partial Class frmProduct
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmProduct))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.txtName = New System.Windows.Forms.TextBox()
@@ -36,9 +34,9 @@ Partial Class frmProduct
         Me.cboCompany = New System.Windows.Forms.ComboBox()
         Me.btnRemoveLine = New System.Windows.Forms.Button()
         Me.btnAddLine = New System.Windows.Forms.Button()
-        Me.grdPrices = New System.Windows.Forms.DataGridView()
         Me.myFormControler = New DMS_Application.ctlFormController()
         Me.chkTaxable = New System.Windows.Forms.CheckBox()
+        Me.grdPrices = New Syncfusion.Windows.Forms.Grid.GridControl()
         Me.gbInfos.SuspendLayout()
         CType(Me.grdPrices, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -94,11 +92,9 @@ Partial Class frmProduct
         '
         'gbInfos
         '
-        Me.gbInfos.Controls.Add(Me.cboProductBrand)
-        Me.gbInfos.Controls.Add(Me.cboCompany)
+        Me.gbInfos.Controls.Add(Me.grdPrices)
         Me.gbInfos.Controls.Add(Me.btnRemoveLine)
         Me.gbInfos.Controls.Add(Me.btnAddLine)
-        Me.gbInfos.Controls.Add(Me.grdPrices)
         Me.gbInfos.Location = New System.Drawing.Point(5, 104)
         Me.gbInfos.Name = "gbInfos"
         Me.gbInfos.Size = New System.Drawing.Size(366, 160)
@@ -110,7 +106,7 @@ Partial Class frmProduct
         '
         Me.cboProductBrand.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboProductBrand.FormattingEnabled = True
-        Me.cboProductBrand.Location = New System.Drawing.Point(92, 116)
+        Me.cboProductBrand.Location = New System.Drawing.Point(196, 82)
         Me.cboProductBrand.Name = "cboProductBrand"
         Me.cboProductBrand.Size = New System.Drawing.Size(76, 21)
         Me.cboProductBrand.TabIndex = 19
@@ -120,7 +116,7 @@ Partial Class frmProduct
         '
         Me.cboCompany.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboCompany.FormattingEnabled = True
-        Me.cboCompany.Location = New System.Drawing.Point(10, 116)
+        Me.cboCompany.Location = New System.Drawing.Point(114, 82)
         Me.cboCompany.Name = "cboCompany"
         Me.cboCompany.Size = New System.Drawing.Size(76, 21)
         Me.cboCompany.TabIndex = 18
@@ -146,34 +142,11 @@ Partial Class frmProduct
         Me.btnAddLine.TabIndex = 1
         Me.btnAddLine.UseVisualStyleBackColor = True
         '
-        'grdPrices
-        '
-        Me.grdPrices.AllowUserToAddRows = False
-        Me.grdPrices.AllowUserToOrderColumns = True
-        Me.grdPrices.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised
-        Me.grdPrices.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.grdPrices.DefaultCellStyle = DataGridViewCellStyle1
-        Me.grdPrices.EnableHeadersVisualStyles = False
-        Me.grdPrices.Location = New System.Drawing.Point(6, 18)
-        Me.grdPrices.MultiSelect = False
-        Me.grdPrices.Name = "grdPrices"
-        Me.grdPrices.RowHeadersWidth = 10
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.White
-        Me.grdPrices.RowsDefaultCellStyle = DataGridViewCellStyle2
-        Me.grdPrices.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.grdPrices.Size = New System.Drawing.Size(316, 135)
-        Me.grdPrices.TabIndex = 0
-        Me.grdPrices.Tag = "9"
-        '
         'myFormControler
         '
+        Me.myFormControler.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.myFormControler.FormIsLoading = False
         Me.myFormControler.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
         Me.myFormControler.Item_ID = 0
@@ -195,11 +168,24 @@ Partial Class frmProduct
         Me.chkTaxable.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.chkTaxable.UseVisualStyleBackColor = True
         '
+        'grdPrices
+        '
+        Me.grdPrices.Location = New System.Drawing.Point(6, 18)
+        Me.grdPrices.Name = "grdPrices"
+        Me.grdPrices.SerializeCellsBehavior = Syncfusion.Windows.Forms.Grid.GridSerializeCellsBehavior.SerializeAsRangeStylesIntoCode
+        Me.grdPrices.Size = New System.Drawing.Size(316, 135)
+        Me.grdPrices.SmartSizeBox = False
+        Me.grdPrices.TabIndex = 3
+        Me.grdPrices.Text = "GridControl1"
+        Me.grdPrices.UseRightToLeftCompatibleTextBox = True
+        '
         'frmProduct
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(376, 299)
+        Me.Controls.Add(Me.cboProductBrand)
+        Me.Controls.Add(Me.cboCompany)
         Me.Controls.Add(Me.chkTaxable)
         Me.Controls.Add(Me.myFormControler)
         Me.Controls.Add(Me.gbInfos)
@@ -230,10 +216,10 @@ Partial Class frmProduct
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents gbInfos As System.Windows.Forms.GroupBox
     Public WithEvents myFormControler As DMS_Application.ctlFormController
-    Friend WithEvents grdPrices As System.Windows.Forms.DataGridView
     Friend WithEvents btnRemoveLine As System.Windows.Forms.Button
     Friend WithEvents btnAddLine As System.Windows.Forms.Button
     Friend WithEvents cboCompany As System.Windows.Forms.ComboBox
     Friend WithEvents cboProductBrand As System.Windows.Forms.ComboBox
     Friend WithEvents chkTaxable As System.Windows.Forms.CheckBox
+    Friend WithEvents grdPrices As Syncfusion.Windows.Forms.Grid.GridControl
 End Class

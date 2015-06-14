@@ -22,7 +22,7 @@ Public Class frmGeneralList
 
         mListToOpen = vstrGenList_ID
 
-        grdList.Model.Options.ActivateCurrentCellBehavior = GridCellActivateAction.None
+
 
     End Sub
 
@@ -82,7 +82,7 @@ Public Class frmGeneralList
 
             End Select
 
-            myFormControler.LoadFormData()
+            myFormController.LoadFormData()
 
             Select Case vFormMode
                 Case mConstants.Form_Modes.INSERT_MODE
@@ -115,7 +115,7 @@ Public Class frmGeneralList
 
         Try
             blnValidReturn = mcGrdList.bln_FillData(mstrGridSQL)
-
+            'Refresh()
         Catch ex As Exception
             blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
@@ -130,8 +130,8 @@ Public Class frmGeneralList
 #Region "Private events"
 
     Private Sub mcGrid_SetDisplay() Handles mcGrdList.SetDisplay
-
-        grdList.ReadOnly = True
+        grdList.AllowProportionalColumnSizing = True
+        grdList.Model.Options.ActivateCurrentCellBehavior = GridCellActivateAction.None
 
     End Sub
 
@@ -184,7 +184,7 @@ Public Class frmGeneralList
         End If
     End Sub
 
-    Private Sub myFormManager_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
+    Private Sub myFormController_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormController.LoadData
         Dim blnValidReturn As Boolean
 
         If mcGrdList Is Nothing Then

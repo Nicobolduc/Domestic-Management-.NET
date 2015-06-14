@@ -14,7 +14,7 @@
             GROCERY_LIST_ID = 8
         End Enum
 
-        Public Enum GeneralList_AppCapID
+        Public Enum GeneralList_GridCapID
             EXPENSES_CAP = 1
             PRODUCTS_CAP = 2
             PRODUCT_TYPE_CAP = 3
@@ -38,37 +38,37 @@
                     Case mGeneralList.GeneralLists_ID.EXPENSES_LIST_ID
                         strSQL = strGetExpenseList_SQL()
                         strListName = " - Dépenses" 'TODO
-                        frmGenList.mintGridTag = CStr(GeneralList_AppCapID.EXPENSES_CAP)
+                        frmGenList.mintGridTag = CStr(GeneralList_GridCapID.EXPENSES_CAP)
 
                     Case mGeneralList.GeneralLists_ID.PRODUCTS_LIST_ID
                         strSQL = strGetProductsList_SQL()
                         strListName = " - Produits"
-                        frmGenList.mintGridTag = CStr(GeneralList_AppCapID.PRODUCTS_CAP)
+                        frmGenList.mintGridTag = CStr(GeneralList_GridCapID.PRODUCTS_CAP)
 
                     Case mGeneralList.GeneralLists_ID.PRODUCT_TYPE_LIST_ID
                         strSQL = strGetProductTypeList_SQL()
                         strListName = " - Types de produit"
-                        frmGenList.mintGridTag = CStr(GeneralList_AppCapID.PRODUCT_TYPE_CAP)
+                        frmGenList.mintGridTag = CStr(GeneralList_GridCapID.PRODUCT_TYPE_CAP)
 
                     Case mGeneralList.GeneralLists_ID.PRODUCT_CATEGORY_LIST_ID
                         strSQL = strGetProductCategoryList_SQL()
                         strListName = " - Catégories de produit"
-                        frmGenList.mintGridTag = CStr(GeneralList_AppCapID.PRODUCT_CATEGORY_CAP)
+                        frmGenList.mintGridTag = CStr(GeneralList_GridCapID.PRODUCT_CATEGORY_CAP)
 
                     Case mGeneralList.GeneralLists_ID.PRODUCT_BRAND_LIST_ID
                         strSQL = strGetProductBrandList_SQL()
                         strListName = " - Marques de produit"
-                        frmGenList.mintGridTag = CStr(GeneralList_AppCapID.PRODUCT_BRAND_CAP)
+                        frmGenList.mintGridTag = CStr(GeneralList_GridCapID.PRODUCT_BRAND_CAP)
 
                     Case mGeneralList.GeneralLists_ID.COMPANY_LIST_ID
                         strSQL = strGetCompanyList_SQL()
                         strListName = " - Compagnies"
-                        frmGenList.mintGridTag = CStr(GeneralList_AppCapID.COMPANY_CAP)
+                        frmGenList.mintGridTag = CStr(GeneralList_GridCapID.COMPANY_CAP)
 
                     Case mGeneralList.GeneralLists_ID.GROCERY_LIST_ID
                         strSQL = strGetGroceryList_SQL()
                         strListName = " - Épicerie"
-                        frmGenList.mintGridTag = CStr(GeneralList_AppCapID.GROCERY_CAP)
+                        frmGenList.mintGridTag = CStr(GeneralList_GridCapID.GROCERY_CAP)
 
                     Case Else
                         'Do nothing
@@ -81,7 +81,7 @@
                     frmGenList.Text = frmGenList.Text & strListName
                     frmGenList.MdiParent = My.Forms.mdiGeneral
 
-                    frmGenList.myFormControler.ShowForm(mConstants.Form_Modes.CONSULT_MODE)
+                    frmGenList.myFormController.ShowForm(mConstants.Form_Modes.CONSULT_MODE)
 
                     If My.Forms.mdiGeneral.GetGenListChildCount = 0 Then
                         frmGenList.Location = New Point(0, 0)

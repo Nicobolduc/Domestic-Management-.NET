@@ -36,7 +36,7 @@ Partial Class frmGeneralList
         Me.ToolTips = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnRefresh = New System.Windows.Forms.Button()
         Me.grdList = New Syncfusion.Windows.Forms.Grid.GridControl()
-        Me.myFormControler = New DMS_Application.ctlFormController()
+        Me.myFormController = New DMS_Application.ctlFormController()
         CType(Me.grdList, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -132,35 +132,35 @@ Partial Class frmGeneralList
         Me.grdList.BaseStylesMap.AddRange(New Syncfusion.Windows.Forms.Grid.GridBaseStyle() {GridBaseStyle1, GridBaseStyle2, GridBaseStyle3, GridBaseStyle4})
         Me.grdList.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.grdList.ColWidthEntries.AddRange(New Syncfusion.Windows.Forms.Grid.GridColWidth() {New Syncfusion.Windows.Forms.Grid.GridColWidth(0, 35)})
-        Me.grdList.Location = New System.Drawing.Point(12, 35)
+        Me.grdList.Location = New System.Drawing.Point(12, 65)
         Me.grdList.Name = "grdList"
         Me.grdList.RowHeightEntries.AddRange(New Syncfusion.Windows.Forms.Grid.GridRowHeight() {New Syncfusion.Windows.Forms.Grid.GridRowHeight(0, 25)})
         Me.grdList.SerializeCellsBehavior = Syncfusion.Windows.Forms.Grid.GridSerializeCellsBehavior.SerializeAsRangeStylesIntoCode
-        Me.grdList.Size = New System.Drawing.Size(507, 513)
+        Me.grdList.Size = New System.Drawing.Size(507, 499)
         Me.grdList.SmartSizeBox = False
         Me.grdList.TabIndex = 6
         Me.grdList.UseRightToLeftCompatibleTextBox = True
         '
-        'myFormControler
+        'myFormController
         '
-        Me.myFormControler.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.myFormControler.FormIsLoading = False
-        Me.myFormControler.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
-        Me.myFormControler.Item_ID = 0
-        Me.myFormControler.Location = New System.Drawing.Point(494, 554)
-        Me.myFormControler.Name = "myFormControler"
-        Me.myFormControler.ShowButtonQuitOnly = True
-        Me.myFormControler.Size = New System.Drawing.Size(85, 33)
-        Me.myFormControler.TabIndex = 4
+        Me.myFormController.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.myFormController.FormIsLoading = False
+        Me.myFormController.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
+        Me.myFormController.Item_ID = 0
+        Me.myFormController.Location = New System.Drawing.Point(494, 570)
+        Me.myFormController.Name = "myFormController"
+        Me.myFormController.ShowButtonQuitOnly = True
+        Me.myFormController.Size = New System.Drawing.Size(85, 33)
+        Me.myFormController.TabIndex = 4
         '
         'frmGeneralList
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(579, 586)
+        Me.ClientSize = New System.Drawing.Size(579, 602)
         Me.Controls.Add(Me.grdList)
         Me.Controls.Add(Me.btnRefresh)
-        Me.Controls.Add(Me.myFormControler)
+        Me.Controls.Add(Me.myFormController)
         Me.Controls.Add(Me.btnAdd)
         Me.Controls.Add(Me.btnUpdate)
         Me.Controls.Add(Me.btnDelete)
@@ -182,7 +182,7 @@ Partial Class frmGeneralList
     Friend WithEvents btnUpdate As System.Windows.Forms.Button
     Friend WithEvents btnAdd As System.Windows.Forms.Button
     Friend WithEvents ToolTips As System.Windows.Forms.ToolTip
-    Public WithEvents myFormControler As DMS_Application.ctlFormController
+    Public WithEvents myFormController As DMS_Application.ctlFormController
     Friend WithEvents btnRefresh As System.Windows.Forms.Button
     Friend WithEvents grdList As Syncfusion.Windows.Forms.Grid.GridControl
 End Class

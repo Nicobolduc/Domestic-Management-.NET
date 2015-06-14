@@ -7,6 +7,8 @@ Public Class SyncfusionGridController
 
     'Private class members
     Private WithEvents grdSync As GridControl
+    Private WithEvents btnAddRow As Button
+    Private WithEvents btnDeleteRow As Button
     Private colsSizeBehavior As ColsSizeBehaviorsController = Nothing
 
     'Public events
@@ -44,12 +46,14 @@ Public Class SyncfusionGridController
 
 #Region "Functions / Subs"
 
-    Public Function bln_Init(ByRef rgrdGrid As GridControl, Optional ByRef rbtnAddLine As Button = Nothing, Optional ByRef rbtnRemoveLine As Button = Nothing) As Boolean
+    Public Function bln_Init(ByRef rgrdGrid As GridControl, Optional ByRef rbtnAddRow As Button = Nothing, Optional ByRef rbtnRemoveRow As Button = Nothing) As Boolean
         Dim blnValidReturn As Boolean = True
         Dim columnsHeaderStyle As New DataGridViewCellStyle
 
         Try
             grdSync = rgrdGrid
+            btnAddRow = rbtnAddRow
+            btnDeleteRow = rbtnRemoveRow
 
             grdSync.BeginInit()
             'AddHandler grdSync.QueryCellInfo, New GridQueryCellInfoEventHandler(AddressOf GridQueryCellInfo)
@@ -85,10 +89,7 @@ Public Class SyncfusionGridController
         Dim mySQLReader As MySqlDataReader = Nothing
         Dim myDataTable As DataTable = New DataTable
         Dim strGridCaption As String = String.Empty
-        Dim lstColumns As String()
         Dim dataTableArray(,) As Object
-        Dim headerStyle As GridStyleInfo
-        Dim individualColStyle As GridStyleInfo
 
         Try
             'Retrieve grid data from database
@@ -100,22 +101,76 @@ Public Class SyncfusionGridController
 
             dataTableArray = New Object(myDataTable.Rows.Count - 1, myDataTable.Columns.Count) {}
 
+            'Set the grid data
+            For intTableRowIndex As Integer = 0 To myDataTable.Rows.Count - 1
+
+                For intTableColIndex As Integer = 0 To myDataTable.Columns.Count - 1
+
+                    dataTableArray(intTableRowIndex, intTableColIndex) = myDataTable.Rows(intTableRowIndex)(intTableColIndex)
+                Next
+            Next
+
+            'Reset the grid
+            'grdSync.Model.Data.Clear()  
+            grdSync.Model.ResetVolatileData()
+            grdSync.RowCount = 0
+            grdSync.ColCount = 0
+            grdSync.BeginUpdate()
+
+            grdSync.RowCount = myDataTable.Rows.Count
+            grdSync.ColCount = myDataTable.Columns.Count
+
+            grdSync.Model.PopulateValues(GridRangeInfo.Cells(1, 1, myDataTable.Rows.Count, myDataTable.Columns.Count), dataTableArray)
+
+            blnValidReturn = bln_SetColsDisplay()
+
+            RaiseEvent SetDisplay()
+
+        Catch ex As Exception
+            blnValidReturn = False
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        Finally
+            If Not IsNothing(mySQLReader) Then
+                mySQLReader.Close()
+                mySQLReader.Dispose()
+            End If
+
+            grdSync.EndUpdate(True)
+
+        End Try
+
+        Return blnValidReturn
+    End Function
+
+    Public Function CellIsEmpty(ByVal vintRow As Integer, ByVal vintCol As Integer) As Boolean
+        Dim blnIsEmpty As Boolean = True
+
+        Try
+            Select Case False
+                Case Not IsDBNull(grdSync(vintRow, vintCol).CellValue)
+                Case Not IsNothing(grdSync(vintRow, vintCol).CellValue)
+                Case Not String.IsNullOrEmpty(Trim(grdSync(vintRow, vintCol).CellValue.ToString))
+                Case Else
+                    blnIsEmpty = False
+            End Select
+
+        Catch ex As Exception
+            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnIsEmpty
+    End Function
+
+    Private Function bln_SetColsDisplay() As Boolean
+        Dim blnValidReturn As Boolean = True
+        Dim strGridCaption As String = String.Empty
+        Dim lstColumns As String()
+        Dim individualColStyle As GridStyleInfo
+
+        Try
             strGridCaption = gcAppControler.str_GetCaption(CInt(grdSync.Tag), gcAppControler.cUser.GetLanguage)
 
             lstColumns = Split(strGridCaption.Insert(0, "|"), "|")
-
-            'Reset the grid
-            'grdSync.Model.Data.Clear()
-            'grdSync.RowCount = 0
-            'grdSync.ColCount = 0
-            grdSync.Model.ResetVolatileData()
-            grdSync.Refresh()
-            'grdSync.Invalidate()
-            grdSync.BeginUpdate()
-            'grdSync.ResetVolatileData()
-            'grdSync.ClearCells(GridRangeInfo.Cells(1, 1, grdSync.RowCount, grdSync.ColCount), True)
-            grdSync.RowCount = myDataTable.Rows.Count
-            grdSync.ColCount = lstColumns.Count - 1
 
             'Definition of columns
             For colHeaderCpt As Integer = 1 To lstColumns.Count - 1
@@ -147,96 +202,31 @@ Public Class SyncfusionGridController
 
             Next
 
-            'Set the grid data
-            For intTableRowIndex As Integer = 0 To myDataTable.Rows.Count - 1
-
-                For intTableColIndex As Integer = 0 To myDataTable.Columns.Count - 1
-
-                    dataTableArray(intTableRowIndex, intTableColIndex) = myDataTable.Rows(intTableRowIndex)(intTableColIndex)
-                Next
-            Next
-
-            grdSync.Model.PopulateValues(GridRangeInfo.Cells(1, 1, myDataTable.Rows.Count, myDataTable.Columns.Count), dataTableArray)
-            grdSync(1, 2).CellValue = myDataTable.Rows.Count
             'Definition of visual styles
-            headerStyle = New GridStyleInfo
+            'headerStyle = New GridStyleInfo
 
-            headerStyle.BackColor = Color.WhiteSmoke
+            'headerStyle.BackColor = Color.WhiteSmoke
 
-            grdSync.ChangeCells(GridRangeInfo.Cells(0, 0, 0, grdSync.ColCount), headerStyle, Syncfusion.Styles.StyleModifyType.ApplyNew)
-            grdSync.ChangeCells(GridRangeInfo.Cells(0, 0, grdSync.RowCount, 0), headerStyle)
-
-            RaiseEvent SetDisplay()
+            'grdSync.ChangeCells(GridRangeInfo.Cells(0, 0, 0, grdSync.ColCount), headerStyle, Syncfusion.Styles.StyleModifyType.ApplyNew)
+            'grdSync.ChangeCells(GridRangeInfo.Cells(0, 0, grdSync.RowCount, 0), headerStyle)
 
             blnValidReturn = True
 
         Catch ex As Exception
             blnValidReturn = False
             gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        Finally
-            If Not IsNothing(mySQLReader) Then
-                mySQLReader.Close()
-                mySQLReader.Dispose()
-            End If
-            grdSync.Invalidate()
-            grdSync.EndUpdate(True)
-            grdSync.Refresh()
         End Try
 
         Return blnValidReturn
     End Function
 
 #End Region
-    'Private dataTableArray(,) As Object
-    'Private mblnLoaded As Boolean
-    'Private Sub GridQueryCellInfo(ByVal sender As Object, ByVal e As GridQueryCellInfoEventArgs)
-    '    Dim blnValidReturn As Boolean = True
-    '    Dim sqlCmd As MySqlCommand
-    '    Dim mySQLReader As MySqlDataReader = Nothing
-    '    Dim myDataTable As DataTable = New DataTable
-    '    Dim strGridCaption As String = String.Empty
-    '    Dim strSQL As String = String.Empty
 
-    '    If Not mblnLoaded Then
-    '        strSQL = strSQL & "  SELECT Company.Cy_ID, " & vbCrLf
-    '        strSQL = strSQL & "         Company.Cy_Name " & vbCrLf
-    '        strSQL = strSQL & "  FROM Company " & vbCrLf
+    Private Sub btnAddRow_Click(sender As Object, e As EventArgs) Handles btnAddRow.Click
 
-    '        strSQL = strSQL & "  ORDER BY Company.Cy_Name " & vbCrLf
-
-    '        'Retrieve grid data from database
-    '        sqlCmd = New MySqlCommand(strSQL, gcAppControler.MySQLConnection)
-
-    '        mySQLReader = sqlCmd.ExecuteReadersdfsdf
-
-    '        myDataTable.Load(mySQLReader)
-
-    '        dataTableArray = New Object(myDataTable.Rows.Count - 1, myDataTable.Columns.Count) {}
-
-    '        For intTableRowIndex As Integer = 0 To myDataTable.Rows.Count - 1
-
-    '            For intTableColIndex As Integer = 0 To myDataTable.Columns.Count - 1
-
-    '                dataTableArray(intTableRowIndex, intTableColIndex) = myDataTable.Rows(intTableRowIndex)(intTableColIndex)
-    '            Next
-    '        Next
-    '        mblnLoaded = True
-    '    End If
-
-    '    If ((e.RowIndex > 0) AndAlso (e.ColIndex > 0)) Then
-
-    '        e.Style.CellValue = dataTableArray(e.RowIndex - 1, e.ColIndex - 1)
-
-    '        e.Handled = True
-
-    '    End If
-
-    'End Sub
-
-    Private Sub faitChier()
-
+        grdSync.RowCount += 1
+        DirectCast(grdSync.FindParentForm, frmProduct).myFormControler.ChangeMade = True 'TODO
     End Sub
-
 End Class
 
 Public Class ColsSizeBehaviorsController

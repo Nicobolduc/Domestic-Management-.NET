@@ -187,32 +187,135 @@ Public Class test
         grdSync.Refresh()
     End Sub
 
-    Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
-        Dim strSQL As String = String.Empty
-        Dim gridControlelr As New SyncfusionGridController
+    Private dataTableArray(,) As Object
 
-        gridControlelr.bln_Init(grdSync)
 
-        strSQL = "  SELECT " & DataGridViewController.GridRowActions.CONSULT_ACTION & " AS Action, " & vbCrLf
-        strSQL = strSQL & "         ProductPrice.ProP_ID, " & vbCrLf
-        strSQL = strSQL & "         Company.Cy_ID, " & vbCrLf
-        strSQL = strSQL & "         Company.Cy_Name, " & vbCrLf
-        strSQL = strSQL & "         ProductBrand.ProB_ID, " & vbCrLf
-        strSQL = strSQL & "         ProductBrand.ProB_Name, " & vbCrLf
-        strSQL = strSQL & "         ProductPrice.ProP_Price " & vbCrLf
-        strSQL = strSQL & "  FROM ProductPrice " & vbCrLf
-        strSQL = strSQL & "     INNER JOIN Company ON Company.Cy_ID = ProductPrice.Cy_ID_Seller " & vbCrLf
-        strSQL = strSQL & "     INNER JOIN ProductBrand ON ProductBrand.ProB_ID = ProductPrice.ProB_ID " & vbCrLf
-        strSQL = strSQL & "  WHERE ProductPrice.Pro_ID = " & 42 & vbCrLf
-        strSQL = strSQL & "  ORDER BY Company.Cy_name " & vbCrLf
+    Private Sub setVisualStyle()
+        Dim strGridCaption As String
+        Dim lstColumns As String()
+        Dim individualColStyle As GridStyleInfo
 
-        gridControlelr.bln_FillData(strSQL)
+        strGridCaption = gcAppControler.str_GetCaption(8, gcAppControler.cUser.GetLanguage)
+
+        lstColumns = Split(strGridCaption.Insert(0, "|"), "|")
+
+        'Definition of columns
+        For colHeaderCpt As Integer = 1 To lstColumns.Count - 1
+
+            individualColStyle = New GridStyleInfo
+            individualColStyle.HorizontalAlignment = GridHorizontalAlignment.Center
+
+            If lstColumns(colHeaderCpt) = String.Empty Then
+                grdSync.SetColHidden(colHeaderCpt, colHeaderCpt, True)
+            Else
+
+                grdSync(0, colHeaderCpt).Text = Microsoft.VisualBasic.Right(lstColumns(colHeaderCpt), lstColumns(colHeaderCpt).Length - 1)
+
+                Select Case lstColumns(colHeaderCpt).Chars(0)
+                    Case CChar("<")
+                        individualColStyle.HorizontalAlignment = GridHorizontalAlignment.Left
+
+
+                    Case CChar("^")
+                        individualColStyle.HorizontalAlignment = GridHorizontalAlignment.Center
+
+                    Case CChar(">")
+                        individualColStyle.HorizontalAlignment = GridHorizontalAlignment.Right
+
+                End Select
+
+                grdSync.ChangeCells(GridRangeInfo.Cells(0, colHeaderCpt, grdSync.RowCount, colHeaderCpt), individualColStyle)
+            End If
+
+        Next
     End Sub
 
-    Private Function getArray() As Integer(,)
-        Dim numArrayCols As Integer = 7
-        Dim numArrayRows As Integer = 1
-        Dim intArray(,) As Integer
+    Private Sub getDataFromBD()
+        Dim sqlCmd As MySqlCommand
+        Dim mySQLReader As MySqlDataReader = Nothing
+        Dim myDataTable As DataTable = New DataTable
+        Dim strSQL As String = String.Empty
+        Dim gridController As New SyncfusionGridController
+
+        gridController.bln_Init(grdSync)
+
+        strSQL = strSQL & "  SELECT Company.Cy_ID, " & vbCrLf
+        strSQL = strSQL & "         Company.Cy_Name " & vbCrLf
+        strSQL = strSQL & "  FROM Company " & vbCrLf
+        strSQL = strSQL & "  ORDER BY Company.Cy_Name " & vbCrLf
+
+        sqlCmd = New MySqlCommand(strSQL, gcAppControler.MySQLConnection)
+
+        mySQLReader = sqlCmd.ExecuteReader
+
+        myDataTable.Load(mySQLReader)
+
+        dataTableArray = New Object(myDataTable.Rows.Count - 1, myDataTable.Columns.Count) {}
+
+        For intRowIndex As Integer = 0 To myDataTable.Rows.Count - 1
+
+            For intColIndex As Integer = 0 To myDataTable.Columns.Count - 1
+
+                dataTableArray(intRowIndex, intColIndex) = myDataTable.Rows(intRowIndex)(intColIndex)
+            Next
+        Next
+
+        numArrayCols = myDataTable.Columns.Count
+        numArrayRows = myDataTable.Rows.Count
+    End Sub
+
+    Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Populate.Click
+
+        'If isInVirtualMode Then
+        '    SetVirtualMode(False)
+        'End If
+
+        ' getDataFromBD
+        SetUpArray()
+        grdSync.ResetVolatileData()
+        grdSync.Refresh()
+
+        Me.Cursor = Cursors.WaitCursor
+
+        grdSync.BeginUpdate()
+        grdSync.RowCount = Me.numArrayRows
+        grdSync.ColCount = Me.numArrayCols
+
+        grdSync.Model.PopulateValues(GridRangeInfo.Cells(1, 1, Me.numArrayRows, Me.numArrayCols), intArray)
+        grdSync.EndUpdate()
+        Refresh()
+
+        Me.Cursor = Cursors.Arrow
+
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim gridCtrl As New SyncfusionGridController
+
+        getDataFromBD()
+
+        grdSync.ResetVolatileData()
+        grdSync.Refresh()
+        grdSync.BeginUpdate()
+
+        grdSync.RowCount = Me.numArrayRows
+        grdSync.ColCount = Me.numArrayCols
+
+        grdSync.Model.PopulateValues(GridRangeInfo.Cells(1, 1, Me.numArrayRows, Me.numArrayCols), dataTableArray)
+
+        setVisualStyle
+
+        grdSync.EndUpdate()
+        Refresh()
+    End Sub
+
+    Private intArray(,) As Integer
+
+    Private numArrayCols As Integer = 5
+    Private numArrayRows As Integer = 5
+
+    Private Function SetUpArray() As Integer(,)
+       
         Dim r As Random = New Random
         Dim i As Integer = 0
 
@@ -229,4 +332,6 @@ Public Class test
 
         Return intArray
     End Function
+
+
 End Class
