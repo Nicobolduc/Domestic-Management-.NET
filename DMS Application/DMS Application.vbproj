@@ -71,7 +71,7 @@
     </Reference>
     <Reference Include="FlexCell, Version=4.3.4.0, Culture=neutral, PublicKeyToken=6f86587eb70ee309, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\FlexCell Technologies\FlexCell.NET4\bin\FlexCell.dll</HintPath>
+      <HintPath>..\External Libs\FlexCell.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data, Version=6.9.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
