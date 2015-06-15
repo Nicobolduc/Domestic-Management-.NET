@@ -93,7 +93,7 @@
                 End If
 
             Catch ex As Exception
-                gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             End Try
 
         End Sub
@@ -224,6 +224,7 @@
 
             End If
 
+            strSQL = strSQL & " GROUP BY Gro_ID " & vbCrLf
             strSQL = strSQL & " HAVING TotalCost IS NOT NULL " & vbCrLf
             strSQL = strSQL & " ORDER BY Grocery.Gro_Name " & vbCrLf
 

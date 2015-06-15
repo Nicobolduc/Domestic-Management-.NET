@@ -41,6 +41,18 @@ Public Class SyncfusionGridController
         End Get
     End Property
 
+    Public ReadOnly Property GetSelectedRow As Integer
+        Get
+            Return grdSync.Selections.GetSelectedRows(True, True).Item(0).Top
+        End Get
+    End Property
+
+    Public ReadOnly Property GetSelectedCol As Integer
+        Get
+            Return grdSync.Selections.GetSelectedCols(True, True).Item(0).Left
+        End Get
+    End Property
+
 #End Region
 
 
@@ -75,7 +87,7 @@ Public Class SyncfusionGridController
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             grdSync.EndInit()
         End Try
@@ -93,7 +105,7 @@ Public Class SyncfusionGridController
 
         Try
             'Retrieve grid data from database
-            sqlCmd = New MySqlCommand(vstrSQL, gcAppControler.MySQLConnection)
+            sqlCmd = New MySqlCommand(vstrSQL, gcAppController.MySQLConnection)
 
             mySQLReader = sqlCmd.ExecuteReader
 
@@ -128,7 +140,7 @@ Public Class SyncfusionGridController
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Close()
@@ -155,7 +167,7 @@ Public Class SyncfusionGridController
             End Select
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnIsEmpty
@@ -168,7 +180,7 @@ Public Class SyncfusionGridController
         Dim individualColStyle As GridStyleInfo
 
         Try
-            strGridCaption = gcAppControler.str_GetCaption(CInt(grdSync.Tag), gcAppControler.cUser.GetLanguage)
+            strGridCaption = gcAppController.str_GetCaption(CInt(grdSync.Tag), gcAppController.cUser.GetLanguage)
 
             lstColumns = Split(strGridCaption.Insert(0, "|"), "|")
 
@@ -214,7 +226,7 @@ Public Class SyncfusionGridController
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -225,7 +237,7 @@ Public Class SyncfusionGridController
     Private Sub btnAddRow_Click(sender As Object, e As EventArgs) Handles btnAddRow.Click
 
         grdSync.RowCount += 1
-        DirectCast(grdSync.FindParentForm, frmProduct).myFormControler.ChangeMade = True 'TODO
+        DirectCast(grdSync.FindParentForm, frmProduct).formController.ChangeMade = True 'TODO
     End Sub
 End Class
 

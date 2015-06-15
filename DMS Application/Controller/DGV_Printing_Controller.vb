@@ -3,7 +3,7 @@
 
     'Private class members
     Private mPrintPrevDialog As PrintPreviewDialog
-    Private mgrdToPrint As DataGridView
+    Private mgrdToPrint As GridControl
     Private mDocumentTitleFont As Font
     Private mColumnsTitleFont As Font
     Private mDetailsFont As Font
@@ -19,8 +19,8 @@
 
 #Region "Properties"
 
-    Public WriteOnly Property SetGridToPrint(Optional ByVal vcolsToPrintArray() As Short = Nothing) As DataGridView
-        Set(ByVal value As DataGridView)
+    Public WriteOnly Property SetGridToPrint(Optional ByVal vcolsToPrintArray() As Short = Nothing) As GridControl
+        Set(ByVal value As GridControl)
             mlstColsToPrint = vcolsToPrintArray
             mgrdToPrint = value
         End Set
@@ -53,7 +53,7 @@
             mPrintPrevDialog.ShowDialog()
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mPrintPrevDialog.Dispose()
         End Try
@@ -68,29 +68,29 @@
         Dim blnDrawHeaderColText As Boolean = True
 
         Try
-            For intRowIndex = 0 To mgrdToPrint.Rows.Count - 1
+            For intRowIndex = 1 To mgrdToPrint.RowCount
 
-                If mgrdToPrint.Rows(intRowIndex).Cells(mintGrid_Selection_col).Value.ToString = True.ToString Or blnDrawHeaderColText Then
+                If mgrdToPrint(intRowIndex, mintGrid_Selection_col).CellValue.ToString = True.ToString Or blnDrawHeaderColText Then
 
-                    For intColIndex = 0 To mgrdToPrint.Columns.Count - 1
+                    For intColIndex = 1 To mgrdToPrint.ColCount
 
-                        If mgrdToPrint.Columns(intColIndex).Visible Then
+                        If Not mgrdToPrint.GetColHidden(intColIndex) Then
 
                             If blnDrawHeaderColText Then
 
-                                veventArgs.Graphics.DrawString(mgrdToPrint.Columns(intColIndex).HeaderText, mColumnsTitleFont, Brushes.Black, intXPos, intYPos)
+                                veventArgs.Graphics.DrawString(mgrdToPrint(intRowIndex, intColIndex).Text, mColumnsTitleFont, Brushes.Black, intXPos, intYPos)
 
-                            ElseIf Not IsDBNull(mgrdToPrint.Rows(intRowIndex).Cells(intColIndex).Value) Then
+                            ElseIf Not IsDBNull(mgrdToPrint(intRowIndex, intColIndex).CellValue) Then
 
-                                Select Case mgrdToPrint.Rows(intRowIndex).Cells(intColIndex).ValueType
+                                Select Case mgrdToPrint(intRowIndex, intColIndex).CellValueType
                                     Case GetType(Double)
-                                        veventArgs.Graphics.DrawString(Format(Val(mgrdToPrint.Rows(intRowIndex).Cells(intColIndex).Value), gstrCurrencyFormat), mDetailsFont, Brushes.Black, intXPos, intYPos)
+                                        veventArgs.Graphics.DrawString(Format(Val(mgrdToPrint(intRowIndex, intColIndex).CellValue), mConstants.DataFormat.CURRENCY), mDetailsFont, Brushes.Black, intXPos, intYPos)
 
                                     Case GetType(Boolean)
-                                        veventArgs.Graphics.DrawString(Integer.Parse(Val(mgrdToPrint.Rows(intRowIndex).Cells(intColIndex).Value).ToString).ToString, mDetailsFont, Brushes.Black, intXPos, intYPos)
+                                        veventArgs.Graphics.DrawString(Integer.Parse(Val(mgrdToPrint(intRowIndex, intColIndex).CellValue).ToString).ToString, mDetailsFont, Brushes.Black, intXPos, intYPos)
 
                                     Case Else
-                                        veventArgs.Graphics.DrawString(mgrdToPrint.Rows(intRowIndex).Cells(intColIndex).Value.ToString, mDetailsFont, Brushes.Black, intXPos, intYPos)
+                                        veventArgs.Graphics.DrawString(mgrdToPrint(intRowIndex, intColIndex).CellValue.ToString, mDetailsFont, Brushes.Black, intXPos, intYPos)
 
                                 End Select
 
@@ -100,7 +100,7 @@
 
                             End If
 
-                            intXPos += mgrdToPrint.Columns(intColIndex).Width + 10 'DataGridViewCell.MeasureTextWidth(e.Graphics, grdToPrint.Rows(intRowIndex).Cells(intColIndex).Value.ToString, detailsFont, 400, TextFormatFlags.Default) '200
+                            intXPos += mgrdToPrint.ColWidths(intColIndex) + 10 'DataGridViewCell.MeasureTextWidth(e.Graphics, grdToPrint.Rows(intRowIndex).Cells(intColIndex).Value.ToString, detailsFont, 400, TextFormatFlags.Default) '200
 
                         End If
 
@@ -115,7 +115,7 @@
             Next
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -128,29 +128,29 @@
         Dim blnDrawHeaderColText As Boolean = True
         'TODO print first line
         Try
-            For intRowIndex = 0 To mgrdToPrint.Rows.Count - 1
+            For intRowIndex = 1 To mgrdToPrint.RowCount
 
-                If mgrdToPrint.Rows(intRowIndex).Cells(mintGrid_Selection_col).Value.ToString = True.ToString Or blnDrawHeaderColText Then
+                If mgrdToPrint(intRowIndex, mintGrid_Selection_col).CellValue.ToString = True.ToString Or blnDrawHeaderColText Then
 
                     For Each intColIndex In mlstColsToPrint
 
-                        If mgrdToPrint.Columns(intColIndex).Visible Then
+                        If Not mgrdToPrint.GetColHidden(intColIndex) Then
 
                             If blnDrawHeaderColText Then
 
-                                veventArgs.Graphics.DrawString(mgrdToPrint.Columns(intColIndex).HeaderText, mColumnsTitleFont, Brushes.Black, intXPos, intYPos)
+                                veventArgs.Graphics.DrawString(mgrdToPrint(intRowIndex, intColIndex).Text, mColumnsTitleFont, Brushes.Black, intXPos, intYPos)
 
-                            ElseIf Not IsDBNull(mgrdToPrint.Rows(intRowIndex).Cells(intColIndex).Value) Then
+                            ElseIf Not IsDBNull(mgrdToPrint(intRowIndex, intColIndex).CellValue) Then
 
-                                Select Case mgrdToPrint.Rows(intRowIndex).Cells(intColIndex).ValueType
+                                Select Case mgrdToPrint(intRowIndex, intColIndex).CellValueType
                                     Case GetType(Double)
-                                        veventArgs.Graphics.DrawString(Format(Val(mgrdToPrint.Rows(intRowIndex).Cells(intColIndex).Value), gstrCurrencyFormat), mDetailsFont, Brushes.Black, intXPos, intYPos)
+                                        veventArgs.Graphics.DrawString(Format(Val(mgrdToPrint(intRowIndex, intColIndex).CellValue), mConstants.DataFormat.CURRENCY), mDetailsFont, Brushes.Black, intXPos, intYPos)
 
                                     Case GetType(Boolean)
-                                        veventArgs.Graphics.DrawString(Integer.Parse(Val(mgrdToPrint.Rows(intRowIndex).Cells(intColIndex).Value).ToString).ToString, mDetailsFont, Brushes.Black, intXPos, intYPos)
+                                        veventArgs.Graphics.DrawString(Integer.Parse(Val(mgrdToPrint(intRowIndex, intColIndex).CellValue).ToString).ToString, mDetailsFont, Brushes.Black, intXPos, intYPos)
 
                                     Case Else
-                                        veventArgs.Graphics.DrawString(mgrdToPrint.Rows(intRowIndex).Cells(intColIndex).Value.ToString, mDetailsFont, Brushes.Black, intXPos, intYPos)
+                                        veventArgs.Graphics.DrawString(mgrdToPrint(intRowIndex, intColIndex).CellValue.ToString, mDetailsFont, Brushes.Black, intXPos, intYPos)
 
                                 End Select
 
@@ -160,7 +160,7 @@
 
                             End If
 
-                            intXPos += mgrdToPrint.Columns(intColIndex).Width + 20
+                            intXPos += mgrdToPrint.ColWidths(intColIndex) + 20
 
                         End If
 
@@ -180,7 +180,7 @@
             Next
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -195,7 +195,7 @@
         mColumnsTitleFont = New Font(New FontFamily("Arial"), 15, FontStyle.Bold Or FontStyle.Underline, GraphicsUnit.Pixel) 'And FontStyle.Underline
         mDetailsFont = New Font(New FontFamily("Arial"), 13, FontStyle.Regular, GraphicsUnit.Pixel)
 
-        mintGrid_Selection_col = mgrdToPrint.Columns.Count - 1
+        mintGrid_Selection_col = mgrdToPrint.ColCount
     End Sub
 
     Private Sub clsPrinting_PrintPage(ByVal sender As Object, ByVal e As System.Drawing.Printing.PrintPageEventArgs) Handles Me.PrintPage

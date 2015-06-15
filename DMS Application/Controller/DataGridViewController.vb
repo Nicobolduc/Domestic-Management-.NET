@@ -23,6 +23,7 @@ Public Class DataGridViewController
         DELETE_ACTION = mConstants.Form_Modes.DELETE_MODE
     End Enum
 
+
 #Region "Properties"
 
     Public ReadOnly Property getSelectionColName As String
@@ -63,7 +64,8 @@ Public Class DataGridViewController
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -87,11 +89,11 @@ Public Class DataGridViewController
             grdDGV.Rows.Clear()
             grdDGV.Columns.Clear()
 
-            strGridCaption = gcAppControler.str_GetCaption(CInt(grdDGV.Tag), gcAppControler.cUser.GetLanguage)
+            strGridCaption = gcAppController.str_GetCaption(CInt(grdDGV.Tag), gcAppController.cUser.GetLanguage)
 
             lstColumns = Split(strGridCaption, "|")
 
-            sqlCmd = New MySqlCommand(vstrSQL, gcAppControler.MySQLConnection)
+            sqlCmd = New MySqlCommand(vstrSQL, gcAppController.MySQLConnection)
 
             mySQLReader = sqlCmd.ExecuteReader
 
@@ -152,7 +154,7 @@ Public Class DataGridViewController
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Close()
@@ -179,7 +181,7 @@ Public Class DataGridViewController
             grdDGV.Rows(grdDGV.Rows.Count - 1).Cells(mintDefaultActionCol).Value = GridRowActions.INSERT_ACTION
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -210,7 +212,7 @@ Public Class DataGridViewController
             End If
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -228,7 +230,7 @@ Public Class DataGridViewController
             End Select
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnIsEmpty

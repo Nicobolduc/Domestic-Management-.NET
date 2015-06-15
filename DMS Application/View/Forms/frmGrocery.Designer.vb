@@ -23,17 +23,18 @@ Partial Class frmGrocery
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmGrocery))
-        Me.grdGrocery = New System.Windows.Forms.DataGridView()
+        Dim GridBaseStyle1 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
+        Dim GridBaseStyle2 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
+        Dim GridBaseStyle3 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
+        Dim GridBaseStyle4 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
         Me.cboGroceryStore = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.btnRefresh = New System.Windows.Forms.Button()
         Me.btnPrint = New System.Windows.Forms.Button()
         Me.btnSelectAll = New System.Windows.Forms.Button()
         Me.btnUnselectAll = New System.Windows.Forms.Button()
-        Me.PageSetupDialog1 = New System.Windows.Forms.PageSetupDialog()
+        Me.PageSetupDialog = New System.Windows.Forms.PageSetupDialog()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.txtSubTotal = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -43,39 +44,11 @@ Partial Class frmGrocery
         Me.chkDefaultCy = New System.Windows.Forms.CheckBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.txtGroceryName = New System.Windows.Forms.TextBox()
-        Me.myFormControler = New DMS_Application.ctlFormController()
-        CType(Me.grdGrocery, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.grdGrocery = New Syncfusion.Windows.Forms.Grid.GridControl()
+        Me.formController = New DMS_Application.ctlFormController()
         Me.GroupBox1.SuspendLayout()
+        CType(Me.grdGrocery, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        '
-        'grdGrocery
-        '
-        Me.grdGrocery.AllowUserToAddRows = False
-        Me.grdGrocery.AllowUserToOrderColumns = True
-        Me.grdGrocery.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grdGrocery.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised
-        Me.grdGrocery.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.grdGrocery.DefaultCellStyle = DataGridViewCellStyle1
-        Me.grdGrocery.EnableHeadersVisualStyles = False
-        Me.grdGrocery.Location = New System.Drawing.Point(5, 58)
-        Me.grdGrocery.MultiSelect = False
-        Me.grdGrocery.Name = "grdGrocery"
-        Me.grdGrocery.RowHeadersWidth = 10
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.White
-        Me.grdGrocery.RowsDefaultCellStyle = DataGridViewCellStyle2
-        Me.grdGrocery.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.grdGrocery.Size = New System.Drawing.Size(706, 466)
-        Me.grdGrocery.TabIndex = 1
-        Me.grdGrocery.Tag = "12"
         '
         'cboGroceryStore
         '
@@ -111,7 +84,7 @@ Partial Class frmGrocery
         Me.btnPrint.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnPrint.BackgroundImage = CType(resources.GetObject("btnPrint.BackgroundImage"), System.Drawing.Image)
         Me.btnPrint.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.btnPrint.Location = New System.Drawing.Point(717, 484)
+        Me.btnPrint.Location = New System.Drawing.Point(717, 483)
         Me.btnPrint.Name = "btnPrint"
         Me.btnPrint.Size = New System.Drawing.Size(40, 40)
         Me.btnPrint.TabIndex = 4
@@ -218,24 +191,59 @@ Partial Class frmGrocery
         Me.txtGroceryName.Size = New System.Drawing.Size(253, 20)
         Me.txtGroceryName.TabIndex = 0
         '
-        'myFormControler
+        'grdGrocery
         '
-        Me.myFormControler.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.myFormControler.FormIsLoading = False
-        Me.myFormControler.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
-        Me.myFormControler.Item_ID = 0
-        Me.myFormControler.Location = New System.Drawing.Point(0, 570)
-        Me.myFormControler.Name = "myFormControler"
-        Me.myFormControler.ShowButtonQuitOnly = False
-        Me.myFormControler.Size = New System.Drawing.Size(762, 33)
-        Me.myFormControler.TabIndex = 5
+        GridBaseStyle1.Name = "Header"
+        GridBaseStyle1.StyleInfo.Borders.Bottom = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
+        GridBaseStyle1.StyleInfo.Borders.Left = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
+        GridBaseStyle1.StyleInfo.Borders.Right = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
+        GridBaseStyle1.StyleInfo.Borders.Top = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
+        GridBaseStyle1.StyleInfo.CellType = "Header"
+        GridBaseStyle1.StyleInfo.Font.Bold = True
+        GridBaseStyle1.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Vertical, System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(184, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(234, Byte), Integer), CType(CType(216, Byte), Integer)))
+        GridBaseStyle1.StyleInfo.VerticalAlignment = Syncfusion.Windows.Forms.Grid.GridVerticalAlignment.Middle
+        GridBaseStyle2.Name = "Standard"
+        GridBaseStyle2.StyleInfo.Font.Facename = "Tahoma"
+        GridBaseStyle2.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(System.Drawing.SystemColors.Window)
+        GridBaseStyle3.Name = "Column Header"
+        GridBaseStyle3.StyleInfo.BaseStyle = "Header"
+        GridBaseStyle3.StyleInfo.HorizontalAlignment = Syncfusion.Windows.Forms.Grid.GridHorizontalAlignment.Center
+        GridBaseStyle4.Name = "Row Header"
+        GridBaseStyle4.StyleInfo.BaseStyle = "Header"
+        GridBaseStyle4.StyleInfo.HorizontalAlignment = Syncfusion.Windows.Forms.Grid.GridHorizontalAlignment.Left
+        GridBaseStyle4.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(184, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(234, Byte), Integer), CType(CType(216, Byte), Integer)))
+        Me.grdGrocery.BaseStylesMap.AddRange(New Syncfusion.Windows.Forms.Grid.GridBaseStyle() {GridBaseStyle1, GridBaseStyle2, GridBaseStyle3, GridBaseStyle4})
+        Me.grdGrocery.ColWidthEntries.AddRange(New Syncfusion.Windows.Forms.Grid.GridColWidth() {New Syncfusion.Windows.Forms.Grid.GridColWidth(0, 35)})
+        Me.grdGrocery.Location = New System.Drawing.Point(5, 58)
+        Me.grdGrocery.Name = "grdGrocery"
+        Me.grdGrocery.RowHeightEntries.AddRange(New Syncfusion.Windows.Forms.Grid.GridRowHeight() {New Syncfusion.Windows.Forms.Grid.GridRowHeight(0, 25)})
+        Me.grdGrocery.SerializeCellsBehavior = Syncfusion.Windows.Forms.Grid.GridSerializeCellsBehavior.SerializeAsRangeStylesIntoCode
+        Me.grdGrocery.Size = New System.Drawing.Size(706, 465)
+        Me.grdGrocery.SmartSizeBox = False
+        Me.grdGrocery.TabIndex = 22
+        Me.grdGrocery.Tag = "12"
+        Me.grdGrocery.Text = "GridControl1"
+        Me.grdGrocery.UseRightToLeftCompatibleTextBox = True
+        '
+        'formController
+        '
+        Me.formController.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.formController.FormIsLoading = False
+        Me.formController.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
+        Me.formController.Item_ID = 0
+        Me.formController.Location = New System.Drawing.Point(0, 570)
+        Me.formController.Name = "formController"
+        Me.formController.ShowButtonQuitOnly = False
+        Me.formController.Size = New System.Drawing.Size(762, 33)
+        Me.formController.TabIndex = 5
         '
         'frmGrocery
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(761, 602)
+        Me.Controls.Add(Me.grdGrocery)
         Me.Controls.Add(Me.txtGroceryName)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.GroupBox1)
@@ -247,8 +255,7 @@ Partial Class frmGrocery
         Me.Controls.Add(Me.btnSelectAll)
         Me.Controls.Add(Me.btnPrint)
         Me.Controls.Add(Me.btnRefresh)
-        Me.Controls.Add(Me.grdGrocery)
-        Me.Controls.Add(Me.myFormControler)
+        Me.Controls.Add(Me.formController)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
@@ -256,20 +263,19 @@ Partial Class frmGrocery
         Me.Name = "frmGrocery"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Épicerie"
-        CType(Me.grdGrocery, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox1.ResumeLayout(False)
+        CType(Me.grdGrocery, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents grdGrocery As System.Windows.Forms.DataGridView
     Friend WithEvents cboGroceryStore As System.Windows.Forms.ComboBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents btnRefresh As System.Windows.Forms.Button
     Friend WithEvents btnPrint As System.Windows.Forms.Button
     Friend WithEvents btnSelectAll As System.Windows.Forms.Button
     Friend WithEvents btnUnselectAll As System.Windows.Forms.Button
-    Friend WithEvents PageSetupDialog1 As System.Windows.Forms.PageSetupDialog
+    Friend WithEvents PageSetupDialog As System.Windows.Forms.PageSetupDialog
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents txtSubTotal As System.Windows.Forms.TextBox
     Friend WithEvents Label3 As System.Windows.Forms.Label
@@ -278,6 +284,7 @@ Partial Class frmGrocery
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents txtGroceryName As System.Windows.Forms.TextBox
-    Public WithEvents myFormControler As DMS_Application.ctlFormController
+    Public WithEvents formController As DMS_Application.ctlFormController
     Friend WithEvents chkDefaultCy As System.Windows.Forms.CheckBox
+    Friend WithEvents grdGrocery As Syncfusion.Windows.Forms.Grid.GridControl
 End Class

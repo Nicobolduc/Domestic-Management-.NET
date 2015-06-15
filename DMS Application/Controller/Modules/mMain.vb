@@ -1,16 +1,11 @@
 ﻿Module mMain
 
 
-    Public gcAppControler As AppController
-
-    Public gstrCurrencyFormat As String = "##,0.00$"
-
-    Public gintGrid_Action_col As Integer = 0
-
+    Public gcAppController As AppController
 
     Sub main()
 
-        gcAppControler = New AppController
+        gcAppController = AppController.GetAppController
 
     End Sub
 

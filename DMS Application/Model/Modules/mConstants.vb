@@ -40,4 +40,9 @@ Public Module mConstants
         PHARMACY = 4
     End Enum
 
+    Structure DataFormat
+        Const CURRENCY = "##,0.00$"
+    End Structure
+
+
 End Module

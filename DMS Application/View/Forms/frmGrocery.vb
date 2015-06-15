@@ -1,23 +1,23 @@
 ﻿Public Class frmGrocery
 
     'Private members
-    Private Const mintGrdGrocery_Pro_ID_col As Short = 0
-    Private Const mintGrdGrocery_Pro_Name_col As Short = 1
-    Private Const mintGrdGrocery_ProT_ID_col As Short = 2
-    Private Const mintGrdGrocery_ProT_Name_col As Short = 3
-    Private Const mintGrdGrocery_ProC_ID_col As Short = 4
-    Private Const mintGrdGrocery_ProC_Name_col As Short = 5
-    Private Const mintGrdGrocery_Pro_Taxable_col As Short = 6
-    Private Const mintGrdGrocery_ProB_ID_col As Short = 7
-    Private Const mintGrdGrocery_ProB_Name_col As Short = 8
-    Private Const mintGrdGrocery_ProP_Price_col As Short = 9
-    Private Const mintGrdGrocery_Sel_col As Short = 10
+    Private Const mintGrdGrocery_Pro_ID_col As Short = 1
+    Private Const mintGrdGrocery_Pro_Name_col As Short = 2
+    Private Const mintGrdGrocery_ProT_ID_col As Short = 3
+    Private Const mintGrdGrocery_ProT_Name_col As Short = 4
+    Private Const mintGrdGrocery_ProC_ID_col As Short = 5
+    Private Const mintGrdGrocery_ProC_Name_col As Short = 6
+    Private Const mintGrdGrocery_Pro_Taxable_col As Short = 7
+    Private Const mintGrdGrocery_ProB_ID_col As Short = 8
+    Private Const mintGrdGrocery_ProB_Name_col As Short = 9
+    Private Const mintGrdGrocery_ProP_Price_col As Short = 10
+    Private Const mintGrdGrocery_Sel_col As Short = 11
 
     Private mdblTaxe_TPS As Double
     Private mdblTaxe_TVQ As Double
 
     'Private class members
-    Private WithEvents mcGrdGrocery As DataGridViewController
+    Private WithEvents mcGrdGrocery As SyncfusionGridController
     Private mcSQL As MySQLController
     Private mcPrinter As DGV_Printing_Controller
 
@@ -33,16 +33,17 @@
             mdblTaxe_TPS = Val(MySQLController.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_Name = 'TPS'"))
             mdblTaxe_TVQ = Val(MySQLController.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_Name = 'TVQ'"))
 
-            strSQL = strSQL & " SELECT  Grocery.Gro_Name " & vbCrLf
-
+            strSQL = strSQL & " SELECT  Grocery.Gro_Name, " & vbCrLf
+            strSQL = strSQL & "         Gro_Default_Cy_ID " & vbCrLf
             strSQL = strSQL & " FROM Grocery " & vbCrLf
-            strSQL = strSQL & " WHERE Gro_ID = " & myFormControler.Item_ID & vbCrLf
+            strSQL = strSQL & " WHERE Gro_ID = " & formController.Item_ID & vbCrLf
 
             mySQLReader = MySQLController.ADOSelect(strSQL)
 
             If mySQLReader.Read() Then
 
                 txtGroceryName.Text = mySQLReader.Item("Gro_Name").ToString
+                cboGroceryStore.SelectedValue = mySQLReader.Item("Gro_Default_Cy_ID").ToString
             Else
                 'Do nothing
             End If
@@ -51,7 +52,7 @@
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Close()
@@ -86,7 +87,7 @@
             strSQL = strSQL & "     INNER JOIN ProductBrand ##ON ProductBrand.ProB_ID = 1 " & vbCrLf
             strSQL = strSQL & "     INNER JOIN ProductPrice ON ProductPrice.Pro_ID = Product.Pro_ID " & vbCrLf
             strSQL = strSQL & "                            AND ProductPrice.ProB_ID = ProductBrand.ProB_ID " & vbCrLf
-            strSQL = strSQL & "                            AND ProductPrice.Cy_ID = " & cboGroceryStore.SelectedValue.ToString & vbCrLf
+            strSQL = strSQL & "                            AND ProductPrice.Cy_ID_Seller = " & cboGroceryStore.SelectedValue.ToString & vbCrLf
             strSQL = strSQL & " ORDER BY Product.Pro_Name, ProductType.ProT_Name, ProductCategory.ProC_Name " & vbCrLf
 
             blnValidReturn = mcGrdGrocery.bln_FillData(strSQL)
@@ -96,17 +97,19 @@
                 strSQL = String.Empty
                 strSQL = strSQL & " SELECT Gro_Pro.Pro_ID " & vbCrLf
                 strSQL = strSQL & " FROM Gro_Pro " & vbCrLf
-                strSQL = strSQL & " WHERE Gro_Pro.Gro_ID = " & myFormControler.Item_ID & vbCrLf
+                strSQL = strSQL & " WHERE Gro_Pro.Gro_ID = " & formController.Item_ID & vbCrLf
 
                 mySQLReader = MySQLController.ADOSelect(strSQL)
 
-                While mySQLReader.Read And grdGrocery.Rows.Count > 0
+                While mySQLReader.Read And grdGrocery.RowCount > 0
 
-                    For intRow = 0 To grdGrocery.Rows.Count - 1
+                    For intRow = 1 To grdGrocery.RowCount
 
-                        If mySQLReader.Item("Pro_ID").ToString = grdGrocery.Item(mintGrdGrocery_Pro_ID_col, intRow).Value.ToString Then
+                        If mySQLReader.Item("Pro_ID").ToString = grdGrocery(intRow, mintGrdGrocery_Pro_ID_col).CellValue.ToString Then
 
-                            grdGrocery.Item(mintGrdGrocery_Sel_col, intRow).Value = False
+                            grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue = True.ToString
+                        Else
+                            grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue = False.ToString
                         End If
                     Next
 
@@ -118,7 +121,7 @@
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Close()
@@ -145,7 +148,7 @@
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -154,14 +157,14 @@
     Private Sub CheckUncheckAll(ByVal vblnCheckAll As Boolean)
 
         Try
-            For Each row As DataGridViewRow In grdGrocery.Rows
-                row.Cells(mintGrdGrocery_Sel_col).Value = vblnCheckAll
+            For intRow As Integer = 1 To grdGrocery.RowCount
+                grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue = vblnCheckAll
             Next
 
             CalculateTotals()
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -173,30 +176,30 @@
         Dim dblMontantAvecTVQ As Double
 
         Try
-            For Each row As DataGridViewRow In grdGrocery.Rows
+            For intRow As Integer = 1 To grdGrocery.RowCount
 
-                If row.Cells(mintGrdGrocery_Sel_col).EditedFormattedValue.ToString = "True" And row.Cells(mintGrdGrocery_Pro_Taxable_col).Value.ToString = "1" Then
+                If grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue.ToString = "True" And grdGrocery(intRow, mintGrdGrocery_Pro_Taxable_col).CellValue.ToString = "1" Then
 
-                    dblSubtotalTaxable = dblSubtotalTaxable + Val(row.Cells(mintGrdGrocery_ProP_Price_col).Value)
+                    dblSubtotalTaxable = dblSubtotalTaxable + Val(grdGrocery(intRow, mintGrdGrocery_ProP_Price_col).CellValue)
 
-                ElseIf row.Cells(mintGrdGrocery_Sel_col).EditedFormattedValue.ToString = "True" And row.Cells(mintGrdGrocery_Pro_Taxable_col).Value.ToString = "0" Then
+                ElseIf grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue.ToString = "True" And grdGrocery(intRow, mintGrdGrocery_Pro_Taxable_col).CellValue.ToString = "0" Then
 
-                    dblSubtotalNotTaxable = dblSubtotalNotTaxable + Val(row.Cells(mintGrdGrocery_ProP_Price_col).Value)
+                    dblSubtotalNotTaxable = dblSubtotalNotTaxable + Val(grdGrocery(intRow, mintGrdGrocery_ProP_Price_col).CellValue)
 
                 End If
             Next
 
-            txtSubTotal.Text = Format(dblSubtotalNotTaxable + dblSubtotalTaxable, gstrCurrencyFormat)
+            txtSubTotal.Text = Format(dblSubtotalNotTaxable + dblSubtotalTaxable, mConstants.DataFormat.CURRENCY)
 
             dblMontantAvecTPS = dblSubtotalTaxable * mdblTaxe_TPS
             dblMontantAvecTVQ = dblSubtotalTaxable * mdblTaxe_TVQ
 
-            txtTotal.Text = Format(dblMontantAvecTPS + dblMontantAvecTVQ + dblSubtotalNotTaxable + dblSubtotalTaxable, gstrCurrencyFormat)
+            txtTotal.Text = Format(dblMontantAvecTPS + dblMontantAvecTVQ + dblSubtotalNotTaxable + dblSubtotalTaxable, mConstants.DataFormat.CURRENCY)
 
-            myFormControler.ChangeMade = True
+            formController.ChangeMade = True
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -209,7 +212,7 @@
 
             mcSQL.bln_BeginTransaction()
 
-            Select Case myFormControler.FormMode
+            Select Case formController.FormMode
                 Case mConstants.Form_Modes.INSERT_MODE
                     blnValidReturn = blnGrocery_Insert()
 
@@ -223,7 +226,7 @@
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mcSQL.bln_EndTransaction(blnValidReturn)
             mcSQL = Nothing
@@ -239,15 +242,15 @@
         Try
             Select Case False
                 Case mcSQL.bln_AddField("Gro_Name", txtGroceryName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_ADOInsert("Grocery", myFormControler.Item_ID)
-                Case myFormControler.Item_ID > 0
+                Case mcSQL.bln_ADOInsert("Grocery", formController.Item_ID)
+                Case formController.Item_ID > 0
                 Case Else
                     blnValidReturn = blnGro_Pro_Insert()
             End Select
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -259,15 +262,15 @@
         Try
             Select Case False
                 Case mcSQL.bln_AddField("Gro_Name", txtGroceryName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_ADOUpdate("Grocery", "Gro_ID = " & myFormControler.Item_ID)
-                Case myFormControler.Item_ID > 0
+                Case mcSQL.bln_ADOUpdate("Grocery", "Gro_ID = " & formController.Item_ID)
+                Case formController.Item_ID > 0
                 Case Else
                     blnValidReturn = blnGro_Pro_Insert()
             End Select
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -279,14 +282,14 @@
         Try
             Select Case False
                 Case blnGro_Pro_Delete()
-                Case mcSQL.bln_ADODelete("Grocery", "Gro_ID = " & myFormControler.Item_ID)
+                Case mcSQL.bln_ADODelete("Grocery", "Gro_ID = " & formController.Item_ID)
                 Case Else
                     blnValidReturn = True
             End Select
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -297,14 +300,14 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_ADODelete("Gro_Pro", "Gro_ID = " & myFormControler.Item_ID)
+                Case mcSQL.bln_ADODelete("Gro_Pro", "Gro_ID = " & formController.Item_ID)
                 Case Else
                     blnValidReturn = True
             End Select
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -318,14 +321,14 @@
 
             If blnValidReturn Then
 
-                For cpt As Integer = 0 To grdGrocery.Rows.Count - 1
+                For cpt As Integer = 1 To grdGrocery.RowCount
 
                     blnValidReturn = False
                     Select Case False
-                        Case grdGrocery.Rows(cpt).Cells(mintGrdGrocery_Sel_col).Value.ToString = "True"
+                        Case grdGrocery(cpt, mintGrdGrocery_Sel_col).CellValue.ToString = "True"
                             blnValidReturn = True
-                        Case mcSQL.bln_AddField("Gro_ID", myFormControler.Item_ID.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
-                        Case mcSQL.bln_AddField("Pro_ID", grdGrocery.Rows(cpt).Cells(mintGrdGrocery_Pro_ID_col).Value.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
+                        Case mcSQL.bln_AddField("Gro_ID", formController.Item_ID.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
+                        Case mcSQL.bln_AddField("Pro_ID", grdGrocery(cpt, mintGrdGrocery_Pro_ID_col).CellValue.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
                         Case mcSQL.bln_ADOInsert("Gro_Pro")
                         Case Else
                             blnValidReturn = True
@@ -338,7 +341,7 @@
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -349,10 +352,10 @@
 
 #Region "Private Events"
 
-    Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
+    Private Sub formController_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
-        mcGrdGrocery = New DataGridViewController
+        mcGrdGrocery = New SyncfusionGridController
 
         Select Case False
             Case mcGrdGrocery.bln_Init(grdGrocery)
@@ -374,32 +377,28 @@
 
     Private Sub mcGrdGrocery_SetDisplay() Handles mcGrdGrocery.SetDisplay
 
-        grdGrocery.Columns(mintGrdGrocery_Pro_Taxable_col).ValueType = GetType(Boolean)
-        grdGrocery.Columns(mintGrdGrocery_ProP_Price_col).ValueType = GetType(Double)
+        grdGrocery.ColStyles(mintGrdGrocery_Sel_col).CellType = "CheckBox"
+        grdGrocery.ColStyles(mintGrdGrocery_Sel_col).CheckBoxOptions = New GridCheckBoxCellInfo(True.ToString(), False.ToString(), "", False)
+        grdGrocery.ColStyles(mintGrdGrocery_Sel_col).CellValueType = GetType(Boolean)
+        grdGrocery.ColStyles(mintGrdGrocery_ProP_Price_col).CellValueType = GetType(Double)
 
-        grdGrocery.Columns(mintGrdGrocery_ProP_Price_col).DefaultCellStyle.Format = gstrCurrencyFormat
+        grdGrocery.ColStyles(mintGrdGrocery_ProP_Price_col).Format = mConstants.DataFormat.CURRENCY
 
-        'grdGrocery.Columns.Add(New DataGridViewCheckBoxColumn())
-        'grdGrocery.Columns(mintGrdGrocery_Sel_col).SortMode = DataGridViewColumnSortMode.Automatic
-        'grdGrocery.Columns(mintGrdGrocery_Sel_col).HeaderText = "Sél."
-        'grdGrocery.Columns(mintGrdGrocery_Sel_col).ReadOnly = False
-        'grdGrocery.Columns(mintGrdGrocery_Sel_col).DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-
-        For Each column As DataGridViewColumn In grdGrocery.Columns
-            If column.Index <> mintGrdGrocery_Sel_col Then
-                column.ReadOnly = True
+        For intCol As Integer = 1 To grdGrocery.ColCount
+            If intCol <> mintGrdGrocery_Sel_col Then
+                grdGrocery.ColStyles(intCol).ReadOnly = True
             End If
         Next
 
         CheckUncheckAll(True)
 
-        grdGrocery.Columns(mintGrdGrocery_Pro_Name_col).Width = 214
-        grdGrocery.Columns(mintGrdGrocery_ProT_Name_col).Width = 97
-        grdGrocery.Columns(mintGrdGrocery_ProC_Name_col).Width = 100
-        grdGrocery.Columns(mintGrdGrocery_Pro_Taxable_col).Width = 59
-        grdGrocery.Columns(mintGrdGrocery_ProB_Name_col).Width = 109
-        grdGrocery.Columns(mintGrdGrocery_ProP_Price_col).Width = 63
-        grdGrocery.Columns(mintGrdGrocery_Sel_col).Width = 37
+        grdGrocery.ColWidths(mintGrdGrocery_Pro_Name_col) = 214
+        grdGrocery.ColWidths(mintGrdGrocery_ProT_Name_col) = 97
+        grdGrocery.ColWidths(mintGrdGrocery_ProC_Name_col) = 100
+        grdGrocery.ColWidths(mintGrdGrocery_Pro_Taxable_col) = 59
+        grdGrocery.ColWidths(mintGrdGrocery_ProB_Name_col) = 109
+        grdGrocery.ColWidths(mintGrdGrocery_ProP_Price_col) = 63
+        grdGrocery.ColWidths(mintGrdGrocery_Sel_col) = 37
     End Sub
 
     Private Sub btnSelectAll_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSelectAll.Click
@@ -418,39 +417,42 @@
         mcPrinter.ShowPrintPreviewDialog()
     End Sub
 
-    Private Sub grdGrocery_CellMouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellMouseEventArgs) Handles grdGrocery.CellMouseUp
-        If e.ColumnIndex = mintGrdGrocery_Sel_col And e.RowIndex <> -1 Then
-            grdGrocery.EndEdit()
-        End If
-    End Sub
-
-    Private Sub grdGrocery_CellValueChanged(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellEventArgs) Handles grdGrocery.CellValueChanged
-        If e.ColumnIndex = mintGrdGrocery_Sel_col And e.RowIndex <> -1 And Not myFormControler.FormIsLoading Then
-            CalculateTotals()
-        End If
-    End Sub
-
-    Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles myFormControler.SaveData
+    Private Sub formController_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles formController.SaveData
         eventArgs.SaveSuccessful = blnSaveData()
     End Sub
 
     Private Sub txtName_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtGroceryName.TextChanged
-        myFormControler.ChangeMade = True
+        formController.ChangeMade = True
     End Sub
 
-    Private Sub myFormControler_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles myFormControler.ValidateRules
+    Private Sub formController_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles formController.ValidateRules
 
         Select Case False
             Case txtGroceryName.Text <> String.Empty
                 txtGroceryName.Focus()
-                gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
             Case Else
                 eventArgs.IsValid = True
         End Select
     End Sub
 
+    Private Sub grdGrocery_CellClick(ByVal sender As Object, ByVal e As Syncfusion.Windows.Forms.Grid.GridCellClickEventArgs) Handles grdGrocery.CheckBoxClick
+        'If e.ColIndex = mintGrdGrocery_Sel_col And e.RowIndex > 0 And Not formController.FormIsLoading Then
+        '    CalculateTotals()
+        'End If
+    End Sub
+
+    Private Sub grdGrocery_CellMouseUp(ByVal sender As Object, ByVal e As Syncfusion.Windows.Forms.Grid.GridCellMouseEventArgs) Handles grdGrocery.CellMouseUp
+        If e.ColIndex = mintGrdGrocery_Sel_col And e.RowIndex <> -1 Then
+            grdGrocery.EndEdit()
+        End If
+    End Sub
+
 #End Region
 
-
-
+    Private Sub grdGrocery_CurrentCellChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdGrocery.CurrentCellChanged
+        If grdGrocery.CurrentCell.ColIndex = mintGrdGrocery_Sel_col And grdGrocery.CurrentCell.RowIndex > 0 And Not formController.FormIsLoading Then
+            CalculateTotals()
+        End If
+    End Sub
 End Class

@@ -118,7 +118,7 @@ Public Class ctlFormController
             rintItem_ID = mintItem_ID
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -223,7 +223,7 @@ Public Class ctlFormController
 
                 End Select
             Else
-                gcAppControler.ShowMessage(mConstants.Error_Messages.ERROR_SAVE_MSG, MsgBoxStyle.Critical)
+                gcAppController.ShowMessage(mConstants.Error_Messages.ERROR_SAVE_MSG, MsgBoxStyle.Critical)
             End If
 
         End If
@@ -232,7 +232,7 @@ Public Class ctlFormController
     End Sub
 
     Private Sub btnCancel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCancel.Click
-        gcAppControler.ClearAllControls(mfrmParent)
+        gcAppController.ClearAllControls(mfrmParent)
         LoadFormData()
     End Sub
 

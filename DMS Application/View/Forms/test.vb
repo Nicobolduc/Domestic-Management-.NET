@@ -107,7 +107,7 @@ Public Class test
         strSQL = strSQL & "  WHERE ProductPrice.Pro_ID = " & 42 & vbCrLf
         strSQL = strSQL & "  ORDER BY Company.Cy_name " & vbCrLf
         'Get the grid data
-        sqlCmd = New MySqlCommand(strSQL, gcAppControler.MySQLConnection)
+        sqlCmd = New MySqlCommand(strSQL, gcAppController.MySQLConnection)
 
         mySQLReader = sqlCmd.ExecuteReader
 
@@ -115,7 +115,7 @@ Public Class test
 
         dataTableArray = New Object(myDataTable.Rows.Count - 1, myDataTable.Columns.Count) {}
 
-        strGridCaption = gcAppControler.str_GetCaption(9, gcAppControler.cUser.GetLanguage)
+        strGridCaption = gcAppController.str_GetCaption(9, gcAppController.cUser.GetLanguage)
 
         lstColumns = Split(strGridCaption.Insert(0, "|"), "|")
 
@@ -158,7 +158,7 @@ Public Class test
             End If
 
         Next
-        
+
         'Set the grid data
         grdSync.BeginUpdate()
 
@@ -195,7 +195,7 @@ Public Class test
         Dim lstColumns As String()
         Dim individualColStyle As GridStyleInfo
 
-        strGridCaption = gcAppControler.str_GetCaption(8, gcAppControler.cUser.GetLanguage)
+        strGridCaption = gcAppController.str_GetCaption(8, gcAppController.cUser.GetLanguage)
 
         lstColumns = Split(strGridCaption.Insert(0, "|"), "|")
 
@@ -244,7 +244,7 @@ Public Class test
         strSQL = strSQL & "  FROM Company " & vbCrLf
         strSQL = strSQL & "  ORDER BY Company.Cy_Name " & vbCrLf
 
-        sqlCmd = New MySqlCommand(strSQL, gcAppControler.MySQLConnection)
+        sqlCmd = New MySqlCommand(strSQL, gcAppController.MySQLConnection)
 
         mySQLReader = sqlCmd.ExecuteReader
 

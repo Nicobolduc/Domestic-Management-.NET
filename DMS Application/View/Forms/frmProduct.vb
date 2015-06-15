@@ -3,13 +3,13 @@
 Public Class frmProduct
 
     'Private members
-    Private Const mintGrdPrices_Action_col As Short = 0
-    Private Const mintGrdPrices_ProP_ID_col As Short = 1
-    Private Const mintGrdPrices_Cy_ID_col As Short = 2
-    Private Const mintGrdPrices_Cy_Name_col As Short = 3
-    Private Const mintGrdPrices_ProB_ID_col As Short = 4
-    Private Const mintGrdPrices_ProB_Name_col As Short = 5
-    Private Const mintGrdPrices_Price_col As Short = 6
+    Private Const mintGrdPrices_Action_col As Short = 1
+    Private Const mintGrdPrices_ProP_ID_col As Short = 2
+    Private Const mintGrdPrices_Cy_ID_col As Short = 3
+    Private Const mintGrdPrices_Cy_Name_col As Short = 4
+    Private Const mintGrdPrices_ProB_ID_col As Short = 5
+    Private Const mintGrdPrices_ProB_Name_col As Short = 6
+    Private Const mintGrdPrices_Price_col As Short = 7
 
     'Private class members
 
@@ -25,7 +25,7 @@ Public Class frmProduct
         Dim intProC_ID As Integer
 
         Try
-            mcProductModel = gcAppControler.CoreModelController.ProductController.GetProductFromID(myFormControler.Item_ID)
+            mcProductModel = gcAppController.GetCoreModelController.GetProductController.Value.GetProductFromID(formController.Item_ID)
 
             Select Case False
                 Case Not mcProductModel Is Nothing
@@ -36,7 +36,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -57,14 +57,14 @@ Public Class frmProduct
             strSQL = strSQL & "  FROM ProductPrice " & vbCrLf
             strSQL = strSQL & "     INNER JOIN Company ON Company.Cy_ID = ProductPrice.Cy_ID_Seller " & vbCrLf
             strSQL = strSQL & "     INNER JOIN ProductBrand ON ProductBrand.ProB_ID = ProductPrice.ProB_ID " & vbCrLf
-            strSQL = strSQL & "  WHERE ProductPrice.Pro_ID = " & myFormControler.Item_ID & vbCrLf
+            strSQL = strSQL & "  WHERE ProductPrice.Pro_ID = " & formController.Item_ID & vbCrLf
             strSQL = strSQL & "  ORDER BY Company.Cy_name " & vbCrLf
 
             blnValidReturn = mcGrdPrices.bln_FillData(strSQL)
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -84,7 +84,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -104,7 +104,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -124,7 +124,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -145,7 +145,7 @@ Public Class frmProduct
 
             cboCategory.SelectedValue = vintSelectedValue
 
-            If myFormControler.FormMode <> mConstants.Form_Modes.DELETE_MODE And vintSelectedValue >= 0 And cboCategory.Items.Count > 1 Then
+            If formController.FormMode <> mConstants.Form_Modes.DELETE_MODE And vintSelectedValue >= 0 And cboCategory.Items.Count > 1 Then
                 cboCategory.Enabled = True
             Else
                 cboCategory.Enabled = False
@@ -153,7 +153,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -163,15 +163,15 @@ Public Class frmProduct
         Dim blnValidReturn As Boolean
 
         Try
-            blnValidReturn = mcProductModel.blnProduct_Save(myFormControler.FormMode)
+            blnValidReturn = mcProductModel.blnProduct_Save(formController.FormMode)
 
-            If blnValidReturn And myFormControler.FormMode <> mConstants.Form_Modes.DELETE_MODE Then
+            If blnValidReturn And formController.FormMode <> mConstants.Form_Modes.DELETE_MODE Then
                 blnValidReturn = blnGrdPrices_SaveData()
             End If
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -182,7 +182,7 @@ Public Class frmProduct
         Dim intRowCpt As Integer
 
         Try
-            For intRowCpt = 0 To grdPrices.RowCount
+            For intRowCpt = 1 To grdPrices.RowCount
 
                 Select Case CInt(grdPrices(intRowCpt, mintGrdPrices_Action_col).CellValue)
                     Case DataGridViewController.GridRowActions.INSERT_ACTION
@@ -203,7 +203,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -213,7 +213,7 @@ Public Class frmProduct
         Dim blnValidReturn As Boolean
 
         Try
-            If myFormControler.FormMode <> mConstants.Form_Modes.DELETE_MODE Then
+            If formController.FormMode <> mConstants.Form_Modes.DELETE_MODE Then
 
                 Dim cellRectangle As Rectangle = grdPrices.GetCellRenderer(vintRowIndex, vintColIndex).GetCellClientRectangle(vintRowIndex, vintColIndex, GridStyleInfo.Default, True)
 
@@ -251,7 +251,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -263,7 +263,7 @@ Public Class frmProduct
 #Region "Private events"
 
     Private Sub cboType_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboType.SelectedIndexChanged
-        If Not myFormControler.FormIsLoading Then
+        If Not formController.FormIsLoading Then
 
             If cboType.SelectedIndex >= 0 Then
                 blnCboCategory_Load()
@@ -272,24 +272,24 @@ Public Class frmProduct
                 cboCategory.Enabled = False
             End If
 
-            myFormControler.ChangeMade = True
+            formController.ChangeMade = True
         End If
     End Sub
 
-    Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
+    Private Sub formController_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
         mcGrdPrices = New SyncfusionGridController
         mcProductModel = New Model.Product
 
         Select Case False
-            Case mcGrdPrices.bln_Init(grdPrices)
+            Case mcGrdPrices.bln_Init(grdPrices, btnAddRow, btnRemoveRow)
             Case blnCboType_Load()
             Case blnCboCategory_Load()
             Case blnCboCompany_Load()
             Case blnCboProductBrand_Load()
             Case blnGrdPrices_Load()
-            Case myFormControler.FormMode <> mConstants.Form_Modes.INSERT_MODE
+            Case formController.FormMode <> mConstants.Form_Modes.INSERT_MODE
                 blnValidReturn = True
             Case blnLoadData()
             Case Else
@@ -303,19 +303,19 @@ Public Class frmProduct
     End Sub
 
     Private Sub txtName_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtName.TextChanged
-        myFormControler.ChangeMade = True
+        formController.ChangeMade = True
     End Sub
 
     Private Sub cboBrand_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs)
-        myFormControler.ChangeMade = True
+        formController.ChangeMade = True
     End Sub
 
     Private Sub cboCategory_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboCategory.SelectedIndexChanged
-        myFormControler.ChangeMade = True
+        formController.ChangeMade = True
     End Sub
 
-    Private Sub myFormControler_SetReadRights() Handles myFormControler.SetReadRights
-        Select Case myFormControler.FormMode
+    Private Sub formController_SetReadRights() Handles formController.SetReadRights
+        Select Case formController.FormMode
             Case mConstants.Form_Modes.INSERT_MODE
 
 
@@ -325,25 +325,25 @@ Public Class frmProduct
         End Select
     End Sub
 
-    Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles myFormControler.SaveData
+    Private Sub formController_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles formController.SaveData
         eventArgs.SaveSuccessful = blnSaveData()
     End Sub
 
-    Private Sub myFormControler_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles myFormControler.ValidateRules
+    Private Sub formController_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles formController.ValidateRules
         Dim intRowIndex As Integer
 
         Select Case False
             Case txtName.Text <> String.Empty
-                gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtName.Focus()
 
             Case cboType.SelectedIndex > -1
-                gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 cboType.DroppedDown = True
                 cboType.Focus()
 
             Case cboCategory.SelectedIndex > -1
-                gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                 cboType.DroppedDown = True
                 cboType.Focus()
 
@@ -354,21 +354,21 @@ Public Class frmProduct
 
         If eventArgs.IsValid And grdPrices.RowCount > 0 Then
 
-            For intRowIndex = 0 To grdPrices.RowCount - 1
+            For intRowIndex = 1 To grdPrices.RowCount
 
                 eventArgs.IsValid = False
 
                 Select Case True
                     Case mcGrdPrices.CellIsEmpty(intRowIndex, mintGrdPrices_Cy_ID_col)
-                        gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                        gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                         blnGrdPrices_Cbo_Show(intRowIndex, mintGrdPrices_Cy_Name_col)
 
                     Case mcGrdPrices.CellIsEmpty(intRowIndex, mintGrdPrices_ProB_ID_col)
-                        gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                        gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                         blnGrdPrices_Cbo_Show(intRowIndex, mintGrdPrices_ProB_Name_col)
 
                     Case mcGrdPrices.CellIsEmpty(intRowIndex, mintGrdPrices_Price_col)
-                        gcAppControler.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                        gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                         'grdPrices.CurrentCell = grdPrices.Rows(intRowIndex).Cells(mintGrdPrices_Price_col
                         grdPrices.CurrentCell.MoveTo(GridRangeInfo.Cells(intRowIndex, mintGrdPrices_Price_col, intRowIndex, mintGrdPrices_Price_col), GridSetCurrentCellOptions.SetFocus And GridSetCurrentCellOptions.ScrollInView)
                         'grdPrices.BeginEdit(True)
@@ -385,14 +385,13 @@ Public Class frmProduct
     End Sub
 
     Private Sub mcGrdPrices_SetDisplay() Handles mcGrdPrices.SetDisplay
+        mcGrdPrices.SetColsSizeBehavior = ColsSizeBehaviorsController.colsSizeBehaviors.EXTEND_LAST_COL
 
-        'grdPrices.Columns(mintGrdPrices_ProP_ID_col).ReadOnly = True
-        'grdPrices.Columns(mintGrdPrices_Cy_Name_col).ReadOnly = True
-        'grdPrices.Columns(mintGrdPrices_ProB_Name_col).ReadOnly = True
+        grdPrices.ColWidths(mintGrdPrices_Cy_Name_col) = 146
+        grdPrices.ColWidths(mintGrdPrices_ProB_Name_col) = 100
 
-        'grdPrices.Columns(mintGrdPrices_Price_col).ValueType = GetType(Double)
-        ' grdPrices.Model.Cols.SetCells(mintGrdPrices_Price_col,GridStyleInfoStoreTable)
-        'grdPrices.Columns(mintGrdPrices_Price_col).DefaultCellStyle.Format = gstrCurrencyFormat
+        grdPrices.ColStyles(mintGrdPrices_Price_col).Format = mConstants.DataFormat.CURRENCY
+        grdPrices.ColStyles(mintGrdPrices_Price_col).CellValueType = GetType(Double)
     End Sub
 
     Private Sub grdPrices_CellValidating(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellValidatingEventArgs)
@@ -400,48 +399,47 @@ Public Class frmProduct
 
             If Not IsNumeric(grdPrices.Selections.GetSelectedRows(True, True).Item(0)) Then 'And grdPrices.Selections.GetSelectedRows(True, True).Item(0) <> String.Empty Then
 
-                gcAppControler.ShowMessage(mConstants.Validation_Messages.NUMERIC_VALUE, MsgBoxStyle.Information)
+                gcAppController.ShowMessage(mConstants.Validation_Messages.NUMERIC_VALUE, MsgBoxStyle.Information)
 
                 e.Cancel = True
             End If
         End If
 
         If Not e.Cancel Then
-            myFormControler.ChangeMade = True
+            formController.ChangeMade = True
         End If
     End Sub
 
     Private Sub grdPrices_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdPrices.DoubleClick
         If mcGrdPrices.GetSelectedRowsCount > 0 Then
 
-            Select Case grdPrices.Selections.GetSelectedCols(True, True).Item(0).Top
+            Select Case mcGrdPrices.GetSelectedCol
                 Case mintGrdPrices_Cy_Name_col, mintGrdPrices_ProB_Name_col
-                    'blnGrdPrices_Cbo_Show(grdPrices.SelectedRows(0).Index, grdPrices.CurrentCell.ColumnIndex)
+                    blnGrdPrices_Cbo_Show(mcGrdPrices.GetSelectedRow, mcGrdPrices.GetSelectedCol)
 
                 Case Else
                     ' grdPrices.BeginEdit(True)
 
             End Select
-
         End If
     End Sub
 
     Private Sub cboCompany_LostFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboCompany.Leave
-        'grdPrices.SelectedRows(0).Cells(mintGrdPrices_Cy_ID_col).Value = cboCompany.SelectedValue
-        'grdPrices.SelectedRows(0).Cells(mintGrdPrices_Cy_Name_col).Value = cboCompany.SelectedItem.Value
+        grdPrices(mcGrdPrices.GetSelectedRow, mintGrdPrices_Cy_ID_col).CellValue = cboCompany.SelectedValue
+        grdPrices(mcGrdPrices.GetSelectedRow, mintGrdPrices_Cy_Name_col).CellValue = cboCompany.SelectedItem.Value
 
         cboCompany.Visible = False
     End Sub
 
     Private Sub cboProductBrand_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboProductBrand.Leave
-        'grdPrices.SelectedRows(0).Cells(mintGrdPrices_ProB_ID_col).Value = cboProductBrand.SelectedValue
-        'grdPrices.SelectedRows(0).Cells(mintGrdPrices_ProB_Name_col).Value = cboProductBrand.SelectedItem.Value
+        grdPrices(mcGrdPrices.GetSelectedRow, mintGrdPrices_ProB_ID_col).CellValue = cboCompany.SelectedValue
+        grdPrices(mcGrdPrices.GetSelectedRow, mintGrdPrices_ProB_Name_col).CellValue = cboCompany.SelectedItem.Value
 
         cboProductBrand.Visible = False
     End Sub
 
     Private Sub chkTaxable_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkTaxable.CheckedChanged
-        myFormControler.ChangeMade = True
+        formController.ChangeMade = True
     End Sub
 
 #End Region

@@ -3,6 +3,7 @@
     Public Class Product
 
         'Private members
+        <DebuggerBrowsable(DebuggerBrowsableState.Never)>
         Private _intProduct_ID As Integer
         Private _strName As String = String.Empty
         Private _intType_ID As Integer
@@ -27,7 +28,7 @@
                 Return _strName
             End Get
 
-            Set(value As String)
+            Set(ByVal value As String)
 
                 If Not value = String.Empty Then
                     _strName = value
@@ -42,7 +43,7 @@
                 Return _intType_ID
             End Get
 
-            Set(value As Integer)
+            Set(ByVal value As Integer)
                 If value > 0 Then
                     _intType_ID = value
                 Else
@@ -56,7 +57,7 @@
                 Return _intCategory_ID
             End Get
 
-            Set(value As Integer)
+            Set(ByVal value As Integer)
                 _intCategory_ID = value
             End Set
         End Property
@@ -66,7 +67,7 @@
                 Return _blnIsTaxable
             End Get
 
-            Set(value As Boolean)
+            Set(ByVal value As Boolean)
                 _blnIsTaxable = value
             End Set
         End Property
@@ -110,7 +111,7 @@
 
             Catch ex As Exception
                 blnValidReturn = False
-                gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             Finally
                 mcSQL.bln_EndTransaction(blnValidReturn)
                 mcSQL = Nothing
@@ -134,7 +135,7 @@
 
             Catch ex As Exception
                 blnValidReturn = False
-                gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             End Try
 
             Return blnValidReturn
@@ -145,7 +146,7 @@
 
             Try
                 Select Case False
-                    Case blnProduct_AddFields
+                    Case blnProduct_AddFields()
                     Case mcSQL.bln_ADOInsert("Product", _intProduct_ID)
                     Case _intProduct_ID > 0
                     Case Else
@@ -154,7 +155,7 @@
 
             Catch ex As Exception
                 blnValidReturn = False
-                gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             End Try
 
             Return blnValidReturn
@@ -165,7 +166,7 @@
 
             Try
                 Select Case False
-                    Case blnProduct_AddFields
+                    Case blnProduct_AddFields()
                     Case mcSQL.bln_ADOUpdate("Product", "Pro_ID = " & _intProduct_ID)
                     Case Else
                         blnValidReturn = True
@@ -173,7 +174,7 @@
 
             Catch ex As Exception
                 blnValidReturn = False
-                gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             End Try
 
             Return blnValidReturn
@@ -192,7 +193,7 @@
 
             Catch ex As Exception
                 blnValidReturn = False
-                gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             End Try
 
             Return blnValidReturn

@@ -1,15 +1,31 @@
 ﻿Imports MySql.Data.MySqlClient
 Imports DMS_Application.Model
 
-Public Class AppController
+Public NotInheritable Class AppController
 
     'Private class members
     Private mdiGeneral As mdiGeneral
     Private mcMySQLConnection As MySqlConnection
     Private mcErrorsLog As ErrorsLogController
-    Private mcCoreModelController As DMS_Application.CoreModelController.CoreModelController
     Private mcUser As User
     Private mcStringCleaner As System.Text.RegularExpressions.Regex = New System.Text.RegularExpressions.Regex("'", System.Text.RegularExpressions.RegexOptions.Compiled Or System.Text.RegularExpressions.RegexOptions.CultureInvariant Or System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+    'Private Shared ReadOnly _myUniqueInstance As New Lazy(Of AppController)(Function() New AppController(), System.Threading.LazyThreadSafetyMode.ExecutionAndPublication)
+    Private Shared _myUniqueInstance As AppController
+
+
+#Region "Shared Functions /Subs"
+
+    Public Shared ReadOnly Property GetAppController As AppController
+        Get
+            If _myUniqueInstance Is Nothing Then
+                _myUniqueInstance = New AppController()
+            End If
+
+            Return _myUniqueInstance
+        End Get
+    End Property
+
+#End Region
 
 
 #Region "Properties"
@@ -44,9 +60,9 @@ Public Class AppController
         End Get
     End Property
 
-    Public ReadOnly Property CoreModelController As DMS_Application.CoreModelController.CoreModelController
+    Public ReadOnly Property GetCoreModelController As DMS_Application.CoreModelController.CoreModelController
         Get
-            Return mcCoreModelController
+            Return CoreModelController.CoreModelController.GetCoreModelController
         End Get
     End Property
 
@@ -54,7 +70,7 @@ Public Class AppController
 
 #Region "Constructors"
 
-    Public Sub New()
+    Private Sub New()
 
         mcErrorsLog = New ErrorsLogController
 
@@ -74,8 +90,8 @@ Public Class AppController
 
         mcMySQLConnection = New MySqlConnection
 
-        mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.107;Port=3306;userid=Nicolas;password=nicolas;database=dms_tests"
-        'mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests"
+        'mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.107;Port=3306;userid=Nicolas;password=nicolas;database=dms_tests"
+        mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests"
 
         Try
             mcMySQLConnection.Open()
@@ -99,7 +115,7 @@ Public Class AppController
             strFormat = "yyyy-MM-dd hh:mm:ss"
 
         Catch ex As MySqlException
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return strFormat
@@ -119,7 +135,7 @@ Public Class AppController
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -135,7 +151,7 @@ Public Class AppController
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return strCaption
@@ -151,12 +167,12 @@ Public Class AppController
         Dim strMessage As String = String.Empty
 
         Try
-            strMessage = gcAppControler.str_GetCaption(vintCaption_ID, mcUser.GetLanguage)
+            strMessage = gcAppController.str_GetCaption(vintCaption_ID, mcUser.GetLanguage)
 
             MsgBox(strMessage, vmsgType)
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -196,7 +212,7 @@ Public Class AppController
             Next objControl
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -240,7 +256,7 @@ Public Class AppController
             Next objControl
 
         Catch ex As Exception
-            gcAppControler.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
