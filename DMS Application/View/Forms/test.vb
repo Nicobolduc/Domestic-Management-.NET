@@ -266,11 +266,10 @@ Public Class test
 
     Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Populate.Click
 
-        'If isInVirtualMode Then
-        '    SetVirtualMode(False)
-        'End If
+        Dim gridController As New SyncfusionGridController
 
-        ' getDataFromBD
+        gridController.bln_Init(grdSync)
+
         SetUpArray()
         grdSync.ResetVolatileData()
         grdSync.Refresh()

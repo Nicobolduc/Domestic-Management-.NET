@@ -22,15 +22,19 @@ Public Class frmProduct
     Private Function blnLoadData() As Boolean
         Dim blnValidReturn As Boolean
         Dim strSQL As String = String.Empty
-        Dim intProC_ID As Integer
-
+    
         Try
             mcProductModel = gcAppController.GetCoreModelController.GetProductController.Value.GetProductFromID(formController.Item_ID)
 
+            cboType.SelectedValue = mcProductModel.Type_ID
+
             Select Case False
                 Case Not mcProductModel Is Nothing
-                Case blnCboCategory_Load(intProC_ID)
+                Case blnCboCategory_Load(mcProductModel.Category_ID)
                 Case Else
+                    txtName.Text = mcProductModel.Name
+                    chkTaxable.Checked = mcProductModel.isTaxable
+
                     blnValidReturn = True
             End Select
 
@@ -215,7 +219,7 @@ Public Class frmProduct
         Try
             If formController.FormMode <> mConstants.Form_Modes.DELETE_MODE Then
 
-                Dim cellRectangle As Rectangle = grdPrices.GetCellRenderer(vintRowIndex, vintColIndex).GetCellClientRectangle(vintRowIndex, vintColIndex, GridStyleInfo.Default, True)
+                Dim cellRectangle As Rectangle = grdPrices.GetCellRenderer(vintRowIndex, vintColIndex).GetCellClientRectangle(vintRowIndex, vintColIndex, GridStyleInfo.Default, False)
 
                 Select Case vintColIndex
                     Case mintGrdPrices_Cy_Name_col
@@ -224,7 +228,7 @@ Public Class frmProduct
                             cboCompany.SelectedValue = grdPrices(vintRowIndex, mintGrdPrices_Cy_ID_col).CellValue
                         End If
 
-                        cboCompany.Location = New Point(cellRectangle.Location.X + 6, cellRectangle.Location.Y + (cellRectangle.Size.Height - 4))
+                        cboCompany.Location = New Point(cellRectangle.Location.X + 7, cellRectangle.Location.Y + (cellRectangle.Size.Height))
 
                         cboCompany.Size = cellRectangle.Size
 
@@ -238,7 +242,7 @@ Public Class frmProduct
                             cboProductBrand.SelectedValue = grdPrices(vintRowIndex, mintGrdPrices_ProB_ID_col).CellValue
                         End If
 
-                        cboProductBrand.Location = New Point(cellRectangle.Location.X + 6, cellRectangle.Location.Y + (cellRectangle.Size.Height - 4))
+                        cboProductBrand.Location = New Point(cellRectangle.Location.X + 7, cellRectangle.Location.Y + (cellRectangle.Size.Height))
 
                         cboProductBrand.Size = cellRectangle.Size
 
@@ -279,7 +283,6 @@ Public Class frmProduct
     Private Sub formController_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
-        mcGrdPrices = New SyncfusionGridController
         mcProductModel = New Model.Product
 
         Select Case False
@@ -306,7 +309,7 @@ Public Class frmProduct
         formController.ChangeMade = True
     End Sub
 
-    Private Sub cboBrand_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs)
+    Private Sub cboProductBrand_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs)
         formController.ChangeMade = True
     End Sub
 
@@ -329,7 +332,7 @@ Public Class frmProduct
         eventArgs.SaveSuccessful = blnSaveData()
     End Sub
 
-    Private Sub formController_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles formController.ValidateRules
+    Private Sub formController_ValidateForm(ByVal eventArgs As ValidateFormEventArgs) Handles formController.ValidateForm
         Dim intRowIndex As Integer
 
         Select Case False
@@ -369,9 +372,8 @@ Public Class frmProduct
 
                     Case mcGrdPrices.CellIsEmpty(intRowIndex, mintGrdPrices_Price_col)
                         gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
-                        'grdPrices.CurrentCell = grdPrices.Rows(intRowIndex).Cells(mintGrdPrices_Price_col
                         grdPrices.CurrentCell.MoveTo(GridRangeInfo.Cells(intRowIndex, mintGrdPrices_Price_col, intRowIndex, mintGrdPrices_Price_col), GridSetCurrentCellOptions.SetFocus And GridSetCurrentCellOptions.ScrollInView)
-                        'grdPrices.BeginEdit(True)
+                        grdPrices.CurrentCell.BeginEdit()
 
                     Case Else
                         eventArgs.IsValid = True
@@ -387,17 +389,37 @@ Public Class frmProduct
     Private Sub mcGrdPrices_SetDisplay() Handles mcGrdPrices.SetDisplay
         mcGrdPrices.SetColsSizeBehavior = ColsSizeBehaviorsController.colsSizeBehaviors.EXTEND_LAST_COL
 
+        grdPrices.ColStyles(mintGrdPrices_Cy_Name_col).ReadOnly = True
+        grdPrices.ColStyles(mintGrdPrices_ProB_Name_col).ReadOnly = True
+
         grdPrices.ColWidths(mintGrdPrices_Cy_Name_col) = 146
         grdPrices.ColWidths(mintGrdPrices_ProB_Name_col) = 100
 
         grdPrices.ColStyles(mintGrdPrices_Price_col).Format = mConstants.DataFormat.CURRENCY
         grdPrices.ColStyles(mintGrdPrices_Price_col).CellValueType = GetType(Double)
+
+        grdPrices.Model.Options.ActivateCurrentCellBehavior = GridCellActivateAction.None
+
     End Sub
 
-    Private Sub grdPrices_CellValidating(ByVal sender As Object, ByVal e As System.Windows.Forms.DataGridViewCellValidatingEventArgs)
-        If e.ColumnIndex = mintGrdPrices_Price_col And mcGrdPrices.GetSelectedRowsCount > 0 Then
+    Private Sub grdPrices_CellDoubleClick(sender As Object, e As GridCellClickEventArgs) Handles grdPrices.CellDoubleClick
+        If mcGrdPrices.GetSelectedRowsCount > 0 Then
 
-            If Not IsNumeric(grdPrices.Selections.GetSelectedRows(True, True).Item(0)) Then 'And grdPrices.Selections.GetSelectedRows(True, True).Item(0) <> String.Empty Then
+            Select Case mcGrdPrices.GetSelectedCol
+                Case mintGrdPrices_Cy_Name_col, mintGrdPrices_ProB_Name_col
+                    blnGrdPrices_Cbo_Show(mcGrdPrices.GetSelectedRow, mcGrdPrices.GetSelectedCol)
+
+                Case Else
+                    'grdPrices.BeginEdit(True)
+            End Select
+        End If
+    End Sub
+
+    Private Sub grdPrices_CurrentCellAcceptedChanges(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles grdPrices.CurrentCellAcceptedChanges
+
+        If mcGrdPrices.GetSelectedCol = mintGrdPrices_Price_col And mcGrdPrices.GetSelectedRowsCount > 0 Then
+
+            If Not IsNumeric(grdPrices(mcGrdPrices.GetSelectedRow, mcGrdPrices.GetSelectedCol).CellValue) And mcGrdPrices.CurrentCellIsEmpty Then
 
                 gcAppController.ShowMessage(mConstants.Validation_Messages.NUMERIC_VALUE, MsgBoxStyle.Information)
 
@@ -410,36 +432,30 @@ Public Class frmProduct
         End If
     End Sub
 
-    Private Sub grdPrices_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdPrices.DoubleClick
-        If mcGrdPrices.GetSelectedRowsCount > 0 Then
-
-            Select Case mcGrdPrices.GetSelectedCol
-                Case mintGrdPrices_Cy_Name_col, mintGrdPrices_ProB_Name_col
-                    blnGrdPrices_Cbo_Show(mcGrdPrices.GetSelectedRow, mcGrdPrices.GetSelectedCol)
-
-                Case Else
-                    ' grdPrices.BeginEdit(True)
-
-            End Select
-        End If
-    End Sub
-
-    Private Sub cboCompany_LostFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboCompany.Leave
+    Private Sub cboCompany_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboCompany.Leave
         grdPrices(mcGrdPrices.GetSelectedRow, mintGrdPrices_Cy_ID_col).CellValue = cboCompany.SelectedValue
         grdPrices(mcGrdPrices.GetSelectedRow, mintGrdPrices_Cy_Name_col).CellValue = cboCompany.SelectedItem.Value
 
         cboCompany.Visible = False
+        mcGrdPrices.ChangeMade = True
     End Sub
 
     Private Sub cboProductBrand_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboProductBrand.Leave
-        grdPrices(mcGrdPrices.GetSelectedRow, mintGrdPrices_ProB_ID_col).CellValue = cboCompany.SelectedValue
-        grdPrices(mcGrdPrices.GetSelectedRow, mintGrdPrices_ProB_Name_col).CellValue = cboCompany.SelectedItem.Value
+        grdPrices(mcGrdPrices.GetSelectedRow, mintGrdPrices_ProB_ID_col).CellValue = cboProductBrand.SelectedValue
+        grdPrices(mcGrdPrices.GetSelectedRow, mintGrdPrices_ProB_Name_col).CellValue = cboProductBrand.SelectedItem.Value
 
         cboProductBrand.Visible = False
     End Sub
 
     Private Sub chkTaxable_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkTaxable.CheckedChanged
         formController.ChangeMade = True
+    End Sub
+
+    Public Sub New()
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        mcGrdPrices = New SyncfusionGridController
     End Sub
 
 #End Region

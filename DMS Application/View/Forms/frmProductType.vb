@@ -14,7 +14,7 @@
         Try
             strSQL = strSQL & " SELECT ProductType.ProT_Name " & vbCrLf
             strSQL = strSQL & " FROM ProductType " & vbCrLf
-            strSQL = strSQL & " WHERE ProductType.ProT_ID = " & myFormControler.Item_ID & vbCrLf
+            strSQL = strSQL & " WHERE ProductType.ProT_ID = " & formController.Item_ID & vbCrLf
 
             mySQLReader = MySQLController.ADOSelect(strSQL)
 
@@ -46,7 +46,7 @@
 
             mcSQL.bln_BeginTransaction()
 
-            Select Case myFormControler.FormMode
+            Select Case formController.FormMode
                 Case mConstants.Form_Modes.INSERT_MODE
                     blnValidReturn = blnProductType_Insert()
 
@@ -75,8 +75,8 @@
         Try
             Select Case False
                 Case mcSQL.bln_AddField("ProT_Name", txtName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_ADOInsert("ProductType", myFormControler.Item_ID)
-                Case myFormControler.Item_ID > 0
+                Case mcSQL.bln_ADOInsert("ProductType", formController.Item_ID)
+                Case formController.Item_ID > 0
                 Case Else
                     blnValidReturn = True
             End Select
@@ -95,7 +95,7 @@
         Try
             Select Case False
                 Case mcSQL.bln_AddField("ProT_Name", txtName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_ADOUpdate("ProductType", "ProT_ID = " & myFormControler.Item_ID)
+                Case mcSQL.bln_ADOUpdate("ProductType", "ProT_ID = " & formController.Item_ID)
                 Case Else
                     blnValidReturn = True
             End Select
@@ -113,7 +113,7 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_ADODelete("ProductType", "ProT_ID = " & myFormControler.Item_ID)
+                Case mcSQL.bln_ADODelete("ProductType", "ProT_ID = " & formController.Item_ID)
                 Case Else
                     blnValidReturn = True
             End Select
@@ -131,11 +131,11 @@
 
 #Region "Private events"
 
-    Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
+    Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
         Select Case False
-            Case myFormControler.FormMode <> mConstants.Form_Modes.INSERT_MODE
+            Case formController.FormMode <> mConstants.Form_Modes.INSERT_MODE
                 blnValidReturn = True
             Case blnLoadData()
             Case Else
@@ -144,11 +144,11 @@
 
     End Sub
 
-    Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles myFormControler.SaveData
+    Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles formController.SaveData
         eventArgs.SaveSuccessful = blnSaveData()
     End Sub
 
-    Private Sub myFormControler_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles myFormControler.ValidateRules
+    Private Sub myFormControler_ValidateForm(ByVal eventArgs As ValidateFormEventArgs) Handles formController.ValidateForm
         Select Case False
             Case txtName.Text <> String.Empty
                 gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
@@ -161,7 +161,7 @@
     End Sub
 
     Private Sub txtName_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtName.TextChanged
-        myFormControler.ChangeMade = True
+        formController.ChangeMade = True
     End Sub
 
 #End Region

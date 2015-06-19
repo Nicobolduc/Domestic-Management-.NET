@@ -3,13 +3,15 @@
 Public Class frmGeneralList
     Inherits System.Windows.Forms.Form
 
+    'Public members
+    Public mintGridTag As String = String.Empty
+    Public mstrGridSQL As String = String.Empty
+
     'Private members
     Private Const mintItem_ID_col As Integer = 1
 
     Private mListToOpen As mGeneralList.GeneralLists_ID
-
-    Public mintGridTag As String = String.Empty
-    Public mstrGridSQL As String = String.Empty
+    Private mintSelectedRow As Integer = 1
 
     'Private class members
     Private WithEvents mcGrdList As SyncfusionGridController
@@ -35,8 +37,6 @@ Public Class frmGeneralList
         Dim blnValidReturn As Boolean = True
         Dim frmToOpen As Object = Nothing
         Dim intItem_ID As Integer
-        Dim intRowIndex As Integer
-        Dim intSelectedRow As Integer
         Dim selectedRows As GridRangeInfoList = grdList.Selections.GetSelectedRows(True, True)
 
         Try
@@ -65,8 +65,8 @@ Public Class frmGeneralList
             End Select
 
             If selectedRows.Count > 0 Then
-                intSelectedRow = selectedRows.Item(0).Top
-                intItem_ID = CInt(grdList(intSelectedRow, mintItem_ID_col).CellValue)
+                mintSelectedRow = selectedRows.Item(0).Top
+                intItem_ID = CInt(grdList(mintSelectedRow, mintItem_ID_col).CellValue)
             End If
 
             Select Case vFormMode
@@ -86,17 +86,20 @@ Public Class frmGeneralList
 
             Select Case vFormMode
                 Case mConstants.Form_Modes.INSERT_MODE
-                    For intRowIndex = 1 To grdList.RowCount
-                        'If CInt(grdList(intRowIndex, mintItem_ID_col).CellValue) = intItem_ID Then
-                        '    intSelectedRow = intRowIndex
-                        'End If
+                    For intRowIndex As Integer = 1 To grdList.RowCount
+
+                        If grdList(intRowIndex, mintItem_ID_col).CellValue = intItem_ID Then
+
+                            mintSelectedRow = intRowIndex
+
+                            Exit For
+                        End If
                     Next
 
             End Select
 
-            If intSelectedRow >= 0 And grdList.RowCount > 0 Then
-                '    grdList.Rows(intSelectedRow).Selected = True
-                '    'grdList.FirstDisplayedScrollingRowIndex = grdList.SelectedRows(0).Index
+            If mintSelectedRow >= 0 And grdList.RowCount > 0 Then
+                mcGrdList.SetSelectedRow = mintSelectedRow
             End If
 
             txtFilter.Focus()
@@ -114,11 +117,20 @@ Public Class frmGeneralList
         Dim blnValidReturn As Boolean
 
         Try
+            SuspendLayout()
+
             blnValidReturn = mcGrdList.bln_FillData(mstrGridSQL)
-            'Refresh()
+
+            If blnValidReturn And grdList.RowCount > 0 Then
+
+                mcGrdList.SetSelectedRow = mintSelectedRow
+            End If
+
         Catch ex As Exception
             blnValidReturn = False
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        Finally
+            ResumeLayout()
         End Try
 
         Return blnValidReturn
@@ -132,7 +144,6 @@ Public Class frmGeneralList
     Private Sub mcGrid_SetDisplay() Handles mcGrdList.SetDisplay
         grdList.AllowProportionalColumnSizing = True
         grdList.Model.Options.ActivateCurrentCellBehavior = GridCellActivateAction.None
-
     End Sub
 
     Private Sub btnAdd_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAdd.Click

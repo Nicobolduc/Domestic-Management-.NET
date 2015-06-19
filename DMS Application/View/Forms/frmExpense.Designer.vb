@@ -29,7 +29,7 @@ Partial Class frmExpense
         Me.cboInterval = New System.Windows.Forms.ComboBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.dtpBillDate = New System.Windows.Forms.DateTimePicker()
-        Me.myFormControler = New DMS_Application.ctlFormController()
+        Me.formController = New DMS_Application.ctlFormController()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.txtAmount = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -86,16 +86,16 @@ Partial Class frmExpense
         Me.dtpBillDate.TabIndex = 2
         Me.dtpBillDate.Value = New Date(2014, 9, 4, 1, 12, 37, 0)
         '
-        'myFormControler
+        'formController
         '
-        Me.myFormControler.FormIsLoading = False
-        Me.myFormControler.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
-        Me.myFormControler.Item_ID = 0
-        Me.myFormControler.Location = New System.Drawing.Point(0, 86)
-        Me.myFormControler.Name = "myFormControler"
-        Me.myFormControler.ShowButtonQuitOnly = False
-        Me.myFormControler.Size = New System.Drawing.Size(445, 33)
-        Me.myFormControler.TabIndex = 4
+        Me.formController.FormIsLoading = False
+        Me.formController.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
+        Me.formController.Item_ID = 0
+        Me.formController.Location = New System.Drawing.Point(0, 86)
+        Me.formController.Name = "formController"
+        Me.formController.ShowButtonQuitOnly = False
+        Me.formController.Size = New System.Drawing.Size(445, 33)
+        Me.formController.TabIndex = 4
         '
         'Label4
         '
@@ -131,7 +131,7 @@ Partial Class frmExpense
         Me.Controls.Add(Me.cboInterval)
         Me.Controls.Add(Me.dtpBillDate)
         Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.myFormControler)
+        Me.Controls.Add(Me.formController)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.txtCode)
         Me.Controls.Add(Me.Label1)
@@ -151,7 +151,7 @@ Partial Class frmExpense
     Friend WithEvents txtCode As System.Windows.Forms.TextBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents cboInterval As System.Windows.Forms.ComboBox
-    Public WithEvents myFormControler As DMS_Application.ctlFormController
+    Public WithEvents formController As DMS_Application.ctlFormController
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents dtpBillDate As System.Windows.Forms.DateTimePicker
     Friend WithEvents Label4 As System.Windows.Forms.Label

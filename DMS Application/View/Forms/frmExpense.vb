@@ -17,7 +17,7 @@
             strSQL = strSQL & "        Expense.Exp_Amount, " & vbCrLf
             strSQL = strSQL & "        Expense.Per_ID " & vbCrLf
             strSQL = strSQL & " FROM Expense " & vbCrLf
-            strSQL = strSQL & " WHERE Expense.Exp_ID = " & myFormControler.Item_ID & vbCrLf
+            strSQL = strSQL & " WHERE Expense.Exp_ID = " & formController.Item_ID & vbCrLf
 
             mySQLReader = MySQLController.ADOSelect(strSQL)
 
@@ -76,7 +76,7 @@
 
             mcSQL.bln_BeginTransaction()
 
-            Select Case myFormControler.FormMode
+            Select Case formController.FormMode
                 Case mConstants.Form_Modes.INSERT_MODE
                     blnValidReturn = blnExpense_Insert()
 
@@ -108,8 +108,8 @@
                 Case mcSQL.bln_AddField("Exp_BillingDate", CStr(IIf(IsDBNull(dtpBillDate.Value), "", dtpBillDate.Value.ToString)), mConstants.MySQL_FieldTypes.DATETIME_TYPE)
                 Case mcSQL.bln_AddField("Exp_Amount", txtAmount.Text, mConstants.MySQL_FieldTypes.DOUBLE_TYPE)
                 Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedValue), mConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_ADOInsert("Expense", myFormControler.Item_ID)
-                Case myFormControler.Item_ID > 0
+                Case mcSQL.bln_ADOInsert("Expense", formController.Item_ID)
+                Case formController.Item_ID > 0
                 Case Else
                     blnValidReturn = True
             End Select
@@ -130,7 +130,7 @@
                 Case mcSQL.bln_AddField("Exp_Name", txtCode.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
                 Case mcSQL.bln_AddField("Exp_Amount", txtAmount.Text, mConstants.MySQL_FieldTypes.DOUBLE_TYPE)
                 Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedValue), mConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_ADOUpdate("Expense", "Exp_ID = " & myFormControler.Item_ID)
+                Case mcSQL.bln_ADOUpdate("Expense", "Exp_ID = " & formController.Item_ID)
                 Case Else
                     blnValidReturn = True
             End Select
@@ -148,7 +148,7 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_ADODelete("Expense", "Exp_ID = " & myFormControler.Item_ID)
+                Case mcSQL.bln_ADODelete("Expense", "Exp_ID = " & formController.Item_ID)
                 Case Else
                     blnValidReturn = True
             End Select
@@ -166,14 +166,14 @@
 
 #Region "Private events"
 
-    Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
+    Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
         dtpBillDate.Value = DateTime.Today
 
         Select Case False
             Case blnCboInterval_Load()
-            Case myFormControler.FormMode <> mConstants.Form_Modes.INSERT_MODE
+            Case formController.FormMode <> mConstants.Form_Modes.INSERT_MODE
                 blnValidReturn = True
             Case blnLoadData()
             Case Else
@@ -182,19 +182,19 @@
 
     End Sub
 
-    Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles myFormControler.SaveData
+    Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles formController.SaveData
         eventArgs.SaveSuccessful = blnSaveData()
     End Sub
 
     Private Sub txtCode_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtCode.TextChanged, txtAmount.TextChanged
-        myFormControler.ChangeMade = True
+        formController.ChangeMade = True
     End Sub
 
     Private Sub cboInterval_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboInterval.SelectedIndexChanged
-        myFormControler.ChangeMade = True
+        formController.ChangeMade = True
     End Sub
 
-    Private Sub myFormControler_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles myFormControler.ValidateRules
+    Private Sub myFormControler_ValidateForm(ByVal eventArgs As ValidateFormEventArgs) Handles formController.ValidateForm
         Select Case False
             Case txtCode.Text <> String.Empty
                 gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
@@ -220,7 +220,7 @@
     End Sub
 
     Private Sub dtpBillDate_ValueChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles dtpBillDate.ValueChanged
-        myFormControler.ChangeMade = True
+        formController.ChangeMade = True
     End Sub
 
 #End Region

@@ -108,7 +108,7 @@
         End If
     End Sub
 
-    Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormControler.LoadData
+    Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
         mcGridBudget = New DataGridViewController

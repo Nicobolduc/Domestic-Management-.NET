@@ -90,8 +90,8 @@ Public NotInheritable Class AppController
 
         mcMySQLConnection = New MySqlConnection
 
-        'mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.107;Port=3306;userid=Nicolas;password=nicolas;database=dms_tests"
-        mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests"
+        mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.107;Port=3306;userid=Nicolas;password=nicolas;database=dms_tests"
+        'mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests"
 
         Try
             mcMySQLConnection.Open()
@@ -103,6 +103,7 @@ Public NotInheritable Class AppController
             MessageBox.Show("La connexion au serveur a échouée.")
             Me.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             mcMySQLConnection.Dispose()
+            Application.Exit()
         End Try
 
         Return blnValidReturn

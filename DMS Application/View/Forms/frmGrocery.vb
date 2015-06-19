@@ -43,7 +43,7 @@
             If mySQLReader.Read() Then
 
                 txtGroceryName.Text = mySQLReader.Item("Gro_Name").ToString
-                cboGroceryStore.SelectedValue = mySQLReader.Item("Gro_Default_Cy_ID").ToString
+                cboGroceryStore.SelectedValue = mySQLReader.Item("Gro_Default_Cy_ID")
             Else
                 'Do nothing
             End If
@@ -65,6 +65,7 @@
 
     Private Function blnGrdGrocery_Load() As Boolean
         Dim blnValidReturn As Boolean
+        Dim blnChecked As Boolean
         Dim strSQL As String = String.Empty
         Dim intRow As Integer
         Dim mySQLReader As MySqlDataReader = Nothing
@@ -103,15 +104,12 @@
 
                 While mySQLReader.Read And grdGrocery.RowCount > 0
 
-                    For intRow = 1 To grdGrocery.RowCount
+                    If mcGrdGrocery.FindRow(mySQLReader.Item("Pro_ID").ToString, mintGrdGrocery_Pro_ID_col) > 0 Then
 
-                        If mySQLReader.Item("Pro_ID").ToString = grdGrocery(intRow, mintGrdGrocery_Pro_ID_col).CellValue.ToString Then
-
-                            grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue = True.ToString
-                        Else
-                            grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue = False.ToString
-                        End If
-                    Next
+                        grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue = True
+                    Else
+                        grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue = False
+                    End If
 
                 End While
 
@@ -229,11 +227,9 @@
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mcSQL.bln_EndTransaction(blnValidReturn)
-            mcSQL = Nothing
         End Try
 
         Return blnValidReturn
-
     End Function
 
     Private Function blnGrocery_Insert() As Boolean
@@ -355,8 +351,6 @@
     Private Sub formController_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
-        mcGrdGrocery = New SyncfusionGridController
-
         Select Case False
             Case mcGrdGrocery.bln_Init(grdGrocery)
             Case blnCboGroceryStore_Load()
@@ -376,6 +370,7 @@
     End Sub
 
     Private Sub mcGrdGrocery_SetDisplay() Handles mcGrdGrocery.SetDisplay
+        mcGrdGrocery.SetColsSizeBehavior = ColsSizeBehaviorsController.colsSizeBehaviors.EXTEND_LAST_COL
 
         grdGrocery.ColStyles(mintGrdGrocery_Sel_col).CellType = "CheckBox"
         grdGrocery.ColStyles(mintGrdGrocery_Sel_col).CheckBoxOptions = New GridCheckBoxCellInfo(True.ToString(), False.ToString(), "", False)
@@ -425,7 +420,7 @@
         formController.ChangeMade = True
     End Sub
 
-    Private Sub formController_ValidateRules(ByVal eventArgs As ValidateRulesEventArgs) Handles formController.ValidateRules
+    Private Sub formController_ValidateForm(ByVal eventArgs As ValidateFormEventArgs) Handles formController.ValidateForm
 
         Select Case False
             Case txtGroceryName.Text <> String.Empty
@@ -436,23 +431,25 @@
         End Select
     End Sub
 
-    Private Sub grdGrocery_CellClick(ByVal sender As Object, ByVal e As Syncfusion.Windows.Forms.Grid.GridCellClickEventArgs) Handles grdGrocery.CheckBoxClick
-        'If e.ColIndex = mintGrdGrocery_Sel_col And e.RowIndex > 0 And Not formController.FormIsLoading Then
-        '    CalculateTotals()
-        'End If
-    End Sub
-
     Private Sub grdGrocery_CellMouseUp(ByVal sender As Object, ByVal e As Syncfusion.Windows.Forms.Grid.GridCellMouseEventArgs) Handles grdGrocery.CellMouseUp
         If e.ColIndex = mintGrdGrocery_Sel_col And e.RowIndex <> -1 Then
             grdGrocery.EndEdit()
         End If
     End Sub
 
-#End Region
+    Public Sub New()
+        'This call is required by the designer.
+        InitializeComponent()
+
+        mcGrdGrocery = New SyncfusionGridController
+    End Sub
 
     Private Sub grdGrocery_CurrentCellChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdGrocery.CurrentCellChanged
         If grdGrocery.CurrentCell.ColIndex = mintGrdGrocery_Sel_col And grdGrocery.CurrentCell.RowIndex > 0 And Not formController.FormIsLoading Then
             CalculateTotals()
         End If
     End Sub
+
+#End Region
+
 End Class

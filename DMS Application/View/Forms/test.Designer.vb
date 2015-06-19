@@ -30,6 +30,7 @@ Partial Class test
         Me.grdSync = New Syncfusion.Windows.Forms.Grid.GridControl()
         Me.Populate = New System.Windows.Forms.Button()
         Me.Button1 = New System.Windows.Forms.Button()
+        Me.GridAwareTextBox1 = New Syncfusion.Windows.Forms.Grid.GridAwareTextBox()
         CType(Me.C1FlexGrid1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.grdSync, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -113,11 +114,22 @@ Partial Class test
         Me.Button1.Text = "Feed DB"
         Me.Button1.UseVisualStyleBackColor = True
         '
+        'GridAwareTextBox1
+        '
+        Me.GridAwareTextBox1.AutoSuggestFormula = False
+        Me.GridAwareTextBox1.DisabledBackColor = System.Drawing.SystemColors.Window
+        Me.GridAwareTextBox1.EnabledBackColor = System.Drawing.SystemColors.Window
+        Me.GridAwareTextBox1.Location = New System.Drawing.Point(519, 604)
+        Me.GridAwareTextBox1.Name = "GridAwareTextBox1"
+        Me.GridAwareTextBox1.Size = New System.Drawing.Size(100, 20)
+        Me.GridAwareTextBox1.TabIndex = 14
+        '
         'test
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1178, 819)
+        Me.Controls.Add(Me.GridAwareTextBox1)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.Populate)
         Me.Controls.Add(Me.grdSync)
@@ -131,6 +143,7 @@ Partial Class test
         CType(Me.C1FlexGrid1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.grdSync, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -142,4 +155,5 @@ Partial Class test
     Friend WithEvents grdSync As Syncfusion.Windows.Forms.Grid.GridControl
     Friend WithEvents Populate As System.Windows.Forms.Button
     Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents GridAwareTextBox1 As Syncfusion.Windows.Forms.Grid.GridAwareTextBox
 End Class

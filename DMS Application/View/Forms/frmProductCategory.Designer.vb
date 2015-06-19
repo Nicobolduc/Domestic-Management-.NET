@@ -25,7 +25,7 @@ Partial Class frmProductCategory
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmProductCategory))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtName = New System.Windows.Forms.TextBox()
-        Me.myFormControler = New DMS_Application.ctlFormController()
+        Me.formController = New DMS_Application.ctlFormController()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.cboType = New System.Windows.Forms.ComboBox()
         Me.SuspendLayout()
@@ -45,16 +45,16 @@ Partial Class frmProductCategory
         Me.txtName.Size = New System.Drawing.Size(367, 20)
         Me.txtName.TabIndex = 1
         '
-        'myFormControler
+        'formController
         '
-        Me.myFormControler.FormIsLoading = False
-        Me.myFormControler.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
-        Me.myFormControler.Item_ID = 0
-        Me.myFormControler.Location = New System.Drawing.Point(0, 61)
-        Me.myFormControler.Name = "myFormControler"
-        Me.myFormControler.ShowButtonQuitOnly = False
-        Me.myFormControler.Size = New System.Drawing.Size(421, 33)
-        Me.myFormControler.TabIndex = 10
+        Me.formController.FormIsLoading = False
+        Me.formController.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
+        Me.formController.Item_ID = 0
+        Me.formController.Location = New System.Drawing.Point(0, 61)
+        Me.formController.Name = "formController"
+        Me.formController.ShowButtonQuitOnly = False
+        Me.formController.Size = New System.Drawing.Size(421, 33)
+        Me.formController.TabIndex = 10
         '
         'Label2
         '
@@ -80,7 +80,7 @@ Partial Class frmProductCategory
         Me.ClientSize = New System.Drawing.Size(420, 93)
         Me.Controls.Add(Me.cboType)
         Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.myFormControler)
+        Me.Controls.Add(Me.formController)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.txtName)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
@@ -96,7 +96,7 @@ Partial Class frmProductCategory
     End Sub
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents txtName As System.Windows.Forms.TextBox
-    Public WithEvents myFormControler As DMS_Application.ctlFormController
+    Public WithEvents formController As DMS_Application.ctlFormController
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents cboType As System.Windows.Forms.ComboBox
 End Class

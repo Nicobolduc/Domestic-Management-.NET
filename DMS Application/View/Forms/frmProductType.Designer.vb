@@ -25,7 +25,7 @@ Partial Class frmBrandProto
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmBrandProto))
         Me.txtName = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.myFormControler = New DMS_Application.ctlFormController()
+        Me.formController = New DMS_Application.ctlFormController()
         Me.SuspendLayout()
         '
         'txtName
@@ -43,30 +43,30 @@ Partial Class frmBrandProto
         Me.Label1.TabIndex = 18
         Me.Label1.Text = "Nom:"
         '
-        'myFormControler
+        'formController
         '
-        Me.myFormControler.FormIsLoading = False
-        Me.myFormControler.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
-        Me.myFormControler.Item_ID = 0
-        Me.myFormControler.Location = New System.Drawing.Point(0, 32)
-        Me.myFormControler.Name = "myFormControler"
-        Me.myFormControler.ShowButtonQuitOnly = False
-        Me.myFormControler.Size = New System.Drawing.Size(408, 33)
-        Me.myFormControler.TabIndex = 19
+        Me.formController.FormIsLoading = False
+        Me.formController.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
+        Me.formController.Item_ID = 0
+        Me.formController.Location = New System.Drawing.Point(0, 32)
+        Me.formController.Name = "formController"
+        Me.formController.ShowButtonQuitOnly = False
+        Me.formController.Size = New System.Drawing.Size(408, 33)
+        Me.formController.TabIndex = 19
         '
-        'frmProductType
+        'frmBrandProto
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(407, 64)
-        Me.Controls.Add(Me.myFormControler)
+        Me.Controls.Add(Me.formController)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.txtName)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.Name = "frmProductType"
+        Me.Name = "frmBrandProto"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Type de produit"
         Me.ResumeLayout(False)
@@ -75,5 +75,5 @@ Partial Class frmBrandProto
     End Sub
     Friend WithEvents txtName As System.Windows.Forms.TextBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Public WithEvents myFormControler As DMS_Application.ctlFormController
+    Public WithEvents formController As DMS_Application.ctlFormController
 End Class

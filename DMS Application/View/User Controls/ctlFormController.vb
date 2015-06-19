@@ -19,7 +19,7 @@ Public Class ctlFormController
     Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
     Public Event SetReadRights()
     Public Event LoadData(ByVal eventArgs As LoadDataEventArgs)
-    Public Event ValidateRules(ByVal eventArgs As ValidateRulesEventArgs)
+    Public Event ValidateForm(ByVal eventArgs As ValidateFormEventArgs)
     Public Event SaveData(ByVal eventArgs As SaveDataEventArgs)
 
 
@@ -99,6 +99,8 @@ Public Class ctlFormController
         mintItem_ID = rintItem_ID
 
         Try
+            Me.Cursor = System.Windows.Forms.Cursors.WaitCursor
+
             mfrmParent = MyBase.FindForm()
 
             SetVisualStyle()
@@ -111,6 +113,9 @@ Public Class ctlFormController
                 mfrmParent.Show()
             Else
                 mfrmParent.MdiParent = Nothing
+                mfrmParent.ShowInTaskbar = False
+
+                Me.Cursor = System.Windows.Forms.Cursors.Default
 
                 mfrmParent.ShowDialog()
             End If
@@ -119,6 +124,8 @@ Public Class ctlFormController
 
         Catch ex As Exception
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        Finally
+            Me.Cursor = System.Windows.Forms.Cursors.Default
         End Try
 
     End Sub
@@ -196,11 +203,11 @@ Public Class ctlFormController
 
     Private Sub btnApply_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnApply.Click
         Dim saveEvent As New SaveDataEventArgs
-        Dim validationEvent As New ValidateRulesEventArgs
+        Dim validationEvent As New ValidateFormEventArgs
 
         Me.Cursor = Cursors.WaitCursor
 
-        RaiseEvent ValidateRules(validationEvent)
+        RaiseEvent ValidateForm(validationEvent)
 
         If validationEvent.IsValid Then
 
@@ -304,7 +311,7 @@ Public Class SaveDataEventArgs
 
 End Class
 
-Public Class ValidateRulesEventArgs
+Public Class ValidateFormEventArgs
     Inherits System.EventArgs
 
     Private mblnIsValid As Boolean

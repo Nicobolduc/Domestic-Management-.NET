@@ -23,22 +23,23 @@ Partial Class frmCompany
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmCompany))
-        Me.myFormControler = New Global.DMS_Application.ctlFormController()
+        Me.formController = New DMS_Application.ctlFormController()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtName = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.cboCompanyType = New System.Windows.Forms.ComboBox()
         Me.SuspendLayout()
-        'myFormControler
         '
-        Me.myFormControler.FormIsLoading = False
-        Me.myFormControler.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
-        Me.myFormControler.Item_ID = 0
-        Me.myFormControler.Location = New System.Drawing.Point(0, 49)
-        Me.myFormControler.Name = "myFormControler"
-        Me.myFormControler.ShowButtonQuitOnly = False
-        Me.myFormControler.Size = New System.Drawing.Size(437, 33)
-        Me.myFormControler.TabIndex = 2
+        'formController
+        '
+        Me.formController.FormIsLoading = False
+        Me.formController.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
+        Me.formController.Item_ID = 0
+        Me.formController.Location = New System.Drawing.Point(0, 49)
+        Me.formController.Name = "formController"
+        Me.formController.ShowButtonQuitOnly = False
+        Me.formController.Size = New System.Drawing.Size(437, 33)
+        Me.formController.TabIndex = 2
         '
         'Label1
         '
@@ -81,7 +82,7 @@ Partial Class frmCompany
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.txtName)
-        Me.Controls.Add(Me.myFormControler)
+        Me.Controls.Add(Me.formController)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
@@ -93,7 +94,7 @@ Partial Class frmCompany
         Me.PerformLayout()
 
     End Sub
-    Public WithEvents myFormControler As DMS_Application.ctlFormController
+    Public WithEvents formController As DMS_Application.ctlFormController
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents txtName As System.Windows.Forms.TextBox
     Friend WithEvents Label2 As System.Windows.Forms.Label

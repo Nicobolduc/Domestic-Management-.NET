@@ -51,7 +51,7 @@
         frmGestionBudget.Width = 1024
         frmGestionBudget.Height = 768
 
-        frmGestionBudget.myFormControler.ShowForm(mConstants.Form_Modes.CONSULT_MODE)
+        frmGestionBudget.formController.ShowForm(mConstants.Form_Modes.CONSULT_MODE)
     End Sub
 
     Private Sub mnuiExpenseToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiExpense.Click

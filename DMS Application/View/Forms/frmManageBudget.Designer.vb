@@ -38,7 +38,7 @@ Partial Class frmManageBudget
         Me.rbtnBiMensuel = New System.Windows.Forms.RadioButton()
         Me.rbtnMensuelle = New System.Windows.Forms.RadioButton()
         Me.dtpFrom = New System.Windows.Forms.DateTimePicker()
-        Me.myFormControler = New DMS_Application.ctlFormController()
+        Me.formController = New DMS_Application.ctlFormController()
         CType(Me.grdBudget, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.gbFilter.SuspendLayout()
         Me.SuspendLayout()
@@ -47,8 +47,8 @@ Partial Class frmManageBudget
         '
         Me.grdBudget.AllowUserToAddRows = False
         Me.grdBudget.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.grdBudget.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised
         Me.grdBudget.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.grdBudget.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column3, Me.Column2})
@@ -86,7 +86,7 @@ Partial Class frmManageBudget
         'gbFilter
         '
         Me.gbFilter.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.gbFilter.Controls.Add(Me.btnRefresh)
         Me.gbFilter.Controls.Add(Me.Label2)
         Me.gbFilter.Controls.Add(Me.dtpTo)
@@ -191,17 +191,17 @@ Partial Class frmManageBudget
         Me.dtpFrom.Size = New System.Drawing.Size(144, 20)
         Me.dtpFrom.TabIndex = 0
         '
-        'myFormControler
+        'formController
         '
-        Me.myFormControler.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.myFormControler.FormIsLoading = False
-        Me.myFormControler.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
-        Me.myFormControler.Item_ID = 0
-        Me.myFormControler.Location = New System.Drawing.Point(638, 613)
-        Me.myFormControler.Name = "myFormControler"
-        Me.myFormControler.ShowButtonQuitOnly = True
-        Me.myFormControler.Size = New System.Drawing.Size(85, 33)
-        Me.myFormControler.TabIndex = 4
+        Me.formController.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.formController.FormIsLoading = False
+        Me.formController.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
+        Me.formController.Item_ID = 0
+        Me.formController.Location = New System.Drawing.Point(638, 613)
+        Me.formController.Name = "formController"
+        Me.formController.ShowButtonQuitOnly = True
+        Me.formController.Size = New System.Drawing.Size(85, 33)
+        Me.formController.TabIndex = 4
         '
         'frmManageBudget
         '
@@ -210,7 +210,7 @@ Partial Class frmManageBudget
         Me.ClientSize = New System.Drawing.Size(735, 645)
         Me.Controls.Add(Me.gbFilter)
         Me.Controls.Add(Me.grdBudget)
-        Me.Controls.Add(Me.myFormControler)
+        Me.Controls.Add(Me.formController)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmManageBudget"
@@ -236,6 +236,6 @@ Partial Class frmManageBudget
     Friend WithEvents Column3 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column2 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents btnRefresh As System.Windows.Forms.Button
-    Public WithEvents myFormControler As DMS_Application.ctlFormController
+    Public WithEvents formController As DMS_Application.ctlFormController
 
 End Class

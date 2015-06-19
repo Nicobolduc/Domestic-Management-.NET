@@ -22,10 +22,10 @@ Partial Class frmProduct
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim GridBaseStyle5 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
-        Dim GridBaseStyle6 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
-        Dim GridBaseStyle7 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
-        Dim GridBaseStyle8 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
+        Dim GridBaseStyle1 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
+        Dim GridBaseStyle2 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
+        Dim GridBaseStyle3 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
+        Dim GridBaseStyle4 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmProduct))
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -34,13 +34,13 @@ Partial Class frmProduct
         Me.cboType = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.gbInfos = New System.Windows.Forms.GroupBox()
+        Me.cboCompany = New System.Windows.Forms.ComboBox()
         Me.grdPrices = New Syncfusion.Windows.Forms.Grid.GridControl()
         Me.btnRemoveRow = New System.Windows.Forms.Button()
         Me.btnAddRow = New System.Windows.Forms.Button()
-        Me.cboProductBrand = New System.Windows.Forms.ComboBox()
-        Me.cboCompany = New System.Windows.Forms.ComboBox()
         Me.chkTaxable = New System.Windows.Forms.CheckBox()
         Me.formController = New DMS_Application.ctlFormController()
+        Me.cboProductBrand = New System.Windows.Forms.ComboBox()
         Me.gbInfos.SuspendLayout()
         CType(Me.grdPrices, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -96,6 +96,8 @@ Partial Class frmProduct
         '
         'gbInfos
         '
+        Me.gbInfos.Controls.Add(Me.cboProductBrand)
+        Me.gbInfos.Controls.Add(Me.cboCompany)
         Me.gbInfos.Controls.Add(Me.grdPrices)
         Me.gbInfos.Controls.Add(Me.btnRemoveRow)
         Me.gbInfos.Controls.Add(Me.btnAddRow)
@@ -106,29 +108,43 @@ Partial Class frmProduct
         Me.gbInfos.TabStop = False
         Me.gbInfos.Text = "Prix"
         '
+        'cboCompany
+        '
+        Me.cboCompany.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboCompany.FormattingEnabled = True
+        Me.cboCompany.Location = New System.Drawing.Point(44, 59)
+        Me.cboCompany.Name = "cboCompany"
+        Me.cboCompany.Size = New System.Drawing.Size(76, 21)
+        Me.cboCompany.TabIndex = 19
+        Me.cboCompany.Visible = False
+        '
         'grdPrices
         '
-        GridBaseStyle5.Name = "Header"
-        GridBaseStyle5.StyleInfo.Borders.Bottom = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
-        GridBaseStyle5.StyleInfo.Borders.Left = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
-        GridBaseStyle5.StyleInfo.Borders.Right = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
-        GridBaseStyle5.StyleInfo.Borders.Top = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
-        GridBaseStyle5.StyleInfo.CellType = "Header"
-        GridBaseStyle5.StyleInfo.Font.Bold = True
-        GridBaseStyle5.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Vertical, System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(184, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(234, Byte), Integer), CType(CType(216, Byte), Integer)))
-        GridBaseStyle5.StyleInfo.VerticalAlignment = Syncfusion.Windows.Forms.Grid.GridVerticalAlignment.Middle
-        GridBaseStyle6.Name = "Standard"
-        GridBaseStyle6.StyleInfo.Font.Facename = "Tahoma"
-        GridBaseStyle6.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(System.Drawing.SystemColors.Window)
-        GridBaseStyle7.Name = "Column Header"
-        GridBaseStyle7.StyleInfo.BaseStyle = "Header"
-        GridBaseStyle7.StyleInfo.HorizontalAlignment = Syncfusion.Windows.Forms.Grid.GridHorizontalAlignment.Center
-        GridBaseStyle8.Name = "Row Header"
-        GridBaseStyle8.StyleInfo.BaseStyle = "Header"
-        GridBaseStyle8.StyleInfo.HorizontalAlignment = Syncfusion.Windows.Forms.Grid.GridHorizontalAlignment.Left
-        GridBaseStyle8.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(184, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(234, Byte), Integer), CType(CType(216, Byte), Integer)))
-        Me.grdPrices.BaseStylesMap.AddRange(New Syncfusion.Windows.Forms.Grid.GridBaseStyle() {GridBaseStyle5, GridBaseStyle6, GridBaseStyle7, GridBaseStyle8})
+        GridBaseStyle1.Name = "Header"
+        GridBaseStyle1.StyleInfo.Borders.Bottom = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
+        GridBaseStyle1.StyleInfo.Borders.Left = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
+        GridBaseStyle1.StyleInfo.Borders.Right = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
+        GridBaseStyle1.StyleInfo.Borders.Top = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
+        GridBaseStyle1.StyleInfo.CellType = "Header"
+        GridBaseStyle1.StyleInfo.Font.Bold = True
+        GridBaseStyle1.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Vertical, System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(184, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(234, Byte), Integer), CType(CType(216, Byte), Integer)))
+        GridBaseStyle1.StyleInfo.VerticalAlignment = Syncfusion.Windows.Forms.Grid.GridVerticalAlignment.Middle
+        GridBaseStyle2.Name = "Standard"
+        GridBaseStyle2.StyleInfo.Font.Facename = "Tahoma"
+        GridBaseStyle2.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(System.Drawing.SystemColors.Window)
+        GridBaseStyle3.Name = "Column Header"
+        GridBaseStyle3.StyleInfo.BaseStyle = "Header"
+        GridBaseStyle3.StyleInfo.HorizontalAlignment = Syncfusion.Windows.Forms.Grid.GridHorizontalAlignment.Center
+        GridBaseStyle4.Name = "Row Header"
+        GridBaseStyle4.StyleInfo.BaseStyle = "Header"
+        GridBaseStyle4.StyleInfo.HorizontalAlignment = Syncfusion.Windows.Forms.Grid.GridHorizontalAlignment.Left
+        GridBaseStyle4.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(184, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(234, Byte), Integer), CType(CType(216, Byte), Integer)))
+        Me.grdPrices.BaseStylesMap.AddRange(New Syncfusion.Windows.Forms.Grid.GridBaseStyle() {GridBaseStyle1, GridBaseStyle2, GridBaseStyle3, GridBaseStyle4})
         Me.grdPrices.ColWidthEntries.AddRange(New Syncfusion.Windows.Forms.Grid.GridColWidth() {New Syncfusion.Windows.Forms.Grid.GridColWidth(0, 35)})
+        Me.grdPrices.ControllerOptions = CType(((((Syncfusion.Windows.Forms.Grid.GridControllerOptions.ClickCells Or Syncfusion.Windows.Forms.Grid.GridControllerOptions.DragSelectRowOrColumn) _
+            Or Syncfusion.Windows.Forms.Grid.GridControllerOptions.OleDataSource) _
+            Or Syncfusion.Windows.Forms.Grid.GridControllerOptions.OleDropTarget) _
+            Or Syncfusion.Windows.Forms.Grid.GridControllerOptions.ExcelLikeSelection), Syncfusion.Windows.Forms.Grid.GridControllerOptions)
         Me.grdPrices.Location = New System.Drawing.Point(6, 18)
         Me.grdPrices.Name = "grdPrices"
         Me.grdPrices.RowHeightEntries.AddRange(New Syncfusion.Windows.Forms.Grid.GridRowHeight() {New Syncfusion.Windows.Forms.Grid.GridRowHeight(0, 25)})
@@ -160,26 +176,6 @@ Partial Class frmProduct
         Me.btnAddRow.TabIndex = 1
         Me.btnAddRow.UseVisualStyleBackColor = True
         '
-        'cboProductBrand
-        '
-        Me.cboProductBrand.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboProductBrand.FormattingEnabled = True
-        Me.cboProductBrand.Location = New System.Drawing.Point(196, 82)
-        Me.cboProductBrand.Name = "cboProductBrand"
-        Me.cboProductBrand.Size = New System.Drawing.Size(76, 21)
-        Me.cboProductBrand.TabIndex = 19
-        Me.cboProductBrand.Visible = False
-        '
-        'cboCompany
-        '
-        Me.cboCompany.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboCompany.FormattingEnabled = True
-        Me.cboCompany.Location = New System.Drawing.Point(114, 82)
-        Me.cboCompany.Name = "cboCompany"
-        Me.cboCompany.Size = New System.Drawing.Size(76, 21)
-        Me.cboCompany.TabIndex = 18
-        Me.cboCompany.Visible = False
-        '
         'chkTaxable
         '
         Me.chkTaxable.Location = New System.Drawing.Point(11, 84)
@@ -195,8 +191,8 @@ Partial Class frmProduct
         'formController
         '
         Me.formController.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.formController.FormIsLoading = False
         Me.formController.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
         Me.formController.Item_ID = 0
@@ -206,13 +202,21 @@ Partial Class frmProduct
         Me.formController.Size = New System.Drawing.Size(376, 33)
         Me.formController.TabIndex = 4
         '
+        'cboProductBrand
+        '
+        Me.cboProductBrand.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboProductBrand.FormattingEnabled = True
+        Me.cboProductBrand.Location = New System.Drawing.Point(145, 70)
+        Me.cboProductBrand.Name = "cboProductBrand"
+        Me.cboProductBrand.Size = New System.Drawing.Size(76, 21)
+        Me.cboProductBrand.TabIndex = 20
+        Me.cboProductBrand.Visible = False
+        '
         'frmProduct
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(376, 299)
-        Me.Controls.Add(Me.cboProductBrand)
-        Me.Controls.Add(Me.cboCompany)
         Me.Controls.Add(Me.chkTaxable)
         Me.Controls.Add(Me.formController)
         Me.Controls.Add(Me.gbInfos)
@@ -245,8 +249,8 @@ Partial Class frmProduct
     Public WithEvents formController As DMS_Application.ctlFormController
     Friend WithEvents btnRemoveRow As System.Windows.Forms.Button
     Friend WithEvents btnAddRow As System.Windows.Forms.Button
-    Friend WithEvents cboCompany As System.Windows.Forms.ComboBox
-    Friend WithEvents cboProductBrand As System.Windows.Forms.ComboBox
     Friend WithEvents chkTaxable As System.Windows.Forms.CheckBox
     Friend WithEvents grdPrices As Syncfusion.Windows.Forms.Grid.GridControl
+    Friend WithEvents cboCompany As System.Windows.Forms.ComboBox
+    Friend WithEvents cboProductBrand As System.Windows.Forms.ComboBox
 End Class
