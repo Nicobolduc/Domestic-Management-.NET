@@ -12,10 +12,13 @@
 
 #Region "Properties"
 
-    Public ReadOnly Property ProductPrice_ID As Integer
+    Public Property ProductPrice_ID As Integer
         Get
             Return _intProductPrice_ID
         End Get
+        Set(ByVal value As Integer)
+            _intProductPrice_ID = value
+        End Set
     End Property
 
 
@@ -56,6 +59,12 @@
 
         Set(value As Double)
             _dblPrice = value
+        End Set
+    End Property
+
+    Public WriteOnly Property SetMySQL As MySQLController
+        Set(ByVal value As MySQLController)
+            mcSQL = value
         End Set
     End Property
 
@@ -103,6 +112,7 @@
 
         Try
             Select Case False
+                Case mcSQL.bln_RefreshFields
                 Case mcSQL.bln_AddField("Cy_ID_Seller", _intCompanySeller_ID, mConstants.MySQL_FieldTypes.INT_TYPE)
                 Case mcSQL.bln_AddField("ProB_ID", _intProductBrand_ID, mConstants.MySQL_FieldTypes.INT_TYPE)
                 Case mcSQL.bln_AddField("Pro_ID", _intProduct_ID, mConstants.MySQL_FieldTypes.INT_TYPE)

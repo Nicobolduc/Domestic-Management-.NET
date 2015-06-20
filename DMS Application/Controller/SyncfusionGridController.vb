@@ -9,7 +9,7 @@ Public Class SyncfusionGridController
     Private Const mstrSelectionColName As String = "SelCol"
 
     'Private class members
-    Private WithEvents mgrdSync As GridControl
+    Private WithEvents mGrdSync As GridControl
     Private WithEvents mbtnAddRow As Button
     Private WithEvents mbtnDeleteRow As Button
     Private WithEvents mfrmGridParent As Object
@@ -17,7 +17,7 @@ Public Class SyncfusionGridController
 
     'Public events
     Public Event SetDisplay()
-    Public Event ValidateData()
+    Public Event ValidateData(ByVal eventArgs As ValidateGridEventArgs)
     Public Event SaveGridData()
 
     'Public enums
@@ -32,24 +32,24 @@ Public Class SyncfusionGridController
 #Region "Properties"
 
     Public WriteOnly Property SetColsSizeBehavior As ColsSizeBehaviorsController.colsSizeBehaviors
-        Set(value As ColsSizeBehaviorsController.colsSizeBehaviors)
+        Set(ByVal value As ColsSizeBehaviorsController.colsSizeBehaviors)
             mcGridColsSizeBehavior = New ColsSizeBehaviorsController
-            mcGridColsSizeBehavior.AttachGrid(mgrdSync)
+            mcGridColsSizeBehavior.AttachGrid(mGrdSync)
             mcGridColsSizeBehavior.ColsSizeBehavior = value
         End Set
     End Property
 
     Public ReadOnly Property GetSelectedRowsCount As Integer
         Get
-            Return mgrdSync.Selections.GetSelectedRows(True, True).Count
+            Return mGrdSync.Selections.GetSelectedRows(True, True).Count
         End Get
     End Property
 
     Public ReadOnly Property GetSelectedRow As Integer
         Get
-            If mgrdSync.Selections.GetSelectedRows(True, True).Count > 0 Then
+            If mGrdSync.Selections.GetSelectedRows(True, True).Count > 0 Then
 
-                Return mgrdSync.Selections.GetSelectedRows(True, True).Item(0).Top
+                Return mGrdSync.Selections.GetSelectedRows(True, True).Item(0).Top
             Else
                 Return -1
             End If
@@ -58,9 +58,9 @@ Public Class SyncfusionGridController
 
     Public ReadOnly Property GetSelectedCol As Integer
         Get
-            If mgrdSync.Selections.GetSelectedCols(True, True).Count > 0 Then
+            If mGrdSync.Selections.GetSelectedCols(True, True).Count > 0 Then
 
-                Return mgrdSync.Selections.GetSelectedCols(True, True).Item(0).Left
+                Return mGrdSync.Selections.GetSelectedCols(True, True).Item(0).Left
             Else
                 Return -1
             End If
@@ -68,10 +68,10 @@ Public Class SyncfusionGridController
     End Property
 
     Public WriteOnly Property SetSelectedRow() As Integer
-        Set(value As Integer)
-            If value <= mgrdSync.RowCount And value > 0 Then
+        Set(ByVal value As Integer)
+            If value <= mGrdSync.RowCount And value > 0 Then
 
-                mgrdSync.CurrentCell.MoveTo(GridRangeInfo.Row(value))
+                mGrdSync.CurrentCell.MoveTo(GridRangeInfo.Row(value))
             Else
                 'Do nothing
             End If
@@ -80,18 +80,20 @@ Public Class SyncfusionGridController
 
     Public WriteOnly Property ChangeMade As Boolean
         Set(ByVal value As Boolean)
+            If mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue <> GridRowActions.INSERT_ACTION Then
 
-            If value = True Then
+                If value = True Then
 
-                mfrmGridParent.formController.ChangeMade = True
+                    mfrmGridParent.formController.ChangeMade = True
 
-                mgrdSync.RowStyles(GetSelectedRow).BackColor = Color.Yellow
-                mgrdSync(GetSelectedRow, mintDefaultActionCol).CellValue = GridRowActions.UPDATE_ACTION
-            Else
-                mfrmGridParent.formController.ChangeMade = False
+                    mGrdSync.RowStyles(GetSelectedRow).BackColor = Color.Yellow
+                    mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue = GridRowActions.UPDATE_ACTION
+                Else
+                    mfrmGridParent.formController.ChangeMade = False
 
-                mgrdSync.RowStyles(GetSelectedRow).BackColor = Color.Empty
-                mgrdSync(GetSelectedRow, mintDefaultActionCol).CellValue = GridRowActions.NO_ACTION
+                    mGrdSync.RowStyles(GetSelectedRow).BackColor = Color.Empty
+                    mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue = GridRowActions.NO_ACTION
+                End If
             End If
         End Set
     End Property
@@ -108,37 +110,37 @@ Public Class SyncfusionGridController
         Try
             mfrmGridParent = rgrdGrid.FindParentForm
 
-            mgrdSync = rgrdGrid
+            mGrdSync = rgrdGrid
             mbtnAddRow = rbtnAddRow
             mbtnDeleteRow = rbtnRemoveRow
 
-            mgrdSync.BeginInit()
-            mgrdSync.ControllerOptions = GridControllerOptions.ClickCells Or GridControllerOptions.ResizeCells
-            mgrdSync.CommandStack.Enabled = True
-            mgrdSync.ResizeColsBehavior = GridResizeCellsBehavior.ResizeSingle Or GridResizeCellsBehavior.OutlineHeaders Or GridResizeCellsBehavior.InsideGrid
+            mGrdSync.BeginInit()
+            mGrdSync.ControllerOptions = GridControllerOptions.ClickCells Or GridControllerOptions.ResizeCells
+            mGrdSync.CommandStack.Enabled = True
+            mGrdSync.ResizeColsBehavior = GridResizeCellsBehavior.ResizeSingle Or GridResizeCellsBehavior.OutlineHeaders Or GridResizeCellsBehavior.InsideGrid
             'AddHandler grdSync.QueryCellInfo, New GridQueryCellInfoEventHandler(AddressOf GridQueryCellInfo)
 
-            mgrdSync.ThemesEnabled = True
-            mgrdSync.UnHideColsOnDblClick = False
-            mgrdSync.GridVisualStyles = Syncfusion.Windows.Forms.GridVisualStyles.Office2010Blue
-            mgrdSync.Properties.BackgroundColor = Color.LightGray
+            mGrdSync.ThemesEnabled = True
+            mGrdSync.UnHideColsOnDblClick = False
+            mGrdSync.GridVisualStyles = Syncfusion.Windows.Forms.GridVisualStyles.Office2010Blue
+            mGrdSync.Properties.BackgroundColor = Color.LightGray
 
-            mgrdSync.NumberedRowHeaders = False
-            mgrdSync.NumberedColHeaders = False
-            mgrdSync.DefaultGridBorderStyle = GridBorderStyle.Solid
-            mgrdSync.BorderStyle = BorderStyle.Fixed3D
+            mGrdSync.NumberedRowHeaders = False
+            mGrdSync.NumberedColHeaders = False
+            mGrdSync.DefaultGridBorderStyle = GridBorderStyle.Solid
+            mGrdSync.BorderStyle = BorderStyle.Fixed3D
 
-            mgrdSync.DefaultRowHeight = 18
-            mgrdSync.DefaultColWidth = 70
-            mgrdSync.SetColWidth(0, 0, 9)
+            mGrdSync.DefaultRowHeight = 18
+            mGrdSync.DefaultColWidth = 70
+            mGrdSync.SetColWidth(0, 0, 9)
 
-            mgrdSync.ListBoxSelectionMode = SelectionMode.One
+            mGrdSync.ListBoxSelectionMode = SelectionMode.One
 
         Catch ex As Exception
             blnValidReturn = False
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
-            mgrdSync.EndInit()
+            mGrdSync.EndInit()
         End Try
 
         Return blnValidReturn
@@ -173,15 +175,15 @@ Public Class SyncfusionGridController
 
             'Reset the grid
             'grdSync.Model.Data.Clear()  
-            mgrdSync.Model.ResetVolatileData()
-            mgrdSync.RowCount = 0
-            mgrdSync.ColCount = 0
-            mgrdSync.BeginUpdate()
+            mGrdSync.Model.ResetVolatileData()
+            mGrdSync.RowCount = 0
+            mGrdSync.ColCount = 0
+            mGrdSync.BeginUpdate()
 
-            mgrdSync.RowCount = myDataTable.Rows.Count
-            mgrdSync.ColCount = myDataTable.Columns.Count
+            mGrdSync.RowCount = myDataTable.Rows.Count
+            mGrdSync.ColCount = myDataTable.Columns.Count
 
-            mgrdSync.Model.PopulateValues(GridRangeInfo.Cells(1, 1, myDataTable.Rows.Count, myDataTable.Columns.Count), dataTableArray)
+            mGrdSync.Model.PopulateValues(GridRangeInfo.Cells(1, 1, myDataTable.Rows.Count, myDataTable.Columns.Count), dataTableArray)
 
             blnValidReturn = bln_SetColsDisplay()
 
@@ -196,7 +198,7 @@ Public Class SyncfusionGridController
                 mySQLReader.Dispose()
             End If
 
-            mgrdSync.EndUpdate(True)
+            mGrdSync.EndUpdate(True)
 
         End Try
 
@@ -208,9 +210,9 @@ Public Class SyncfusionGridController
 
         Try
             Select Case False
-                Case Not IsDBNull(mgrdSync(vintRow, vintCol).CellValue)
-                Case Not IsNothing(mgrdSync(vintRow, vintCol).CellValue)
-                Case Not String.IsNullOrEmpty(Trim(mgrdSync(vintRow, vintCol).CellValue.ToString))
+                Case Not IsDBNull(mGrdSync(vintRow, vintCol).CellValue)
+                Case Not IsNothing(mGrdSync(vintRow, vintCol).CellValue)
+                Case Not String.IsNullOrEmpty(Trim(mGrdSync(vintRow, vintCol).CellValue.ToString))
                 Case Else
                     blnIsEmpty = False
             End Select
@@ -227,9 +229,9 @@ Public Class SyncfusionGridController
 
         Try
             Select Case False
-                Case Not IsDBNull(mgrdSync(GetSelectedRow, GetSelectedCol).CellValue)
-                Case Not IsNothing(mgrdSync(GetSelectedRow, GetSelectedCol).CellValue)
-                Case Not String.IsNullOrEmpty(Trim(mgrdSync(GetSelectedRow, GetSelectedCol).CellValue.ToString))
+                Case Not IsDBNull(mGrdSync(GetSelectedRow, GetSelectedCol).CellValue)
+                Case Not IsNothing(mGrdSync(GetSelectedRow, GetSelectedCol).CellValue)
+                Case Not String.IsNullOrEmpty(Trim(mGrdSync(GetSelectedRow, GetSelectedCol).CellValue.ToString))
                 Case Else
                     blnIsEmpty = False
             End Select
@@ -248,7 +250,7 @@ Public Class SyncfusionGridController
         Dim individualColStyle As GridStyleInfo
 
         Try
-            strGridCaption = gcAppController.str_GetCaption(CInt(mgrdSync.Tag), gcAppController.cUser.GetLanguage)
+            strGridCaption = gcAppController.str_GetCaption(CInt(mGrdSync.Tag), gcAppController.cUser.GetLanguage)
 
             lstColumns = Split(strGridCaption.Insert(0, "|"), "|")
 
@@ -259,10 +261,10 @@ Public Class SyncfusionGridController
                 individualColStyle.HorizontalAlignment = GridHorizontalAlignment.Center
 
                 If lstColumns(colHeaderCpt) = String.Empty Then
-                    mgrdSync.SetColHidden(colHeaderCpt, colHeaderCpt, True)
+                    mGrdSync.SetColHidden(colHeaderCpt, colHeaderCpt, True)
                 Else
 
-                    mgrdSync(0, colHeaderCpt).Text = Microsoft.VisualBasic.Right(lstColumns(colHeaderCpt), lstColumns(colHeaderCpt).Length - 1)
+                    mGrdSync(0, colHeaderCpt).Text = Microsoft.VisualBasic.Right(lstColumns(colHeaderCpt), lstColumns(colHeaderCpt).Length - 1)
 
                     Select Case lstColumns(colHeaderCpt).Chars(0)
                         Case CChar("<")
@@ -277,7 +279,7 @@ Public Class SyncfusionGridController
 
                     End Select
 
-                    mgrdSync.ChangeCells(GridRangeInfo.Cells(0, colHeaderCpt, mgrdSync.RowCount, colHeaderCpt), individualColStyle)
+                    mGrdSync.ChangeCells(GridRangeInfo.Cells(0, colHeaderCpt, mGrdSync.RowCount, colHeaderCpt), individualColStyle)
                 End If
 
             Next
@@ -303,9 +305,9 @@ Public Class SyncfusionGridController
     Public Function FindRow(ByVal vValueToFind As Object, ByVal vintColToSearch As Integer) As Integer
         Dim intReturnValue As Integer = -1
 
-        For intRowIdx As Integer = 1 To mgrdSync.RowCount
+        For intRowIdx As Integer = 1 To mGrdSync.RowCount
 
-            If mgrdSync(intRowIdx, vintColToSearch).CellValue = vValueToFind Then
+            If mGrdSync(intRowIdx, vintColToSearch).CellValue = vValueToFind Then
 
                 Return intRowIdx
             Else
@@ -321,27 +323,27 @@ Public Class SyncfusionGridController
 
 #Region "Private events"
 
-    Private Sub btnAddRow_Click(sender As Object, e As EventArgs) Handles mbtnAddRow.Click
+    Private Sub btnAddRow_Click(ByVal sender As Object, ByVal e As EventArgs) Handles mbtnAddRow.Click
 
-        mgrdSync.RowCount += 1
+        mGrdSync.RowCount += 1
 
-        mgrdSync.RowStyles(mgrdSync.RowCount).BackColor = Color.LightGreen
-        mgrdSync(mgrdSync.RowCount, mintDefaultActionCol).CellValue = GridRowActions.INSERT_ACTION
-        SetSelectedRow = mgrdSync.RowCount
+        mGrdSync.RowStyles(mGrdSync.RowCount).BackColor = Color.LightGreen
+        mGrdSync(mGrdSync.RowCount, mintDefaultActionCol).CellValue = GridRowActions.INSERT_ACTION
+        SetSelectedRow = mGrdSync.RowCount
 
         mfrmGridParent.formController.ChangeMade = True
     End Sub
 
-    Private Sub btnDeleteRow_Click(sender As Object, e As EventArgs) Handles mbtnDeleteRow.Click
+    Private Sub btnDeleteRow_Click(ByVal sender As Object, ByVal e As EventArgs) Handles mbtnDeleteRow.Click
 
         If GetSelectedRow > 0 Then
 
-            If mgrdSync(GetSelectedRow, mintDefaultActionCol).CellValue = SyncfusionGridController.GridRowActions.INSERT_ACTION Then
+            If mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue = SyncfusionGridController.GridRowActions.INSERT_ACTION Then
 
-                mgrdSync.Rows.RemoveRange(GetSelectedRow, GetSelectedRow)
+                mGrdSync.Rows.RemoveRange(GetSelectedRow, GetSelectedRow)
             Else
-                mgrdSync.RowStyles(GetSelectedRow).BackColor = Color.Red
-                mgrdSync(GetSelectedRow, mintDefaultActionCol).CellValue = GridRowActions.DELETE_ACTION
+                mGrdSync.RowStyles(GetSelectedRow).BackColor = Color.Red
+                mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue = GridRowActions.DELETE_ACTION
 
                 mfrmGridParent.formController.ChangeMade = True
             End If
@@ -349,12 +351,31 @@ Public Class SyncfusionGridController
         End If
     End Sub
 
-    Private Sub grdSync_CurrentCellChanged(sender As Object, e As EventArgs) Handles mgrdSync.CurrentCellChanged
-        mgrdSync.RowStyles(GetSelectedRow).BackColor = Color.Yellow
-        mgrdSync(GetSelectedRow, mintDefaultActionCol).CellValue = GridRowActions.UPDATE_ACTION
+    Private Sub grdSync_CurrentCellChanged(ByVal sender As Object, ByVal e As EventArgs) Handles mGrdSync.CurrentCellChanged
+
+        If mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue <> GridRowActions.INSERT_ACTION Then
+            mGrdSync.RowStyles(GetSelectedRow).BackColor = Color.Yellow
+            mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue = GridRowActions.UPDATE_ACTION
+        End If
     End Sub
 
 #End Region
+
+End Class
+
+Public Class ValidateGridEventArgs
+    Inherits System.EventArgs
+
+    Private mblnIsValid As Boolean
+
+    Public Property IsValid As Boolean
+        Get
+            Return mblnIsValid
+        End Get
+        Set(ByVal value As Boolean)
+            mblnIsValid = value
+        End Set
+    End Property
 
 End Class
 

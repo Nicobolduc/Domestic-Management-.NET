@@ -8,7 +8,7 @@ Public Class MySQLController
     Private mMySQLCmd As MySqlCommand
     Private mMySQLTransaction As MySqlTransaction
 
-    Private mColFields As Dictionary(Of String, String)
+    Private mColFields As Collections.Specialized.StringDictionary
 
 
 #Region "Properties"
@@ -27,7 +27,7 @@ Public Class MySQLController
     Public Sub New()
         mMySQLCmd = New MySqlCommand
 
-        mColFields = New Dictionary(Of String, String)
+        mColFields = New Collections.Specialized.StringDictionary
     End Sub
 
 #End Region
@@ -91,7 +91,14 @@ Public Class MySQLController
 
 #Region "Functions / Subs"
 
+    Public Function bln_RefreshFields() As Boolean
 
+        Dim blnValidReturn As Boolean = True
+
+        mColFields = New Collections.Specialized.StringDictionary
+
+        Return blnValidReturn
+    End Function
 
     Public Function bln_BeginTransaction() As Boolean
         Dim blnValidReturn As Boolean
@@ -236,9 +243,9 @@ Public Class MySQLController
 
         Try
             For Each strKey As String In mColFields.Keys
-                mColFields.Item(strKey).ToString()
+                'mColFields.Item(strKey).ToString()
 
-                strFields = strFields & CStr(IIf(strFields = String.Empty, String.Empty, ",")) & strKey & "=" & mColFields.Item(strKey).ToString()
+                strFields = strFields & CStr(IIf(strFields = String.Empty, String.Empty, ",")) & strKey.ToString & "=" & mColFields.Item(strKey).ToString()
             Next
 
             mMySQLCmd.CommandText = strSQL & strFields & " WHERE " & vstrWhere
