@@ -82,7 +82,7 @@ Public Class frmGeneralList
 
             End Select
 
-            myFormController.LoadFormData()
+            formController.LoadFormData()
 
             Select Case vFormMode
                 Case mConstants.Form_Modes.INSERT_MODE
@@ -195,7 +195,7 @@ Public Class frmGeneralList
         End If
     End Sub
 
-    Private Sub myFormController_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles myFormController.LoadData
+    Private Sub formController_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
         If mcGrdList Is Nothing Then

@@ -74,7 +74,7 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("ProT_Name", txtName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("ProT_Name", txtName.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
                 Case mcSQL.bln_ADOInsert("ProductType", formController.Item_ID)
                 Case formController.Item_ID > 0
                 Case Else
@@ -94,7 +94,7 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("ProT_Name", txtName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("ProT_Name", txtName.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
                 Case mcSQL.bln_ADOUpdate("ProductType", "ProT_ID = " & formController.Item_ID)
                 Case Else
                     blnValidReturn = True

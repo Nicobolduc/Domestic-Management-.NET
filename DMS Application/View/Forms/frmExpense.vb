@@ -104,10 +104,10 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Exp_Name", txtCode.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("Exp_BillingDate", CStr(IIf(IsDBNull(dtpBillDate.Value), "", dtpBillDate.Value.ToString)), mConstants.MySQL_FieldTypes.DATETIME_TYPE)
-                Case mcSQL.bln_AddField("Exp_Amount", txtAmount.Text, mConstants.MySQL_FieldTypes.DOUBLE_TYPE)
-                Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedValue), mConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Exp_Name", txtCode.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("Exp_BillingDate", CStr(IIf(IsDBNull(dtpBillDate.Value), "", dtpBillDate.Value.ToString)), MySQLController.MySQL_FieldTypes.DATETIME_TYPE)
+                Case mcSQL.bln_AddField("Exp_Amount", txtAmount.Text, MySQLController.MySQL_FieldTypes.DOUBLE_TYPE)
+                Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedValue), MySQLController.MySQL_FieldTypes.ID_TYPE)
                 Case mcSQL.bln_ADOInsert("Expense", formController.Item_ID)
                 Case formController.Item_ID > 0
                 Case Else
@@ -127,9 +127,9 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Exp_Name", txtCode.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("Exp_Amount", txtAmount.Text, mConstants.MySQL_FieldTypes.DOUBLE_TYPE)
-                Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedValue), mConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Exp_Name", txtCode.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("Exp_Amount", txtAmount.Text, MySQLController.MySQL_FieldTypes.DOUBLE_TYPE)
+                Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedValue), MySQLController.MySQL_FieldTypes.ID_TYPE)
                 Case mcSQL.bln_ADOUpdate("Expense", "Exp_ID = " & formController.Item_ID)
                 Case Else
                     blnValidReturn = True

@@ -53,6 +53,7 @@ Public Class frmProduct
 
         Try
             mcProductModel.SetMySQL = mcSQL
+            mcProductModel.DLMCommand = formController.FormMode
             mcProductModel.ID = formController.Item_ID
             mcProductModel.Name = txtName.Text
             mcProductModel.IsTaxable = chkTaxable.Checked
@@ -66,17 +67,17 @@ Public Class frmProduct
 
                 productPrice.ProductPrice_ID = Val(grdPrices(intRowIdx, mintGrdPrices_ProP_ID_col).CellValue)
 
-                If grdPrices(intRowIdx, mintGrdPrices_Action_col).CellValue <> SyncfusionGridController.GridRowActions.DELETE_ACTION Then
+                'If grdPrices(intRowIdx, mintGrdPrices_Action_col).CellValue <> SyncfusionGridController.GridRowActions.DELETE_ACTION Then
+                productPrice.DLMCommand = grdPrices(intRowIdx, mintGrdPrices_Action_col).CellValue
+                productPrice.Product_ID = mcProductModel.ID
+                productPrice.CompanySeller_ID = grdPrices(intRowIdx, mintGrdPrices_Cy_Seller_ID_col).CellValue
+                productPrice.Price = grdPrices(intRowIdx, mintGrdPrices_Price_col).CellValue
+                productPrice.ProductBrand_ID = Val(grdPrices(intRowIdx, mintGrdPrices_ProB_ID_col).CellValue)
 
-                    productPrice.Product_ID = mcProductModel.ID
-                    productPrice.CompanySeller_ID = grdPrices(intRowIdx, mintGrdPrices_Cy_Seller_ID_col).CellValue
-                    productPrice.Price = grdPrices(intRowIdx, mintGrdPrices_Price_col).CellValue
-                    productPrice.ProductBrand_ID = Val(grdPrices(intRowIdx, mintGrdPrices_ProB_ID_col).CellValue)
-
-                    mcProductModel.GetLstProductPrice.Add(productPrice)
-                Else
-                    blnValidReturn = productPrice.blnProductPrice_Save(mConstants.Form_Modes.DELETE_MODE)
-                End If
+                mcProductModel.GetLstProductPrice.Add(productPrice)
+                'Else
+                'blnValidReturn = productPrice.blnProductPrice_Save(mConstants.Form_Modes.DELETE_MODE)
+                'End If
 
                 If Not blnValidReturn Then Exit For
             Next
@@ -217,8 +218,7 @@ Public Class frmProduct
             Select Case False
                 Case mcSQL.bln_BeginTransaction
                 Case blnBuildProduct()
-
-                Case mcProductModel.blnProduct_Save(formController.FormMode)
+                Case mcProductModel.blnProduct_Save()
                 Case formController.FormMode <> mConstants.Form_Modes.DELETE_MODE
                     blnValidReturn = True
                     'Case blnGrdPrices_SaveData()

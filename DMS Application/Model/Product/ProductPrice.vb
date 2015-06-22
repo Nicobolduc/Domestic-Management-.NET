@@ -7,10 +7,21 @@
     Private _intProduct_ID As Integer
     Private _dblPrice As Double
 
+    Private _intDMLCommand As mConstants.Form_Modes
+
     'Private class members
     Private mcSQL As MySQLController
 
 #Region "Properties"
+
+    Public Property DLMCommand As mConstants.Form_Modes
+        Get
+            Return _intDMLCommand
+        End Get
+        Set(ByVal value As mConstants.Form_Modes)
+            _intDMLCommand = value
+        End Set
+    End Property
 
     Public Property ProductPrice_ID As Integer
         Get
@@ -27,7 +38,7 @@
             Return _intCompanySeller_ID
         End Get
 
-        Set(value As Integer)
+        Set(ByVal value As Integer)
             _intCompanySeller_ID = value
         End Set
     End Property
@@ -37,7 +48,7 @@
             Return _intProductBrand_ID
         End Get
 
-        Set(value As Integer)
+        Set(ByVal value As Integer)
             _intProductBrand_ID = value
         End Set
     End Property
@@ -47,7 +58,7 @@
             Return _intProduct_ID
         End Get
 
-        Set(value As Integer)
+        Set(ByVal value As Integer)
             _intProduct_ID = value
         End Set
     End Property
@@ -57,7 +68,7 @@
             Return _dblPrice
         End Get
 
-        Set(value As Double)
+        Set(ByVal value As Double)
             _dblPrice = value
         End Set
     End Property
@@ -80,11 +91,11 @@
 
 #Region "Functions / Subs"
 
-    Public Function blnProductPrice_Save(ByVal vFormMode As mConstants.Form_Modes) As Boolean
+    Public Function blnProductPrice_Save() As Boolean
         Dim blnValidReturn As Boolean = True
 
         Try
-            Select Case vFormMode
+            Select Case _intDMLCommand
                 Case Form_Modes.INSERT_MODE
                     blnValidReturn = blnProductPrice_Insert()
 
@@ -113,10 +124,10 @@
         Try
             Select Case False
                 Case mcSQL.bln_RefreshFields
-                Case mcSQL.bln_AddField("Cy_ID_Seller", _intCompanySeller_ID, mConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("ProB_ID", _intProductBrand_ID, mConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("Pro_ID", _intProduct_ID, mConstants.MySQL_FieldTypes.INT_TYPE)
-                Case mcSQL.bln_AddField("ProP_Price", _dblPrice, mConstants.MySQL_FieldTypes.DOUBLE_TYPE)
+                Case mcSQL.bln_AddField("Cy_ID_Seller", _intCompanySeller_ID, MySQLController.MySQL_FieldTypes.ID_TYPE)
+                Case mcSQL.bln_AddField("ProB_ID", _intProductBrand_ID, MySQLController.MySQL_FieldTypes.ID_TYPE)
+                Case mcSQL.bln_AddField("Pro_ID", _intProduct_ID, MySQLController.MySQL_FieldTypes.ID_TYPE)
+                Case mcSQL.bln_AddField("ProP_Price", _dblPrice, MySQLController.MySQL_FieldTypes.DOUBLE_TYPE)
                 Case Else
                     blnValidReturn = True
             End Select

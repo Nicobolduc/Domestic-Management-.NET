@@ -36,7 +36,7 @@ Partial Class frmGeneralList
         Me.ToolTips = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnRefresh = New System.Windows.Forms.Button()
         Me.grdList = New Syncfusion.Windows.Forms.Grid.GridControl()
-        Me.myFormController = New DMS_Application.ctlFormController()
+        Me.formController = New DMS_Application.ctlFormController()
         CType(Me.grdList, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -141,17 +141,17 @@ Partial Class frmGeneralList
         Me.grdList.TabIndex = 6
         Me.grdList.UseRightToLeftCompatibleTextBox = True
         '
-        'myFormController
+        'formController
         '
-        Me.myFormController.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.myFormController.FormIsLoading = False
-        Me.myFormController.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
-        Me.myFormController.Item_ID = 0
-        Me.myFormController.Location = New System.Drawing.Point(494, 570)
-        Me.myFormController.Name = "myFormController"
-        Me.myFormController.ShowButtonQuitOnly = True
-        Me.myFormController.Size = New System.Drawing.Size(85, 33)
-        Me.myFormController.TabIndex = 4
+        Me.formController.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.formController.FormIsLoading = False
+        Me.formController.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
+        Me.formController.Item_ID = 0
+        Me.formController.Location = New System.Drawing.Point(494, 570)
+        Me.formController.Name = "formController"
+        Me.formController.ShowButtonQuitOnly = True
+        Me.formController.Size = New System.Drawing.Size(85, 33)
+        Me.formController.TabIndex = 4
         '
         'frmGeneralList
         '
@@ -160,7 +160,7 @@ Partial Class frmGeneralList
         Me.ClientSize = New System.Drawing.Size(579, 602)
         Me.Controls.Add(Me.grdList)
         Me.Controls.Add(Me.btnRefresh)
-        Me.Controls.Add(Me.myFormController)
+        Me.Controls.Add(Me.formController)
         Me.Controls.Add(Me.btnAdd)
         Me.Controls.Add(Me.btnUpdate)
         Me.Controls.Add(Me.btnDelete)
@@ -182,7 +182,7 @@ Partial Class frmGeneralList
     Friend WithEvents btnUpdate As System.Windows.Forms.Button
     Friend WithEvents btnAdd As System.Windows.Forms.Button
     Friend WithEvents ToolTips As System.Windows.Forms.ToolTip
-    Public WithEvents myFormController As DMS_Application.ctlFormController
+    Public WithEvents formController As DMS_Application.ctlFormController
     Friend WithEvents btnRefresh As System.Windows.Forms.Button
     Friend WithEvents grdList As Syncfusion.Windows.Forms.Grid.GridControl
 End Class
