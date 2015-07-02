@@ -118,6 +118,7 @@
     <Compile Include="Controller\SyncfusionGridController.vb" />
     <Compile Include="Controller\CoreModelController.vb" />
     <Compile Include="Controller\Model Controllers\ProductController.vb" />
+    <Compile Include="Model\IAlterable.vb" />
     <Compile Include="Model\Product\ProductPrice.vb" />
     <Compile Include="View\User Controls\ctlGridTextBox.Designer.vb">
       <DependentUpon>ctlGridTextBox.vb</DependentUpon>

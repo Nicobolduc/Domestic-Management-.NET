@@ -5,7 +5,7 @@ Public Class frmProduct
     'Private members
     Private Const mintGrdPrices_Action_col As Short = 1
     Private Const mintGrdPrices_ProP_ID_col As Short = 2
-    Private Const mintGrdPrices_Cy_ID_col As Short = 3
+    Private Const mintGrdPrices_Cy_Seller_ID_col As Short = 3
     Private Const mintGrdPrices_Cy_Name_col As Short = 4
     Private Const mintGrdPrices_ProB_ID_col As Short = 5
     Private Const mintGrdPrices_ProB_Name_col As Short = 6
@@ -14,6 +14,7 @@ Public Class frmProduct
     'Private class members
     Private WithEvents mcGrdPrices As SyncfusionGridController
     Private mcProductModel As Model.Product
+    Private mcSQL As MySQLController
 
 
 #Region "Functions / Subs"
@@ -21,7 +22,7 @@ Public Class frmProduct
     Private Function blnLoadData() As Boolean
         Dim blnValidReturn As Boolean
         Dim strSQL As String = String.Empty
-    
+
         Try
             mcProductModel = gcAppController.GetCoreModelController.GetProductController.Value.GetProductFromID(formController.Item_ID)
 
@@ -32,10 +33,55 @@ Public Class frmProduct
                 Case blnCboCategory_Load(mcProductModel.Category_ID)
                 Case Else
                     txtName.Text = mcProductModel.Name
-                    chkTaxable.Checked = mcProductModel.isTaxable
+                    chkTaxable.Checked = mcProductModel.IsTaxable
 
                     blnValidReturn = True
             End Select
+
+        Catch ex As Exception
+            blnValidReturn = False
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnValidReturn
+    End Function
+
+    Private Function blnBuildProduct() As Boolean
+        Dim blnValidReturn As Boolean
+        Dim productPrice As ProductPrice
+
+        Try
+            mcProductModel.SetMySQL = mcSQL
+            mcProductModel.DLMCommand = formController.FormMode
+            mcProductModel.ID = formController.Item_ID
+            mcProductModel.Name = txtName.Text
+            mcProductModel.IsTaxable = chkTaxable.Checked
+            mcProductModel.Type_ID = cboType.SelectedValue
+            mcProductModel.Category_ID = cboCategory.SelectedValue
+
+            For intRowIdx As Integer = 1 To grdPrices.RowCount
+
+                productPrice = New ProductPrice
+                productPrice.SetMySQL = mcSQL
+
+                productPrice.ProductPrice_ID = Val(grdPrices(intRowIdx, mintGrdPrices_ProP_ID_col).CellValue)
+
+                'If grdPrices(intRowIdx, mintGrdPrices_Action_col).CellValue <> SyncfusionGridController.GridRowActions.DELETE_ACTION Then
+                productPrice.DLMCommand = grdPrices(intRowIdx, mintGrdPrices_Action_col).CellValue
+                productPrice.Product_ID = mcProductModel.ID
+                productPrice.CompanySeller_ID = grdPrices(intRowIdx, mintGrdPrices_Cy_Seller_ID_col).CellValue
+                productPrice.Price = grdPrices(intRowIdx, mintGrdPrices_Price_col).CellValue
+                productPrice.ProductBrand_ID = Val(grdPrices(intRowIdx, mintGrdPrices_ProB_ID_col).CellValue)
+
+                mcProductModel.GetLstProductPrice.Add(productPrice)
+                'Else
+                'blnValidReturn = productPrice.blnProductPrice_Save(mConstants.Form_Modes.DELETE_MODE)
+                'End If
+
+                If Not blnValidReturn Then Exit For
+            Next
+
+            blnValidReturn = True
 
         Catch ex As Exception
             blnValidReturn = False
@@ -166,15 +212,24 @@ Public Class frmProduct
         Dim blnValidReturn As Boolean
 
         Try
-            blnValidReturn = mcProductModel.blnProduct_Save(formController.FormMode)
+            mcSQL = New MySQLController
 
-            If blnValidReturn And formController.FormMode <> mConstants.Form_Modes.DELETE_MODE Then
-                blnValidReturn = blnGrdPrices_SaveData()
-            End If
+            Select Case False
+                Case mcSQL.bln_BeginTransaction
+                Case blnBuildProduct()
+                Case mcProductModel.blnProduct_Save()
+                Case formController.FormMode <> mConstants.Form_Modes.DELETE_MODE
+                    blnValidReturn = True
+                    'Case blnGrdPrices_SaveData()
+                Case Else
+                    blnValidReturn = True
+            End Select
 
         Catch ex As Exception
             blnValidReturn = False
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        Finally
+            mcSQL.bln_EndTransaction(blnValidReturn)
         End Try
 
         Return blnValidReturn
@@ -224,7 +279,7 @@ Public Class frmProduct
                     Case mintGrdPrices_Cy_Name_col
 
                         If Not mcGrdPrices.CellIsEmpty(vintRowIndex, vintColIndex) Then
-                            cboCompany.SelectedValue = grdPrices(vintRowIndex, mintGrdPrices_Cy_ID_col).CellValue
+                            cboCompany.SelectedValue = grdPrices(vintRowIndex, mintGrdPrices_Cy_Seller_ID_col).CellValue
                         End If
 
                         cboCompany.Location = New Point(cellRectangle.Location.X + 7, cellRectangle.Location.Y + (cellRectangle.Size.Height))
@@ -282,7 +337,10 @@ Public Class frmProduct
     Private Sub formController_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
-        mcProductModel = New Model.Product
+        If mcProductModel.ID > 0 And formController.Item_ID <= 0 Then
+
+            formController.Item_ID = mcProductModel.ID
+        End If
 
         Select Case False
             Case mcGrdPrices.bln_Init(grdPrices, btnAddRow, btnRemoveRow)
@@ -361,7 +419,7 @@ Public Class frmProduct
                 eventArgs.IsValid = False
 
                 Select Case True
-                    Case mcGrdPrices.CellIsEmpty(intRowIndex, mintGrdPrices_Cy_ID_col)
+                    Case mcGrdPrices.CellIsEmpty(intRowIndex, mintGrdPrices_Cy_Seller_ID_col)
                         gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
                         blnGrdPrices_Cbo_Show(intRowIndex, mintGrdPrices_Cy_Name_col)
 
@@ -401,7 +459,7 @@ Public Class frmProduct
 
     End Sub
 
-    Private Sub grdPrices_CellDoubleClick(sender As Object, e As GridCellClickEventArgs) Handles grdPrices.CellDoubleClick
+    Private Sub grdPrices_CellDoubleClick(ByVal sender As Object, ByVal e As GridCellClickEventArgs) Handles grdPrices.CellDoubleClick
         If mcGrdPrices.GetSelectedRowsCount > 0 Then
 
             Select Case mcGrdPrices.GetSelectedCol
@@ -414,7 +472,7 @@ Public Class frmProduct
         End If
     End Sub
 
-    Private Sub grdPrices_CurrentCellAcceptedChanges(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles grdPrices.CurrentCellAcceptedChanges
+    Private Sub grdPrices_CurrentCellAcceptedChanges(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles grdPrices.CurrentCellAcceptedChanges
 
         If mcGrdPrices.GetSelectedCol = mintGrdPrices_Price_col And mcGrdPrices.GetSelectedRowsCount > 0 Then
 
@@ -432,7 +490,7 @@ Public Class frmProduct
     End Sub
 
     Private Sub cboCompany_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboCompany.Leave
-        grdPrices(mcGrdPrices.GetSelectedRow, mintGrdPrices_Cy_ID_col).CellValue = cboCompany.SelectedValue
+        grdPrices(mcGrdPrices.GetSelectedRow, mintGrdPrices_Cy_Seller_ID_col).CellValue = cboCompany.SelectedValue
         grdPrices(mcGrdPrices.GetSelectedRow, mintGrdPrices_Cy_Name_col).CellValue = cboCompany.SelectedItem.Value
 
         cboCompany.Visible = False
@@ -444,6 +502,7 @@ Public Class frmProduct
         grdPrices(mcGrdPrices.GetSelectedRow, mintGrdPrices_ProB_Name_col).CellValue = cboProductBrand.SelectedItem.Value
 
         cboProductBrand.Visible = False
+        mcGrdPrices.ChangeMade = True
     End Sub
 
     Private Sub chkTaxable_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkTaxable.CheckedChanged
@@ -455,8 +514,19 @@ Public Class frmProduct
         InitializeComponent()
 
         mcGrdPrices = New SyncfusionGridController
+        mcProductModel = New Model.Product
+    End Sub
+
+    Private Sub mcGrdPrices_ValidateData(ByVal eventArgs As ValidateGridEventArgs) Handles mcGrdPrices.ValidateData
+        If grdPrices.RowCount < 1 Then
+
+            gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+            eventArgs.IsValid = False
+        Else
+            eventArgs.IsValid = True
+        End If
     End Sub
 
 #End Region
-
+    
 End Class

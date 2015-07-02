@@ -9,14 +9,6 @@ Public Module mConstants
         ANNUEL = 5
     End Enum
 
-    Public Enum MySQL_FieldTypes
-        TINYINT_TYPE = 0
-        INT_TYPE = 1
-        DOUBLE_TYPE = 2
-        VARCHAR_TYPE = 3
-        DATETIME_TYPE = 4
-    End Enum
-
     Public Enum Form_Modes
         CONSULT_MODE = 0
         INSERT_MODE = 1

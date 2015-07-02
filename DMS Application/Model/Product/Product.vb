@@ -3,12 +3,14 @@
     Public Class Product
 
         'Private members
-        <DebuggerBrowsable(DebuggerBrowsableState.Never)>
+        '<DebuggerBrowsable(DebuggerBrowsableState.Never)>
         Private _intProduct_ID As Integer
         Private _strName As String = String.Empty
         Private _intType_ID As Integer
         Private _intCategory_ID As Integer
         Private _blnIsTaxable As Boolean
+
+        Private _intDMLCommand As mConstants.Form_Modes
 
         'Private class members
         Private mLstProductPrice As List(Of ProductPrice)
@@ -17,10 +19,22 @@
 
 #Region "Properties"
 
-        Public ReadOnly Property ID As Integer
+        Public Property DLMCommand As mConstants.Form_Modes
+            Get
+                Return _intDMLCommand
+            End Get
+            Set(ByVal value As mConstants.Form_Modes)
+                _intDMLCommand = value
+            End Set
+        End Property
+
+        Public Property ID As Integer
             Get
                 Return _intProduct_ID
             End Get
+            Set(ByVal value As Integer)
+                _intProduct_ID = value
+            End Set
         End Property
 
         Public Property Name As String
@@ -62,13 +76,25 @@
             End Set
         End Property
 
-        Public Property isTaxable As Boolean
+        Public Property IsTaxable As Boolean
             Get
                 Return _blnIsTaxable
             End Get
 
             Set(ByVal value As Boolean)
                 _blnIsTaxable = value
+            End Set
+        End Property
+
+        Public ReadOnly Property GetLstProductPrice As List(Of ProductPrice)
+            Get
+                Return mLstProductPrice
+            End Get
+        End Property
+
+        Public WriteOnly Property SetMySQL As MySQLController
+            Set(ByVal value As MySQLController)
+                mcSQL = value
             End Set
         End Property
 
@@ -86,15 +112,13 @@
 
 #Region "Functions / Subs"
 
-        Public Function blnProduct_Save(ByVal vFormMode As mConstants.Form_Modes) As Boolean
+        Public Function blnProduct_Save() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
-                mcSQL = New MySQLController
+                If mcSQL.blnTransactionStarted Then
 
-                If mcSQL.bln_BeginTransaction() Then
-
-                    Select Case vFormMode
+                    Select Case _intDMLCommand
                         Case mConstants.Form_Modes.INSERT_MODE
                             blnValidReturn = blnProduct_Insert()
 
@@ -112,9 +136,6 @@
             Catch ex As Exception
                 blnValidReturn = False
                 gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-            Finally
-                mcSQL.bln_EndTransaction(blnValidReturn)
-                mcSQL = Nothing
             End Try
 
             Return blnValidReturn
@@ -125,10 +146,11 @@
 
             Try
                 Select Case False
-                    Case mcSQL.bln_AddField("Pro_Name", _strName, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                    Case mcSQL.bln_AddField("ProT_ID", _intType_ID.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
-                    Case mcSQL.bln_AddField("ProC_ID", _intCategory_ID.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
-                    Case mcSQL.bln_AddField("Pro_Taxable", _blnIsTaxable.ToString, mConstants.MySQL_FieldTypes.TINYINT_TYPE)
+                    Case mcSQL.bln_RefreshFields
+                    Case mcSQL.bln_AddField("Pro_Name", _strName, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
+                    Case mcSQL.bln_AddField("ProT_ID", _intType_ID.ToString, MySQLController.MySQL_FieldTypes.ID_TYPE)
+                    Case mcSQL.bln_AddField("ProC_ID", _intCategory_ID.ToString, MySQLController.MySQL_FieldTypes.ID_TYPE)
+                    Case mcSQL.bln_AddField("Pro_Taxable", _blnIsTaxable.ToString, MySQLController.MySQL_FieldTypes.TINYINT_TYPE)
                     Case Else
                         blnValidReturn = True
                 End Select
@@ -149,6 +171,7 @@
                     Case blnProduct_AddFields()
                     Case mcSQL.bln_ADOInsert("Product", _intProduct_ID)
                     Case _intProduct_ID > 0
+                    Case blnLstProductPrice_Save()
                     Case Else
                         blnValidReturn = True
                 End Select
@@ -168,6 +191,7 @@
                 Select Case False
                     Case blnProduct_AddFields()
                     Case mcSQL.bln_ADOUpdate("Product", "Pro_ID = " & _intProduct_ID)
+                    Case blnLstProductPrice_Save()
                     Case Else
                         blnValidReturn = True
                 End Select
@@ -193,6 +217,28 @@
 
             Catch ex As Exception
                 blnValidReturn = False
+                gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            End Try
+
+            Return blnValidReturn
+        End Function
+
+        Private Function blnLstProductPrice_Save() As Boolean
+            Dim blnValidReturn As Boolean
+
+            Try
+                For Each proPrice As ProductPrice In mLstProductPrice
+
+                    proPrice.Product_ID = _intProduct_ID
+
+                    blnValidReturn = proPrice.blnProductPrice_Save()
+
+                    If Not blnValidReturn Then Exit For
+                Next
+
+                blnValidReturn = True
+
+            Catch ex As Exception
                 gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             End Try
 

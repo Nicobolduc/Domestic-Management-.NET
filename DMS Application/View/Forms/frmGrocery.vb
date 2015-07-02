@@ -237,7 +237,7 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Gro_Name", txtGroceryName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("Gro_Name", txtGroceryName.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
                 Case mcSQL.bln_ADOInsert("Grocery", formController.Item_ID)
                 Case formController.Item_ID > 0
                 Case Else
@@ -257,7 +257,7 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Gro_Name", txtGroceryName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("Gro_Name", txtGroceryName.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
                 Case mcSQL.bln_ADOUpdate("Grocery", "Gro_ID = " & formController.Item_ID)
                 Case formController.Item_ID > 0
                 Case Else
@@ -323,8 +323,8 @@
                     Select Case False
                         Case grdGrocery(cpt, mintGrdGrocery_Sel_col).CellValue.ToString = "True"
                             blnValidReturn = True
-                        Case mcSQL.bln_AddField("Gro_ID", formController.Item_ID.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
-                        Case mcSQL.bln_AddField("Pro_ID", grdGrocery(cpt, mintGrdGrocery_Pro_ID_col).CellValue.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
+                        Case mcSQL.bln_AddField("Gro_ID", formController.Item_ID.ToString, MySQLController.MySQL_FieldTypes.ID_TYPE)
+                        Case mcSQL.bln_AddField("Pro_ID", grdGrocery(cpt, mintGrdGrocery_Pro_ID_col).CellValue.ToString, MySQLController.MySQL_FieldTypes.ID_TYPE)
                         Case mcSQL.bln_ADOInsert("Gro_Pro")
                         Case Else
                             blnValidReturn = True

@@ -96,8 +96,8 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Cy_Name", txtName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("CyT_ID", cboCompanyType.SelectedValue.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Cy_Name", txtName.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("CyT_ID", cboCompanyType.SelectedValue.ToString, MySQLController.MySQL_FieldTypes.ID_TYPE)
                 Case mcSQL.bln_ADOInsert("Company", formController.Item_ID)
                 Case formController.Item_ID > 0
                 Case Else
@@ -117,8 +117,8 @@
 
         Try
             Select Case False
-                Case mcSQL.bln_AddField("Cy_Name", txtName.Text, mConstants.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("CyT_ID", cboCompanyType.SelectedValue.ToString, mConstants.MySQL_FieldTypes.INT_TYPE)
+                Case mcSQL.bln_AddField("Cy_Name", txtName.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("CyT_ID", cboCompanyType.SelectedValue.ToString, MySQLController.MySQL_FieldTypes.ID_TYPE)
                 Case mcSQL.bln_ADOUpdate("Company", "Cy_ID = " & formController.Item_ID)
                 Case Else
                     blnValidReturn = True

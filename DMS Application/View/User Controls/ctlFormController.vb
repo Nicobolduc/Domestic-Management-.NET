@@ -16,6 +16,7 @@ Public Class ctlFormController
     Private WithEvents mfrmParent As System.Windows.Forms.Form
 
     'Public Events
+    Public Event BeNotify(ByVal eventArgs As BeNotifyEventArgs)
     Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
     Public Event SetReadRights()
     Public Event LoadData(ByVal eventArgs As LoadDataEventArgs)
@@ -322,6 +323,22 @@ Public Class ValidateFormEventArgs
         End Get
         Set(ByVal value As Boolean)
             mblnIsValid = value
+        End Set
+    End Property
+
+End Class
+
+Public Class BeNotifyEventArgs
+    Inherits System.EventArgs
+
+    Private _lstReceivedValues As List(Of Object)
+
+    Public Property LstReceivedValues As List(Of Object)
+        Get
+            Return New List(Of Object)
+        End Get
+        Set(ByVal value As List(Of Object))
+            _lstReceivedValues = value
         End Set
     End Property
 

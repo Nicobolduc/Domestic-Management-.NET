@@ -81,7 +81,7 @@
                     frmGenList.Text = frmGenList.Text & strListName
                     frmGenList.MdiParent = My.Forms.mdiGeneral
 
-                    frmGenList.myFormController.ShowForm(mConstants.Form_Modes.CONSULT_MODE)
+                    frmGenList.formController.ShowForm(mConstants.Form_Modes.CONSULT_MODE)
 
                     If My.Forms.mdiGeneral.GetGenListChildCount = 0 Then
                         frmGenList.Location = New Point(0, 0)
