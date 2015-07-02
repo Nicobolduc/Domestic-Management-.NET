@@ -24,14 +24,10 @@ Partial Class test
     Private Sub InitializeComponent()
         Me.Grid2 = New FlexCell.Grid()
         Me.Button2 = New System.Windows.Forms.Button()
-        Me.C1FlexGrid1 = New C1.Win.C1FlexGrid.C1FlexGrid()
-        Me.Button3 = New System.Windows.Forms.Button()
         Me.Button4 = New System.Windows.Forms.Button()
         Me.grdSync = New Syncfusion.Windows.Forms.Grid.GridControl()
         Me.Populate = New System.Windows.Forms.Button()
         Me.Button1 = New System.Windows.Forms.Button()
-        Me.GridAwareTextBox1 = New Syncfusion.Windows.Forms.Grid.GridAwareTextBox()
-        CType(Me.C1FlexGrid1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.grdSync, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -40,7 +36,7 @@ Partial Class test
         Me.Grid2.CheckedImage = Nothing
         Me.Grid2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Grid2.GridColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer))
-        Me.Grid2.Location = New System.Drawing.Point(524, 3)
+        Me.Grid2.Location = New System.Drawing.Point(524, 429)
         Me.Grid2.Name = "Grid2"
         Me.Grid2.Size = New System.Drawing.Size(562, 378)
         Me.Grid2.TabIndex = 5
@@ -48,34 +44,16 @@ Partial Class test
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(1100, 67)
+        Me.Button2.Location = New System.Drawing.Point(1092, 429)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(66, 40)
         Me.Button2.TabIndex = 6
         Me.Button2.Text = "FlexCell"
         Me.Button2.UseVisualStyleBackColor = True
         '
-        'C1FlexGrid1
-        '
-        Me.C1FlexGrid1.ColumnInfo = "10,1,0,0,0,95,Columns:"
-        Me.C1FlexGrid1.Location = New System.Drawing.Point(4, 387)
-        Me.C1FlexGrid1.Name = "C1FlexGrid1"
-        Me.C1FlexGrid1.Rows.DefaultSize = 19
-        Me.C1FlexGrid1.Size = New System.Drawing.Size(521, 420)
-        Me.C1FlexGrid1.TabIndex = 7
-        '
-        'Button3
-        '
-        Me.Button3.Location = New System.Drawing.Point(540, 387)
-        Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(66, 40)
-        Me.Button3.TabIndex = 8
-        Me.Button3.Text = "C1 Grid"
-        Me.Button3.UseVisualStyleBackColor = True
-        '
         'Button4
         '
-        Me.Button4.Location = New System.Drawing.Point(1092, 387)
+        Me.Button4.Location = New System.Drawing.Point(1092, 12)
         Me.Button4.Name = "Button4"
         Me.Button4.Size = New System.Drawing.Size(66, 40)
         Me.Button4.TabIndex = 10
@@ -86,10 +64,10 @@ Partial Class test
         '
         Me.grdSync.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.grdSync.GridVisualStyles = Syncfusion.Windows.Forms.GridVisualStyles.Office2010Blue
-        Me.grdSync.Location = New System.Drawing.Point(625, 387)
+        Me.grdSync.Location = New System.Drawing.Point(12, 12)
         Me.grdSync.Name = "grdSync"
         Me.grdSync.SerializeCellsBehavior = Syncfusion.Windows.Forms.Grid.GridSerializeCellsBehavior.SerializeAsRangeStylesIntoCode
-        Me.grdSync.Size = New System.Drawing.Size(461, 391)
+        Me.grdSync.Size = New System.Drawing.Size(1074, 391)
         Me.grdSync.SmartSizeBox = False
         Me.grdSync.TabIndex = 11
         Me.grdSync.Tag = "9"
@@ -98,7 +76,7 @@ Partial Class test
         '
         'Populate
         '
-        Me.Populate.Location = New System.Drawing.Point(1092, 433)
+        Me.Populate.Location = New System.Drawing.Point(1092, 58)
         Me.Populate.Name = "Populate"
         Me.Populate.Size = New System.Drawing.Size(66, 40)
         Me.Populate.TabIndex = 12
@@ -107,53 +85,36 @@ Partial Class test
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(1092, 479)
+        Me.Button1.Location = New System.Drawing.Point(1092, 104)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(66, 40)
         Me.Button1.TabIndex = 13
         Me.Button1.Text = "Feed DB"
         Me.Button1.UseVisualStyleBackColor = True
         '
-        'GridAwareTextBox1
-        '
-        Me.GridAwareTextBox1.AutoSuggestFormula = False
-        Me.GridAwareTextBox1.DisabledBackColor = System.Drawing.SystemColors.Window
-        Me.GridAwareTextBox1.EnabledBackColor = System.Drawing.SystemColors.Window
-        Me.GridAwareTextBox1.Location = New System.Drawing.Point(519, 604)
-        Me.GridAwareTextBox1.Name = "GridAwareTextBox1"
-        Me.GridAwareTextBox1.Size = New System.Drawing.Size(100, 20)
-        Me.GridAwareTextBox1.TabIndex = 14
-        '
         'test
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1178, 819)
-        Me.Controls.Add(Me.GridAwareTextBox1)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.Populate)
         Me.Controls.Add(Me.grdSync)
         Me.Controls.Add(Me.Button4)
-        Me.Controls.Add(Me.Button3)
-        Me.Controls.Add(Me.C1FlexGrid1)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Grid2)
         Me.Name = "test"
         Me.Text = "test"
-        CType(Me.C1FlexGrid1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.grdSync, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
 
     Friend WithEvents Grid2 As FlexCell.Grid
     Friend WithEvents Button2 As System.Windows.Forms.Button
-    Friend WithEvents C1FlexGrid1 As C1.Win.C1FlexGrid.C1FlexGrid
-    Friend WithEvents Button3 As System.Windows.Forms.Button
+    'Friend WithEvents C1FlexGrid1 As C1.Win.C1FlexGrid.C1FlexGrid
     Friend WithEvents Button4 As System.Windows.Forms.Button
     Friend WithEvents grdSync As Syncfusion.Windows.Forms.Grid.GridControl
     Friend WithEvents Populate As System.Windows.Forms.Button
     Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents GridAwareTextBox1 As Syncfusion.Windows.Forms.Grid.GridAwareTextBox
 End Class

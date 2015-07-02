@@ -103,7 +103,9 @@ Public NotInheritable Class AppController
             MessageBox.Show("La connexion au serveur a échouée.")
             Me.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             mcMySQLConnection.Dispose()
+#If Debug = 0 Then
             Application.Exit()
+#End If
         End Try
 
         Return blnValidReturn

@@ -12,7 +12,6 @@ Public Class frmProduct
     Private Const mintGrdPrices_Price_col As Short = 7
 
     'Private class members
-
     Private WithEvents mcGrdPrices As SyncfusionGridController
     Private mcProductModel As Model.Product
 

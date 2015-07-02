@@ -1,6 +1,11 @@
 ﻿Public Class Template
 
+    'Public members
+
     'Private members
+
+    'Private class members
+
 
 #Region "Properties"
 
@@ -30,7 +35,11 @@
 #End Region
 
 
+#Region "Private events"
 
+
+
+#End Region
 
 
 End Class
