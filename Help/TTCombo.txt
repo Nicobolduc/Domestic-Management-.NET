@@ -1,0 +1,1434 @@
+Option Strict Off
+Option Explicit On
+Imports VB = Microsoft.VisualBasic
+<System.Runtime.InteropServices.ProgId("ctlTTCombo_NET.ctlTTCombo")>
+Public Class ctlGridTextBox
+    Inherits System.Windows.Forms.UserControl
+
+
+    Private Const mstrCONTROL_NAME As String = "CONTROL COMBO "
+
+    Private Const gvbNullString As String = ""
+
+    Private mcTTAPP As TT3DLL.clsTTAPP
+    Private mrecRec As ADODB.Recordset
+    Private mintColCode As Short 'POsition de la colonne code dans le recordset
+
+    Private mblnAllowResize As Boolean
+    Private mblnStartResize As Boolean
+    Private mintStartX As Short
+    Private mintStartSize As Short
+    Private mblnFilterModeOnly As Boolean
+
+    Private mstrSQL As String = gvbNullString
+    Private mstrSQLOriginal As String = gvbNullString
+    Private mstrFilter As String = gvbNullString
+    Private mlngNewNRI As Integer
+    Private mlngNRI As Integer
+    Private mblnEnabled As Boolean = True
+    Private mstrInitKeyString As String = gvbNullString
+
+    Private mblnChangeMade As Boolean
+    Public mstrFormCaption As String 'TAG1      "1|2"
+    Public mstrGridCaption As String 'TAG2      "1|2"
+
+    Public GridWidth As Integer
+    Public Merge As Boolean
+    Public MoveCols As Boolean
+
+    Private mblnSetToolTips As Boolean
+    Private mblnUseInGrid As Boolean = False
+    Private mblnValideNumeric As Boolean
+
+    Private mblnSelTextOnFocus As Boolean
+
+    Private mblnRefreshActivated As Boolean
+    Private mblnLoaded As Boolean
+    Private mstrLoadOnlyThisNRI As String = gvbNullString
+    Private mblnFilterIsAlpha As Boolean
+
+    Private Const mstrINVALID_CARACTERS As String = "*%"
+
+    'Buttons
+    Private Const mintNormal_cmd As Short = 0
+    Private Const mintSmall_cmd As Short = 1
+
+    Private Const mintMINSIZE As Short = 300
+    Private Const mintKeyOpenDetail As Short = 113 'F2
+    Private Const mintKeyDeleteText As Short = 116 'F5
+    'UPGRADE_NOTE: mintKeyOpenGrid was changed from a Constant to a Variable. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="C54B49D7-5804-4D48-834B-B3D81E4C2F13"'
+    Private mintKeyOpenGrid As Short = System.Windows.Forms.Keys.Return
+    Private Const mstrKEY_DELIMITER As String = "****"
+
+    Public Event Change(ByVal Sender As System.Object, ByVal e As ChangeEventArgs)
+    Public Event BeforeValide(ByVal Sender As System.Object, ByVal e As BeforeValideEventArgs) 'Permet de mettre a jour le filtre avante toute validation
+    Public Event AfterValide(ByVal Sender As System.Object, ByRef e As AfterValideEventArgs)
+    Public Event ShowDetail(ByVal Sender As System.Object, ByVal e As ShowDetailEventArgs) 'Permet d'appeler un ecran de détail
+    Public Event OpenListe(ByVal Sender As System.Object, ByRef e As OpenListeEventArgs) 'Permet d'appeler un ecran de détail
+
+    Private autoCompleteStringCollection As AutoCompleteStringCollection 'Classe qui sert à faire fonctionner l'autocomplete d'un control
+
+    ReadOnly Property hWindow() As Integer
+        Get
+            hWindow = Handle.ToInt32
+        End Get
+    End Property
+    Private Sub UserControl_Initialize()
+        autoCompleteStringCollection = New AutoCompleteStringCollection
+    End Sub
+
+
+    Property ADORecord() As ADODB.Recordset
+        Get
+            ADORecord = mrecRec
+        End Get
+        Set(ByVal Value As ADODB.Recordset)
+            'MP: pourquoi?? frmTTFIlter marchait tout croche
+            'If Me.IsHandleCreated Then
+            mrecRec = New ADODB.Recordset
+            mrecRec = Value
+
+            'LoadAutoComplete()
+
+            'UPGRADE_WARNING: Couldn't resolve default property of object mrecRec.Source. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'
+            If IsNothing(mrecRec) Then
+                mstrSQL = gvbNullString
+                mstrSQLOriginal = gvbNullString
+            Else
+                mstrSQL = mrecRec.Source
+                mstrSQLOriginal = mrecRec.Source
+            End If
+
+            'UPGRADE_WARNING: Couldn't resolve default property of object mrecRec.Source. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'
+
+            'MP: quand on set le recordset direct on doit dire qu'il est loaded.
+            'Probleme avec ca dans TTFilter ou on change la valeur du caption direct sur le recordset...
+            mblnLoaded = True
+            'End If
+        End Set
+    End Property
+
+    ''' <summary>
+    ''' Empli l'autocomplete à partir du recordset et relie celui-ci avec le txtbox
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub LoadAutoComplete()
+        'autoCompleteStringCollection.Clear()
+        'If mrecRec IsNot Nothing Then
+        '    While Not mrecRec.EOF And mrecRec.RecordCount <> 0
+        '        autoCompleteStringCollection.Add(mrecRec(mintColCode).Value.ToString)
+        '        mrecRec.MoveNext()
+        '    End While
+        'Else 'nothing
+        'End If
+        'txtBox.AutoCompleteCustomSource = autoCompleteStringCollection
+        'txtBox.AutoCompleteSource = AutoCompleteSource.CustomSource
+        'txtBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend
+    End Sub
+
+    Public Function ADORecord_CopyFromOther(ByVal vRecRecord As ADODB.Recordset) As Boolean
+        On Error GoTo Error_ADORecord_CopyFromOther
+        Const strFCT_NAME As String = "ADORecord_CopyFromOther"
+
+        Dim blnReturn As Boolean
+        Dim recRecordTemp As New ADODB.Recordset
+        'MP Quand on copie un recordset d'un autre TTCbo, on le clone avant de l'affecter, sinon quand un va changer, celui ci va changer aussi
+        'Ne fonctionne pas avec les combos qui ont un init key
+
+        Call mcTTAPP.bln_RecordsetClone(vRecRecord, recRecordTemp)
+
+        'mstrSQL = recRecordTemp.Source
+        'mstrSQLOriginal = recRecordTemp.Source
+        mstrSQL = vRecRecord.Source
+        mstrSQLOriginal = vRecRecord.Source
+
+        mrecRec = recRecordTemp
+        'LoadAutoComplete()
+
+        mblnLoaded = True
+
+Exit_ADORecord_CopyFromOther:
+        recRecordTemp = Nothing
+        ADORecord_CopyFromOther = blnReturn
+        Exit Function
+
+Error_ADORecord_CopyFromOther:
+        blnReturn = False
+        Call mcTTAPP.bln_LogError(Err, mstrCONTROL_NAME, strFCT_NAME)
+        Resume Exit_ADORecord_CopyFromOther
+    End Function
+
+
+    Property SQL() As String
+        Get
+            SQL = mstrSQL
+        End Get
+        Set(ByVal Value As String)
+            Dim strSQLTemp As String = gvbNullString
+
+            Select Case True
+
+                Case Value = gvbNullString
+                    mblnLoaded = False
+
+                    mstrSQLOriginal = Value
+                    mstrSQL = Value
+
+                    'Nouveau SQL = NOUVELLE REQUETTE
+                    'UPGRADE_NOTE: Object mrecRec may not be destroyed until it is garbage collected. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6E35BFF6-CD74-4B09-9689-3E1A43DF8969"'
+                    mrecRec = Nothing
+                    Call pfblnClearControl()
+                    Call pSetRecordSQL()
+                    LoadAutoComplete()
+                Case mstrSQLOriginal = Value
+                    'do nothing
+
+                Case mstrSQLOriginal <> Value
+                    mlngNRI = 0
+
+                    If mstrInitKeyString <> gvbNullString Then
+                        mblnLoaded = False
+                    Else
+                        mblnLoaded = True
+                    End If
+
+                    mstrSQLOriginal = Value
+
+                    If Not mblnFilterModeOnly Then
+                        Call fblnSQL_Process(mstrSQL, mblnLoaded, mstrSQLOriginal, mstrInitKeyString, mstrKEY_DELIMITER, mcTTAPP, mblnFilterIsAlpha, mblnFilterModeOnly, "0")
+                    Else
+                        'do nothing: En mode filtre, le ttcbo n'est loadé que sur le validate du txtbox
+                    End If
+
+                    'Nouveau SQL = NOUVELLE REQUETTE
+                    Call pSetRecordSQL()
+                    LoadAutoComplete()
+                Case Else
+                    'Do Nothing
+            End Select
+
+        End Set
+    End Property
+
+
+    Property UseInGrid() As Boolean
+        Get
+            UseInGrid = mblnUseInGrid
+        End Get
+        Set(ByVal Value As Boolean)
+            mblnUseInGrid = Value
+            mblnAllowResize = True
+            If mblnUseInGrid Then
+                'UPGRADE_ISSUE: UserControl property UserControl.BackStyle was not upgraded. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="CC4C7EC0-C903-48FC-ACCC-81861D12DA4A"'
+                'MyBase.BackStyle = 1
+                MyBase.BackColor = Color.Gainsboro
+                cmdDetail(mintSmall_cmd).Visible = True
+                cmdDetail(mintNormal_cmd).Visible = False
+            Else
+                'UPGRADE_ISSUE: UserControl property UserControl.BackStyle was not upgraded. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="CC4C7EC0-C903-48FC-ACCC-81861D12DA4A"'
+                'MyBase.BackStyle = 0
+                MyBase.BackColor = Color.Transparent
+                cmdDetail(mintSmall_cmd).Visible = False
+                cmdDetail(mintNormal_cmd).Visible = True
+            End If
+
+        End Set
+    End Property
+
+
+    Property AllowResize() As Boolean
+        Get
+            AllowResize = mblnAllowResize
+        End Get
+        Set(ByVal Value As Boolean)
+            mblnAllowResize = Value
+        End Set
+    End Property
+
+
+
+    Property lngNRI() As Integer
+        Get
+            lngNRI = mlngNRI
+        End Get
+        Set(ByVal Value As Integer)
+            Select Case True
+                Case Value = 0
+                    Call pfblnClearControl()
+                    mblnChangeMade = False
+
+                Case Value <> mlngNRI
+                    Call pfblnValide(True, , Value)
+
+                Case Value = mlngNRI
+                    'Do Nothing
+                Case Else
+
+            End Select
+
+            'Si on force le NRI pas mblnChangeMade
+            mblnChangeMade = False
+
+        End Set
+    End Property
+
+    ReadOnly Property ItemCount() As Integer
+        Get
+            If mrecRec Is Nothing Then
+                ItemCount = 0
+            Else
+                ItemCount = mrecRec.RecordCount
+            End If
+        End Get
+    End Property
+
+    ReadOnly Property TextCode() As String
+        Get
+            TextCode = txtBox.Text
+        End Get
+    End Property
+
+
+    'UPGRADE_NOTE: Filter was upgraded to Filter_Renamed. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="A9E4979A-37FA-4718-9994-97DD76ED70A7"'
+    Property Filter() As String
+        Get
+            Filter = mstrFilter
+        End Get
+        Set(ByVal Value As String)
+            mstrFilter = Value
+            Call pSetFilter()
+        End Set
+    End Property
+
+    Shadows Property Enabled() As Boolean
+        Get
+            Enabled = mblnEnabled
+        End Get
+        Set(ByVal Value As Boolean)
+            mblnEnabled = Value
+            txtBox.ReadOnly = Not mblnEnabled
+
+            If mblnEnabled Then
+                txtBox.BackColor = System.Drawing.SystemColors.Window
+            Else
+                txtBox.BackColor = System.Drawing.SystemColors.Control
+            End If
+        End Set
+    End Property
+    Property blnLoaded() As Boolean
+        Get
+            blnLoaded = mblnLoaded
+        End Get
+        Set(ByVal Value As Boolean)
+            mblnLoaded = Value
+        End Set
+    End Property
+
+
+    Overrides Property Text() As String
+        Get
+            Text = txtBox.Text
+        End Get
+        Set(ByVal Value As String)
+            txtBox.Text = Value
+        End Set
+    End Property
+
+    '*************************************************************
+    '*
+    '* Name:        bln_SetAsInitKey
+    '*
+    '* Par:         Michael,  2007-06-20
+    '*
+    '* Description:
+    '*
+    '* IN:
+    '* OUT: False si erreur, True si OK
+    '*
+    '*************************************************************
+    Public Function str_SetAsInitKey(ByVal vstrInitKey As String) As String
+        On Error GoTo Error_bln_SetAsInitKey
+        Const strFCT_NAME As String = "bln_SetAsInitKey"
+
+        Dim strReturn As String = gvbNullString
+
+        strReturn = gvbNullString
+
+        mstrInitKeyString = mstrKEY_DELIMITER & vstrInitKey & mstrKEY_DELIMITER
+
+        strReturn = mstrInitKeyString
+
+Exit_str_SetAsInitKey:
+        str_SetAsInitKey = strReturn
+        Exit Function
+
+Error_bln_SetAsInitKey:
+        strReturn = gvbNullString
+        Call mcTTAPP.bln_LogError(Err, mstrCONTROL_NAME, strFCT_NAME)
+        Resume Exit_str_SetAsInitKey
+    End Function
+
+
+    Public Function bln_Clear() As Boolean
+        'UPGRADE_NOTE: Object mrecRec may not be destroyed until it is garbage collected. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6E35BFF6-CD74-4B09-9689-3E1A43DF8969"'
+        mrecRec = Nothing
+        mstrSQL = gvbNullString
+        mstrSQLOriginal = gvbNullString
+
+        Call pfblnClearControl()
+
+
+EXIT_bln_Clear:
+        bln_Clear = True
+    End Function
+
+    Public Function bln_PopUpGrid() As Boolean
+        Call psOpenGrid_Process(False)
+
+EXIT_bln_PopUpGrid:
+        bln_PopUpGrid = True
+    End Function
+
+    Private Sub cmdDetail_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles cmdDetail.Click
+        Dim Index As Short = cmdDetail.GetIndex(eventSender)
+        txtBox.Focus()
+        Call psOpenGrid_Process(False)
+    End Sub
+
+    Private Sub txtBox_GotFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtBox.GotFocus
+        If mblnSelTextOnFocus Then
+            Call bln_SelText()
+        End If
+    End Sub
+
+    'UPGRADE_WARNING: Event txtBox.TextChanged may fire when form is initialized. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="88B12AE1-6DE0-48A0-86F1-60C0686C026A"'
+    Private Sub txtBox_TextChanged(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles txtBox.TextChanged
+        mblnChangeMade = True
+    End Sub
+
+
+    Private Sub txtBox_DoubleClick(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles txtBox.DoubleClick
+        Call psOpenGrid_Process(True)
+    End Sub
+
+    Private Sub txtBox_KeyDown(ByVal eventSender As System.Object, ByVal eventArgs As System.Windows.Forms.KeyEventArgs)
+        Dim KeyCode As Short = eventArgs.KeyCode
+        Dim Shift As Short = eventArgs.KeyData \ &H10000
+
+        If mblnEnabled Then
+            Select Case KeyCode
+                Case System.Windows.Forms.Keys.Down
+                    Call pfblnMoveKeyDown(True)
+                Case System.Windows.Forms.Keys.Up
+                    Call pfblnMoveKeyDown(False)
+                Case Else
+
+            End Select
+        Else
+            'Do nothing
+        End If
+
+    End Sub
+    Private Sub psOpenGrid_Process(ByVal vblnValidateTextBoxAfter As Boolean)
+        Dim blnOpen As Boolean
+        Dim lngCurrNRI As Integer
+        Dim eventArgs As OpenListeEventArgs
+
+        If Not mblnLoaded Then
+            If Not mblnFilterModeOnly Then
+                lngCurrNRI = mlngNRI
+
+                'Load le cbo pour de vrai
+                Call fblnSQL_Process(mstrSQL, mblnLoaded, mstrSQLOriginal, mstrInitKeyString, mstrKEY_DELIMITER, mcTTAPP, mblnFilterIsAlpha, mblnFilterModeOnly)
+
+                Call pSetRecordSQL()
+                Call pSetFilter()
+
+                Call pfblnValide(True, , lngCurrNRI)
+            Else
+                'On ne load pas la grille à cet endroit en mode filtre
+            End If
+        End If
+
+        eventArgs = New OpenListeEventArgs(blnOpen)
+
+        RaiseEvent BeforeValide(Me, Nothing)
+        RaiseEvent OpenListe(Me, eventArgs)
+        If eventArgs.blnOpen Then
+            Call psOpenGrid()
+            '3 cas: double click, enter: OUI. cmd Click:NON
+            If vblnValidateTextBoxAfter Then
+                Call pfblnValideTxtBox(True)
+            End If
+        Else
+            'Do nothing
+        End If
+    End Sub
+    Private Sub txtBox_KeyPress(ByVal eventSender As System.Object, ByVal eventArgs As System.Windows.Forms.KeyPressEventArgs) Handles txtBox.KeyPress
+        Dim KeyAscii As Short = Asc(eventArgs.KeyChar)
+        'Remplace par user control KeyDown pour ouvrir la grille
+
+        '    If KeyAscii = vbKeyReturn Then
+        '        Call pfblnValideTxtBox(True)
+        '    Else
+        '        'Do nothing
+        '    End If
+        eventArgs.KeyChar = Chr(KeyAscii)
+
+        If KeyAscii = 0 Then
+            eventArgs.Handled = True
+        End If
+    End Sub
+
+    Private Sub txtBox_Leave(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles txtBox.Leave
+
+        If mblnChangeMade = True Then
+            Call pfblnValideTxtBox(False)
+        Else
+            'DO nothing
+        End If
+
+    End Sub
+
+
+    Private Sub txtBox_MouseDown(ByVal eventSender As System.Object, ByVal eventArgs As System.Windows.Forms.MouseEventArgs) Handles txtBox.MouseDown
+        Dim Button As Short = eventArgs.Button \ &H100000
+        Dim Shift As Short = System.Windows.Forms.Control.ModifierKeys \ &H10000
+        Dim x As Single = VB6.PixelsToTwipsX(eventArgs.X)
+        Dim y As Single = VB6.PixelsToTwipsY(eventArgs.Y)
+
+        If mblnAllowResize And Button = VB6.MouseButtonConstants.LeftButton And Shift <> 0 Then
+            'Start Resize
+            mblnStartResize = True
+            mintStartX = x
+            mintStartSize = VB6.PixelsToTwipsX(MyBase.Width)
+            Cursor = System.Windows.Forms.Cursors.SizeWE
+        Else
+            mintStartX = 0
+        End If
+
+        If mblnSelTextOnFocus Then
+            Call bln_SelText()
+        End If
+
+    End Sub
+
+    Private Sub txtBox_MouseMove(ByVal eventSender As System.Object, ByVal eventArgs As System.Windows.Forms.MouseEventArgs) Handles txtBox.MouseMove
+        Dim Button As Short = eventArgs.Button \ &H100000
+        Dim Shift As Short = System.Windows.Forms.Control.ModifierKeys \ &H10000
+        Dim x As Single = VB6.PixelsToTwipsX(eventArgs.X)
+        Dim y As Single = VB6.PixelsToTwipsY(eventArgs.Y)
+
+        Dim intToResize As Short
+        If mblnStartResize And Button = VB6.MouseButtonConstants.LeftButton Then
+            'RESIZE
+            intToResize = x - mintStartX
+            If mintStartSize + intToResize <= 0 Then
+                'Do nothing
+            Else
+                MyBase.Width = VB6.TwipsToPixelsX(mintStartSize + intToResize)
+            End If
+        Else
+            'Do nothing
+        End If
+    End Sub
+
+    Private Sub txtBox_MouseUp(ByVal eventSender As System.Object, ByVal eventArgs As System.Windows.Forms.MouseEventArgs) Handles txtBox.MouseUp
+        Dim Button As Short = eventArgs.Button \ &H100000
+        Dim Shift As Short = System.Windows.Forms.Control.ModifierKeys \ &H10000
+        Dim x As Single = VB6.PixelsToTwipsX(eventArgs.X)
+        Dim y As Single = VB6.PixelsToTwipsY(eventArgs.Y)
+        'StopResize
+        mblnStartResize = False
+        Cursor = System.Windows.Forms.Cursors.Default
+        mintStartX = 0
+    End Sub
+
+    Private Sub txtBox_Validating(ByVal eventSender As System.Object, ByVal eventArgs As System.ComponentModel.CancelEventArgs) Handles txtBox.Validating
+        Dim Cancel As Boolean = eventArgs.Cancel
+        Call pfblnValideTxtBox(True, Cancel)
+        eventArgs.Cancel = Cancel
+    End Sub
+
+    Private Sub ctlTTCombo_KeyDown(ByVal eventSender As System.Object, ByVal eventArgs As System.Windows.Forms.KeyEventArgs) Handles txtBox.KeyDown
+        Dim KeyCode As Short = eventArgs.KeyCode
+        Dim Shift As Short = eventArgs.KeyData \ &H10000
+        Dim blnCancel As Boolean
+        Dim strText As String = gvbNullString
+
+        Select Case KeyCode
+            Case mintKeyOpenGrid ' Pas avec l'auto complete
+                Call psOpenGrid_Process(True)
+
+            Case mintKeyOpenDetail
+
+                If Trim(txtBox.Text) <> gvbNullString Then
+                    strText = Trim(txtBox.Text)
+
+                    Call pfblnValideTxtBox(True, blnCancel)
+                    If Not blnCancel Then
+                        RaiseEvent ShowDetail(Me, New ShowDetailEventArgs(False))
+                    Else
+                        'On remet le texte pas valide temporairement pour permettre au user de le prendre et de l'envoyer a l'autre fenetre.
+                        txtBox.Text = strText
+                        RaiseEvent ShowDetail(Me, New ShowDetailEventArgs(True))
+                        txtBox.Text = gvbNullString
+                    End If
+                Else
+                    'Mode ajouter
+                    RaiseEvent ShowDetail(Me, New ShowDetailEventArgs(True))
+                End If
+
+                txtBox.Focus()
+
+            Case mintKeyDeleteText
+                If Enabled Then
+                    txtBox.Text = gvbNullString
+                Else
+                    'do nothing
+                End If
+
+            Case System.Windows.Forms.Keys.Down
+                If mblnEnabled Then
+                    Call pfblnMoveKeyDown(True)
+                End If
+
+            Case System.Windows.Forms.Keys.Up
+                If mblnEnabled Then
+                    Call pfblnMoveKeyDown(False)
+                End If
+
+            Case Else
+
+        End Select
+
+    End Sub
+
+    Private Sub ctlTTCombo_GotFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.GotFocus
+
+    End Sub
+
+    Private Sub ctlTTCombo_LostFocus(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.LostFocus
+        Cursor = System.Windows.Forms.Cursors.Default
+    End Sub
+
+    Private Sub ctlTTCombo_MouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles Me.MouseDown
+
+    End Sub
+
+    Private Sub ctlTTCombo_Resize(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles MyBase.Resize
+        If mblnUseInGrid Then
+            If 400 > VB6.PixelsToTwipsX(MyBase.Width) Then
+                MyBase.Width = VB6.TwipsToPixelsX(500)
+            Else
+                'Do Nothing
+            End If
+            txtBox.Height = MyBase.Height
+            cmdDetail(mintSmall_cmd).Height = MyBase.Height + VB6.TwipsToPixelsX(8)
+            txtBox.Width = VB6.TwipsToPixelsX(VB6.PixelsToTwipsX(MyBase.Width) - VB6.PixelsToTwipsX(cmdDetail(mintSmall_cmd).Width) - 50)
+            cmdDetail(mintSmall_cmd).Left = VB6.TwipsToPixelsX(VB6.PixelsToTwipsX(MyBase.Width) - VB6.PixelsToTwipsX(cmdDetail(mintSmall_cmd).Width))
+        Else
+            If 600 > VB6.PixelsToTwipsX(MyBase.Width) Then
+                MyBase.Width = VB6.TwipsToPixelsX(600)
+            Else
+                'Do Nothing
+            End If
+            MyBase.Height = VB6.TwipsToPixelsY(315)
+            txtBox.Width = VB6.TwipsToPixelsX(VB6.PixelsToTwipsX(MyBase.Width) - VB6.PixelsToTwipsX(cmdDetail(mintNormal_cmd).Width) - 50)
+            cmdDetail(mintNormal_cmd).Left = VB6.TwipsToPixelsX(VB6.PixelsToTwipsX(MyBase.Width) - VB6.PixelsToTwipsX(cmdDetail(mintNormal_cmd).Width))
+        End If
+    End Sub
+
+    Private Function pfblnValide(ByVal vblnAssignNRI As Boolean, Optional ByRef blnCancel As Boolean = False, Optional ByRef vvNRI As Object = Nothing, Optional ByRef vCode As Object = Nothing) As Boolean
+        On Error GoTo Error_pfblnValide
+        Const strFCT_NAME As String = "pfblnValide"
+        Dim blnReturn As Boolean
+        Dim strToFind As String = gvbNullString
+        Dim strtoFindLike As String = gvbNullString
+        Dim blnValidNum As Boolean
+        Dim blnInvalidCarac As Boolean
+        Dim strSQLTemp As String = gvbNullString
+
+        blnReturn = True
+        blnInvalidCarac = False
+
+        RaiseEvent BeforeValide(Me, Nothing)
+
+        Cursor = System.Windows.Forms.Cursors.WaitCursor
+
+        If Not mblnLoaded Then
+            'UPGRADE_NOTE: IsMissing() was changed to IsNothing(). Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="8AE1CB93-37AB-439A-A4FF-BE3B6760BB23"'
+            If Not IsNothing(vvNRI) Then
+                'UPGRADE_WARNING: Couldn't resolve default property of object vvNRI. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'
+                Call fblnSQL_Process(mstrSQL, mblnLoaded, mstrSQLOriginal, mstrInitKeyString, mstrKEY_DELIMITER, mcTTAPP, mblnFilterIsAlpha, mblnFilterModeOnly, vvNRI)
+
+                Call pSetRecordSQL()
+                Call pSetFilter()
+            Else
+                'Load le cbo pour de vrai
+                Call fblnSQL_Process(mstrSQL, mblnLoaded, mstrSQLOriginal, mstrInitKeyString, mstrKEY_DELIMITER, mcTTAPP, mblnFilterIsAlpha, mblnFilterModeOnly)
+
+                Call pSetRecordSQL()
+                Call pSetFilter()
+            End If
+        Else
+            'OK, deja loade
+        End If
+
+        'UPGRADE_NOTE: IsMissing() was changed to IsNothing(). Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="8AE1CB93-37AB-439A-A4FF-BE3B6760BB23"'
+        Select Case True
+            Case mrecRec Is Nothing
+                blnReturn = True
+
+            Case mrecRec.RecordCount = 0
+                blnReturn = True
+
+            Case IsNothing(vvNRI) And IsNothing(vCode)
+                blnReturn = False
+
+            Case Not IsNothing(vvNRI)
+                Call mrecRec.MoveFirst()
+                'UPGRADE_WARNING: Couldn't resolve default property of object vvNRI. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'
+                Call mrecRec.Find(mrecRec.Fields(0).Name & " = " & vvNRI, , ADODB.SearchDirectionEnum.adSearchForward, 0)
+
+            Case Not IsNothing(vCode)
+                If mblnValideNumeric Then
+                    Call mcTTAPP.bln_ValideControlDataNumeric(txtBox, TT3DLL.clsConstante.TTValideType.TTVT_INTEGER, blnValidNum, 0)
+                    If Not blnValidNum Then
+                        'UPGRADE_WARNING: Couldn't resolve default property of object vCode. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'
+                        vCode = "0"
+                    Else
+                        'do nothing
+                    End If
+                    'Pas suffisant...
+                    '                If Not IsNumeric(vCode) Then
+                    '                    vCode = "0"
+                    '                Else
+                    '                    'do nothing
+                    '                End If
+                    'UPGRADE_WARNING: Couldn't resolve default property of object vCode. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'
+                    strToFind = vCode
+                    'UPGRADE_WARNING: Couldn't resolve default property of object vCode. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'
+                    strtoFindLike = vCode
+                Else
+                    'UPGRADE_WARNING: Couldn't resolve default property of object vCode. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'
+                    Select Case True
+                        Case (InStr(1, mstrINVALID_CARACTERS, vCode) <> 0) Or VB.Left(vCode, 1) = "_"
+                            blnReturn = False
+                            blnInvalidCarac = True
+                        Case Else
+                            'UPGRADE_WARNING: Couldn't resolve default property of object vCode. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'
+                            strToFind = pfstrSQLFix(vCode)
+                            'UPGRADE_WARNING: Couldn't resolve default property of object vCode. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'
+                            strtoFindLike = pfstrSQLFix(vCode & "*")
+                    End Select
+                End If
+
+                If blnReturn Then
+                    Call mrecRec.MoveFirst()
+                    Call mrecRec.Find(mrecRec.Fields(mintColCode).Name & " = " & strToFind, , ADODB.SearchDirectionEnum.adSearchForward, 0)
+
+                    If mrecRec.EOF Then 'Si ne trouve pas = Alors LIKE
+                        Call mrecRec.MoveFirst()
+                        Call mrecRec.Find(mrecRec.Fields(mintColCode).Name & " LIKE " & strtoFindLike, , ADODB.SearchDirectionEnum.adSearchForward, 0)
+                    Else
+                        'FOUND IT
+                    End If
+                End If
+
+            Case Else
+                blnReturn = False
+        End Select
+
+        ToolTip1.SetToolTip(txtBox, gvbNullString)
+
+        If blnReturn Then
+            If Not mrecRec Is Nothing AndAlso Not mrecRec.EOF Then
+                If vblnAssignNRI Then
+                    mlngNRI = mrecRec.Fields(0).Value
+                    mlngNewNRI = mrecRec.Fields(0).Value
+                    txtBox.Text = IIf(IsDBNull(mrecRec.Fields(mintColCode).Value), gvbNullString, mrecRec.Fields(mintColCode).Value)
+                Else
+                    mlngNewNRI = mrecRec.Fields(0).Value
+                End If
+                'UPGRADE_WARNING: Use of Null/IsNull() detected. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="2EED02CB-5C0E-4DC1-AE94-4FAA3A30F51A"'
+                If mblnSetToolTips Then ToolTip1.SetToolTip(txtBox, IIf(IsDBNull(mrecRec.Fields(2).Value), gvbNullString, mrecRec.Fields(2).Value))
+                blnCancel = False
+            Else
+                blnCancel = True
+                If vblnAssignNRI Then
+                    mlngNRI = 0
+                    mlngNewNRI = 0
+                    txtBox.Text = gvbNullString
+                Else
+                    mlngNewNRI = 0
+                End If
+            End If
+        Else
+            blnCancel = True
+            If vblnAssignNRI Then
+                mlngNRI = 0
+                mlngNewNRI = 0
+                txtBox.Text = gvbNullString
+            Else
+                mlngNewNRI = 0
+            End If
+
+            If blnInvalidCarac Then
+                'Permet de conserver le focus
+                blnReturn = True
+            End If
+        End If
+
+
+Exit_pfblnValide:
+        Cursor = System.Windows.Forms.Cursors.Default
+        pfblnValide = blnReturn
+        Exit Function
+
+Error_pfblnValide:
+        blnReturn = False
+        blnCancel = True
+        Call mcTTAPP.bln_LogError(Err, mstrCONTROL_NAME, strFCT_NAME)
+        Resume Exit_pfblnValide
+
+    End Function
+
+
+    Private Sub psOpenGrid()
+        On Error GoTo Error_psOpenGrid
+        Const strFCT_NAME As String = "psOpenGrid"
+
+        Dim frmTemp As New frmGrid_Net
+        Dim lngRowCount As Integer
+        Dim lngNRISelected As Integer
+        Dim blnChangeMade As Boolean
+        Dim blnCanStop As Boolean
+        Dim myDA As New System.Data.OleDb.OleDbDataAdapter()
+        Dim myDS As System.Data.DataSet = New System.Data.DataSet()
+        Dim myDT As System.Data.DataTable = New System.Data.DataTable
+        Dim recRecord As New ADODB.Recordset
+
+        'ERIC: On doit emplir une DataTable avec le recordset pour être capable de
+        '      Loader la grille sans tout chambouler...
+
+        If Not mrecRec Is Nothing Or mblnFilterModeOnly Then
+
+            Call mcTTAPP.bln_RecordsetClone(mrecRec, recRecord)
+
+            myDA.Fill(myDS, recRecord, "MyTable")
+            myDT = myDS.Tables(0)
+
+            If Not mrecRec Is Nothing Then
+                lngRowCount = mrecRec.RecordCount
+            Else
+                lngRowCount = 0
+            End If
+
+            lngNRISelected = mlngNRI
+
+            frmTemp.mblnValidNum = mblnValideNumeric
+            frmTemp.mintColCodeRecordset = mintColCode
+
+            If lngNRISelected = 0 Then
+                frmTemp.mstrNearestText = Trim(txtBox.Text)
+            Else
+                frmTemp.mstrNearestText = gvbNullString
+            End If
+
+            frmTemp.mstrHeader_Caption = mstrFormCaption
+            frmTemp.mlngHeader_NbrItem = lngRowCount
+
+            frmTemp.grdGrid.Width = VB6.TwipsToPixelsX(GridWidth - 100)
+            frmTemp.Width = VB6.TwipsToPixelsX(GridWidth)
+
+
+
+            Dim frmFormMdiParente As System.Windows.Forms.Form = Me.FindForm
+            If Not frmFormMdiParente.IsMdiContainer Then
+                frmFormMdiParente = frmFormMdiParente.MdiParent
+            End If
+
+            If mblnFilterModeOnly Then
+                Call frmTemp.fblnOpenEmpty(myDT, mstrGridCaption, lngNRISelected, mblnFilterModeOnly, mblnFilterIsAlpha, mstrSQLOriginal, mblnLoaded, mstrInitKeyString, mstrKEY_DELIMITER, mcTTAPP, Me._cmdDetail_1)
+            Else
+                Call frmTemp.fblnOpen(myDT, lngNRISelected, mstrGridCaption, Merge, MoveCols, mintColCode + 1, mcTTAPP, mblnFilterModeOnly, mblnFilterIsAlpha, Me._cmdDetail_1)
+            End If
+
+            'WB 20090910 : Ajout d'un 'work-around' afin d'évité des bugs dans certain logiciel
+            '
+            '     détail : SGSP5, lorsque qu'un TTCombo est lié à une grille (peu importe quel forme)
+            '              Si l'utilisateur modifie la valeur du champs texte puis appuis sur la loupe
+            '              et choisi une autre valeur, la nouvelle valeur n'est pas transmise correctement.
+            '              L'utilisateur à l'impression que tous ces bien déroulé, puisque aucun message d'erreur
+            '              n'apparait.
+            '
+            '  précision : Pour une quelquone raison, txtBox est alors invisible, ce qui fait planter le setFocus
+            '              et a pour effet de ne pas déclancher l'évenement Change (et donc la valeur ne change pas)
+            '
+            '        log : Les messages suivant apparaissent dans le log
+            '               10-Sep-09/09:39:37        ERROR 5: Invalid procedure call or argument From SGSP5 3.9.1 In CONTROL COMBO :psOpenGrid
+            '               10-Sep-09/09:39:48        ERROR 5: Invalid procedure call or argument From SGSP5 3.9.1 In CONTROL COMBO :psOpenGrid
+            '
+            ' correction : Avant de faire SetFocus, on s'assure que le control est toujours visible
+
+            If txtBox.Visible Then
+                txtBox.Focus()
+            End If
+
+            blnChangeMade = False
+            Select Case True
+                Case lngNRISelected = 0 'Appuie sur ESC dans l'écran
+                    lngNRISelected = mlngNRI
+
+                Case lngNRISelected = mlngNRI
+                    'Pas de changement de NRI
+
+                Case lngNRISelected <> mlngNRI
+                    blnChangeMade = True
+
+            End Select
+
+            'Change seulement si le control est actif
+            If mblnEnabled Then
+                mlngNewNRI = lngNRISelected
+
+                If mlngNewNRI <> mlngNRI Then Call pfblnValide(False, , mlngNewNRI)
+
+                If blnChangeMade Then RaiseEvent Change(Me, New ChangeEventArgs(mlngNewNRI))
+
+                If mblnUseInGrid Then
+                    Me.OnLeave(Nothing)
+                End If
+            Else
+                'Don nothing
+            End If
+
+        Else
+            'Do nothing
+        End If
+
+Exit_psOpenGrid:
+        'UPGRADE_NOTE: Object frmTemp may not be destroyed until it is garbage collected. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6E35BFF6-CD74-4B09-9689-3E1A43DF8969"'
+        frmTemp = Nothing
+        myDA = Nothing
+        myDS = Nothing
+        myDT = Nothing
+        recRecord = Nothing
+        Exit Sub
+
+Error_psOpenGrid:
+        Call mcTTAPP.bln_LogError(Err, mstrCONTROL_NAME, strFCT_NAME)
+        Resume Exit_psOpenGrid
+    End Sub
+
+    Private Sub pSetFilter()
+        If mrecRec Is Nothing Then
+            ' Do nothing
+        Else
+            If mstrFilter Is Nothing Then
+                mstrFilter = ""
+            End If
+            mrecRec.Filter = mstrFilter
+            If mlngNRI <> 0 And (mrecRec.RecordCount > 0) Then
+                Call mrecRec.MoveFirst()
+                Call mrecRec.Find(mrecRec.Fields(0).Name & " = " & mlngNRI, , ADODB.SearchDirectionEnum.adSearchForward, 0)
+            Else
+                ' Do nothing
+            End If
+        End If
+    End Sub
+
+    Private Sub pSetRecordSQL()
+        'UPGRADE_NOTE: Object mrecRec may not be destroyed until it is garbage collected. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6E35BFF6-CD74-4B09-9689-3E1A43DF8969"'
+        mrecRec = Nothing
+
+        Cursor = System.Windows.Forms.Cursors.WaitCursor
+        If mrecRec Is Nothing Then
+            If mstrSQL <> gvbNullString Then
+                mrecRec = New ADODB.Recordset
+                Call mcTTAPP.bln_ADOSelect(mstrSQL, mrecRec)
+                'LoadAutoComplete()
+                If mblnSetToolTips And mrecRec.Fields.Count > 1 Then
+                    mblnSetToolTips = True
+                Else
+                    mblnSetToolTips = False
+                End If
+            Else
+                ' Do nothing
+            End If
+        Else
+            'Do nothing
+        End If
+
+        Cursor = System.Windows.Forms.Cursors.Default
+    End Sub
+
+    Private Sub UserControl_Terminate()
+        'UPGRADE_NOTE: Object mcTTAPP may not be destroyed until it is garbage collected. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6E35BFF6-CD74-4B09-9689-3E1A43DF8969"'
+        mcTTAPP = Nothing
+        'UPGRADE_NOTE: Object mrecRec may not be destroyed until it is garbage collected. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6E35BFF6-CD74-4B09-9689-3E1A43DF8969"'
+        mrecRec = Nothing
+
+        Me.Font = Nothing
+        txtBox.Font = Nothing
+        _cmdDetail_0.Font = Nothing
+        _cmdDetail_1.Font = Nothing
+
+    End Sub
+
+    Function pfstrSQLFix(ByVal vstrString As String) As String
+        Const strFCT_NAME As String = "pfstrSQLFix"
+        On Error GoTo Err_pfstrSQLFix
+        Dim blnReturn As Boolean
+        Dim intIndex As Short
+        Dim strReturn As String = gvbNullString
+        Dim strCar As String = gvbNullString
+        'Init
+        strReturn = gvbNullString
+
+        'For each caracter in string
+        For intIndex = 1 To Len(vstrString)
+            strCar = Mid(vstrString, intIndex, 1)
+
+            If StrComp(strCar, "'") = 0 Then
+                strReturn = strReturn & "''"
+            Else
+                strReturn = strReturn & strCar
+            End If
+        Next intIndex
+
+        strReturn = "'" & strReturn & "'"
+
+Exit_pfstrSQLFix:
+        pfstrSQLFix = strReturn
+        Exit Function
+
+Err_pfstrSQLFix:
+        strReturn = vstrString
+        Call mcTTAPP.bln_LogError(Err, mstrCONTROL_NAME, strFCT_NAME)
+        Resume Exit_pfstrSQLFix
+    End Function
+
+
+    '****************************************************************
+    '* Nom de la fonction   : bln_INIT
+    '*
+    '*               Cree   : 09-08-2001   lamorin
+    '*            Modifie   : **-**-****  ***
+    '*
+    '*                But   :
+    '*
+    '* Parametre(s):
+    '*              IN :
+    '*
+    '*              OUT:    True, si succes. False, si erreur
+    '*
+    '****************************************************************
+    Public Function bln_INIT(ByRef rcTTAPP As TT3DLL.clsTTAPP, Optional ByRef blnSetField2AsToolTips As Boolean = True, Optional ByVal vblnTextCodeFieldIsNumeric As Boolean = False, Optional ByVal vintColCode As Short = 1, Optional ByVal vintForcedAlignment As Short = 0, Optional ByVal vintFontSize As Short = 0, Optional ByVal vstrFontName As String = gvbNullString, Optional ByVal vblnRefreshActivated As Boolean = True, Optional ByVal vstrLoadThisNRIOnly As String = gvbNullString, Optional ByVal vblnFilterModeOnly As Boolean = False, Optional ByVal vblnFilterIsAlpha As Boolean = False, Optional ByVal vblnSelTextOnFocus As Boolean = False) As Boolean
+        On Error GoTo Error_bln_INIT
+        Const strFCT_NAME As String = "bln_INIT"
+        Dim blnReturn As Boolean
+
+        blnReturn = True
+
+        'UPGRADE_NOTE: Object mrecRec may not be destroyed until it is garbage collected. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6E35BFF6-CD74-4B09-9689-3E1A43DF8969"'
+        mrecRec = Nothing
+        mcTTAPP = rcTTAPP
+
+        mblnSelTextOnFocus = vblnSelTextOnFocus
+
+        mblnRefreshActivated = vblnRefreshActivated
+
+        mstrLoadOnlyThisNRI = vstrLoadThisNRIOnly
+        mblnFilterModeOnly = vblnFilterModeOnly
+
+        mblnSetToolTips = blnSetField2AsToolTips
+        mintColCode = vintColCode
+
+        mstrSQL = gvbNullString
+        mstrSQLOriginal = gvbNullString
+
+        Call pfblnClearControl()
+
+        GridWidth = 5325 'Default
+
+        mblnValideNumeric = vblnTextCodeFieldIsNumeric
+        mblnFilterIsAlpha = vblnFilterIsAlpha
+
+        If vintForcedAlignment = 0 Then
+            If mblnValideNumeric Then
+                txtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Else
+                txtBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Left
+            End If
+        Else
+            txtBox.TextAlign = vintForcedAlignment
+        End If
+
+        If vstrFontName <> gvbNullString Then
+            txtBox.Font = VB6.FontChangeName(txtBox.Font, vstrFontName)
+        End If
+
+        If vintFontSize <> 0 Then
+            txtBox.Font = VB6.FontChangeSize(txtBox.Font, vintFontSize)
+        End If
+
+        mcTTAPP.bln_Look_SetStyle(_cmdDetail_0)
+        mcTTAPP.bln_Look_SetStyle(_cmdDetail_1)
+
+Exit_bln_INIT:
+        bln_INIT = blnReturn
+        Exit Function
+
+Error_bln_INIT:
+        blnReturn = False
+        Call mcTTAPP.bln_LogError(Err, mstrCONTROL_NAME, strFCT_NAME)
+        Resume Exit_bln_INIT
+    End Function
+
+    Public Function bln_GetItemNRI(ByRef cTTItemNRI As TT3DLL.clsTTItemNRI, Optional ByVal vintColNRI As Short = 0) As Boolean
+        On Error GoTo Error_bln_GetItemNRI
+        Const strFCT_NAME As String = "bln_GetItemNRI"
+        Dim blnReturn As Boolean
+
+        cTTItemNRI = New TT3DLL.clsTTItemNRI
+
+        Select Case False
+            Case Not mrecRec Is Nothing
+            Case cTTItemNRI.bln_BuildNRIListe(mrecRec, vintColNRI, mlngNRI)
+            Case Else
+                blnReturn = True
+        End Select
+
+Exit_bln_GetItemNRI:
+        bln_GetItemNRI = blnReturn
+        Exit Function
+
+Error_bln_GetItemNRI:
+        blnReturn = False
+        Call mcTTAPP.bln_LogError(Err, mstrCONTROL_NAME, strFCT_NAME)
+        Resume Exit_bln_GetItemNRI
+    End Function
+
+    '****************************************************************
+    '* Nom de la fonction   : pfblnValideTxtBox
+    '*
+    '*               Cree   : 23-10-2001   lamorin
+    '*            Modifie   : **-**-****  ***
+    '*
+    '*                But   :
+    '*
+    '* Parametre(s):
+    '*              IN :
+    '*
+    '*              OUT:    True, si succes. False, si erreur
+    '*
+    '****************************************************************
+    Private Function pfblnValideTxtBox(Optional ByVal blnKeepFocusOnError As Boolean = False, Optional ByRef rblnCancel As Boolean = False) As Boolean
+        On Error GoTo Error_pfblnValideTxtBox
+        Const strFCT_NAME As String = "pfblnValideTxtBox"
+        Dim blnReturn As Boolean
+        Dim lngOldVal As Integer
+        Dim blnCancel As Boolean
+        Dim varTemp As AfterValideEventArgs
+
+        blnReturn = True
+        lngOldVal = mlngNRI
+
+        If mblnChangeMade Then
+            ToolTip1.SetToolTip(txtBox, gvbNullString)
+            Select Case True
+                Case Trim(txtBox.Text) = gvbNullString
+                    'Pas de selection
+                    mlngNewNRI = 0
+                    rblnCancel = False
+                    mblnChangeMade = False
+                Case Not pfblnValide(False, blnCancel, , txtBox.Text)
+                    'La fonction est valide
+                    RaiseEvent AfterValide(Me, New AfterValideEventArgs(blnCancel))
+                Case Else
+                    varTemp = New AfterValideEventArgs(blnCancel)
+                    RaiseEvent AfterValide(Me, varTemp)
+
+                    Select Case True
+                        Case varTemp.vblnWasInvalid And blnKeepFocusOnError 'Called from Key Press or validate
+                            txtBox.Focus()
+                            txtBox.SelectionStart = 0
+                            txtBox.SelectionLength = Len(txtBox.Text)
+                            rblnCancel = True
+                        Case varTemp.vblnWasInvalid And Not blnKeepFocusOnError 'Called from LostFocus
+                            Call pfblnClearControl()
+                            mblnChangeMade = False
+                        Case Else
+                            mblnChangeMade = False
+                    End Select
+            End Select
+        Else
+            'Do nothing
+        End If
+
+        If lngOldVal <> mlngNewNRI Then
+            RaiseEvent Change(Me, New ChangeEventArgs(mlngNewNRI))
+        Else
+            'MP 2003-01-23: Raffraichit le code quand meme...
+            If mlngNewNRI <> 0 Then txtBox.Text = mrecRec.Fields(mintColCode).Value
+        End If
+
+Exit_pfblnValideTxtBox:
+        pfblnValideTxtBox = blnReturn
+        Exit Function
+
+Error_pfblnValideTxtBox:
+        blnReturn = False
+        Call mcTTAPP.bln_LogError(Err, mstrCONTROL_NAME, strFCT_NAME)
+        Resume Exit_pfblnValideTxtBox
+    End Function
+
+    '****************************************************************
+    '* Nom de la fonction   : bln_Refresh
+    '*
+    '*               Cree   : 23-10-2001   lamorin
+    '*            Modifie   : **-**-****  ***
+    '*
+    '*                But   :
+    '*
+    '* Parametre(s):
+    '*              IN :
+    '*
+    '*              OUT:    True, si succes. False, si erreur
+    '*
+    '****************************************************************
+    Public Function bln_Refresh(Optional ByVal vlngNRI As Integer = 0, Optional ByVal vvarRefreshSQL As Object = Nothing) As Boolean
+        On Error GoTo Error_bln_Refresh
+        Const strFCT_NAME As String = "bln_Refresh"
+        Dim blnReturn As Boolean
+        Dim blnDoRefresh As Boolean
+        Dim blnRefreshDone As Boolean
+
+        blnReturn = pfblnClearControl()
+
+        blnRefreshDone = False
+
+        'MP: La variable est par defaut a TRUE, parce qu'on pourra jamais repasser tous les cbos de DEV3 en meme temps,
+        'donc on garde l'ancienne methode par defaut pour que ca ne commence pas a reagir bizzare dans les ecrans.
+
+        'Si le vvarRefresh de la fonction a toujours priorite si il est passé
+        'UPGRADE_NOTE: IsMissing() was changed to IsNothing(). Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="8AE1CB93-37AB-439A-A4FF-BE3B6760BB23"'
+        If Not IsNothing(vvarRefreshSQL) Then
+            'UPGRADE_WARNING: Couldn't resolve default property of object vvarRefreshSQL. Click for more: 'ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'
+            blnDoRefresh = vvarRefreshSQL
+        Else
+            blnDoRefresh = mblnRefreshActivated
+        End If
+
+        If Not mblnLoaded Then
+            Call fblnSQL_Process(mstrSQL, mblnLoaded, mstrSQLOriginal, mstrInitKeyString, mstrKEY_DELIMITER, mcTTAPP, mblnFilterIsAlpha, mblnFilterModeOnly, CStr(vlngNRI))
+
+            Call pSetRecordSQL()
+            Call pSetFilter()
+
+            blnRefreshDone = True
+        End If
+
+        If blnDoRefresh And Not blnRefreshDone Then
+            Call pSetRecordSQL()
+            Call pSetFilter()
+        End If
+
+        If vlngNRI <> 0 Then
+            Me.lngNRI = vlngNRI
+            If lngNRI <> 0 Then
+                txtBox.Text = mrecRec.Fields(mintColCode).Value
+            Else
+                txtBox.Text = gvbNullString
+            End If
+        Else
+            txtBox.Text = gvbNullString
+        End If
+
+
+Exit_bln_Refresh:
+        bln_Refresh = blnReturn
+        Exit Function
+
+Error_bln_Refresh:
+        blnReturn = False
+        Call mcTTAPP.bln_LogError(Err, mstrCONTROL_NAME, strFCT_NAME)
+        Resume Exit_bln_Refresh
+    End Function
+
+    '****************************************************************
+    '* Nom de la fonction   : pfblnClearControl
+    '*
+    '*               Cree   : 10-01-2002   lamorin
+    '*            Modifie   : **-**-****  ***
+    '*
+    '*                But   :
+    '*
+    '* Parametre(s):
+    '*              IN :
+    '*
+    '*              OUT:    True, si succes. False, si erreur
+    '*
+    '****************************************************************
+    Private Function pfblnClearControl() As Boolean
+        On Error GoTo Error_pfblnClearControl
+        Const strFCT_NAME As String = "pfblnClearControl"
+        Dim blnReturn As Boolean
+
+        blnReturn = True
+        txtBox.Text = gvbNullString
+        ToolTip1.SetToolTip(txtBox, gvbNullString)
+        mlngNRI = 0
+        mlngNewNRI = 0
+
+
+Exit_pfblnClearControl:
+        pfblnClearControl = blnReturn
+        Exit Function
+
+Error_pfblnClearControl:
+        blnReturn = False
+        Call mcTTAPP.bln_LogError(Err, mstrCONTROL_NAME, strFCT_NAME)
+        Resume Exit_pfblnClearControl
+    End Function
+
+    '****************************************************************
+    '* Nom de la fonction   : pfblnMoveKeyDown
+    '*
+    '*               Cree   : 11-01-2002   lamorin
+    '*            Modifie   : **-**-****  ***
+    '*
+    '*                But   :
+    '*
+    '* Parametre(s):
+    '*              IN :
+    '*
+    '*              OUT:    True, si succes. False, si erreur
+    '*
+    '****************************************************************
+    Private Function pfblnMoveKeyDown(ByRef vblnKeyDown As Boolean) As Boolean
+        On Error GoTo Error_pfblnMoveKeyDown
+        Const strFCT_NAME As String = "pfblnMoveKeyDown"
+        Dim blnReturn As Boolean
+        Dim blnDontShow As Boolean
+        Dim lngCurrNRI As Integer
+
+        blnReturn = True
+        blnDontShow = False
+
+        If Not mblnLoaded Then
+            lngCurrNRI = mlngNRI
+
+            'Load le cbo pour de vrai
+            Call fblnSQL_Process(mstrSQL, mblnLoaded, mstrSQLOriginal, mstrInitKeyString, mstrKEY_DELIMITER, mcTTAPP, mblnFilterIsAlpha, mblnFilterModeOnly)
+
+            Call pSetRecordSQL()
+            Call pSetFilter()
+
+            Call pfblnValide(True, , lngCurrNRI)
+        End If
+
+        If vblnKeyDown Then
+            Select Case True
+                Case mrecRec.RecordCount = 0
+                    blnDontShow = True
+                Case mrecRec.EOF
+                    mrecRec.MoveFirst()
+                Case Else
+                    If txtBox.Text = gvbNullString Then
+                        mrecRec.MoveFirst()
+                    Else
+                        mrecRec.MoveNext()
+                        If mrecRec.EOF Then mrecRec.MoveFirst()
+                    End If
+            End Select
+        Else
+            'MoveUp
+            Select Case True
+                Case mrecRec.RecordCount = 0
+                    blnDontShow = True
+                Case mrecRec.BOF
+                    mrecRec.MoveLast()
+                Case Else
+                    If txtBox.Text = gvbNullString Then
+                        mrecRec.MoveLast()
+                    Else
+                        mrecRec.MovePrevious()
+                        If mrecRec.BOF Then mrecRec.MoveLast()
+                    End If
+            End Select
+        End If
+
+        If Not blnDontShow Then
+            If mrecRec.RecordCount <> 0 Then
+                mlngNewNRI = mrecRec.Fields(0).Value
+
+                If mlngNewNRI <> mlngNRI Then Call pfblnValide(False, , mlngNewNRI)
+
+                RaiseEvent Change(Me, New ChangeEventArgs(mlngNewNRI))
+            Else
+                'Do nothing
+            End If
+        Else
+            'Do nothing
+        End If
+
+
+Exit_pfblnMoveKeyDown:
+        pfblnMoveKeyDown = blnReturn
+        Exit Function
+
+Error_pfblnMoveKeyDown:
+        blnReturn = False
+        Call mcTTAPP.bln_LogError(Err, mstrCONTROL_NAME, strFCT_NAME)
+        Resume Exit_pfblnMoveKeyDown
+    End Function
+
+    '****************************************************************
+    '* Nom de la fonction   : bln_SelText
+    '*
+    '*               Cree   : 01-02-2007  ¶émi
+    '*            Modifie   : **-**-****  ***
+    '*
+    '*                But   : sélectionne le text dans le control (le curseur reste à la fin du texte, utilisation à vos risques)
+    '*
+    '* Parametre(s):
+    '*              IN :
+    '*
+    '*              OUT:    True, si succes. False, si erreur
+    '*
+    '****************************************************************
+    Public Function bln_SelText() As Boolean
+        On Error GoTo Error_bln_SelText
+        Const strFCT_NAME As String = "bln_SelText"
+        Dim blnReturn As Boolean
+
+        blnReturn = True
+
+        If Enabled Then
+            If txtBox.Text <> gvbNullString Then
+                txtBox.SelectionStart = 0
+                txtBox.SelectionLength = Len(txtBox.Text)
+            Else
+                'do nothing
+            End If
+        Else
+            'do nothing
+        End If
+
+Exit_bln_SelText:
+        bln_SelText = blnReturn
+        Exit Function
+Error_bln_SelText:
+        blnReturn = False
+        Call mcTTAPP.bln_LogError(Err, mstrCONTROL_NAME, strFCT_NAME)
+        Resume Exit_bln_SelText
+    End Function
+
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
+    End Sub
+
+End Class

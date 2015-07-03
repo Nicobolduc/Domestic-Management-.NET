@@ -216,15 +216,15 @@
             strSQL = strSQL & "         CASE WHEN SUM(TProPrice.ProP_Price) = 0 THEN NULL ELSE ROUND(SUM(TProPrice.ProP_Price),2) END As TotalCost " & vbCrLf
             strSQL = strSQL & "  FROM Gro_Pro " & vbCrLf
             strSQL = strSQL & "     INNER JOIN Grocery ON Gro_Pro.Gro_ID = Gro_Pro.Gro_ID " & vbCrLf
-            strSQL = strSQL & "     INNER JOIN (SELECT ProP_Price, Pro_ID " & vbCrLf
+            strSQL = strSQL & "     INNER JOIN (SELECT ProP_Price, Pro_ID, ProB_ID " & vbCrLf
             strSQL = strSQL & "                 FROM ProductPrice " & vbCrLf
-            strSQL = strSQL & "                ) As TProPrice ON TProPrice.Pro_ID = Gro_Pro.Pro_ID  " & vbCrLf
+            strSQL = strSQL & "                ) As TProPrice ON TProPrice.Pro_ID = Gro_Pro.Pro_ID AND TProPrice.ProB_ID = Gro_Pro.ProB_ID " & vbCrLf
 
             If vstrWhere <> String.Empty Then
 
             End If
 
-            strSQL = strSQL & " GROUP BY Gro_ID " & vbCrLf
+            strSQL = strSQL & " GROUP BY Grocery.Gro_ID " & vbCrLf
             strSQL = strSQL & " HAVING TotalCost IS NOT NULL " & vbCrLf
             strSQL = strSQL & " ORDER BY Grocery.Gro_Name " & vbCrLf
 

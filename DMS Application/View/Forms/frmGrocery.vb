@@ -1,25 +1,38 @@
 ﻿Public Class frmGrocery
 
     'Private members
-    Private Const mintGrdGrocery_Pro_ID_col As Short = 1
-    Private Const mintGrdGrocery_Pro_Name_col As Short = 2
-    Private Const mintGrdGrocery_ProT_ID_col As Short = 3
-    Private Const mintGrdGrocery_ProT_Name_col As Short = 4
-    Private Const mintGrdGrocery_ProC_ID_col As Short = 5
-    Private Const mintGrdGrocery_ProC_Name_col As Short = 6
-    Private Const mintGrdGrocery_Pro_Taxable_col As Short = 7
-    Private Const mintGrdGrocery_ProB_ID_col As Short = 8
-    Private Const mintGrdGrocery_ProB_Name_col As Short = 9
-    Private Const mintGrdGrocery_ProP_Price_col As Short = 10
-    Private Const mintGrdGrocery_Sel_col As Short = 11
+    Private Const mintGrdGrocery_Action_col As Short = 1
+    Private Const mintGrdGrocery_Pro_ID_col As Short = 2
+    Private Const mintGrdGrocery_Pro_Name_col As Short = 3
+    Private Const mintGrdGrocery_ProT_ID_col As Short = 4
+    Private Const mintGrdGrocery_ProT_Name_col As Short = 5
+    Private Const mintGrdGrocery_ProC_ID_col As Short = 6
+    Private Const mintGrdGrocery_ProC_Name_col As Short = 7
+    Private Const mintGrdGrocery_Pro_Taxable_col As Short = 8
+    Private Const mintGrdGrocery_ProB_ID_col As Short = 9
+    Private Const mintGrdGrocery_ProB_Name_col As Short = 10
+    Private Const mintGrdGrocery_ProP_Price_col As Short = 11
+    Private Const mintGrdGrocery_Sel_col As Short = 12
 
     Private mdblTaxe_TPS As Double
     Private mdblTaxe_TVQ As Double
 
     'Private class members
-    Private WithEvents mcGrdGrocery As SyncfusionGridController
+    Private WithEvents mcGrdGroceryController As SyncfusionGridController
     Private mcSQL As MySQLController
     Private mcPrinter As DGV_Printing_Controller
+
+
+#Region "Constructors"
+
+    Public Sub New()
+        'This call is required by the designer.
+        InitializeComponent()
+
+        mcGrdGroceryController = New SyncfusionGridController
+    End Sub
+
+#End Region
 
 
 #Region "Functions / Subs"
@@ -43,7 +56,14 @@
             If mySQLReader.Read() Then
 
                 txtGroceryName.Text = mySQLReader.Item("Gro_Name").ToString
-                cboGroceryStore.SelectedValue = mySQLReader.Item("Gro_Default_Cy_ID")
+
+                If Not IsDBNull(mySQLReader.Item("Gro_Default_Cy_ID")) Then
+
+                    cboGroceryStore.SelectedValue = mySQLReader.Item("Gro_Default_Cy_ID")
+                    chkDefaultCy.Checked = True
+                Else
+                    chkDefaultCy.Checked = False
+                End If
             Else
                 'Do nothing
             End If
@@ -65,19 +85,18 @@
 
     Private Function blnGrdGrocery_Load() As Boolean
         Dim blnValidReturn As Boolean
-        Dim blnChecked As Boolean
         Dim strSQL As String = String.Empty
-        Dim intRow As Integer
         Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
-            strSQL = strSQL & " SELECT  Product.Pro_ID, " & vbCrLf
+            strSQL = strSQL & "  SELECT " & DataGridViewController.GridRowActions.CONSULT_ACTION & " AS Action, " & vbCrLf
+            strSQL = strSQL & "         Product.Pro_ID, " & vbCrLf
             strSQL = strSQL & "         Product.Pro_Name, " & vbCrLf
             strSQL = strSQL & "         ProductType.ProT_ID, " & vbCrLf
             strSQL = strSQL & "         ProductType.ProT_Name, " & vbCrLf
             strSQL = strSQL & "         ProductCategory.ProC_ID, " & vbCrLf
             strSQL = strSQL & "         CASE WHEN ProductCategory.ProC_Name IS NULL THEN '' ELSE ProductCategory.ProC_Name END AS ProC_Name, " & vbCrLf
-            strSQL = strSQL & "         Product.Pro_Taxable, " & vbCrLf
+            strSQL = strSQL & "         CASE WHEN Product.Pro_Taxable = 1 THEN 'True' ELSE 'False' END, " & vbCrLf
             strSQL = strSQL & "         ProductBrand.ProB_ID, " & vbCrLf
             strSQL = strSQL & "         ProductBrand.ProB_Name, " & vbCrLf
             strSQL = strSQL & "         ProductPrice.ProP_Price, " & vbCrLf
@@ -91,12 +110,13 @@
             strSQL = strSQL & "                            AND ProductPrice.Cy_ID_Seller = " & cboGroceryStore.SelectedValue.ToString & vbCrLf
             strSQL = strSQL & " ORDER BY Product.Pro_Name, ProductType.ProT_Name, ProductCategory.ProC_Name " & vbCrLf
 
-            blnValidReturn = mcGrdGrocery.bln_FillData(strSQL)
+            blnValidReturn = mcGrdGroceryController.bln_FillData(strSQL)
 
             If blnValidReturn Then
 
                 strSQL = String.Empty
-                strSQL = strSQL & " SELECT Gro_Pro.Pro_ID " & vbCrLf
+                strSQL = strSQL & " SELECT Gro_Pro.Pro_ID, " & vbCrLf
+                strSQL = strSQL & "        Gro_Pro.ProB_ID " & vbCrLf
                 strSQL = strSQL & " FROM Gro_Pro " & vbCrLf
                 strSQL = strSQL & " WHERE Gro_Pro.Gro_ID = " & formController.Item_ID & vbCrLf
 
@@ -104,12 +124,22 @@
 
                 While mySQLReader.Read And grdGrocery.RowCount > 0
 
-                    If mcGrdGrocery.FindRow(mySQLReader.Item("Pro_ID").ToString, mintGrdGrocery_Pro_ID_col) > 0 Then
+                    For intRowIdx As Integer = 1 To grdGrocery.RowCount
 
-                        grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue = True
-                    Else
-                        grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue = False
-                    End If
+                        If grdGrocery(intRowIdx, mintGrdGrocery_Pro_ID_col).CellValue.ToString = mySQLReader.Item("Pro_ID").ToString Then
+
+                            If grdGrocery(intRowIdx, mintGrdGrocery_ProB_ID_col).CellValue.ToString = mySQLReader.Item("ProB_ID").ToString Then
+
+                                grdGrocery(intRowIdx, mintGrdGrocery_Sel_col).CellValue = True
+
+                                Exit For
+                            Else
+                                'Continue searching
+                            End If
+                        Else
+                            'Continue searching
+                        End If
+                    Next
 
                 End While
 
@@ -176,11 +206,11 @@
         Try
             For intRow As Integer = 1 To grdGrocery.RowCount
 
-                If grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue.ToString = "True" And grdGrocery(intRow, mintGrdGrocery_Pro_Taxable_col).CellValue.ToString = "1" Then
+                If grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue.ToString = "True" And grdGrocery(intRow, mintGrdGrocery_Pro_Taxable_col).CellValue.ToString = "True" Then
 
                     dblSubtotalTaxable = dblSubtotalTaxable + Val(grdGrocery(intRow, mintGrdGrocery_ProP_Price_col).CellValue)
 
-                ElseIf grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue.ToString = "True" And grdGrocery(intRow, mintGrdGrocery_Pro_Taxable_col).CellValue.ToString = "0" Then
+                ElseIf grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue.ToString = "True" And grdGrocery(intRow, mintGrdGrocery_Pro_Taxable_col).CellValue.ToString = "False" Then
 
                     dblSubtotalNotTaxable = dblSubtotalNotTaxable + Val(grdGrocery(intRow, mintGrdGrocery_ProP_Price_col).CellValue)
 
@@ -238,6 +268,7 @@
         Try
             Select Case False
                 Case mcSQL.bln_AddField("Gro_Name", txtGroceryName.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("Gro_Default_Cy_ID", IIf(chkDefaultCy.Checked, cboGroceryStore.SelectedValue, 0), MySQLController.MySQL_FieldTypes.ID_TYPE)
                 Case mcSQL.bln_ADOInsert("Grocery", formController.Item_ID)
                 Case formController.Item_ID > 0
                 Case Else
@@ -258,6 +289,7 @@
         Try
             Select Case False
                 Case mcSQL.bln_AddField("Gro_Name", txtGroceryName.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
+                Case mcSQL.bln_AddField("Gro_Default_Cy_ID", IIf(chkDefaultCy.Checked, cboGroceryStore.SelectedValue, 0), MySQLController.MySQL_FieldTypes.ID_TYPE)
                 Case mcSQL.bln_ADOUpdate("Grocery", "Gro_ID = " & formController.Item_ID)
                 Case formController.Item_ID > 0
                 Case Else
@@ -324,7 +356,8 @@
                         Case grdGrocery(cpt, mintGrdGrocery_Sel_col).CellValue.ToString = "True"
                             blnValidReturn = True
                         Case mcSQL.bln_AddField("Gro_ID", formController.Item_ID.ToString, MySQLController.MySQL_FieldTypes.ID_TYPE)
-                        Case mcSQL.bln_AddField("Pro_ID", grdGrocery(cpt, mintGrdGrocery_Pro_ID_col).CellValue.ToString, MySQLController.MySQL_FieldTypes.ID_TYPE)
+                        Case mcSQL.bln_AddField("Pro_ID", grdGrocery(cpt, mintGrdGrocery_Pro_ID_col).CellValue, MySQLController.MySQL_FieldTypes.ID_TYPE)
+                        Case mcSQL.bln_AddField("ProB_ID", grdGrocery(cpt, mintGrdGrocery_ProB_ID_col).CellValue, MySQLController.MySQL_FieldTypes.ID_TYPE)
                         Case mcSQL.bln_ADOInsert("Gro_Pro")
                         Case Else
                             blnValidReturn = True
@@ -352,10 +385,10 @@
         Dim blnValidReturn As Boolean
 
         Select Case False
-            Case mcGrdGrocery.bln_Init(grdGrocery)
+            Case mcGrdGroceryController.bln_Init(grdGrocery)
             Case blnCboGroceryStore_Load()
-            Case blnGrdGrocery_Load()
             Case blnLoadData()
+            Case blnGrdGrocery_Load()
             Case Else
                 blnValidReturn = True
         End Select
@@ -369,13 +402,16 @@
         blnGrdGrocery_Load()
     End Sub
 
-    Private Sub mcGrdGrocery_SetDisplay() Handles mcGrdGrocery.SetDisplay
-        mcGrdGrocery.SetColsSizeBehavior = ColsSizeBehaviorsController.colsSizeBehaviors.EXTEND_LAST_COL
+    Private Sub mcGrdGroceryController_SetDisplay() Handles mcGrdGroceryController.SetDisplay
+        mcGrdGroceryController.SetColsSizeBehavior = ColsSizeBehaviorsController.colsSizeBehaviors.EXTEND_LAST_COL
 
         grdGrocery.ColStyles(mintGrdGrocery_Sel_col).CellType = "CheckBox"
         grdGrocery.ColStyles(mintGrdGrocery_Sel_col).CheckBoxOptions = New GridCheckBoxCellInfo(True.ToString(), False.ToString(), "", False)
         grdGrocery.ColStyles(mintGrdGrocery_Sel_col).CellValueType = GetType(Boolean)
         grdGrocery.ColStyles(mintGrdGrocery_ProP_Price_col).CellValueType = GetType(Double)
+        grdGrocery.ColStyles(mintGrdGrocery_Pro_Taxable_col).CellType = "CheckBox"
+        grdGrocery.ColStyles(mintGrdGrocery_Pro_Taxable_col).CheckBoxOptions = New GridCheckBoxCellInfo(True.ToString(), False.ToString(), "", False)
+        grdGrocery.ColStyles(mintGrdGrocery_Pro_Taxable_col).CellValueType = GetType(Boolean)
 
         grdGrocery.ColStyles(mintGrdGrocery_ProP_Price_col).Format = mConstants.DataFormat.CURRENCY
 
@@ -384,8 +420,6 @@
                 grdGrocery.ColStyles(intCol).ReadOnly = True
             End If
         Next
-
-        CheckUncheckAll(True)
 
         grdGrocery.ColWidths(mintGrdGrocery_Pro_Name_col) = 214
         grdGrocery.ColWidths(mintGrdGrocery_ProT_Name_col) = 97
@@ -435,13 +469,6 @@
         If e.ColIndex = mintGrdGrocery_Sel_col And e.RowIndex <> -1 Then
             grdGrocery.EndEdit()
         End If
-    End Sub
-
-    Public Sub New()
-        'This call is required by the designer.
-        InitializeComponent()
-
-        mcGrdGrocery = New SyncfusionGridController
     End Sub
 
     Private Sub grdGrocery_CurrentCellChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdGrocery.CurrentCellChanged

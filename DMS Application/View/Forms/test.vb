@@ -1,4 +1,5 @@
 ﻿Imports FlexCell
+Imports System.Collections.Specialized
 
 Public Class test
 
@@ -174,9 +175,23 @@ Public Class test
 
         'grdSync.Item(1, 0).CellType = Syncfusion.Windows.Forms.Grid.GridCellTypeName.CheckBox
 
+        grdSync.Cols.InsertRange(2, 5)
+
+        Dim items As New StringCollection()
+        items.Add("One")
+        items.Add("Two")
+        items.Add("Three")
+        items.Add("Four")
+        items.Add("Five")
+
+        grdSync.ColStyles(4).CellType = "ComboBox"
+        'grdSync(1, 4).DataSource = items
+        grdSync.ColStyles(4).DataSource = items
+
         grdSync.EndUpdate()
 
         grdSync.Refresh()
+
     End Sub
 
     Private dataTableArray(,) As Object
@@ -294,7 +309,7 @@ Public Class test
 
         grdSync.Model.PopulateValues(GridRangeInfo.Cells(1, 1, Me.numArrayRows, Me.numArrayCols), dataTableArray)
 
-        setVisualStyle
+        setVisualStyle()
 
         grdSync.EndUpdate()
         Refresh()
@@ -306,7 +321,7 @@ Public Class test
     Private numArrayRows As Integer = 5
 
     Private Function SetUpArray() As Integer(,)
-       
+
         Dim r As Random = New Random
         Dim i As Integer = 0
 

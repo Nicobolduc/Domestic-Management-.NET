@@ -85,7 +85,7 @@ Public Class frmGeneralList
             formController.LoadFormData()
 
             Select Case vFormMode
-                Case mConstants.Form_Modes.INSERT_MODE
+                Case mConstants.Form_Modes.INSERT_MODE, Form_Modes.UPDATE_MODE
                     For intRowIndex As Integer = 1 To grdList.RowCount
 
                         If grdList(intRowIndex, mintItem_ID_col).CellValue = intItem_ID Then
