@@ -48,7 +48,7 @@ Public Class frmGeneralList
                     frmToOpen = New frmProduct
 
                 Case mGeneralList.GeneralLists_ID.PRODUCT_TYPE_LIST_ID
-                    frmToOpen = New frmBrandProto
+                    frmToOpen = New frmProductType
 
                 Case mGeneralList.GeneralLists_ID.PRODUCT_CATEGORY_LIST_ID
                     frmToOpen = New frmProductCategory

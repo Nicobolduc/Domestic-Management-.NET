@@ -20,7 +20,7 @@ Public Module mConstants
         ERROR_SAVE_MSG = 5
     End Enum
 
-    Public Enum Validation_Messages
+    Public Enum Validation_Message
         MANDATORY_VALUE = 6
         NUMERIC_VALUE = 10
     End Enum
@@ -32,9 +32,13 @@ Public Module mConstants
         PHARMACY = 4
     End Enum
 
+    Public Enum TaxeType
+        TPS = 1
+        TVQ = 2
+    End Enum
+
     Structure DataFormat
         Const CURRENCY = "##,0.00$"
     End Structure
-
 
 End Module

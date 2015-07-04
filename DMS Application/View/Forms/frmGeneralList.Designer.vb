@@ -54,7 +54,7 @@ Partial Class frmGeneralList
         Me.txtFilter.Location = New System.Drawing.Point(53, 9)
         Me.txtFilter.Name = "txtFilter"
         Me.txtFilter.Size = New System.Drawing.Size(333, 20)
-        Me.txtFilter.TabIndex = 1
+        Me.txtFilter.TabIndex = 0
         '
         'btnDelete
         '
@@ -63,7 +63,7 @@ Partial Class frmGeneralList
         Me.btnDelete.Location = New System.Drawing.Point(525, 173)
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Size = New System.Drawing.Size(48, 48)
-        Me.btnDelete.TabIndex = 3
+        Me.btnDelete.TabIndex = 4
         Me.ToolTips.SetToolTip(Me.btnDelete, "Supprimer")
         Me.btnDelete.UseVisualStyleBackColor = True
         '
@@ -74,7 +74,7 @@ Partial Class frmGeneralList
         Me.btnUpdate.Location = New System.Drawing.Point(525, 119)
         Me.btnUpdate.Name = "btnUpdate"
         Me.btnUpdate.Size = New System.Drawing.Size(48, 48)
-        Me.btnUpdate.TabIndex = 2
+        Me.btnUpdate.TabIndex = 3
         Me.ToolTips.SetToolTip(Me.btnUpdate, "Modifier")
         Me.btnUpdate.UseVisualStyleBackColor = True
         '
@@ -85,7 +85,7 @@ Partial Class frmGeneralList
         Me.btnAdd.Location = New System.Drawing.Point(525, 65)
         Me.btnAdd.Name = "btnAdd"
         Me.btnAdd.Size = New System.Drawing.Size(48, 48)
-        Me.btnAdd.TabIndex = 1
+        Me.btnAdd.TabIndex = 2
         Me.ToolTips.SetToolTip(Me.btnAdd, "Ajouter")
         Me.btnAdd.UseVisualStyleBackColor = True
         '
@@ -101,7 +101,7 @@ Partial Class frmGeneralList
         Me.btnRefresh.Location = New System.Drawing.Point(529, 9)
         Me.btnRefresh.Name = "btnRefresh"
         Me.btnRefresh.Size = New System.Drawing.Size(40, 40)
-        Me.btnRefresh.TabIndex = 5
+        Me.btnRefresh.TabIndex = 1
         Me.btnRefresh.UseVisualStyleBackColor = True
         '
         'grdList
@@ -151,7 +151,7 @@ Partial Class frmGeneralList
         Me.formController.Name = "formController"
         Me.formController.ShowButtonQuitOnly = True
         Me.formController.Size = New System.Drawing.Size(85, 33)
-        Me.formController.TabIndex = 4
+        Me.formController.TabIndex = 5
         '
         'frmGeneralList
         '

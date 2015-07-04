@@ -43,8 +43,8 @@
         Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
-            mdblTaxe_TPS = Val(MySQLController.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_Name = 'TPS'"))
-            mdblTaxe_TVQ = Val(MySQLController.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_Name = 'TVQ'"))
+            mdblTaxe_TPS = Val(MySQLController.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_ID = " & mConstants.TaxeType.TPS))
+            mdblTaxe_TVQ = Val(MySQLController.str_ADOSingleLookUp("Tax_rate", "Tax", "Tax_ID = " & mConstants.TaxeType.TVQ))
 
             strSQL = strSQL & " SELECT  Grocery.Gro_Name, " & vbCrLf
             strSQL = strSQL & "         Gro_Default_Cy_ID " & vbCrLf
@@ -459,7 +459,7 @@
         Select Case False
             Case txtGroceryName.Text <> String.Empty
                 txtGroceryName.Focus()
-                gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
             Case Else
                 eventArgs.IsValid = True
         End Select

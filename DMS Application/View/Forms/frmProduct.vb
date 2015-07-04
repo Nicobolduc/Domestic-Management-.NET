@@ -34,22 +34,23 @@ Public Class frmProduct
 
     Private Function blnLoadData() As Boolean
         Dim blnValidReturn As Boolean
-        Dim strSQL As String = String.Empty
 
         Try
-            mcProductModel = gcAppController.GetCoreModelController.GetProductController.Value.GetProductFromID(formController.Item_ID)
+            mcProductModel = gcAppController.GetCoreModelController.GetProductController.Value.GetProduct(formController.Item_ID)
 
-            cboType.SelectedValue = mcProductModel.Type_ID
+            If Not mcProductModel Is Nothing Then
 
-            Select Case False
-                Case Not mcProductModel Is Nothing
-                Case blnCboCategory_Load(mcProductModel.Category_ID)
-                Case Else
-                    txtName.Text = mcProductModel.Name
-                    chkTaxable.Checked = mcProductModel.IsTaxable
+                cboType.SelectedValue = mcProductModel.Type.ID
 
-                    blnValidReturn = True
-            End Select
+                Select Case False
+                    Case blnCboCategory_Load(mcProductModel.Category.ID)
+                    Case Else
+                        txtName.Text = mcProductModel.Name
+                        chkTaxable.Checked = mcProductModel.IsTaxable
+
+                        blnValidReturn = True
+                End Select
+            End If
 
         Catch ex As Exception
             blnValidReturn = False
@@ -64,13 +65,13 @@ Public Class frmProduct
         Dim productPrice As ProductPrice
 
         Try
-            mcProductModel.SetMySQL = mcSQL
+            mcProductModel.SQLController = mcSQL
             mcProductModel.DLMCommand = formController.FormMode
             mcProductModel.ID = formController.Item_ID
             mcProductModel.Name = txtName.Text
             mcProductModel.IsTaxable = chkTaxable.Checked
-            mcProductModel.Type_ID = cboType.SelectedValue
-            mcProductModel.Category_ID = cboCategory.SelectedValue
+            mcProductModel.Type.ID = cboType.SelectedValue
+            mcProductModel.Category.ID = cboCategory.SelectedValue
 
             For intRowIdx As Integer = 1 To grdPrices.RowCount
 
@@ -327,16 +328,16 @@ Public Class frmProduct
 
         Select Case False
             Case txtName.Text <> String.Empty
-                gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtName.Focus()
 
             Case cboType.SelectedIndex > -1
-                gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 cboType.DroppedDown = True
                 cboType.Focus()
 
             Case cboCategory.SelectedIndex > -1
-                gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 cboType.DroppedDown = True
                 cboType.Focus()
 
@@ -353,17 +354,17 @@ Public Class frmProduct
 
                 Select Case True
                     Case mcGrdPricesController.CellIsEmpty(intRowIndex, mintGrdPrices_Cy_Seller_ID_col)
-                        gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
- 
+                        gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+
                         mcGrdPricesController.SetSelectedCol(True) = mintGrdPrices_Cy_Seller_Name_col
 
                     Case mcGrdPricesController.CellIsEmpty(intRowIndex, mintGrdPrices_ProB_ID_col)
-                        gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                        gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
 
                         mcGrdPricesController.SetSelectedCol(True) = mintGrdPrices_ProB_Name_col
 
                     Case mcGrdPricesController.CellIsEmpty(intRowIndex, mintGrdPrices_Price_col)
-                        gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+                        gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
 
                         mcGrdPricesController.SetSelectedCol() = mintGrdPrices_Price_col
 
@@ -409,7 +410,7 @@ Public Class frmProduct
                 Case mintGrdPrices_Price_col
                     If Not IsNumeric(grdPrices(mcGrdPricesController.GetSelectedRow, mcGrdPricesController.GetSelectedCol).CellValue) And mcGrdPricesController.CurrentCellIsEmpty Then
 
-                        gcAppController.ShowMessage(mConstants.Validation_Messages.NUMERIC_VALUE, MsgBoxStyle.Information)
+                        gcAppController.ShowMessage(mConstants.Validation_Message.NUMERIC_VALUE, MsgBoxStyle.Information)
 
                         e.Cancel = True
                     End If
@@ -444,7 +445,7 @@ Public Class frmProduct
     Private Sub mcGrdPrices_ValidateData(ByVal eventArgs As ValidateGridEventArgs) Handles mcGrdPricesController.ValidateData
         If grdPrices.RowCount < 1 Then
 
-            gcAppController.ShowMessage(mConstants.Validation_Messages.MANDATORY_VALUE, MsgBoxStyle.Information)
+            gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
             eventArgs.IsValid = False
         Else
             eventArgs.IsValid = True

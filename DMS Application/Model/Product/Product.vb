@@ -1,32 +1,20 @@
 ﻿Namespace Model
 
     Public Class Product
+        Inherits CommonToModels
 
         'Private members
-        '<DebuggerBrowsable(DebuggerBrowsableState.Never)>
         Private _intProduct_ID As Integer
         Private _strName As String = String.Empty
-        Private _intType_ID As Integer
-        Private _intCategory_ID As Integer
         Private _blnIsTaxable As Boolean
 
-        Private _intDMLCommand As mConstants.Form_Modes
-
         'Private class members
-        Private mLstProductPrice As List(Of ProductPrice)
-        Private mcSQL As MySQLController
+        Private mcLstProductPrice As List(Of ProductPrice)
+        Private mcProductCategory As ProductCategory
+        Private mcProductType As ProductType
 
 
 #Region "Properties"
-
-        Public Property DLMCommand As mConstants.Form_Modes
-            Get
-                Return _intDMLCommand
-            End Get
-            Set(ByVal value As mConstants.Form_Modes)
-                _intDMLCommand = value
-            End Set
-        End Property
 
         Public Property ID As Integer
             Get
@@ -52,27 +40,21 @@
             End Set
         End Property
 
-        Public Property Type_ID As Integer
+        Public Property Type As ProductType
             Get
-                Return _intType_ID
+                Return mcProductType
             End Get
-
-            Set(ByVal value As Integer)
-                If value > 0 Then
-                    _intType_ID = value
-                Else
-                    'Non valide
-                End If
+            Set(value As ProductType)
+                mcProductType = value
             End Set
         End Property
 
-        Public Property Category_ID As Integer
+        Public Property Category As ProductCategory
             Get
-                Return _intCategory_ID
+                Return mcProductCategory
             End Get
-
-            Set(ByVal value As Integer)
-                _intCategory_ID = value
+            Set(value As ProductCategory)
+                mcProductCategory = value
             End Set
         End Property
 
@@ -88,14 +70,8 @@
 
         Public ReadOnly Property GetLstProductPrice As List(Of ProductPrice)
             Get
-                Return mLstProductPrice
+                Return mcLstProductPrice
             End Get
-        End Property
-
-        Public WriteOnly Property SetMySQL As MySQLController
-            Set(ByVal value As MySQLController)
-                mcSQL = value
-            End Set
         End Property
 
 #End Region
@@ -104,7 +80,9 @@
 #Region "Constructors"
 
         Public Sub New()
-            mLstProductPrice = New List(Of ProductPrice)
+            mcLstProductPrice = New List(Of ProductPrice)
+            mcProductCategory = New ProductCategory
+            mcProductType = New ProductType
         End Sub
 
 #End Region
@@ -116,9 +94,9 @@
             Dim blnValidReturn As Boolean
 
             Try
-                If mcSQL.blnTransactionStarted Then
+                If SQLController.blnTransactionStarted Then
 
-                    Select Case _intDMLCommand
+                    Select Case DLMCommand
                         Case mConstants.Form_Modes.INSERT_MODE
                             blnValidReturn = blnProduct_Insert()
 
@@ -146,11 +124,11 @@
 
             Try
                 Select Case False
-                    Case mcSQL.bln_RefreshFields
-                    Case mcSQL.bln_AddField("Pro_Name", _strName, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
-                    Case mcSQL.bln_AddField("ProT_ID", _intType_ID.ToString, MySQLController.MySQL_FieldTypes.ID_TYPE)
-                    Case mcSQL.bln_AddField("ProC_ID", _intCategory_ID.ToString, MySQLController.MySQL_FieldTypes.ID_TYPE)
-                    Case mcSQL.bln_AddField("Pro_Taxable", _blnIsTaxable.ToString, MySQLController.MySQL_FieldTypes.TINYINT_TYPE)
+                    Case SQLController.bln_RefreshFields
+                    Case SQLController.bln_AddField("Pro_Name", _strName, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
+                    Case SQLController.bln_AddField("ProT_ID", mcProductType.ID.ToString, MySQLController.MySQL_FieldTypes.ID_TYPE)
+                    Case SQLController.bln_AddField("ProC_ID", mcProductCategory.ID.ToString, MySQLController.MySQL_FieldTypes.ID_TYPE)
+                    Case SQLController.bln_AddField("Pro_Taxable", _blnIsTaxable.ToString, MySQLController.MySQL_FieldTypes.TINYINT_TYPE)
                     Case Else
                         blnValidReturn = True
                 End Select
@@ -169,7 +147,7 @@
             Try
                 Select Case False
                     Case blnProduct_AddFields()
-                    Case mcSQL.bln_ADOInsert("Product", _intProduct_ID)
+                    Case SQLController.bln_ADOInsert("Product", _intProduct_ID)
                     Case _intProduct_ID > 0
                     Case blnLstProductPrice_Save()
                     Case Else
@@ -190,7 +168,7 @@
             Try
                 Select Case False
                     Case blnProduct_AddFields()
-                    Case mcSQL.bln_ADOUpdate("Product", "Pro_ID = " & _intProduct_ID)
+                    Case SQLController.bln_ADOUpdate("Product", "Pro_ID = " & _intProduct_ID)
                     Case blnLstProductPrice_Save()
                     Case Else
                         blnValidReturn = True
@@ -209,8 +187,8 @@
 
             Try
                 Select Case False
-                    Case mcSQL.bln_ADODelete("ProductPrice", "Pro_ID = " & _intProduct_ID)
-                    Case mcSQL.bln_ADODelete("Product", "Pro_ID = " & _intProduct_ID)
+                    Case SQLController.bln_ADODelete("ProductPrice", "Pro_ID = " & _intProduct_ID)
+                    Case SQLController.bln_ADODelete("Product", "Pro_ID = " & _intProduct_ID)
                     Case Else
                         blnValidReturn = True
                 End Select
@@ -227,7 +205,7 @@
             Dim blnValidReturn As Boolean
 
             Try
-                For Each proPrice As ProductPrice In mLstProductPrice
+                For Each proPrice As ProductPrice In mcLstProductPrice
 
                     proPrice.Product_ID = _intProduct_ID
 
