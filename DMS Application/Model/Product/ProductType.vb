@@ -1,7 +1,7 @@
 ﻿Namespace Model
 
     Public Class ProductType
-        Inherits CommonToModels
+        Inherits BaseModel
 
         'Private members
         Private _intType_ID As Integer
@@ -41,13 +41,13 @@
                 If SQLController.blnTransactionStarted Then
 
                     Select Case DLMCommand
-                        Case mConstants.Form_Modes.INSERT_MODE
+                        Case mConstants.Form_Mode.INSERT_MODE
                             blnValidReturn = blnProductType_Insert()
 
-                        Case mConstants.Form_Modes.UPDATE_MODE
+                        Case mConstants.Form_Mode.UPDATE_MODE
                             blnValidReturn = blnProductType_Update()
 
-                        Case mConstants.Form_Modes.DELETE_MODE
+                        Case mConstants.Form_Mode.DELETE_MODE
                             blnValidReturn = blnProductType_Delete()
 
                     End Select

@@ -20,7 +20,7 @@
     'Private class members
     Private WithEvents mcGrdGroceryController As SyncfusionGridController
     Private mcSQL As MySQLController
-    Private mcPrinter As DGV_Printing_Controller
+    Private mcPrinter As PrintingController
 
 
 #Region "Constructors"
@@ -37,7 +37,7 @@
 
 #Region "Functions / Subs"
 
-    Private Function blnLoadData() As Boolean
+    Private Function blnFormData_Load() As Boolean
         Dim blnValidReturn As Boolean
         Dim strSQL As String = String.Empty
         Dim mySQLReader As MySqlDataReader = Nothing
@@ -232,7 +232,7 @@
 
     End Sub
 
-    Private Function blnSaveData() As Boolean
+    Private Function blnFormData_Save() As Boolean
         Dim blnValidReturn As Boolean
 
         Try
@@ -241,13 +241,13 @@
             mcSQL.bln_BeginTransaction()
 
             Select Case formController.FormMode
-                Case mConstants.Form_Modes.INSERT_MODE
+                Case mConstants.Form_Mode.INSERT_MODE
                     blnValidReturn = blnGrocery_Insert()
 
-                Case mConstants.Form_Modes.UPDATE_MODE
+                Case mConstants.Form_Mode.UPDATE_MODE
                     blnValidReturn = blnGrocery_Update()
 
-                Case mConstants.Form_Modes.DELETE_MODE
+                Case mConstants.Form_Mode.DELETE_MODE
                     blnValidReturn = blnGrocery_Delete()
 
             End Select
@@ -387,7 +387,7 @@
         Select Case False
             Case mcGrdGroceryController.bln_Init(grdGrocery)
             Case blnCboGroceryStore_Load()
-            Case blnLoadData()
+            Case blnFormData_Load()
             Case blnGrdGrocery_Load()
             Case Else
                 blnValidReturn = True
@@ -439,7 +439,7 @@
     End Sub
 
     Private Sub btnPrint_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnPrint.Click
-        mcPrinter = New DGV_Printing_Controller("Épicerie du: " & Date.Today)
+        mcPrinter = New PrintingController("Épicerie du: " & Date.Today)
 
         mcPrinter.SetGridToPrint(New Short() {mintGrdGrocery_Pro_Name_col, mintGrdGrocery_ProC_Name_col, mintGrdGrocery_ProB_Name_col, mintGrdGrocery_ProP_Price_col}) = grdGrocery()
 
@@ -447,7 +447,7 @@
     End Sub
 
     Private Sub formController_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles formController.SaveData
-        eventArgs.SaveSuccessful = blnSaveData()
+        eventArgs.SaveSuccessful = blnFormData_Save()
     End Sub
 
     Private Sub txtName_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtGroceryName.TextChanged

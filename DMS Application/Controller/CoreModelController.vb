@@ -2,8 +2,11 @@
 
     Public NotInheritable Class CoreModelController
 
-        Private mcProductController As Lazy(Of ProductController)
         Private Shared _myUniqueInstance As CoreModelController
+
+        Private mcProductController As Lazy(Of ProductController)
+        Private mcCompanyController As CompanyController
+        Private mcFinanceController As FinanceController
 
 
 #Region "Constructors"
@@ -23,6 +26,26 @@
                 End If
 
                 Return mcProductController
+            End Get
+        End Property
+
+        Public ReadOnly Property GetFinanceController As FinanceController
+            Get
+                If mcFinanceController Is Nothing Then
+                    mcFinanceController = New FinanceController
+                End If
+
+                Return mcFinanceController
+            End Get
+        End Property
+
+        Public ReadOnly Property GetCompanyController As CompanyController
+            Get
+                If mcCompanyController Is Nothing Then
+                    mcCompanyController = New CompanyController
+                End If
+
+                Return mcCompanyController
             End Get
         End Property
 

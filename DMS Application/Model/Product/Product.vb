@@ -1,7 +1,7 @@
 ﻿Namespace Model
 
     Public Class Product
-        Inherits CommonToModels
+        Inherits BaseModel
 
         'Private members
         Private _intProduct_ID As Integer
@@ -76,7 +76,6 @@
 
 #End Region
 
-
 #Region "Constructors"
 
         Public Sub New()
@@ -87,7 +86,6 @@
 
 #End Region
 
-
 #Region "Functions / Subs"
 
         Public Function blnProduct_Save() As Boolean
@@ -97,13 +95,13 @@
                 If SQLController.blnTransactionStarted Then
 
                     Select Case DLMCommand
-                        Case mConstants.Form_Modes.INSERT_MODE
+                        Case mConstants.Form_Mode.INSERT_MODE
                             blnValidReturn = blnProduct_Insert()
 
-                        Case mConstants.Form_Modes.UPDATE_MODE
+                        Case mConstants.Form_Mode.UPDATE_MODE
                             blnValidReturn = blnProduct_Update()
 
-                        Case mConstants.Form_Modes.DELETE_MODE
+                        Case mConstants.Form_Mode.DELETE_MODE
                             blnValidReturn = blnProduct_Delete()
 
                     End Select

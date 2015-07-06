@@ -2,47 +2,37 @@
 
     'Private members
     Private mcSQL As MySQLController
+    Private mcExpenseModel As Model.Expense
 
 
 #Region "Functions / Subs"
 
-    Private Function blnLoadData() As Boolean
+    Private Function blnFormData_Load() As Boolean
         Dim blnValidReturn As Boolean
-        Dim strSQL As String = String.Empty
-        Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
-            strSQL = strSQL & " SELECT Expense.Exp_Name, " & vbCrLf
-            strSQL = strSQL & "        Expense.Exp_BillingDate, " & vbCrLf
-            strSQL = strSQL & "        Expense.Exp_Amount, " & vbCrLf
-            strSQL = strSQL & "        Expense.Per_ID " & vbCrLf
-            strSQL = strSQL & " FROM Expense " & vbCrLf
-            strSQL = strSQL & " WHERE Expense.Exp_ID = " & formController.Item_ID & vbCrLf
+            mcExpenseModel = gcAppController.GetCoreModelController.GetFinanceController.GetExpense(formController.Item_ID)
 
-            mySQLReader = MySQLController.ADOSelect(strSQL)
+            If Not mcExpenseModel Is Nothing Then
 
-            While mySQLReader.Read
-                txtCode.Text = mySQLReader.Item("Exp_Name").ToString
+                txtName.Text = mcExpenseModel.Name
+                txtAmount.Text = mcExpenseModel.Amount.ToString
+                cboInterval.SelectedValue = CInt(mcExpenseModel.Period)
 
-                txtAmount.Text = mySQLReader.Item("Exp_Amount").ToString
+                If Not mcExpenseModel.BillingDate Is Nothing Then
 
-                If Not IsDBNull(mySQLReader.Item("Exp_BillingDate")) Then
-                    dtpBillDate.Value = CDate(mySQLReader.Item("Exp_BillingDate"))
+                    dtpBillDate.Checked = True
+                    dtpBillDate.Value = CDate(Format(AppController.GetAppController.str_GetPCDateFormat, mcExpenseModel.BillingDate.Value.ToString))
+                Else
+                    dtpBillDate.Checked = False
                 End If
 
-                cboInterval.SelectedValue = CInt(mySQLReader.Item("Per_ID"))
-            End While
-
-            blnValidReturn = True
+                blnValidReturn = True
+            End If
 
         Catch ex As Exception
             blnValidReturn = False
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        Finally
-            If Not IsNothing(mySQLReader) Then
-                mySQLReader.Close()
-                mySQLReader.Dispose()
-            End If
         End Try
 
         Return blnValidReturn
@@ -54,11 +44,11 @@
 
         Try
             strSQL = strSQL & " SELECT Period.Per_ID, " & vbCrLf
-            strSQL = strSQL & "        Period.Per_Desc " & vbCrLf
+            strSQL = strSQL & "        Period.Per_Name " & vbCrLf
             strSQL = strSQL & " FROM Period " & vbCrLf
             strSQL = strSQL & " ORDER BY Period.Per_ID " & vbCrLf
 
-            blnValidReturn = mWinControlsFunctions.blnComboBox_LoadFromSQL(strSQL, "Per_ID", "Per_Desc", False, cboInterval)
+            blnValidReturn = mWinControlsFunctions.blnComboBox_LoadFromSQL(strSQL, "Per_ID", "Per_Name", False, cboInterval)
 
         Catch ex As Exception
             blnValidReturn = False
@@ -68,24 +58,19 @@
         Return blnValidReturn
     End Function
 
-    Private Function blnSaveData() As Boolean
+    Private Function blnFormData_Save() As Boolean
         Dim blnValidReturn As Boolean
 
         Try
             mcSQL = New MySQLController
 
-            mcSQL.bln_BeginTransaction()
-
-            Select Case formController.FormMode
-                Case mConstants.Form_Modes.INSERT_MODE
-                    blnValidReturn = blnExpense_Insert()
-
-                Case mConstants.Form_Modes.UPDATE_MODE
-                    blnValidReturn = blnExense_Update()
-
-                Case mConstants.Form_Modes.DELETE_MODE
-                    blnValidReturn = blnExpense_Delete()
-
+            Select Case False
+                Case blnSyncExpenseModel()
+                Case mcSQL.bln_BeginTransaction()
+                Case mcExpenseModel.blnExpense_Save()
+                Case Else
+                    formController.Item_ID = mcExpenseModel.ID
+                    blnValidReturn = True
             End Select
 
         Catch ex As Exception
@@ -99,59 +84,30 @@
         Return blnValidReturn
     End Function
 
-    Private Function blnExpense_Insert() As Boolean
+    Public Function blnSyncExpenseModel() As Boolean
         Dim blnValidReturn As Boolean
 
         Try
-            Select Case False
-                Case mcSQL.bln_AddField("Exp_Name", txtCode.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("Exp_BillingDate", CStr(IIf(IsDBNull(dtpBillDate.Value), "", dtpBillDate.Value.ToString)), MySQLController.MySQL_FieldTypes.DATETIME_TYPE)
-                Case mcSQL.bln_AddField("Exp_Amount", txtAmount.Text, MySQLController.MySQL_FieldTypes.DOUBLE_TYPE)
-                Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedValue), MySQLController.MySQL_FieldTypes.ID_TYPE)
-                Case mcSQL.bln_ADOInsert("Expense", formController.Item_ID)
-                Case formController.Item_ID > 0
-                Case Else
-                    blnValidReturn = True
-            End Select
+            If mcExpenseModel Is Nothing Then
 
-        Catch ex As Exception
-            blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
+                mcExpenseModel = New Model.Expense
+            End If
 
-        Return blnValidReturn
-    End Function
+            mcExpenseModel.SQLController = mcSQL
+            mcExpenseModel.DLMCommand = formController.FormMode
+            mcExpenseModel.ID = formController.Item_ID
+            mcExpenseModel.Name = txtName.Text
+            mcExpenseModel.Amount = Math.Round(Val(txtAmount.Text), 2)
+            mcExpenseModel.Period = CType(cboInterval.SelectedValue, Period)
 
-    Private Function blnExense_Update() As Boolean
-        Dim blnValidReturn As Boolean
+            If Not IsDBNull(dtpBillDate.Value) And dtpBillDate.Checked Then
 
-        Try
-            Select Case False
-                Case mcSQL.bln_AddField("Exp_Name", txtCode.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("Exp_Amount", txtAmount.Text, MySQLController.MySQL_FieldTypes.DOUBLE_TYPE)
-                Case mcSQL.bln_AddField("Per_ID", CStr(cboInterval.SelectedValue), MySQLController.MySQL_FieldTypes.ID_TYPE)
-                Case mcSQL.bln_ADOUpdate("Expense", "Exp_ID = " & formController.Item_ID)
-                Case Else
-                    blnValidReturn = True
-            End Select
+                mcExpenseModel.BillingDate = dtpBillDate.Value
+            Else
+                mcExpenseModel.BillingDate = Nothing
+            End If
 
-        Catch ex As Exception
-            blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
-
-        Return blnValidReturn
-    End Function
-
-    Private Function blnExpense_Delete() As Boolean
-        Dim blnValidReturn As Boolean
-
-        Try
-            Select Case False
-                Case mcSQL.bln_ADODelete("Expense", "Exp_ID = " & formController.Item_ID)
-                Case Else
-                    blnValidReturn = True
-            End Select
+            blnValidReturn = True
 
         Catch ex As Exception
             blnValidReturn = False
@@ -163,7 +119,6 @@
 
 #End Region
 
-
 #Region "Private events"
 
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
@@ -173,9 +128,9 @@
 
         Select Case False
             Case blnCboInterval_Load()
-            Case formController.FormMode <> mConstants.Form_Modes.INSERT_MODE
+            Case formController.FormMode <> mConstants.Form_Mode.INSERT_MODE
                 blnValidReturn = True
-            Case blnLoadData()
+            Case blnFormData_Load()
             Case Else
                 blnValidReturn = True
         End Select
@@ -183,10 +138,10 @@
     End Sub
 
     Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles formController.SaveData
-        eventArgs.SaveSuccessful = blnSaveData()
+        eventArgs.SaveSuccessful = blnFormData_Save()
     End Sub
 
-    Private Sub txtCode_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtCode.TextChanged, txtAmount.TextChanged
+    Private Sub txtCode_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtName.TextChanged, txtAmount.TextChanged
         formController.ChangeMade = True
     End Sub
 
@@ -196,9 +151,9 @@
 
     Private Sub myFormControler_ValidateForm(ByVal eventArgs As ValidateFormEventArgs) Handles formController.ValidateForm
         Select Case False
-            Case txtCode.Text <> String.Empty
+            Case txtName.Text <> String.Empty
                 gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
-                txtCode.Focus()
+                txtName.Focus()
 
             Case txtAmount.Text <> String.Empty
                 gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)

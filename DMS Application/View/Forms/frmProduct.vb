@@ -24,15 +24,13 @@ Public Class frmProduct
         InitializeComponent()
 
         mcGrdPricesController = New SyncfusionGridController
-        mcProductModel = New Model.Product
     End Sub
 
 #End Region
 
-
 #Region "Functions / Subs"
 
-    Private Function blnLoadData() As Boolean
+    Private Function blnFormData_Load() As Boolean
         Dim blnValidReturn As Boolean
 
         Try
@@ -65,6 +63,11 @@ Public Class frmProduct
         Dim productPrice As ProductPrice
 
         Try
+            If mcProductModel Is Nothing Then
+
+                mcProductModel = New Model.Product
+            End If
+
             mcProductModel.SQLController = mcSQL
             mcProductModel.DLMCommand = formController.FormMode
             mcProductModel.ID = formController.Item_ID
@@ -183,7 +186,7 @@ Public Class frmProduct
 
             cboCategory.SelectedValue = vintSelectedValue
 
-            If formController.FormMode <> mConstants.Form_Modes.DELETE_MODE And vintSelectedValue >= 0 And cboCategory.Items.Count > 1 Then
+            If formController.FormMode <> mConstants.Form_Mode.DELETE_MODE And vintSelectedValue >= 0 And cboCategory.Items.Count > 1 Then
                 cboCategory.Enabled = True
             Else
                 cboCategory.Enabled = False
@@ -197,7 +200,7 @@ Public Class frmProduct
         Return blnValidReturn
     End Function
 
-    Private Function blnSaveData() As Boolean
+    Private Function blnFormData_Save() As Boolean
         Dim blnValidReturn As Boolean
 
         Try
@@ -208,6 +211,7 @@ Public Class frmProduct
                 Case mcSQL.bln_BeginTransaction
                 Case mcProductModel.blnProduct_Save()
                 Case Else
+                    formController.Item_ID = mcProductModel.ID
                     blnValidReturn = True
             End Select
 
@@ -257,7 +261,6 @@ Public Class frmProduct
 
 #End Region
 
-
 #Region "Private events"
 
     Private Sub cboType_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboType.SelectedIndexChanged
@@ -277,19 +280,14 @@ Public Class frmProduct
     Private Sub formController_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
-        If mcProductModel.ID > 0 And formController.Item_ID <= 0 Then
-
-            formController.Item_ID = mcProductModel.ID
-        End If
-
         Select Case False
             Case mcGrdPricesController.bln_Init(grdPrices, btnAddRow, btnRemoveRow)
             Case blnCboType_Load()
             Case blnCboCategory_Load()
             Case blnGrdPrices_Load()
-            Case formController.FormMode <> mConstants.Form_Modes.INSERT_MODE
+            Case formController.FormMode <> mConstants.Form_Mode.INSERT_MODE
                 blnValidReturn = True
-            Case blnLoadData()
+            Case blnFormData_Load()
             Case Else
                 blnValidReturn = True
         End Select
@@ -308,19 +306,8 @@ Public Class frmProduct
         formController.ChangeMade = True
     End Sub
 
-    Private Sub formController_SetReadRights() Handles formController.SetReadRights
-        Select Case formController.FormMode
-            Case mConstants.Form_Modes.INSERT_MODE
-
-
-            Case mConstants.Form_Modes.DELETE_MODE
-                ' grdPrices.ClearSelection()
-
-        End Select
-    End Sub
-
     Private Sub formController_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles formController.SaveData
-        eventArgs.SaveSuccessful = blnSaveData()
+        eventArgs.SaveSuccessful = blnFormData_Save()
     End Sub
 
     Private Sub formController_ValidateForm(ByVal eventArgs As ValidateFormEventArgs) Handles formController.ValidateForm

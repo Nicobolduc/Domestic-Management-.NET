@@ -2,59 +2,45 @@
 
     'Private class members
     Private mcSQL As MySQLController
+    Private mcProductBrandModel As Model.ProductBrand
 
 
 #Region "Functions / Subs"
 
-    Private Function blnLoadData() As Boolean
+    Private Function blnFormData_Load() As Boolean
         Dim blnValidReturn As Boolean
-        Dim strSQL As String = String.Empty
-        Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
-            strSQL = strSQL & " SELECT ProductBrand.ProB_Name " & vbCrLf
-            strSQL = strSQL & " FROM ProductBrand " & vbCrLf
-            strSQL = strSQL & " WHERE ProductBrand.ProB_ID = " & formController.Item_ID & vbCrLf
+            mcProductBrandModel = gcAppController.GetCoreModelController.GetProductController.Value.GetProductBrand(formController.Item_ID)
 
-            mySQLReader = MySQLController.ADOSelect(strSQL)
+            If Not mcProductBrandModel Is Nothing Then
 
-            mySQLReader.Read()
+                txtName.Text = mcProductBrandModel.Name
 
-            txtName.Text = mySQLReader.Item("ProB_Name").ToString
-
-            blnValidReturn = True
+                blnValidReturn = True
+            End If
 
         Catch ex As Exception
             blnValidReturn = False
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        Finally
-            If Not IsNothing(mySQLReader) Then
-                mySQLReader.Close()
-                mySQLReader.Dispose()
-            End If
         End Try
 
         Return blnValidReturn
     End Function
 
-    Private Function blnSaveData() As Boolean
+    Private Function blnFormData_Save() As Boolean
         Dim blnValidReturn As Boolean
 
         Try
             mcSQL = New MySQLController
 
-            mcSQL.bln_BeginTransaction()
-
-            Select Case formController.FormMode
-                Case mConstants.Form_Modes.INSERT_MODE
-                    blnValidReturn = blnProductType_Insert()
-
-                Case mConstants.Form_Modes.UPDATE_MODE
-                    blnValidReturn = blnProductType_Update()
-
-                Case mConstants.Form_Modes.DELETE_MODE
-                    blnValidReturn = blnProductType_Delete()
-
+            Select Case False
+                Case blnSyncProductBrandModel()
+                Case mcSQL.bln_BeginTransaction
+                Case mcProductBrandModel.blnProductBrand_Save()
+                Case Else
+                    formController.Item_ID = mcProductBrandModel.ID
+                    blnValidReturn = True
             End Select
 
         Catch ex As Exception
@@ -68,54 +54,21 @@
         Return blnValidReturn
     End Function
 
-    Private Function blnProductType_Insert() As Boolean
+    Public Function blnSyncProductBrandModel() As Boolean
         Dim blnValidReturn As Boolean
 
         Try
-            Select Case False
-                Case mcSQL.bln_AddField("ProB_Name", txtName.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_ADOInsert("ProductBrand", formController.Item_ID)
-                Case formController.Item_ID > 0
-                Case Else
-                    blnValidReturn = True
-            End Select
+            If mcProductBrandModel Is Nothing Then
 
-        Catch ex As Exception
-            blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
+                mcProductBrandModel = New Model.ProductBrand
+            End If
 
-        Return blnValidReturn
-    End Function
+            mcProductBrandModel.SQLController = mcSQL
+            mcProductBrandModel.DLMCommand = formController.FormMode
+            mcProductBrandModel.ID = formController.Item_ID
+            mcProductBrandModel.Name = txtName.Text
 
-    Private Function blnProductType_Update() As Boolean
-        Dim blnValidReturn As Boolean
-
-        Try
-            Select Case False
-                Case mcSQL.bln_AddField("ProB_Name", txtName.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_ADOUpdate("ProductBrand", "ProB_ID = " & formController.Item_ID)
-                Case Else
-                    blnValidReturn = True
-            End Select
-
-        Catch ex As Exception
-            blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
-
-        Return blnValidReturn
-    End Function
-
-    Private Function blnProductType_Delete() As Boolean
-        Dim blnValidReturn As Boolean
-
-        Try
-            Select Case False
-                Case mcSQL.bln_ADODelete("ProductBrand", "ProB_ID = " & formController.Item_ID)
-                Case Else
-                    blnValidReturn = True
-            End Select
+            blnValidReturn = True
 
         Catch ex As Exception
             blnValidReturn = False
@@ -127,16 +80,15 @@
 
 #End Region
 
-
 #Region "Private events"
 
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
         Select Case False
-            Case formController.FormMode <> mConstants.Form_Modes.INSERT_MODE
+            Case formController.FormMode <> mConstants.Form_Mode.INSERT_MODE
                 blnValidReturn = True
-            Case blnLoadData()
+            Case blnFormData_Load()
             Case Else
                 blnValidReturn = True
         End Select
@@ -144,7 +96,7 @@
     End Sub
 
     Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles formController.SaveData
-        eventArgs.SaveSuccessful = blnSaveData()
+        eventArgs.SaveSuccessful = blnFormData_Save()
     End Sub
 
     Private Sub myFormControler_ValidateForm(ByVal eventArgs As ValidateFormEventArgs) Handles formController.ValidateForm

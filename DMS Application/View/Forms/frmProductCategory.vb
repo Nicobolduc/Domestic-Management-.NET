@@ -2,28 +2,26 @@
 
     'Private class members
     Private mcSQL As MySQLController
+    Private mcProductCategoryModel As Model.ProductCategory
 
 
 #Region "Functions / Subs"
 
-    Private Function blnLoadData() As Boolean
+    Private Function blnFormData_Load() As Boolean
         Dim blnValidReturn As Boolean
-        Dim strSQL As String = String.Empty
         Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
-            strSQL = strSQL & " SELECT ProductCategory.ProC_Name, " & vbCrLf
-            strSQL = strSQL & "        ProductCategory.ProT_ID " & vbCrLf
-            strSQL = strSQL & " FROM ProductCategory " & vbCrLf
-            strSQL = strSQL & " WHERE ProductCategory.ProC_ID = " & formController.Item_ID & vbCrLf
+            mcProductCategoryModel = gcAppController.GetCoreModelController.GetProductController.Value.GetProductCategory(formController.Item_ID)
 
-            mySQLReader = MySQLController.ADOSelect(strSQL)
+            If Not mcProductCategoryModel Is Nothing Then
 
-            mySQLReader.Read()
+                txtName.Text = mcProductCategoryModel.Name
 
-            txtName.Text = mySQLReader.Item("ProC_Name").ToString
+                cboType.SelectedValue = mcProductCategoryModel.Type.ID
 
-            cboType.SelectedValue = CInt(mySQLReader.Item("ProT_ID"))
+                blnValidReturn = True
+            End If
 
         Catch ex As Exception
             blnValidReturn = False
@@ -33,6 +31,31 @@
                 mySQLReader.Close()
                 mySQLReader.Dispose()
             End If
+        End Try
+
+        Return blnValidReturn
+    End Function
+
+    Private Function blnFormData_Save() As Boolean
+        Dim blnValidReturn As Boolean
+
+        Try
+            mcSQL = New MySQLController
+
+            Select Case False
+                Case blnSyncProductCategoryModel()
+                Case mcSQL.bln_BeginTransaction
+                Case mcProductCategoryModel.blnProductCategory_Save()
+                Case Else
+                    formController.Item_ID = mcProductCategoryModel.ID
+                    blnValidReturn = True
+            End Select
+
+        Catch ex As Exception
+            blnValidReturn = False
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        Finally
+            mcSQL.bln_EndTransaction(blnValidReturn)
         End Try
 
         Return blnValidReturn
@@ -58,87 +81,22 @@
         Return blnValidReturn
     End Function
 
-    Private Function blnSaveData() As Boolean
+    Public Function blnSyncProductCategoryModel() As Boolean
         Dim blnValidReturn As Boolean
 
         Try
-            mcSQL = New MySQLController
+            If mcProductCategoryModel Is Nothing Then
 
-            mcSQL.bln_BeginTransaction()
+                mcProductCategoryModel = New Model.ProductCategory
+            End If
 
-            Select Case formController.FormMode
-                Case mConstants.Form_Modes.INSERT_MODE
-                    blnValidReturn = blnProductCategory_Insert()
+            mcProductCategoryModel.SQLController = mcSQL
+            mcProductCategoryModel.DLMCommand = formController.FormMode
+            mcProductCategoryModel.ID = formController.Item_ID
+            mcProductCategoryModel.Name = txtName.Text
+            mcProductCategoryModel.Type.ID = CInt(cboType.SelectedValue)
 
-                Case mConstants.Form_Modes.UPDATE_MODE
-                    blnValidReturn = blnProductCategory_Update()
-
-                Case mConstants.Form_Modes.DELETE_MODE
-                    blnValidReturn = blnProductCategory_Delete()
-
-            End Select
-
-        Catch ex As Exception
-            blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        Finally
-            mcSQL.bln_EndTransaction(blnValidReturn)
-            mcSQL = Nothing
-        End Try
-
-        Return blnValidReturn
-    End Function
-
-    Private Function blnProductCategory_Insert() As Boolean
-        Dim blnValidReturn As Boolean
-
-        Try
-            Select Case False
-                Case mcSQL.bln_AddField("ProC_Name", txtName.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("ProT_ID", CStr(cboType.SelectedValue), MySQLController.MySQL_FieldTypes.ID_TYPE)
-                Case mcSQL.bln_ADOInsert("ProductCategory", formController.Item_ID)
-                Case formController.Item_ID > 0
-                Case Else
-                    blnValidReturn = True
-            End Select
-
-        Catch ex As Exception
-            blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
-
-        Return blnValidReturn
-    End Function
-
-    Private Function blnProductCategory_Update() As Boolean
-        Dim blnValidReturn As Boolean
-
-        Try
-            Select Case False
-                Case mcSQL.bln_AddField("ProC_Name", txtName.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
-                Case mcSQL.bln_AddField("ProT_ID", CStr(cboType.SelectedValue), MySQLController.MySQL_FieldTypes.ID_TYPE)
-                Case mcSQL.bln_ADOUpdate("ProductCategory", "ProC_ID = " & formController.Item_ID)
-                Case Else
-                    blnValidReturn = True
-            End Select
-
-        Catch ex As Exception
-            blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
-
-        Return blnValidReturn
-    End Function
-
-    Private Function blnProductCategory_Delete() As Boolean
-        Dim blnValidReturn As Boolean
-
-        Try
-            Select Case False
-                Case mcSQL.bln_ADODelete("ProductCategory", "ProC_ID = " & formController.Item_ID)
-                Case Else
-                    blnValidReturn = True
-            End Select
+            blnValidReturn = True
 
         Catch ex As Exception
             blnValidReturn = False
@@ -150,7 +108,6 @@
 
 #End Region
 
-
 #Region "Private events"
 
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
@@ -158,16 +115,16 @@
 
         Select Case False
             Case blnCboType_Load()
-            Case formController.FormMode <> mConstants.Form_Modes.INSERT_MODE
+            Case formController.FormMode <> mConstants.Form_Mode.INSERT_MODE
                 blnValidReturn = True
-            Case blnLoadData()
+            Case blnFormData_Load()
             Case Else
                 blnValidReturn = True
         End Select
     End Sub
 
     Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles formController.SaveData
-        eventArgs.SaveSuccessful = blnSaveData()
+        eventArgs.SaveSuccessful = blnFormData_Save()
     End Sub
 
     Private Sub myFormControler_ValidateForm(ByVal eventArgs As ValidateFormEventArgs) Handles formController.ValidateForm

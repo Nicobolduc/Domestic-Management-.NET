@@ -1,4 +1,4 @@
-﻿Public Class DGV_Printing_Controller
+﻿Public Class PrintingController
     Inherits System.Drawing.Printing.PrintDocument
 
     'Private class members

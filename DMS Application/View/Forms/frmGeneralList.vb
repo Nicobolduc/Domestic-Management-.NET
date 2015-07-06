@@ -24,16 +24,13 @@ Public Class frmGeneralList
 
         mListToOpen = vstrGenList_ID
 
-
-
     End Sub
 
 #End Region
 
-
 #Region "Functions / Subs"
 
-    Private Function blnOpenForm(ByVal vFormMode As mConstants.Form_Modes) As Boolean
+    Private Function blnOpenForm(ByVal vFormMode As mConstants.Form_Mode) As Boolean
         Dim blnValidReturn As Boolean = True
         Dim frmToOpen As Object = Nothing
         Dim intItem_ID As Integer
@@ -70,13 +67,13 @@ Public Class frmGeneralList
             End If
 
             Select Case vFormMode
-                Case mConstants.Form_Modes.INSERT_MODE
+                Case mConstants.Form_Mode.INSERT_MODE
                     frmToOpen.formController.ShowForm(vFormMode, 0, True)
 
-                Case mConstants.Form_Modes.UPDATE_MODE
+                Case mConstants.Form_Mode.UPDATE_MODE
                     frmToOpen.formController.ShowForm(vFormMode, intItem_ID, True)
 
-                Case mConstants.Form_Modes.DELETE_MODE
+                Case mConstants.Form_Mode.DELETE_MODE
                     gcAppController.DisableAllFormControls(frmToOpen)
                     frmToOpen.formController.ShowForm(vFormMode, intItem_ID, True)
 
@@ -85,7 +82,7 @@ Public Class frmGeneralList
             formController.LoadFormData()
 
             Select Case vFormMode
-                Case mConstants.Form_Modes.INSERT_MODE, Form_Modes.UPDATE_MODE
+                Case mConstants.Form_Mode.INSERT_MODE, Form_Mode.UPDATE_MODE
                     For intRowIndex As Integer = 1 To grdList.RowCount
 
                         If grdList(intRowIndex, mintItem_ID_col).CellValue = intItem_ID Then
@@ -138,7 +135,6 @@ Public Class frmGeneralList
 
 #End Region
 
-
 #Region "Private events"
 
     Private Sub mcGrid_SetDisplay() Handles mcGrdList.SetDisplay
@@ -149,7 +145,7 @@ Public Class frmGeneralList
     Private Sub btnAdd_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAdd.Click
 
         Try
-            blnOpenForm(mConstants.Form_Modes.INSERT_MODE)
+            blnOpenForm(mConstants.Form_Mode.INSERT_MODE)
 
         Catch ex As Exception
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
@@ -160,7 +156,7 @@ Public Class frmGeneralList
 
         Try
             If grdList.RowCount > 0 Then
-                blnOpenForm(mConstants.Form_Modes.UPDATE_MODE)
+                blnOpenForm(mConstants.Form_Mode.UPDATE_MODE)
             End If
 
         Catch ex As Exception
@@ -174,7 +170,7 @@ Public Class frmGeneralList
 
         Try
             If grdList.RowCount > 0 Then
-                blnOpenForm(mConstants.Form_Modes.DELETE_MODE)
+                blnOpenForm(mConstants.Form_Mode.DELETE_MODE)
             End If
 
         Catch ex As Exception
@@ -185,13 +181,13 @@ Public Class frmGeneralList
 
     Private Sub grdList_DoubleClick(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdList.DoubleClick
         If grdList.RowCount > 0 And grdList.Selections.GetSelectedRows(True, True).Count > 0 Then
-            blnOpenForm(mConstants.Form_Modes.UPDATE_MODE)
+            blnOpenForm(mConstants.Form_Mode.UPDATE_MODE)
         End If
     End Sub
 
     Private Sub grdList_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles grdList.KeyPress
         If grdList.RowCount > 0 And mcGrdList.GetSelectedRowsCount > 0 And e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
-            blnOpenForm(mConstants.Form_Modes.UPDATE_MODE)
+            blnOpenForm(mConstants.Form_Mode.UPDATE_MODE)
         End If
     End Sub
 

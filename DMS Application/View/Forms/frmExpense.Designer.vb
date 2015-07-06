@@ -24,7 +24,7 @@ Partial Class frmExpense
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmExpense))
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.txtCode = New System.Windows.Forms.TextBox()
+        Me.txtName = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.cboInterval = New System.Windows.Forms.ComboBox()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -43,16 +43,16 @@ Partial Class frmExpense
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "Nom:"
         '
-        'txtCode
+        'txtName
         '
-        Me.txtCode.Location = New System.Drawing.Point(73, 6)
-        Me.txtCode.Name = "txtCode"
-        Me.txtCode.Size = New System.Drawing.Size(228, 20)
-        Me.txtCode.TabIndex = 0
+        Me.txtName.Location = New System.Drawing.Point(73, 6)
+        Me.txtName.Name = "txtName"
+        Me.txtName.Size = New System.Drawing.Size(228, 20)
+        Me.txtName.TabIndex = 0
         '
         'Label2
         '
-        Me.Label2.Location = New System.Drawing.Point(206, 56)
+        Me.Label2.Location = New System.Drawing.Point(237, 56)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(71, 13)
         Me.Label2.TabIndex = 3
@@ -62,7 +62,7 @@ Partial Class frmExpense
         '
         Me.cboInterval.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboInterval.FormattingEnabled = True
-        Me.cboInterval.Location = New System.Drawing.Point(274, 53)
+        Me.cboInterval.Location = New System.Drawing.Point(305, 53)
         Me.cboInterval.Name = "cboInterval"
         Me.cboInterval.Size = New System.Drawing.Size(163, 21)
         Me.cboInterval.TabIndex = 3
@@ -77,24 +77,25 @@ Partial Class frmExpense
         '
         'dtpBillDate
         '
-        Me.dtpBillDate.CustomFormat = "dd/MM"
+        Me.dtpBillDate.CustomFormat = "dd/MM/yy"
         Me.dtpBillDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom
         Me.dtpBillDate.Location = New System.Drawing.Point(129, 53)
         Me.dtpBillDate.Name = "dtpBillDate"
         Me.dtpBillDate.ShowCheckBox = True
-        Me.dtpBillDate.Size = New System.Drawing.Size(71, 20)
+        Me.dtpBillDate.Size = New System.Drawing.Size(102, 20)
         Me.dtpBillDate.TabIndex = 2
         Me.dtpBillDate.Value = New Date(2014, 9, 4, 1, 12, 37, 0)
         '
         'formController
         '
+        Me.formController.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.formController.FormIsLoading = False
-        Me.formController.FormMode = DMS_Application.mConstants.Form_Modes.CONSULT_MODE
+        Me.formController.FormMode = DMS_Application.mConstants.Form_Mode.CONSULT_MODE
         Me.formController.Item_ID = 0
         Me.formController.Location = New System.Drawing.Point(0, 86)
         Me.formController.Name = "formController"
         Me.formController.ShowButtonQuitOnly = False
-        Me.formController.Size = New System.Drawing.Size(445, 33)
+        Me.formController.Size = New System.Drawing.Size(473, 33)
         Me.formController.TabIndex = 4
         '
         'Label4
@@ -125,7 +126,7 @@ Partial Class frmExpense
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(444, 117)
+        Me.ClientSize = New System.Drawing.Size(472, 117)
         Me.Controls.Add(Me.txtAmount)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.cboInterval)
@@ -133,7 +134,7 @@ Partial Class frmExpense
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.formController)
         Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.txtCode)
+        Me.Controls.Add(Me.txtName)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.Label5)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
@@ -148,7 +149,7 @@ Partial Class frmExpense
 
     End Sub
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents txtCode As System.Windows.Forms.TextBox
+    Friend WithEvents txtName As System.Windows.Forms.TextBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents cboInterval As System.Windows.Forms.ComboBox
     Public WithEvents formController As DMS_Application.ctlFormController

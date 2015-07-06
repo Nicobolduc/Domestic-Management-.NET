@@ -1,7 +1,7 @@
 ﻿
 Public Module mConstants
 
-    Public Enum BillingInterval
+    Public Enum Period
         WEEKLY = 1
         FORTNIGHTLY = 2
         MONTHLY = 3
@@ -9,14 +9,14 @@ Public Module mConstants
         ANNUEL = 5
     End Enum
 
-    Public Enum Form_Modes
+    Public Enum Form_Mode
         CONSULT_MODE = 0
         INSERT_MODE = 1
         UPDATE_MODE = 2
         DELETE_MODE = 3
     End Enum
 
-    Public Enum Error_Messages
+    Public Enum Error_Message
         ERROR_SAVE_MSG = 5
     End Enum
 

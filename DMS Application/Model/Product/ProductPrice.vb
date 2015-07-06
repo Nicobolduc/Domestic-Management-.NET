@@ -7,18 +7,18 @@
     Private _intProduct_ID As Integer
     Private _dblPrice As Double
 
-    Private _intDMLCommand As mConstants.Form_Modes
+    Private _intDMLCommand As mConstants.Form_Mode
 
     'Private class members
     Private mcSQL As MySQLController
 
 #Region "Properties"
 
-    Public Property DLMCommand As mConstants.Form_Modes
+    Public Property DLMCommand As mConstants.Form_Mode
         Get
             Return _intDMLCommand
         End Get
-        Set(ByVal value As mConstants.Form_Modes)
+        Set(ByVal value As mConstants.Form_Mode)
             _intDMLCommand = value
         End Set
     End Property
@@ -96,13 +96,13 @@
 
         Try
             Select Case _intDMLCommand
-                Case Form_Modes.INSERT_MODE
+                Case Form_Mode.INSERT_MODE
                     blnValidReturn = blnProductPrice_Insert()
 
-                Case Form_Modes.UPDATE_MODE
+                Case Form_Mode.UPDATE_MODE
                     blnValidReturn = blnProductPrice_Update()
 
-                Case Form_Modes.DELETE_MODE
+                Case Form_Mode.DELETE_MODE
                     blnValidReturn = blnProductPrice_Delete()
 
                 Case Else

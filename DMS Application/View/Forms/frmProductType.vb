@@ -5,24 +5,10 @@
     Private mcProductTypeModel As Model.ProductType
 
 
-#Region "Constructors"
-
-    Public Sub New()
-
-        ' This call is required by the designer.
-        InitializeComponent()
-
-        mcProductTypeModel = New Model.ProductType
-
-    End Sub
-
-#End Region
-
 #Region "Functions / Subs"
 
-    Private Function blnLoadData() As Boolean
+    Private Function blnFormData_Load() As Boolean
         Dim blnValidReturn As Boolean
-        Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
             mcProductTypeModel = gcAppController.GetCoreModelController.GetProductController.Value.GetProductType(formController.Item_ID)
@@ -42,7 +28,7 @@
         Return blnValidReturn
     End Function
 
-    Private Function blnSaveData() As Boolean
+    Private Function blnFormData_Save() As Boolean
         Dim blnValidReturn As Boolean
 
         Try
@@ -53,6 +39,7 @@
                 Case mcSQL.bln_BeginTransaction()
                 Case mcProductTypeModel.blnProductType_Save()
                 Case Else
+                    formController.Item_ID = mcProductTypeModel.ID
                     blnValidReturn = True
             End Select
 
@@ -71,6 +58,11 @@
         Dim blnValidReturn As Boolean
 
         Try
+            If mcProductTypeModel Is Nothing Then
+
+                mcProductTypeModel = New Model.ProductType
+            End If
+
             mcProductTypeModel.SQLController = mcSQL
             mcProductTypeModel.DLMCommand = formController.FormMode
             mcProductTypeModel.ID = formController.Item_ID
@@ -88,16 +80,15 @@
 
 #End Region
 
-
 #Region "Private events"
 
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
         Select Case False
-            Case formController.FormMode <> mConstants.Form_Modes.INSERT_MODE
+            Case formController.FormMode <> mConstants.Form_Mode.INSERT_MODE
                 blnValidReturn = True
-            Case blnLoadData()
+            Case blnFormData_Load()
             Case Else
                 blnValidReturn = True
         End Select
@@ -105,7 +96,7 @@
     End Sub
 
     Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles formController.SaveData
-        eventArgs.SaveSuccessful = blnSaveData()
+        eventArgs.SaveSuccessful = blnFormData_Save()
     End Sub
 
     Private Sub myFormControler_ValidateForm(ByVal eventArgs As ValidateFormEventArgs) Handles formController.ValidateForm

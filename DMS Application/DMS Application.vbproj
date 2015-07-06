@@ -115,10 +115,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\AppController.vb" />
-    <Compile Include="Controller\SyncfusionGridController.vb" />
+    <Compile Include="Controller\Model Controllers\CompanyController.vb" />
+    <Compile Include="Controller\Lib\SyncfusionGridController.vb" />
     <Compile Include="Controller\CoreModelController.vb" />
+    <Compile Include="Controller\Model Controllers\FinanceController.vb" />
     <Compile Include="Controller\Model Controllers\ProductController.vb" />
-    <Compile Include="Model\CommonToModels.vb" />
+    <Compile Include="Model\BaseModel.vb" />
+    <Compile Include="Model\Company.vb" />
+    <Compile Include="Model\Expense.vb" />
+    <Compile Include="Model\Product\ProductBrand.vb" />
     <Compile Include="Model\Product\ProductPrice.vb" />
     <Compile Include="View\User Controls\ctlGridTextBox.Designer.vb">
       <DependentUpon>ctlGridTextBox.vb</DependentUpon>
@@ -137,12 +142,12 @@
     <Compile Include="Model\Product\ProductType.vb" />
     <Compile Include="Template.vb" />
     <Compile Include="Model\Modules\mConstants.vb" />
-    <Compile Include="Controller\DataGridViewController.vb" />
-    <Compile Include="Controller\ErrorsLogController.vb" />
-    <Compile Include="Controller\DGV_Printing_Controller.vb">
+    <Compile Include="Controller\Lib\DataGridViewController.vb" />
+    <Compile Include="Controller\Lib\ErrorsLogController.vb" />
+    <Compile Include="Controller\Lib\PrintingController.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controller\MySQLController.vb" />
+    <Compile Include="Controller\Lib\MySQLController.vb" />
     <Compile Include="Model\User\User.vb" />
     <Compile Include="View\User Controls\ctlFormController.Designer.vb">
       <DependentUpon>ctlFormController.vb</DependentUpon>
@@ -174,11 +179,11 @@
     <Compile Include="View\Forms\frmGeneralList.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\Forms\frmManageBudget.vb">
+    <Compile Include="View\Forms\frmBudgetManagement.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\Forms\frmManageBudget.Designer.vb">
-      <DependentUpon>frmManageBudget.vb</DependentUpon>
+    <Compile Include="View\Forms\frmBudgetManagement.Designer.vb">
+      <DependentUpon>frmBudgetManagement.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\Forms\frmProductType.Designer.vb">
@@ -250,8 +255,8 @@
       <DependentUpon>frmGeneralList.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\Forms\frmManageBudget.resx">
-      <DependentUpon>frmManageBudget.vb</DependentUpon>
+    <EmbeddedResource Include="View\Forms\frmBudgetManagement.resx">
+      <DependentUpon>frmBudgetManagement.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Forms\frmProductType.resx">
       <DependentUpon>frmProductType.vb</DependentUpon>

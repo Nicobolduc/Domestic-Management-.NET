@@ -29,7 +29,7 @@ Partial Class mdiGeneral
         Me.mnuGestion = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiBudget = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiGrocery = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mnuFacturation = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mnuFinance = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiExpense = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuProduit = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiProducts = New System.Windows.Forms.ToolStripMenuItem()
@@ -39,17 +39,17 @@ Partial Class mdiGeneral
         Me.EntitéeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiCompany = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuWindows = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TestsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.statusBar = New System.Windows.Forms.StatusStrip()
         Me.lblStatusUser = New System.Windows.Forms.ToolStripStatusLabel()
         Me.lblStatusBD = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.TestsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMain.SuspendLayout()
         Me.statusBar.SuspendLayout()
         Me.SuspendLayout()
         '
         'mnuMain
         '
-        Me.mnuMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnUsager, Me.mnuGestion, Me.mnuFacturation, Me.mnuProduit, Me.EntitéeToolStripMenuItem, Me.mnuWindows, Me.TestsToolStripMenuItem})
+        Me.mnuMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnUsager, Me.mnuGestion, Me.mnuFinance, Me.mnuProduit, Me.EntitéeToolStripMenuItem, Me.mnuWindows, Me.TestsToolStripMenuItem})
         Me.mnuMain.Location = New System.Drawing.Point(0, 0)
         Me.mnuMain.MdiWindowListItem = Me.mnuWindows
         Me.mnuMain.Name = "mnuMain"
@@ -89,17 +89,17 @@ Partial Class mdiGeneral
         Me.mnuiGrocery.Size = New System.Drawing.Size(115, 22)
         Me.mnuiGrocery.Text = "Épicerie"
         '
-        'mnuFacturation
+        'mnuFinance
         '
-        Me.mnuFacturation.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuiExpense})
-        Me.mnuFacturation.Name = "mnuFacturation"
-        Me.mnuFacturation.Size = New System.Drawing.Size(79, 20)
-        Me.mnuFacturation.Text = "Facturation"
+        Me.mnuFinance.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuiExpense})
+        Me.mnuFinance.Name = "mnuFinance"
+        Me.mnuFinance.Size = New System.Drawing.Size(60, 20)
+        Me.mnuFinance.Text = "Finance"
         '
         'mnuiExpense
         '
         Me.mnuiExpense.Name = "mnuiExpense"
-        Me.mnuiExpense.Size = New System.Drawing.Size(119, 22)
+        Me.mnuiExpense.Size = New System.Drawing.Size(152, 22)
         Me.mnuiExpense.Text = "Dépense"
         '
         'mnuProduit
@@ -152,6 +152,12 @@ Partial Class mdiGeneral
         Me.mnuWindows.Size = New System.Drawing.Size(63, 20)
         Me.mnuWindows.Text = "Fenêtres"
         '
+        'TestsToolStripMenuItem
+        '
+        Me.TestsToolStripMenuItem.Name = "TestsToolStripMenuItem"
+        Me.TestsToolStripMenuItem.Size = New System.Drawing.Size(46, 20)
+        Me.TestsToolStripMenuItem.Text = "Tests"
+        '
         'statusBar
         '
         Me.statusBar.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.lblStatusUser, Me.lblStatusBD})
@@ -176,12 +182,6 @@ Partial Class mdiGeneral
         Me.lblStatusBD.Name = "lblStatusBD"
         Me.lblStatusBD.Size = New System.Drawing.Size(30, 20)
         Me.lblStatusBD.Text = "BD:"
-        '
-        'TestsToolStripMenuItem
-        '
-        Me.TestsToolStripMenuItem.Name = "TestsToolStripMenuItem"
-        Me.TestsToolStripMenuItem.Size = New System.Drawing.Size(46, 20)
-        Me.TestsToolStripMenuItem.Text = "Tests"
         '
         'mdiGeneral
         '
@@ -210,7 +210,7 @@ Partial Class mdiGeneral
     Friend WithEvents statusBar As System.Windows.Forms.StatusStrip
     Friend WithEvents lblStatusUser As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents lblStatusBD As System.Windows.Forms.ToolStripStatusLabel
-    Friend WithEvents mnuFacturation As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mnuFinance As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuiExpense As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnUsager As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuProduit As System.Windows.Forms.ToolStripMenuItem

@@ -1,23 +1,33 @@
 ﻿Namespace Model
 
-    Public Class ProductCategory
+    Public Class Company
         Inherits BaseModel
 
         'Private members
-        Private _intCategory_ID As Integer
+        Private _intCompany_ID As Integer
         Private _strName As String = String.Empty
+        Private _intType_ID As Integer
 
         'Private class members
-        Private mcProductType As Model.ProductType
+
 
 #Region "Properties"
 
         Public Property ID As Integer
             Get
-                Return _intCategory_ID
+                Return _intCompany_ID
             End Get
             Set(ByVal value As Integer)
-                _intCategory_ID = value
+                _intCompany_ID = value
+            End Set
+        End Property
+
+        Public Property Type_ID As Integer
+            Get
+                Return _intType_ID
+            End Get
+            Set(ByVal value As Integer)
+                _intType_ID = value
             End Set
         End Property
 
@@ -30,29 +40,11 @@
             End Set
         End Property
 
-        Public Property Type As ProductType
-            Get
-                Return mcProductType
-            End Get
-            Set(ByVal value As ProductType)
-                mcProductType = value
-            End Set
-        End Property
-
-#End Region
-
-#Region "Constructors"
-
-        Public Sub New()
-
-            mcProductType = New Model.ProductType
-        End Sub
-
 #End Region
 
 #Region "Functions / Subs"
 
-        Public Function blnProductCategory_Save() As Boolean
+        Public Function blnCompany_Save() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
@@ -60,13 +52,13 @@
 
                     Select Case DLMCommand
                         Case mConstants.Form_Mode.INSERT_MODE
-                            blnValidReturn = blnProductCategory_Insert()
+                            blnValidReturn = blnCompagny_Insert()
 
                         Case mConstants.Form_Mode.UPDATE_MODE
-                            blnValidReturn = blnProductCategory_Update()
+                            blnValidReturn = blnCompagny_Update()
 
                         Case mConstants.Form_Mode.DELETE_MODE
-                            blnValidReturn = blnProductCategory_Delete()
+                            blnValidReturn = blnCompagny_Delete()
 
                     End Select
                 Else
@@ -81,14 +73,14 @@
             Return blnValidReturn
         End Function
 
-        Private Function blnProductCategory_AddFields() As Boolean
+        Private Function blnCompany_AddFields() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
                 Select Case False
                     Case SQLController.bln_RefreshFields
-                    Case SQLController.bln_AddField("ProC_Name", _strName, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
-                    Case SQLController.bln_AddField("ProT_ID", mcProductType.ID, MySQLController.MySQL_FieldTypes.ID_TYPE)
+                    Case SQLController.bln_AddField("Cy_Name", _strName, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
+                    Case SQLController.bln_AddField("CyT_ID", _intType_ID, MySQLController.MySQL_FieldTypes.ID_TYPE)
                     Case Else
                         blnValidReturn = True
                 End Select
@@ -101,14 +93,14 @@
             Return blnValidReturn
         End Function
 
-        Private Function blnProductCategory_Insert() As Boolean
+        Private Function blnCompagny_Insert() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
                 Select Case False
-                    Case blnProductCategory_AddFields()
-                    Case SQLController.bln_ADOInsert("ProductCategory", _intCategory_ID)
-                    Case _intCategory_ID > 0
+                    Case blnCompany_AddFields()
+                    Case SQLController.bln_ADOInsert("Company", _intCompany_ID)
+                    Case _intCompany_ID > 0
                     Case Else
                         blnValidReturn = True
                 End Select
@@ -121,13 +113,13 @@
             Return blnValidReturn
         End Function
 
-        Private Function blnProductCategory_Update() As Boolean
+        Private Function blnCompagny_Update() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
                 Select Case False
-                    Case blnProductCategory_AddFields()
-                    Case SQLController.bln_ADOUpdate("ProductCategory", "ProC_ID = " & _intCategory_ID)
+                    Case blnCompany_AddFields()
+                    Case SQLController.bln_ADOUpdate("Company", "Cy_ID = " & _intCompany_ID)
                     Case Else
                         blnValidReturn = True
                 End Select
@@ -140,12 +132,12 @@
             Return blnValidReturn
         End Function
 
-        Private Function blnProductCategory_Delete() As Boolean
+        Private Function blnCompagny_Delete() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
                 Select Case False
-                    Case SQLController.bln_ADODelete("ProductCategory", "ProC_ID = " & _intCategory_ID)
+                    Case SQLController.bln_ADODelete("Company", "Cy_ID = " & _intCompany_ID)
                     Case Else
                         blnValidReturn = True
                 End Select

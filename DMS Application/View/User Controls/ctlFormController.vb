@@ -8,7 +8,7 @@ Public Class ctlFormController
 
     'Private members
     Private mintItem_ID As Integer
-    Private mintFormMode As mConstants.Form_Modes
+    Private mintFormMode As mConstants.Form_Mode
     Private mblnChangeMade As Boolean
     Private mblnFormIsLoading As Boolean
     Private mblnShowButtonQuitOnly As Boolean
@@ -37,11 +37,11 @@ Public Class ctlFormController
     End Property
 
     <Browsable(False)>
-    Public Property FormMode As mConstants.Form_Modes
+    Public Property FormMode As mConstants.Form_Mode
         Get
             Return mintFormMode
         End Get
-        Set(ByVal value As mConstants.Form_Modes)
+        Set(ByVal value As mConstants.Form_Mode)
             mintFormMode = value
             SetVisualStyle()
         End Set
@@ -94,7 +94,7 @@ Public Class ctlFormController
 
 #Region "Functions / Subs"
 
-    Public Sub ShowForm(ByVal vintFormMode As mConstants.Form_Modes, Optional ByRef rintItem_ID As Integer = 0, Optional ByVal vblnIsModal As Boolean = False)
+    Public Sub ShowForm(ByVal vintFormMode As mConstants.Form_Mode, Optional ByRef rintItem_ID As Integer = 0, Optional ByVal vblnIsModal As Boolean = False)
 
         mintFormMode = vintFormMode
         mintItem_ID = rintItem_ID
@@ -133,18 +133,18 @@ Public Class ctlFormController
 
     Private Sub SetVisualStyle()
         Select Case mintFormMode
-            Case mConstants.Form_Modes.INSERT_MODE
+            Case mConstants.Form_Mode.INSERT_MODE
                 btnApply.Text = "Enregistrer"
                 imgFormMode.Image = My.Resources.Add
 
-            Case mConstants.Form_Modes.UPDATE_MODE
+            Case mConstants.Form_Mode.UPDATE_MODE
                 btnApply.Text = "Appliquer"
                 imgFormMode.Image = My.Resources.Update
 
         End Select
 
         Select Case mintFormMode
-            Case mConstants.Form_Modes.INSERT_MODE, mConstants.Form_Modes.UPDATE_MODE
+            Case mConstants.Form_Mode.INSERT_MODE, mConstants.Form_Mode.UPDATE_MODE
                 If mblnChangeMade Then
                     btnApply.Enabled = True
                     btnCancel.Enabled = True
@@ -155,10 +155,10 @@ Public Class ctlFormController
                     btnQuit.Enabled = True
                 End If
 
-            Case mConstants.Form_Modes.CONSULT_MODE
+            Case mConstants.Form_Mode.CONSULT_MODE
                 imgFormMode.Image = My.Resources.Consult
 
-            Case mConstants.Form_Modes.DELETE_MODE
+            Case mConstants.Form_Mode.DELETE_MODE
                 btnApply.Enabled = True
                 btnCancel.Enabled = False
                 btnQuit.Enabled = True
@@ -219,19 +219,19 @@ Public Class ctlFormController
                 ChangeMade = False
 
                 Select Case mintFormMode
-                    Case mConstants.Form_Modes.INSERT_MODE
-                        FormMode = mConstants.Form_Modes.UPDATE_MODE
+                    Case mConstants.Form_Mode.INSERT_MODE
+                        FormMode = mConstants.Form_Mode.UPDATE_MODE
                         LoadFormData()
 
-                    Case mConstants.Form_Modes.UPDATE_MODE
+                    Case mConstants.Form_Mode.UPDATE_MODE
                         LoadFormData()
 
-                    Case mConstants.Form_Modes.DELETE_MODE
+                    Case mConstants.Form_Mode.DELETE_MODE
                         mfrmParent.Close()
 
                 End Select
             Else
-                gcAppController.ShowMessage(mConstants.Error_Messages.ERROR_SAVE_MSG, MsgBoxStyle.Critical)
+                gcAppController.ShowMessage(mConstants.Error_Message.ERROR_SAVE_MSG, MsgBoxStyle.Critical)
             End If
 
         End If

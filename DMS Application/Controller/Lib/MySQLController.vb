@@ -30,7 +30,6 @@ Public Class MySQLController
 
 #End Region
 
-
 #Region "Constructor"
 
     Public Sub New()
@@ -40,7 +39,6 @@ Public Class MySQLController
     End Sub
 
 #End Region
-
 
 #Region "Shared Functions / Subs"
 
@@ -96,7 +94,6 @@ Public Class MySQLController
     End Function
 
 #End Region
-
 
 #Region "Functions / Subs"
 
@@ -157,9 +154,13 @@ Public Class MySQLController
         Dim blnValidReturn As Boolean = True
         Dim vstrValue As String = String.Empty
 
-        vstrValue = vobjValue.ToString
-
         Try
+            If vobjValue Is Nothing Or IsDBNull(vstrValue) Then
+                vstrValue = String.Empty
+            Else
+                vstrValue = vobjValue.ToString
+            End If
+
             If String.IsNullOrEmpty(vstrValue) Then
                 vstrValue = "NULL"
             Else

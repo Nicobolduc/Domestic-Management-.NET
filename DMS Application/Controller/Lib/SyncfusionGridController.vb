@@ -24,10 +24,10 @@ Public Class SyncfusionGridController
 
     'Public enums
     Public Enum GridRowActions
-        NO_ACTION = mConstants.Form_Modes.CONSULT_MODE
-        INSERT_ACTION = mConstants.Form_Modes.INSERT_MODE
-        UPDATE_ACTION = mConstants.Form_Modes.UPDATE_MODE
-        DELETE_ACTION = mConstants.Form_Modes.DELETE_MODE
+        NO_ACTION = mConstants.Form_Mode.CONSULT_MODE
+        INSERT_ACTION = mConstants.Form_Mode.INSERT_MODE
+        UPDATE_ACTION = mConstants.Form_Mode.UPDATE_MODE
+        DELETE_ACTION = mConstants.Form_Mode.DELETE_MODE
     End Enum
 
 
