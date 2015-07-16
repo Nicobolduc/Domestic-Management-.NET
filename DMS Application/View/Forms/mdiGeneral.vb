@@ -55,11 +55,11 @@
     End Sub
 
     Private Sub mnuiExpenseToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiExpense.Click
-        mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.EXPENSES_LIST_ID)
+        mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.EXPENSE_LIST_ID)
     End Sub
 
     Private Sub mnuiProductToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiProducts.Click
-        mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.PRODUCTS_LIST_ID)
+        mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.PRODUCT_LIST_ID)
     End Sub
 
     Private Sub mnuiProductCategory_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiProductCategory.Click
@@ -82,6 +82,14 @@
         mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.GROCERY_LIST_ID)
     End Sub
 
+    Private Sub TypeDeDépenseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TypeDeDépenseToolStripMenuItem.Click
+        mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.EXPENSE_TYPE_LIST_ID)
+    End Sub
+
+    Private Sub RevenuToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RevenuToolStripMenuItem.Click
+        mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.INCOME_LIST_ID)
+    End Sub
+
 #End Region
 
     Private Sub TestsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestsToolStripMenuItem.Click
@@ -89,4 +97,6 @@
 
         test.Show()
     End Sub
+
+
 End Class

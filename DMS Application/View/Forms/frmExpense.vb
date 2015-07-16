@@ -18,6 +18,8 @@
                 txtName.Text = mcExpenseModel.Name
                 txtAmount.Text = mcExpenseModel.Amount.ToString
                 cboInterval.SelectedValue = CInt(mcExpenseModel.Period)
+                cboType.SelectedValue = CInt(mcExpenseModel.Type.ID)
+                cboType.BackColor = Color.FromArgb(mcExpenseModel.Type.ArgbColor)
 
                 If Not mcExpenseModel.BillingDate Is Nothing Then
 
@@ -49,6 +51,26 @@
             strSQL = strSQL & " ORDER BY Period.Per_ID " & vbCrLf
 
             blnValidReturn = mWinControlsFunctions.blnComboBox_LoadFromSQL(strSQL, "Per_ID", "Per_Name", False, cboInterval)
+
+        Catch ex As Exception
+            blnValidReturn = False
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnValidReturn
+    End Function
+
+    Private Function blnCboType_Load() As Boolean
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
+
+        Try
+            strSQL = strSQL & " SELECT ExpenseType.ExpT_ID, " & vbCrLf
+            strSQL = strSQL & "        ExpenseType.ExpT_Name " & vbCrLf
+            strSQL = strSQL & " FROM ExpenseType " & vbCrLf
+            strSQL = strSQL & " ORDER BY ExpenseType.ExpT_ID " & vbCrLf
+
+            blnValidReturn = mWinControlsFunctions.blnComboBox_LoadFromSQL(strSQL, "ExpT_ID", "ExpT_Name", False, cboType)
 
         Catch ex As Exception
             blnValidReturn = False
@@ -100,6 +122,9 @@
             mcExpenseModel.Amount = Math.Round(Val(txtAmount.Text), 2)
             mcExpenseModel.Period = CType(cboInterval.SelectedValue, Period)
 
+            mcExpenseModel.Type = New Model.ExpenseType
+            mcExpenseModel.Type.ID = CInt(cboType.SelectedValue)
+
             If Not IsDBNull(dtpBillDate.Value) And dtpBillDate.Checked Then
 
                 mcExpenseModel.BillingDate = dtpBillDate.Value
@@ -128,6 +153,7 @@
 
         Select Case False
             Case blnCboInterval_Load()
+            Case blnCboType_Load()
             Case formController.FormMode <> mConstants.Form_Mode.INSERT_MODE
                 blnValidReturn = True
             Case blnFormData_Load()
@@ -155,15 +181,20 @@
                 gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtName.Focus()
 
-            Case txtAmount.Text <> String.Empty
-                gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
-                txtAmount.Focus()
+                'Case txtAmount.Text <> String.Empty
+                '    gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+                '    txtAmount.Focus()
 
-            Case IsNumeric(txtAmount.Text)
-                gcAppController.ShowMessage(mConstants.Validation_Message.NUMERIC_VALUE, MsgBoxStyle.Information)
-                txtAmount.Focus()
+                'Case IsNumeric(txtAmount.Text)
+                '    gcAppController.ShowMessage(mConstants.Validation_Message.NUMERIC_VALUE, MsgBoxStyle.Information)
+                '    txtAmount.Focus()
 
             Case cboInterval.SelectedIndex > -1
+                gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+                cboInterval.DroppedDown = True
+                cboInterval.Focus()
+
+            Case cboType.SelectedIndex > -1
                 gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 cboInterval.DroppedDown = True
                 cboInterval.Focus()
@@ -178,7 +209,10 @@
         formController.ChangeMade = True
     End Sub
 
+    Private Sub cboType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboType.SelectedIndexChanged
+        formController.ChangeMade = True
+    End Sub
+
 #End Region
-    
 
 End Class

@@ -240,7 +240,7 @@ Public Class ctlFormController
     End Sub
 
     Private Sub btnCancel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCancel.Click
-        gcAppController.ClearAllControls(mfrmParent)
+        gcAppController.EmptyAllFormControls(mfrmParent)
         LoadFormData()
     End Sub
 

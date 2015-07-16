@@ -90,7 +90,7 @@ Public NotInheritable Class AppController
         mcMySQLConnection = New MySqlConnection
 
         mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.107;Port=3306;userid=Nicolas;password=nicolas;database=dms_tests"
-        'mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests"
+        'mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests;MultipleActiveResultSets=true"
 
         Try
             mcMySQLConnection.Open()
@@ -219,7 +219,7 @@ Public NotInheritable Class AppController
 
     End Sub
 
-    Public Sub ClearAllControls(Optional ByRef rForm As System.Windows.Forms.Form = Nothing, Optional ByRef rTabPage As TabPage = Nothing, Optional ByRef rControl As Control = Nothing)
+    Public Sub EmptyAllFormControls(Optional ByRef rForm As System.Windows.Forms.Form = Nothing, Optional ByRef rTabPage As TabPage = Nothing, Optional ByRef rControl As Control = Nothing)
         Dim controlCollection As System.Windows.Forms.Control.ControlCollection
 
         Try
@@ -243,11 +243,11 @@ Public NotInheritable Class AppController
                         DirectCast(objControl, ComboBox).Items.Clear()
 
                     Case "GroupBox"
-                        ClearAllControls(Nothing, Nothing, objControl)
+                        EmptyAllFormControls(Nothing, Nothing, objControl)
 
                     Case "TabControl"
                         For Each tp As TabPage In DirectCast(objControl, TabControl).TabPages
-                            ClearAllControls(Nothing, tp)
+                            EmptyAllFormControls(Nothing, tp)
                         Next
 
                     Case Else
@@ -262,6 +262,7 @@ Public NotInheritable Class AppController
         End Try
 
     End Sub
+
     Protected Overrides Sub Finalize()
         mcMySQLConnection.Close()
         mcMySQLConnection.Dispose()

@@ -9,13 +9,24 @@ Public Class frmGeneralList
 
     'Private members
     Private Const mintItem_ID_col As Integer = 1
+    Private mstrFormToOpenName As String = String.Empty
 
     Private mListToOpen As mGeneralList.GeneralLists_ID
     Private mintSelectedRow As Integer = 1
 
     'Private class members
-    Private WithEvents mcGrdList As SyncfusionGridController
+    Private WithEvents mcGrdListController As SyncfusionGridController
 
+
+#Region "Properties"
+
+    Public WriteOnly Property SetFormToOpenName As String
+        Set(value As String)
+            mstrFormToOpenName = value
+        End Set
+    End Property
+
+#End Region
 
 #Region "Constructor"
 
@@ -33,33 +44,13 @@ Public Class frmGeneralList
     Private Function blnOpenForm(ByVal vFormMode As mConstants.Form_Mode) As Boolean
         Dim blnValidReturn As Boolean = True
         Dim frmToOpen As Object = Nothing
+        Dim strFormName As String = String.Empty
         Dim intItem_ID As Integer
         Dim selectedRows As GridRangeInfoList = grdList.Selections.GetSelectedRows(True, True)
 
         Try
-            Select Case mListToOpen
-                Case mGeneralList.GeneralLists_ID.EXPENSES_LIST_ID
-                    frmToOpen = New frmExpense
-
-                Case mGeneralList.GeneralLists_ID.PRODUCTS_LIST_ID
-                    frmToOpen = New frmProduct
-
-                Case mGeneralList.GeneralLists_ID.PRODUCT_TYPE_LIST_ID
-                    frmToOpen = New frmProductType
-
-                Case mGeneralList.GeneralLists_ID.PRODUCT_CATEGORY_LIST_ID
-                    frmToOpen = New frmProductCategory
-
-                Case mGeneralList.GeneralLists_ID.PRODUCT_BRAND_LIST_ID
-                    frmToOpen = New frmProductBrand
-
-                Case mGeneralList.GeneralLists_ID.COMPANY_LIST_ID
-                    frmToOpen = New frmCompany
-
-                Case mGeneralList.GeneralLists_ID.GROCERY_LIST_ID
-                    frmToOpen = New frmGrocery
-
-            End Select
+            strFormName = GetType(mdiGeneral).Namespace & "." & mstrFormToOpenName 'System.Reflection.Assembly.GetEntryAssembly.GetName.Name
+            frmToOpen = System.Reflection.Assembly.GetEntryAssembly.CreateInstance(strFormName, True)
 
             If selectedRows.Count > 0 Then
                 mintSelectedRow = selectedRows.Item(0).Top
@@ -96,7 +87,7 @@ Public Class frmGeneralList
             End Select
 
             If mintSelectedRow >= 0 And grdList.RowCount > 0 Then
-                mcGrdList.SetSelectedRow = mintSelectedRow
+                mcGrdListController.SetSelectedRow = mintSelectedRow
             End If
 
             txtFilter.Focus()
@@ -116,11 +107,11 @@ Public Class frmGeneralList
         Try
             SuspendLayout()
 
-            blnValidReturn = mcGrdList.bln_FillData(mstrGridSQL)
+            blnValidReturn = mcGrdListController.bln_FillData(mstrGridSQL)
 
             If blnValidReturn And grdList.RowCount > 0 Then
 
-                mcGrdList.SetSelectedRow = mintSelectedRow
+                mcGrdListController.SetSelectedRow = mintSelectedRow
             End If
 
         Catch ex As Exception
@@ -137,9 +128,10 @@ Public Class frmGeneralList
 
 #Region "Private events"
 
-    Private Sub mcGrid_SetDisplay() Handles mcGrdList.SetDisplay
+    Private Sub mcGrid_SetDisplay() Handles mcGrdListController.SetDisplay
         grdList.AllowProportionalColumnSizing = True
         grdList.Model.Options.ActivateCurrentCellBehavior = GridCellActivateAction.None
+        'mcGrdListController.SetColsSizeBehavior = ColsSizeBehaviorsController.colsSizeBehaviors.NONE
     End Sub
 
     Private Sub btnAdd_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAdd.Click
@@ -186,7 +178,7 @@ Public Class frmGeneralList
     End Sub
 
     Private Sub grdList_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles grdList.KeyPress
-        If grdList.RowCount > 0 And mcGrdList.GetSelectedRowsCount > 0 And e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
+        If grdList.RowCount > 0 And mcGrdListController.GetSelectedRowsCount > 0 And e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
             blnOpenForm(mConstants.Form_Mode.UPDATE_MODE)
         End If
     End Sub
@@ -194,18 +186,16 @@ Public Class frmGeneralList
     Private Sub formController_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
-        If mcGrdList Is Nothing Then
-            mcGrdList = New SyncfusionGridController
+        If mcGrdListController Is Nothing Then
+            mcGrdListController = New SyncfusionGridController
         End If
 
         grdList.Tag = mintGridTag
 
         Select Case False
-            Case mcGrdList.bln_Init(grdList)
+            Case mcGrdListController.bln_Init(grdList)
             Case blnGrdList_Load()
             Case Else
-                mcGrdList.SetColsSizeBehavior = ColsSizeBehaviorsController.colsSizeBehaviors.EXTEND_LAST_COL
-
                 blnValidReturn = True
         End Select
 

@@ -3,13 +3,21 @@
     'Private members
     Private mintGrdBudget_Action_col As Short = 1
     Private mintGrdBudget_Exp_ID_col As Short = 2
-    Private mintGrdBudget_Exp_BillingDate_col As Short = 3
-    Private mintGrdBudget_Exp_Name_col As Short = 4
-    Private mintGrdBudget_Exp_Amount_col As Short = 5
-    Private mintGrdBudget_Exp_PaidOn_col As Short = 6
+    Private mintGrdBudget_Income_Date_col As Short = 3
+    Private mintGrdBudget_Exp_BillingDate_col As Short = 4
+    Private mintGrdBudget_Exp_Name_col As Short = 5
+    Private mintGrdBudget_Exp_Amount_col As Short = 6
+    Private mintGrdBudget_Amount_Paid_col As Short = 7
+    Private mintGrdBudget_Exp_PaidOn_col As Short = 8
+    Private mintGrdBudget_ExpT_Name_col As Short = 9
+    Private mintGrdBudget_ExpT_ArgbColor_col As Short = 10
+    Private mintGrdBudget_Income_Name_col As Short = 11
+    Private mintGrdBudget_Income_Amount_col As Short = 12
+    Private mintGrdBudget_Period_Name_col As Short = 13
+    Private mintGrdBudget_Comment_col As Short = 14
 
     'Private class members
-    Private WithEvents mcGridBudget As SyncfusionGridController
+    Private WithEvents mcGridBudgetController As SyncfusionGridController
     Private WithEvents mcSQL As MySQLController
 
 
@@ -20,7 +28,10 @@
 
         Try
             dtpFrom.Value = Date.Today
+            dtpFrom.CustomFormat = gcAppController.str_GetPCDateFormat
+
             dtpTo.Value = DateAdd(DateInterval.Day, 14, Date.Today)
+            dtpTo.CustomFormat = gcAppController.str_GetPCDateFormat
 
             blnValidReturn = True
 
@@ -39,14 +50,39 @@
         Try
             strSQL = strSQL & " SELECT " & DataGridViewController.GridRowActions.CONSULT_ACTION & " AS Action, " & vbCrLf
             strSQL = strSQL & "        Expense.Exp_ID, " & vbCrLf
+            strSQL = strSQL & "        Income.Inc_ReceptDate, " & vbCrLf
             strSQL = strSQL & "        Expense.Exp_BillingDate, " & vbCrLf
             strSQL = strSQL & "        Expense.Exp_Name, " & vbCrLf
             strSQL = strSQL & "        Expense.Exp_Amount, " & vbCrLf
-            strSQL = strSQL & "        NULL AS PaidOn " & vbCrLf
+            strSQL = strSQL & "        NULL AS Amount_Paid, " & vbCrLf
+            strSQL = strSQL & "        NULL As PaidOn, " & vbCrLf
+            strSQL = strSQL & "        ExpenseType.ExpT_Name, " & vbCrLf
+            strSQL = strSQL & "        ExpenseType.ExpT_ArgbColor, " & vbCrLf
+            strSQL = strSQL & "        Income.Inc_Name, " & vbCrLf
+            strSQL = strSQL & "        Income.Inc_Amount, " & vbCrLf
+            strSQL = strSQL & "        Period.Per_Name, " & vbCrLf
+            strSQL = strSQL & "        NULL AS Comment " & vbCrLf 'Must be last col for extend
             strSQL = strSQL & " FROM Expense " & vbCrLf
-            'strSQL = strSQL & "  WHERE Expense.Exp_BillingDate BETWEEN " & dtpFrom.
+            strSQL = strSQL & "     INNER JOIN ExpenseType ON ExpenseType.ExpT_ID = Expense.ExpT_ID " & vbCrLf
+            strSQL = strSQL & "     INNER JOIN Income ON Income.Inc_IsMain = 1 " & vbCrLf
+            strSQL = strSQL & "     INNER JOIN Period ON Period.Per_ID = Income.Per_ID " & vbCrLf
+            strSQL = strSQL & "  WHERE Expense.Exp_BillingDate BETWEEN " & MySQLController.str_FixDateForSelect(dtpFrom.Value) & " AND " & MySQLController.str_FixDateForSelect(dtpTo.Value) & vbCrLf
+            strSQL = strSQL & " ORDER BY Income.Inc_ReceptDate, Expense.Exp_BillingDate " & vbCrLf
 
-            blnValidReturn = mcGridBudget.bln_FillData(strSQL)
+            blnValidReturn = mcGridBudgetController.bln_FillData(strSQL)
+
+            If blnValidReturn Then
+
+                For intRowIdx As Integer = 1 To grdBudget.RowCount
+
+                    grdBudget(intRowIdx, mintGrdBudget_Exp_Name_col).BackColor = Color.FromArgb(CInt(grdBudget(intRowIdx, mintGrdBudget_ExpT_ArgbColor_col).CellValue))
+                Next
+
+                lblMainIncomeDate.Text = Format(grdBudget(grdBudget.RowCount, mintGrdBudget_Income_Date_col).CellValue, gcAppController.str_GetPCDateFormat)
+                lblMainIncomeAmount.Text = grdBudget(grdBudget.RowCount, mintGrdBudget_Income_Amount_col).CellValue.ToString & " $"
+
+
+            End If
 
         Catch ex As Exception
             blnValidReturn = False
@@ -55,6 +91,8 @@
 
         Return blnValidReturn
     End Function
+
+
 
 #End Region
 
@@ -65,21 +103,43 @@
         ' This call is required by the designer.
         InitializeComponent()
 
-        mcGridBudget = New SyncfusionGridController
+        mcGridBudgetController = New SyncfusionGridController
 
     End Sub
 
-    Private Sub mcGrid_SetDisplay() Handles mcGridBudget.SetDisplay
+    Private Sub mcGrid_SetDisplay() Handles mcGridBudgetController.SetDisplay
 
-        grdBudget.ColWidths(mintGrdBudget_Exp_BillingDate_col) = 200
+        grdBudget.ColWidths(mintGrdBudget_Exp_BillingDate_col) = 110
         grdBudget.ColWidths(mintGrdBudget_Exp_Name_col) = 200
-        grdBudget.ColWidths(mintGrdBudget_Exp_Amount_col) = 200
+        grdBudget.ColWidths(mintGrdBudget_Exp_Amount_col) = 100
+        grdBudget.ColWidths(mintGrdBudget_Amount_Paid_col) = 100
+        grdBudget.ColWidths(mintGrdBudget_Exp_PaidOn_col) = 110
+        grdBudget.ColWidths(mintGrdBudget_Income_Date_col) = 110
+
+
+        mcGridBudgetController.blnSetColType_DateTimePicker(mintGrdBudget_Exp_PaidOn_col, True)
 
         grdBudget.ColStyles(mintGrdBudget_Exp_Amount_col).CellValueType = GetType(Double)
         grdBudget.ColStyles(mintGrdBudget_Exp_BillingDate_col).CellValueType = GetType(Date)
 
         grdBudget.ColStyles(mintGrdBudget_Exp_BillingDate_col).Format = gcAppController.str_GetPCDateFormat
+        grdBudget.ColStyles(mintGrdBudget_Income_Date_col).Format = gcAppController.str_GetPCDateFormat
         grdBudget.ColStyles(mintGrdBudget_Exp_Amount_col).Format = mConstants.DataFormat.CURRENCY
+
+        grdBudget.Model.Options.MergeCellsMode = GridMergeCellsMode.OnDemandCalculation Or GridMergeCellsMode.MergeRowsInColumn
+        grdBudget.ColStyles(mintGrdBudget_Income_Date_col).MergeCell = GridMergeCellDirection.RowsInColumn
+        grdBudget.ColStyles(mintGrdBudget_Exp_BillingDate_col).MergeCell = GridMergeCellDirection.RowsInColumn
+
+        grdBudget.TableStyle.VerticalAlignment = GridVerticalAlignment.Middle
+
+        mcGridBudgetController.SetColsSizeBehavior = ColsSizeBehaviorsController.colsSizeBehaviors.EXTEND_LAST_COL
+
+        For intCol As Integer = 1 To grdBudget.ColCount
+            If intCol <> mintGrdBudget_Exp_PaidOn_col And intCol <> mintGrdBudget_Comment_col Then
+                grdBudget.ColStyles(intCol).ReadOnly = True
+            End If
+        Next
+
     End Sub
 
     Private Sub rbtnHedo_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnHebdo.CheckedChanged
@@ -113,8 +173,13 @@
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
+        btnDtpToDown.Text = ChrW(9660)
+        btnAfter.Text = ChrW(9660)
+        btnBefore.Text = ChrW(9650)
+        btnDtpToUp.Text = ChrW(9650)
+
         Select Case False
-            Case mcGridBudget.bln_Init(grdBudget)
+            Case mcGridBudgetController.bln_Init(grdBudget)
             Case blnGrdBudget_Load()
             Case blnFormData_Load()
             Case Else
@@ -126,6 +191,56 @@
         End If
     End Sub
 
+    Private Sub btnRefresh_Click(sender As Object, e As EventArgs) Handles btnRefresh.Click
+        blnGrdBudget_Load()
+    End Sub
+
+    Private Sub btnBefore_Click(sender As Object, e As EventArgs) Handles btnBefore.Click
+
+        Select Case True
+            Case rbtnHebdo.Checked
+                dtpFrom.Value = DateAdd(DateInterval.Day, -7, dtpFrom.Value)
+                dtpTo.Value = DateAdd(DateInterval.Day, 7, dtpFrom.Value)
+
+            Case rbtnBiMensuel.Checked
+                dtpFrom.Value = DateAdd(DateInterval.Day, -14, dtpFrom.Value)
+                dtpTo.Value = DateAdd(DateInterval.Day, 14, dtpFrom.Value)
+
+            Case rbtnMensuelle.Checked
+                dtpFrom.Value = DateAdd(DateInterval.Month, -1, dtpFrom.Value)
+                dtpTo.Value = DateAdd(DateInterval.Month, 1, dtpFrom.Value)
+
+            Case rbtnDeuxMois.Checked
+                dtpFrom.Value = DateAdd(DateInterval.Month, -2, dtpFrom.Value)
+                dtpTo.Value = DateAdd(DateInterval.Month, 2, dtpFrom.Value)
+
+        End Select
+
+    End Sub
+
+    Private Sub btnAfter_Click(sender As Object, e As EventArgs) Handles btnAfter.Click
+
+        Select Case True
+            Case rbtnHebdo.Checked
+                dtpFrom.Value = DateAdd(DateInterval.Day, 7, dtpFrom.Value)
+                dtpTo.Value = DateAdd(DateInterval.Day, 7, dtpFrom.Value)
+
+            Case rbtnBiMensuel.Checked
+                dtpFrom.Value = DateAdd(DateInterval.Day, 14, dtpFrom.Value)
+                dtpTo.Value = DateAdd(DateInterval.Day, 14, dtpFrom.Value)
+
+            Case rbtnMensuelle.Checked
+                dtpFrom.Value = DateAdd(DateInterval.Month, 1, dtpFrom.Value)
+                dtpTo.Value = DateAdd(DateInterval.Month, 1, dtpFrom.Value)
+
+            Case rbtnDeuxMois.Checked
+                dtpFrom.Value = DateAdd(DateInterval.Month, 2, dtpFrom.Value)
+                dtpTo.Value = DateAdd(DateInterval.Month, 2, dtpFrom.Value)
+
+        End Select
+    End Sub
+
 #End Region
 
+    
 End Class

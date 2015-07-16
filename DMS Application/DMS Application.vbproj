@@ -29,6 +29,7 @@
     </NoWarn>
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
     <Prefer32Bit>false</Prefer32Bit>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -42,6 +43,7 @@
     </NoWarn>
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
     <Prefer32Bit>false</Prefer32Bit>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
     <OptionExplicit>On</OptionExplicit>
@@ -76,8 +78,14 @@
     <Reference Include="Syncfusion.Core, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=632609b4d040f6b4" />
     <Reference Include="Syncfusion.Grid.Base, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="Syncfusion.Grid.Windows, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
+    <Reference Include="Syncfusion.GridHelperClasses.Windows, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External Libs\Syncfusion.GridHelperClasses.Windows.dll</HintPath>
+    </Reference>
     <Reference Include="Syncfusion.Shared.Base, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="Syncfusion.Shared.Windows, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
+    <Reference Include="Syncfusion.Tools.Base, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
+    <Reference Include="Syncfusion.Tools.Windows, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data">
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -115,16 +123,40 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\AppController.vb" />
+    <Compile Include="Controller\Libs\Syncfusion GridControl\ColsSizeBehaviorsController.vb" />
+    <Compile Include="Controller\Libs\Syncfusion GridControl\DateTimePickerCell.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controller\Model Controllers\CompanyController.vb" />
-    <Compile Include="Controller\Lib\SyncfusionGridController.vb" />
-    <Compile Include="Controller\CoreModelController.vb" />
+    <Compile Include="Controller\Libs\Syncfusion GridControl\SyncfusionGridController.vb" />
+    <Compile Include="Controller\Model Controllers\CoreModelController.vb" />
     <Compile Include="Controller\Model Controllers\FinanceController.vb" />
     <Compile Include="Controller\Model Controllers\ProductController.vb" />
     <Compile Include="Model\BaseModel.vb" />
     <Compile Include="Model\Company.vb" />
-    <Compile Include="Model\Expense.vb" />
+    <Compile Include="Model\Income.vb" />
+    <Compile Include="Model\Expense\Expense.vb" />
     <Compile Include="Model\Product\ProductBrand.vb" />
     <Compile Include="Model\Product\ProductPrice.vb" />
+    <Compile Include="Model\Expense\ExpenseType.vb" />
+    <Compile Include="View\Forms\frmIncome.Designer.vb">
+      <DependentUpon>frmIncome.vb</DependentUpon>
+    </Compile>
+    <Compile Include="View\Forms\frmIncome.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Forms\frmExpenseType.Designer.vb">
+      <DependentUpon>frmExpenseType.vb</DependentUpon>
+    </Compile>
+    <Compile Include="View\Forms\frmExpenseType.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\User Controls\ctlDateTimePicker.Designer.vb">
+      <DependentUpon>ctlDateTimePicker.vb</DependentUpon>
+    </Compile>
+    <Compile Include="View\User Controls\ctlDateTimePicker.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="View\User Controls\ctlGridTextBox.Designer.vb">
       <DependentUpon>ctlGridTextBox.vb</DependentUpon>
     </Compile>
@@ -142,12 +174,12 @@
     <Compile Include="Model\Product\ProductType.vb" />
     <Compile Include="Template.vb" />
     <Compile Include="Model\Modules\mConstants.vb" />
-    <Compile Include="Controller\Lib\DataGridViewController.vb" />
-    <Compile Include="Controller\Lib\ErrorsLogController.vb" />
-    <Compile Include="Controller\Lib\PrintingController.vb">
+    <Compile Include="Controller\Libs\DataGridViewController.vb" />
+    <Compile Include="Controller\Libs\ErrorsLogController.vb" />
+    <Compile Include="Controller\Libs\PrintingController.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controller\Lib\MySQLController.vb" />
+    <Compile Include="Controller\Libs\MySQLController.vb" />
     <Compile Include="Model\User\User.vb" />
     <Compile Include="View\User Controls\ctlFormController.Designer.vb">
       <DependentUpon>ctlFormController.vb</DependentUpon>
@@ -236,6 +268,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="View\Forms\frmIncome.resx">
+      <DependentUpon>frmIncome.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Forms\frmExpenseType.resx">
+      <DependentUpon>frmExpenseType.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\User Controls\ctlDateTimePicker.resx">
+      <DependentUpon>ctlDateTimePicker.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\User Controls\ctlFormController.resx">
       <DependentUpon>ctlFormController.vb</DependentUpon>
     </EmbeddedResource>

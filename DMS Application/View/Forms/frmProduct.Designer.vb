@@ -34,7 +34,6 @@ Partial Class frmProduct
         Me.cboType = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.gbInfos = New System.Windows.Forms.GroupBox()
-        Me.cboCompany = New System.Windows.Forms.ComboBox()
         Me.grdPrices = New Syncfusion.Windows.Forms.Grid.GridControl()
         Me.btnRemoveRow = New System.Windows.Forms.Button()
         Me.btnAddRow = New System.Windows.Forms.Button()
@@ -95,7 +94,6 @@ Partial Class frmProduct
         '
         'gbInfos
         '
-        Me.gbInfos.Controls.Add(Me.cboCompany)
         Me.gbInfos.Controls.Add(Me.grdPrices)
         Me.gbInfos.Controls.Add(Me.btnRemoveRow)
         Me.gbInfos.Controls.Add(Me.btnAddRow)
@@ -105,16 +103,6 @@ Partial Class frmProduct
         Me.gbInfos.TabIndex = 14
         Me.gbInfos.TabStop = False
         Me.gbInfos.Text = "Prix"
-        '
-        'cboCompany
-        '
-        Me.cboCompany.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboCompany.FormattingEnabled = True
-        Me.cboCompany.Location = New System.Drawing.Point(44, 59)
-        Me.cboCompany.Name = "cboCompany"
-        Me.cboCompany.Size = New System.Drawing.Size(76, 21)
-        Me.cboCompany.TabIndex = 19
-        Me.cboCompany.Visible = False
         '
         'grdPrices
         '
@@ -150,7 +138,7 @@ Partial Class frmProduct
         Me.grdPrices.SerializeCellsBehavior = Syncfusion.Windows.Forms.Grid.GridSerializeCellsBehavior.SerializeAsRangeStylesIntoCode
         Me.grdPrices.Size = New System.Drawing.Size(352, 135)
         Me.grdPrices.SmartSizeBox = False
-        Me.grdPrices.TabIndex = 3
+        Me.grdPrices.TabIndex = 2
         Me.grdPrices.Tag = "9"
         Me.grdPrices.Text = "GridControl1"
         Me.grdPrices.UseRightToLeftCompatibleTextBox = True
@@ -162,7 +150,7 @@ Partial Class frmProduct
         Me.btnRemoveRow.Location = New System.Drawing.Point(364, 59)
         Me.btnRemoveRow.Name = "btnRemoveRow"
         Me.btnRemoveRow.Size = New System.Drawing.Size(35, 35)
-        Me.btnRemoveRow.TabIndex = 2
+        Me.btnRemoveRow.TabIndex = 1
         Me.btnRemoveRow.UseVisualStyleBackColor = True
         '
         'btnAddRow
@@ -172,7 +160,7 @@ Partial Class frmProduct
         Me.btnAddRow.Location = New System.Drawing.Point(364, 18)
         Me.btnAddRow.Name = "btnAddRow"
         Me.btnAddRow.Size = New System.Drawing.Size(35, 35)
-        Me.btnAddRow.TabIndex = 1
+        Me.btnAddRow.TabIndex = 0
         Me.btnAddRow.UseVisualStyleBackColor = True
         '
         'chkTaxable
@@ -240,5 +228,4 @@ Partial Class frmProduct
     Friend WithEvents btnAddRow As System.Windows.Forms.Button
     Friend WithEvents chkTaxable As System.Windows.Forms.CheckBox
     Friend WithEvents grdPrices As Syncfusion.Windows.Forms.Grid.GridControl
-    Friend WithEvents cboCompany As System.Windows.Forms.ComboBox
 End Class

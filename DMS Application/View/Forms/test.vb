@@ -185,8 +185,12 @@ Public Class test
         items.Add("Five")
 
         grdSync.ColStyles(4).CellType = "ComboBox"
-        'grdSync(1, 4).DataSource = items
         grdSync.ColStyles(4).DataSource = items
+
+
+
+
+
 
         grdSync.EndUpdate()
 
@@ -339,5 +343,23 @@ Public Class test
         Return intArray
     End Function
 
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        Dim mcGrid_2 As New SyncfusionGridController
+
+        mcGrid_2.bln_Init(grdSync_2)
+
+        grdSync_2.CellModels.Add("DateTimePicker", New DateTimePickerCell.DateTimePickerCellModel(grdSync_2.Model, False))
+        grdSync_2.ColStyles(1).CellType = "DateTimePicker"
+        grdSync_2.ColStyles(1).CellValueType = GetType(DateTime)
+        grdSync_2.ColStyles(1).Format = gcAppController.str_GetPCDateFormat
+        grdSync_2(2, 1).CellValue = DateTime.Now
+
+    End Sub
+
+    Private Sub grdSync_2_CellsChanged(sender As Object, e As Syncfusion.Windows.Forms.Grid.GridCellsChangedEventArgs) Handles grdSync_2.CellsChanged
+        Dim lol As Object
+        lol = grdSync_2(2, 1).CellValue
+    End Sub
 
 End Class

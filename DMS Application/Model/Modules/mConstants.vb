@@ -23,6 +23,7 @@ Public Module mConstants
     Public Enum Validation_Message
         MANDATORY_VALUE = 6
         NUMERIC_VALUE = 10
+        UNIQUE_ATTRIBUTE = 17
     End Enum
 
     Public Enum CompanyType

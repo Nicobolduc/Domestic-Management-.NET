@@ -75,7 +75,6 @@
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
-                mySQLReader.Close()
                 mySQLReader.Dispose()
             End If
         End Try
@@ -152,7 +151,6 @@
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
-                mySQLReader.Close()
                 mySQLReader.Dispose()
             End If
         End Try

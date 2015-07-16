@@ -4,71 +4,94 @@
 
         'Enums
         Public Enum GeneralLists_ID
-            EXPENSES_LIST_ID = 1
-            PRODUCTS_LIST_ID = 2
+            EXPENSE_LIST_ID = 1
+            PRODUCT_LIST_ID = 2
             PRODUCT_TYPE_LIST_ID = 3
             PRODUCT_CATEGORY_LIST_ID = 4
             PRODUCT_BRAND_LIST_ID = 5
             COMPANY_LIST_ID = 6
             COMPANY_TYPE_LIST_ID = 7
             GROCERY_LIST_ID = 8
+            EXPENSE_TYPE_LIST_ID = 9
+            INCOME_LIST_ID = 10
         End Enum
 
         Public Enum GeneralList_GridCapID
-            EXPENSES_CAP = 1
-            PRODUCTS_CAP = 2
+            EXPENSE_CAP = 1
+            PRODUCT_CAP = 2
             PRODUCT_TYPE_CAP = 3
             PRODUCT_CATEGORY_CAP = 4
             PRODUCT_BRAND_CAP = 7
             COMPANY_CAP = 8
             GROCERY_CAP = 13
+            EXPENSE_TYPE_CAP = 14
+            INCOME_CAP = 16
         End Enum
 
 
 #Region "Functions / Subs"
 
         Public Sub ShowGenList(ByVal vList_ID As mGeneralList.GeneralLists_ID)
-            Dim strListName As String = String.Empty
+            Dim strListGenTitle As String = String.Empty
             Dim strSQL As String = String.Empty
             Dim frmGenList As New frmGeneralList(vList_ID)
 
             Try
 
                 Select Case vList_ID
-                    Case mGeneralList.GeneralLists_ID.EXPENSES_LIST_ID
+                    Case mGeneralList.GeneralLists_ID.EXPENSE_LIST_ID
                         strSQL = strGetExpenseList_SQL()
-                        strListName = " - Dépenses" 'TODO
-                        frmGenList.mintGridTag = CStr(GeneralList_GridCapID.EXPENSES_CAP)
+                        strListGenTitle = " - Dépenses" 'TODO caption pour ca
+                        frmGenList.mintGridTag = CStr(GeneralList_GridCapID.EXPENSE_CAP)
+                        frmGenList.SetFormToOpenName = frmExpense.Name
 
-                    Case mGeneralList.GeneralLists_ID.PRODUCTS_LIST_ID
+                    Case mGeneralList.GeneralLists_ID.EXPENSE_TYPE_LIST_ID
+                        strSQL = strGetExpenseTypeList_SQL()
+                        strListGenTitle = " - Types de dépense"
+                        frmGenList.mintGridTag = CStr(GeneralList_GridCapID.GROCERY_CAP)
+                        frmGenList.SetFormToOpenName = frmExpenseType.Name
+
+                    Case mGeneralList.GeneralLists_ID.PRODUCT_LIST_ID
                         strSQL = strGetProductsList_SQL()
-                        strListName = " - Produits"
-                        frmGenList.mintGridTag = CStr(GeneralList_GridCapID.PRODUCTS_CAP)
+                        strListGenTitle = " - Produits"
+                        frmGenList.mintGridTag = CStr(GeneralList_GridCapID.PRODUCT_CAP)
+                        frmGenList.SetFormToOpenName = frmProduct.Name
 
                     Case mGeneralList.GeneralLists_ID.PRODUCT_TYPE_LIST_ID
                         strSQL = strGetProductTypeList_SQL()
-                        strListName = " - Types de produit"
+                        strListGenTitle = " - Types de produit"
                         frmGenList.mintGridTag = CStr(GeneralList_GridCapID.PRODUCT_TYPE_CAP)
+                        frmGenList.SetFormToOpenName = frmProductType.Name
 
                     Case mGeneralList.GeneralLists_ID.PRODUCT_CATEGORY_LIST_ID
                         strSQL = strGetProductCategoryList_SQL()
-                        strListName = " - Catégories de produit"
+                        strListGenTitle = " - Catégories de produit"
                         frmGenList.mintGridTag = CStr(GeneralList_GridCapID.PRODUCT_CATEGORY_CAP)
+                        frmGenList.SetFormToOpenName = frmProductCategory.Name
 
                     Case mGeneralList.GeneralLists_ID.PRODUCT_BRAND_LIST_ID
                         strSQL = strGetProductBrandList_SQL()
-                        strListName = " - Marques de produit"
+                        strListGenTitle = " - Marques de produit"
                         frmGenList.mintGridTag = CStr(GeneralList_GridCapID.PRODUCT_BRAND_CAP)
+                        frmGenList.SetFormToOpenName = frmProductBrand.Name
 
                     Case mGeneralList.GeneralLists_ID.COMPANY_LIST_ID
                         strSQL = strGetCompanyList_SQL()
-                        strListName = " - Compagnies"
+                        strListGenTitle = " - Compagnies"
                         frmGenList.mintGridTag = CStr(GeneralList_GridCapID.COMPANY_CAP)
+                        frmGenList.SetFormToOpenName = frmCompany.Name
 
                     Case mGeneralList.GeneralLists_ID.GROCERY_LIST_ID
                         strSQL = strGetGroceryList_SQL()
-                        strListName = " - Épicerie"
+                        strListGenTitle = " - Épiceries"
                         frmGenList.mintGridTag = CStr(GeneralList_GridCapID.GROCERY_CAP)
+                        frmGenList.SetFormToOpenName = frmGrocery.Name
+
+                    Case mGeneralList.GeneralLists_ID.INCOME_LIST_ID
+                        strSQL = strGetIncomeList_SQL()
+                        strListGenTitle = " - Revenus" 'TODO caption pour ca
+                        frmGenList.mintGridTag = CStr(GeneralList_GridCapID.INCOME_CAP)
+                        frmGenList.SetFormToOpenName = frmIncome.Name
 
                     Case Else
                         'Do nothing
@@ -78,7 +101,7 @@
                 If strSQL <> String.Empty Then
 
                     frmGenList.mstrGridSQL = strSQL
-                    frmGenList.Text = frmGenList.Text & strListName
+                    frmGenList.Text = frmGenList.Text & strListGenTitle
                     frmGenList.MdiParent = My.Forms.mdiGeneral
 
                     frmGenList.formController.ShowForm(mConstants.Form_Mode.CONSULT_MODE)
@@ -114,10 +137,25 @@
 
             If vstrWhere <> String.Empty Then
 
-
             End If
 
             strSQL = strSQL & "  ORDER BY Expense.Exp_Name " & vbCrLf
+
+            Return strSQL
+        End Function
+
+        Private Function strGetExpenseTypeList_SQL(Optional ByVal vstrWhere As String = Nothing) As String
+            Dim strSQL As String = String.Empty
+
+            strSQL = strSQL & "  SELECT ExpenseType.ExpT_ID, " & vbCrLf
+            strSQL = strSQL & "         ExpenseType.ExpT_Name " & vbCrLf
+            strSQL = strSQL & "  FROM ExpenseType " & vbCrLf
+
+            If vstrWhere <> String.Empty Then
+
+            End If
+
+            strSQL = strSQL & "  ORDER BY ExpenseType.ExpT_Name " & vbCrLf
 
             Return strSQL
         End Function
@@ -134,7 +172,6 @@
             strSQL = strSQL & "     LEFT JOIN ProductCategory ON ProductCategory.ProC_ID = Product.ProC_ID AND ProductType.ProT_ID = ProductCategory.ProT_ID " & vbCrLf
 
             If vstrWhere <> String.Empty Then
-
 
             End If
 
@@ -167,7 +204,6 @@
             strSQL = strSQL & "  FROM ProductCategory " & vbCrLf
 
             If vstrWhere <> String.Empty Then
-
 
             End If
 
@@ -227,6 +263,25 @@
             strSQL = strSQL & " GROUP BY Grocery.Gro_ID " & vbCrLf
             'strSQL = strSQL & " HAVING TotalCost IS NOT NULL " & vbCrLf
             strSQL = strSQL & " ORDER BY Grocery.Gro_Name " & vbCrLf
+
+            Return strSQL
+        End Function
+
+        Private Function strGetIncomeList_SQL(Optional ByVal vstrWhere As String = Nothing) As String
+            Dim strSQL As String = String.Empty
+
+            strSQL = strSQL & "  SELECT Income.Inc_ID, " & vbCrLf
+            strSQL = strSQL & "         Income.Inc_Name, " & vbCrLf
+            strSQL = strSQL & "         TRUNCATE(Income.Inc_Amount, 2) AS Inc_Amount, " & vbCrLf
+            strSQL = strSQL & "         Period.Per_Name " & vbCrLf
+            strSQL = strSQL & "  FROM Income " & vbCrLf
+            strSQL = strSQL & "     INNER JOIN Period ON Period.Per_ID = Income.Per_ID " & vbCrLf
+
+            If vstrWhere <> String.Empty Then
+
+            End If
+
+            strSQL = strSQL & "  ORDER BY Income.Inc_Name " & vbCrLf
 
             Return strSQL
         End Function

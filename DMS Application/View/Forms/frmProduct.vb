@@ -40,14 +40,17 @@ Public Class frmProduct
 
                 cboType.SelectedValue = mcProductModel.Type.ID
 
-                Select Case False
-                    Case blnCboCategory_Load(mcProductModel.Category.ID)
-                    Case Else
-                        txtName.Text = mcProductModel.Name
-                        chkTaxable.Checked = mcProductModel.IsTaxable
+                If Not mcProductModel.Category Is Nothing Then
 
-                        blnValidReturn = True
-                End Select
+                    blnValidReturn = blnCboCategory_Load(mcProductModel.Category.ID)
+                Else
+                    blnValidReturn = True
+                End If
+
+                If blnValidReturn Then
+                    txtName.Text = mcProductModel.Name
+                    chkTaxable.Checked = mcProductModel.IsTaxable
+                End If
             End If
 
         Catch ex As Exception
@@ -129,7 +132,7 @@ Public Class frmProduct
                 strSQL = strSQL & " FROM ProductBrand " & vbCrLf
                 strSQL = strSQL & " ORDER BY ProductBrand.ProB_Name " & vbCrLf
 
-                blnValidReturn = mcGrdPricesController.blnSetColComboBox(strSQL, mintGrdPrices_ProB_Name_col, "ProB_ID", "ProB_Name", False)
+                blnValidReturn = mcGrdPricesController.blnSetColType_ComboBox(strSQL, mintGrdPrices_ProB_Name_col, "ProB_ID", "ProB_Name", False)
 
                 If blnValidReturn Then
 
@@ -139,7 +142,7 @@ Public Class frmProduct
                     strSQL = strSQL & " FROM Company " & vbCrLf
                     strSQL = strSQL & " ORDER BY Company.Cy_Name " & vbCrLf
 
-                    blnValidReturn = mcGrdPricesController.blnSetColComboBox(strSQL, mintGrdPrices_Cy_Seller_Name_col, "Cy_ID", "Cy_Name", False)
+                    blnValidReturn = mcGrdPricesController.blnSetColType_ComboBox(strSQL, mintGrdPrices_Cy_Seller_Name_col, "Cy_ID", "Cy_Name", False)
                 End If
             End If
 
@@ -417,13 +420,13 @@ Public Class frmProduct
         End If
     End Sub
 
-    Private Sub cboCompany_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboCompany.Leave
-        grdPrices(mcGrdPricesController.GetSelectedRow, mintGrdPrices_Cy_Seller_ID_col).CellValue = cboCompany.SelectedValue
-        grdPrices(mcGrdPricesController.GetSelectedRow, mintGrdPrices_Cy_Seller_Name_col).CellValue = cboCompany.SelectedItem.Value
+    'Private Sub cboCompany_Leave(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboCompany.Leave
+    '    grdPrices(mcGrdPricesController.GetSelectedRow, mintGrdPrices_Cy_Seller_ID_col).CellValue = cboCompany.SelectedValue
+    '    grdPrices(mcGrdPricesController.GetSelectedRow, mintGrdPrices_Cy_Seller_Name_col).CellValue = cboCompany.SelectedItem.Value
 
-        cboCompany.Visible = False
-        mcGrdPricesController.ChangeMade = True
-    End Sub
+    '    cboCompany.Visible = False
+    '    mcGrdPricesController.ChangeMade = True
+    'End Sub
 
     Private Sub chkTaxable_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkTaxable.CheckedChanged
         formController.ChangeMade = True

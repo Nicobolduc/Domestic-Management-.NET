@@ -5,6 +5,8 @@
         Dim strSQL As String = String.Empty
         Dim mySQLReader As MySqlDataReader = Nothing
         Dim cProduct As Model.Product = Nothing
+        Dim intProductType_ID As Integer
+        Dim intProductCategory_ID As Integer
 
         Try
             strSQL = strSQL & " SELECT Product.Pro_Name, " & vbCrLf
@@ -27,16 +29,18 @@
                 cProduct.Name = mySQLReader.Item("Pro_Name").ToString
                 cProduct.IsTaxable = CBool(mySQLReader.Item("Pro_Taxable"))
 
-                cProduct.Type.ID = CInt(mySQLReader.Item("ProT_ID"))
-                cProduct.Type.Name = CStr(mySQLReader.Item("ProT_ID"))
+                intProductType_ID = CInt(mySQLReader.Item("ProT_ID"))
+                intProductCategory_ID = CInt(IIf(Not IsDBNull(mySQLReader.Item("ProC_ID")), mySQLReader.Item("ProC_ID"), 0))
 
-                If Not IsDBNull(mySQLReader.Item("ProC_ID")) Then
+                mySQLReader.Dispose()
 
-                    cProduct.Category.ID = CInt(mySQLReader.Item("ProC_ID"))
-                    cProduct.Category.Name = mySQLReader.Item("ProC_Name").ToString
-                    cProduct.Category.Type.ID = cProduct.Type.ID
+                cProduct.Type = GetProductType(intProductType_ID)
+
+                If intProductCategory_ID > 0 Then
+
+                    cProduct.Category = GetProductCategory(intProductCategory_ID)
                 Else
-                    cProduct.Category.ID = 0
+                    cProduct.Category = Nothing
                 End If
             End If
 
@@ -45,7 +49,6 @@
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
-                mySQLReader.Close()
                 mySQLReader.Dispose()
             End If
         End Try
@@ -80,7 +83,6 @@
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
-                mySQLReader.Close()
                 mySQLReader.Dispose()
             End If
         End Try
@@ -119,7 +121,6 @@
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
-                mySQLReader.Close()
                 mySQLReader.Dispose()
             End If
         End Try
@@ -154,7 +155,6 @@
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
-                mySQLReader.Close()
                 mySQLReader.Dispose()
             End If
         End Try

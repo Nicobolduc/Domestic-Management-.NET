@@ -1,24 +1,35 @@
-﻿Public Class frmProductCategory
+﻿Public Class frmExpenseType
 
     'Private class members
     Private mcSQL As MySQLController
-    Private mcProductCategoryModel As Model.ProductCategory
+    Private mcExpenseTypeModel As Model.ExpenseType
 
+
+#Region "Constructors"
+
+    Public Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        mcExpenseTypeModel = New Model.ExpenseType
+
+    End Sub
+
+#End Region
 
 #Region "Functions / Subs"
 
     Private Function blnFormData_Load() As Boolean
         Dim blnValidReturn As Boolean
-        Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
-            mcProductCategoryModel = gcAppController.GetCoreModelController.GetProductController.Value.GetProductCategory(formController.Item_ID)
+            mcExpenseTypeModel = gcAppController.GetCoreModelController.GetFinanceController.GetExpenseType(formController.Item_ID)
 
-            If Not mcProductCategoryModel Is Nothing Then
+            If Not mcExpenseTypeModel Is Nothing Then
 
-                txtName.Text = mcProductCategoryModel.Name
-
-                cboType.SelectedValue = mcProductCategoryModel.Type.ID
+                txtName.Text = mcExpenseTypeModel.Name
+                btnColor.BackColor = Color.FromArgb(mcExpenseTypeModel.ArgbColor)
 
                 blnValidReturn = True
             End If
@@ -26,10 +37,6 @@
         Catch ex As Exception
             blnValidReturn = False
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        Finally
-            If Not IsNothing(mySQLReader) Then
-                mySQLReader.Dispose()
-            End If
         End Try
 
         Return blnValidReturn
@@ -42,11 +49,11 @@
             mcSQL = New MySQLController
 
             Select Case False
-                Case blnSyncProductCategoryModel()
-                Case mcSQL.bln_BeginTransaction
-                Case mcProductCategoryModel.blnProductCategory_Save()
+                Case blnSyncExpenseTypeModel()
+                Case mcSQL.bln_BeginTransaction()
+                Case mcExpenseTypeModel.blnExpenseType_Save()
                 Case Else
-                    formController.Item_ID = mcProductCategoryModel.ID
+                    formController.Item_ID = mcExpenseTypeModel.ID
                     blnValidReturn = True
             End Select
 
@@ -55,45 +62,25 @@
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mcSQL.bln_EndTransaction(blnValidReturn)
+            mcSQL = Nothing
         End Try
 
         Return blnValidReturn
     End Function
 
-    Private Function blnCboType_Load() As Boolean
-        Dim blnValidReturn As Boolean
-        Dim strSQL As String = String.Empty
-
-        Try
-            strSQL = strSQL & " SELECT ProductType.ProT_ID, " & vbCrLf
-            strSQL = strSQL & "        ProductType.ProT_Name " & vbCrLf
-            strSQL = strSQL & " FROM ProductType " & vbCrLf
-            strSQL = strSQL & " ORDER BY ProductType.ProT_Name " & vbCrLf
-
-            blnValidReturn = mWinControlsFunctions.blnComboBox_LoadFromSQL(strSQL, "ProT_ID", "ProT_Name", False, cboType)
-
-        Catch ex As Exception
-            blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
-
-        Return blnValidReturn
-    End Function
-
-    Public Function blnSyncProductCategoryModel() As Boolean
+    Public Function blnSyncExpenseTypeModel() As Boolean
         Dim blnValidReturn As Boolean
 
         Try
-            If mcProductCategoryModel Is Nothing Then
+            If mcExpenseTypeModel Is Nothing Then
 
-                mcProductCategoryModel = New Model.ProductCategory
+                mcExpenseTypeModel = New Model.ExpenseType
             End If
 
-            mcProductCategoryModel.SQLController = mcSQL
-            mcProductCategoryModel.DLMCommand = formController.FormMode
-            mcProductCategoryModel.ID = formController.Item_ID
-            mcProductCategoryModel.Name = txtName.Text
-            mcProductCategoryModel.Type.ID = CInt(cboType.SelectedValue)
+            mcExpenseTypeModel.SQLController = mcSQL
+            mcExpenseTypeModel.DLMCommand = formController.FormMode
+            mcExpenseTypeModel.ID = formController.Item_ID
+            mcExpenseTypeModel.Name = txtName.Text
 
             blnValidReturn = True
 
@@ -113,13 +100,13 @@
         Dim blnValidReturn As Boolean
 
         Select Case False
-            Case blnCboType_Load()
             Case formController.FormMode <> mConstants.Form_Mode.INSERT_MODE
                 blnValidReturn = True
             Case blnFormData_Load()
             Case Else
                 blnValidReturn = True
         End Select
+
     End Sub
 
     Private Sub myFormControler_SaveData(ByVal eventArgs As SaveDataEventArgs) Handles formController.SaveData
@@ -132,11 +119,6 @@
                 gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtName.Focus()
 
-            Case cboType.SelectedIndex > -1
-                gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
-                cboType.DroppedDown = True
-                cboType.Focus()
-
             Case Else
                 eventArgs.IsValid = True
 
@@ -147,10 +129,19 @@
         formController.ChangeMade = True
     End Sub
 
-    Private Sub cboType_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles cboType.SelectedIndexChanged
-        formController.ChangeMade = True
+    Private Sub btnColor_Click(sender As Object, e As EventArgs) Handles btnColor.Click
+
+        ColorDialog.Color = Color.FromArgb(mcExpenseTypeModel.ArgbColor)
+
+        If ColorDialog.ShowDialog() = Windows.Forms.DialogResult.OK Then
+
+            mcExpenseTypeModel.ArgbColor = ColorDialog.Color.ToArgb
+            btnColor.BackColor = ColorDialog.Color
+
+            formController.ChangeMade = True
+        End If
     End Sub
 
 #End Region
-    
+
 End Class

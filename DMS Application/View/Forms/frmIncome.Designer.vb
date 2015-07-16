@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class frmExpense
+Partial Class frmIncome
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -22,19 +22,18 @@ Partial Class frmExpense
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmExpense))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmIncome))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtName = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.cboInterval = New System.Windows.Forms.ComboBox()
+        Me.cboFrequency = New System.Windows.Forms.ComboBox()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.dtpBillDate = New System.Windows.Forms.DateTimePicker()
+        Me.dtpPayDate = New System.Windows.Forms.DateTimePicker()
         Me.formController = New DMS_Application.ctlFormController()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.txtAmount = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.cboType = New System.Windows.Forms.ComboBox()
+        Me.chkMainIncome = New System.Windows.Forms.CheckBox()
         Me.SuspendLayout()
         '
         'Label1
@@ -54,39 +53,39 @@ Partial Class frmExpense
         '
         'Label2
         '
-        Me.Label2.Location = New System.Drawing.Point(237, 89)
+        Me.Label2.Location = New System.Drawing.Point(237, 55)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(71, 13)
         Me.Label2.TabIndex = 3
-        Me.Label2.Text = "Récurrence:"
+        Me.Label2.Text = "Fréquence"
         '
-        'cboInterval
+        'cboFrequency
         '
-        Me.cboInterval.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboInterval.FormattingEnabled = True
-        Me.cboInterval.Location = New System.Drawing.Point(305, 86)
-        Me.cboInterval.Name = "cboInterval"
-        Me.cboInterval.Size = New System.Drawing.Size(163, 21)
-        Me.cboInterval.TabIndex = 3
+        Me.cboFrequency.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboFrequency.FormattingEnabled = True
+        Me.cboFrequency.Location = New System.Drawing.Point(305, 52)
+        Me.cboFrequency.Name = "cboFrequency"
+        Me.cboFrequency.Size = New System.Drawing.Size(163, 21)
+        Me.cboFrequency.TabIndex = 3
         '
         'Label3
         '
-        Me.Label3.Location = New System.Drawing.Point(4, 89)
+        Me.Label3.Location = New System.Drawing.Point(4, 55)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(128, 13)
+        Me.Label3.Size = New System.Drawing.Size(119, 13)
         Me.Label3.TabIndex = 5
-        Me.Label3.Text = "Prochaine facturation le:"
+        Me.Label3.Text = "Prochaine réception le:"
         '
-        'dtpBillDate
+        'dtpPayDate
         '
-        Me.dtpBillDate.CustomFormat = "dd/MM/yy"
-        Me.dtpBillDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpBillDate.Location = New System.Drawing.Point(129, 86)
-        Me.dtpBillDate.Name = "dtpBillDate"
-        Me.dtpBillDate.ShowCheckBox = True
-        Me.dtpBillDate.Size = New System.Drawing.Size(102, 20)
-        Me.dtpBillDate.TabIndex = 2
-        Me.dtpBillDate.Value = New Date(2014, 9, 4, 1, 12, 37, 0)
+        Me.dtpPayDate.CustomFormat = "dd/MM/yy"
+        Me.dtpPayDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpPayDate.Location = New System.Drawing.Point(129, 52)
+        Me.dtpPayDate.Name = "dtpPayDate"
+        Me.dtpPayDate.ShowCheckBox = True
+        Me.dtpPayDate.Size = New System.Drawing.Size(102, 20)
+        Me.dtpPayDate.TabIndex = 2
+        Me.dtpPayDate.Value = New Date(2014, 9, 4, 1, 12, 37, 0)
         '
         'formController
         '
@@ -94,7 +93,7 @@ Partial Class frmExpense
         Me.formController.FormIsLoading = False
         Me.formController.FormMode = DMS_Application.mConstants.Form_Mode.CONSULT_MODE
         Me.formController.Item_ID = 0
-        Me.formController.Location = New System.Drawing.Point(0, 113)
+        Me.formController.Location = New System.Drawing.Point(0, 75)
         Me.formController.Name = "formController"
         Me.formController.ShowButtonQuitOnly = False
         Me.formController.Size = New System.Drawing.Size(473, 33)
@@ -124,35 +123,26 @@ Partial Class frmExpense
         Me.Label5.TabIndex = 9
         Me.Label5.Text = "$"
         '
-        'Label6
+        'chkMainIncome
         '
-        Me.Label6.Location = New System.Drawing.Point(4, 58)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(54, 13)
-        Me.Label6.TabIndex = 10
-        Me.Label6.Text = "Type:"
+        Me.chkMainIncome.AutoSize = True
+        Me.chkMainIncome.Location = New System.Drawing.Point(317, 8)
+        Me.chkMainIncome.Name = "chkMainIncome"
+        Me.chkMainIncome.Size = New System.Drawing.Size(106, 17)
+        Me.chkMainIncome.TabIndex = 10
+        Me.chkMainIncome.Text = "Revenu principal"
+        Me.chkMainIncome.UseVisualStyleBackColor = True
         '
-        'cboType
-        '
-        Me.cboType.BackColor = System.Drawing.SystemColors.Window
-        Me.cboType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboType.FormattingEnabled = True
-        Me.cboType.Location = New System.Drawing.Point(73, 55)
-        Me.cboType.Name = "cboType"
-        Me.cboType.Size = New System.Drawing.Size(158, 21)
-        Me.cboType.TabIndex = 11
-        '
-        'frmExpense
+        'frmIncome
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(472, 144)
-        Me.Controls.Add(Me.cboType)
-        Me.Controls.Add(Me.Label6)
+        Me.ClientSize = New System.Drawing.Size(472, 106)
+        Me.Controls.Add(Me.chkMainIncome)
         Me.Controls.Add(Me.txtAmount)
         Me.Controls.Add(Me.Label4)
-        Me.Controls.Add(Me.cboInterval)
-        Me.Controls.Add(Me.dtpBillDate)
+        Me.Controls.Add(Me.cboFrequency)
+        Me.Controls.Add(Me.dtpPayDate)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.formController)
         Me.Controls.Add(Me.Label2)
@@ -163,9 +153,9 @@ Partial Class frmExpense
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.Name = "frmExpense"
+        Me.Name = "frmIncome"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "Dépense"
+        Me.Text = "Revenu"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -173,13 +163,12 @@ Partial Class frmExpense
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents txtName As System.Windows.Forms.TextBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents cboInterval As System.Windows.Forms.ComboBox
+    Friend WithEvents cboFrequency As System.Windows.Forms.ComboBox
     Public WithEvents formController As DMS_Application.ctlFormController
     Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents dtpBillDate As System.Windows.Forms.DateTimePicker
+    Friend WithEvents dtpPayDate As System.Windows.Forms.DateTimePicker
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents txtAmount As System.Windows.Forms.TextBox
     Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents Label6 As System.Windows.Forms.Label
-    Friend WithEvents cboType As System.Windows.Forms.ComboBox
+    Friend WithEvents chkMainIncome As System.Windows.Forms.CheckBox
 End Class

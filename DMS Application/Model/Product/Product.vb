@@ -126,7 +126,7 @@
                     Case SQLController.bln_AddField("Pro_Name", _strName, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
                     Case SQLController.bln_AddField("ProT_ID", mcProductType.ID.ToString, MySQLController.MySQL_FieldTypes.ID_TYPE)
                     Case SQLController.bln_AddField("ProC_ID", mcProductCategory.ID.ToString, MySQLController.MySQL_FieldTypes.ID_TYPE)
-                    Case SQLController.bln_AddField("Pro_Taxable", _blnIsTaxable.ToString, MySQLController.MySQL_FieldTypes.TINYINT_TYPE)
+                    Case SQLController.bln_AddField("Pro_Taxable", _blnIsTaxable.ToString, MySQLController.MySQL_FieldTypes.BIT_TYPE)
                     Case Else
                         blnValidReturn = True
                 End Select

@@ -31,6 +31,7 @@ Partial Class mdiGeneral
         Me.mnuiGrocery = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuFinance = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiExpense = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TypeDeDépenseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuProduit = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiProducts = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiProductType = New System.Windows.Forms.ToolStripMenuItem()
@@ -43,6 +44,8 @@ Partial Class mdiGeneral
         Me.statusBar = New System.Windows.Forms.StatusStrip()
         Me.lblStatusUser = New System.Windows.Forms.ToolStripStatusLabel()
         Me.lblStatusBD = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.RevenuToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMain.SuspendLayout()
         Me.statusBar.SuspendLayout()
         Me.SuspendLayout()
@@ -91,7 +94,7 @@ Partial Class mdiGeneral
         '
         'mnuFinance
         '
-        Me.mnuFinance.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuiExpense})
+        Me.mnuFinance.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuiExpense, Me.TypeDeDépenseToolStripMenuItem, Me.ToolStripSeparator1, Me.RevenuToolStripMenuItem})
         Me.mnuFinance.Name = "mnuFinance"
         Me.mnuFinance.Size = New System.Drawing.Size(60, 20)
         Me.mnuFinance.Text = "Finance"
@@ -99,8 +102,14 @@ Partial Class mdiGeneral
         'mnuiExpense
         '
         Me.mnuiExpense.Name = "mnuiExpense"
-        Me.mnuiExpense.Size = New System.Drawing.Size(152, 22)
+        Me.mnuiExpense.Size = New System.Drawing.Size(163, 22)
         Me.mnuiExpense.Text = "Dépense"
+        '
+        'TypeDeDépenseToolStripMenuItem
+        '
+        Me.TypeDeDépenseToolStripMenuItem.Name = "TypeDeDépenseToolStripMenuItem"
+        Me.TypeDeDépenseToolStripMenuItem.Size = New System.Drawing.Size(163, 22)
+        Me.TypeDeDépenseToolStripMenuItem.Text = "Type de dépense"
         '
         'mnuProduit
         '
@@ -183,6 +192,17 @@ Partial Class mdiGeneral
         Me.lblStatusBD.Size = New System.Drawing.Size(30, 20)
         Me.lblStatusBD.Text = "BD:"
         '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(160, 6)
+        '
+        'RevenuToolStripMenuItem
+        '
+        Me.RevenuToolStripMenuItem.Name = "RevenuToolStripMenuItem"
+        Me.RevenuToolStripMenuItem.Size = New System.Drawing.Size(163, 22)
+        Me.RevenuToolStripMenuItem.Text = "Revenu"
+        '
         'mdiGeneral
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -224,4 +244,7 @@ Partial Class mdiGeneral
     Friend WithEvents mnuiCompany As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mnuiGrocery As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TestsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents TypeDeDépenseToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents RevenuToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 End Class

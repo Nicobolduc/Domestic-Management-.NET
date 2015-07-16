@@ -1,27 +1,27 @@
 ﻿Namespace Model
 
-    Public Class Expense
+    Public Class Income
         Inherits BaseModel
 
         'Private members
-        Private _intExpense_ID As Integer
+        Private _intIncome_ID As Integer
         Private _strName As String = String.Empty
         Private _dblAmount As Double
-        Private _dtBillingDate As Nullable(Of Date)
+        Private _dtReceptionDate As Nullable(Of Date)
         Private _period_ID As mConstants.Period
+        Private _isMainIncome As Boolean
 
         'Private class members
-
 
 
 #Region "Properties"
 
         Public Property ID As Integer
             Get
-                Return _intExpense_ID
+                Return _intIncome_ID
             End Get
             Set(ByVal value As Integer)
-                _intExpense_ID = value
+                _intIncome_ID = value
             End Set
         End Property
 
@@ -43,12 +43,12 @@
             End Set
         End Property
 
-        Public Property BillingDate As Nullable(Of Date)
+        Public Property ReceptionDate As Nullable(Of Date)
             Get
-                Return _dtBillingDate
+                Return _dtReceptionDate
             End Get
             Set(ByVal value As Nullable(Of Date))
-                _dtBillingDate = value
+                _dtReceptionDate = value
             End Set
         End Property
 
@@ -61,11 +61,20 @@
             End Set
         End Property
 
+        Public Property IsMainIncome As Boolean
+            Get
+                Return _isMainIncome
+            End Get
+            Set(value As Boolean)
+                _isMainIncome = value
+            End Set
+        End Property
+
 #End Region
 
 #Region "Functions / Subs"
 
-        Public Function blnExpense_Save() As Boolean
+        Public Function blnIncome_Save() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
@@ -73,13 +82,13 @@
 
                     Select Case DLMCommand
                         Case mConstants.Form_Mode.INSERT_MODE
-                            blnValidReturn = blnExpense_Insert()
+                            blnValidReturn = blnIncome_Insert()
 
                         Case mConstants.Form_Mode.UPDATE_MODE
-                            blnValidReturn = blnExense_Update()
+                            blnValidReturn = blnIncome_Update()
 
                         Case mConstants.Form_Mode.DELETE_MODE
-                            blnValidReturn = blnExpense_Delete()
+                            blnValidReturn = blnIncome_Delete()
 
                     End Select
                 Else
@@ -94,15 +103,16 @@
             Return blnValidReturn
         End Function
 
-        Private Function blnCompany_AddFields() As Boolean
+        Private Function blnIncome_AddFields() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
                 Select Case False
                     Case SQLController.bln_RefreshFields
-                    Case SQLController.bln_AddField("Exp_Name", _strName, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
-                    Case SQLController.bln_AddField("Exp_BillingDate", _dtBillingDate, MySQLController.MySQL_FieldTypes.DATETIME_TYPE)
-                    Case SQLController.bln_AddField("Exp_Amount", _dblAmount, MySQLController.MySQL_FieldTypes.DOUBLE_TYPE)
+                    Case SQLController.bln_AddField("Inc_Name", _strName, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
+                    Case SQLController.bln_AddField("Inc_ReceptDate", _dtReceptionDate, MySQLController.MySQL_FieldTypes.DATETIME_TYPE)
+                    Case SQLController.bln_AddField("Inc_Amount", _dblAmount, MySQLController.MySQL_FieldTypes.DOUBLE_TYPE)
+                    Case SQLController.bln_AddField("Inc_IsMain", _isMainIncome, MySQLController.MySQL_FieldTypes.BIT_TYPE)
                     Case SQLController.bln_AddField("Per_ID", CInt(_period_ID), MySQLController.MySQL_FieldTypes.ID_TYPE)
                     Case Else
                         blnValidReturn = True
@@ -116,14 +126,14 @@
             Return blnValidReturn
         End Function
 
-        Private Function blnExpense_Insert() As Boolean
+        Private Function blnIncome_Insert() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
                 Select Case False
-                    Case blnCompany_AddFields()
-                    Case SQLController.bln_ADOInsert("Expense", _intExpense_ID)
-                    Case _intExpense_ID > 0
+                    Case blnIncome_AddFields()
+                    Case SQLController.bln_ADOInsert("Income", _intIncome_ID)
+                    Case _intIncome_ID > 0
                     Case Else
                         blnValidReturn = True
                 End Select
@@ -136,13 +146,13 @@
             Return blnValidReturn
         End Function
 
-        Private Function blnExense_Update() As Boolean
+        Private Function blnIncome_Update() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
                 Select Case False
-                    Case blnCompany_AddFields()
-                    Case SQLController.bln_ADOUpdate("Expense", "Exp_ID = " & _intExpense_ID)
+                    Case blnIncome_AddFields()
+                    Case SQLController.bln_ADOUpdate("Income", "Inc_ID = " & _intIncome_ID)
                     Case Else
                         blnValidReturn = True
                 End Select
@@ -155,12 +165,12 @@
             Return blnValidReturn
         End Function
 
-        Private Function blnExpense_Delete() As Boolean
+        Private Function blnIncome_Delete() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
                 Select Case False
-                    Case SQLController.bln_ADODelete("Expense", "Exp_ID = " & _intExpense_ID)
+                    Case SQLController.bln_ADODelete("Income", "Inc_ID = " & _intIncome_ID)
                     Case Else
                         blnValidReturn = True
                 End Select

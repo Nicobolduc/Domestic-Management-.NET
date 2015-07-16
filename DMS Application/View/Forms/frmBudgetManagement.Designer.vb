@@ -22,80 +22,211 @@ Partial Class frmBudgetManagement
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
+        Dim GridBaseStyle5 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
+        Dim GridBaseStyle6 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
+        Dim GridBaseStyle7 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
+        Dim GridBaseStyle8 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmBudgetManagement))
-        Dim GridBaseStyle1 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
-        Dim GridBaseStyle2 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
-        Dim GridBaseStyle3 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
-        Dim GridBaseStyle4 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
         Me.gbFilter = New System.Windows.Forms.GroupBox()
-        Me.btnRefresh = New System.Windows.Forms.Button()
+        Me.dtpFrom = New Syncfusion.Windows.Forms.Tools.DateTimePickerAdv()
+        Me.btnAfter = New System.Windows.Forms.Button()
+        Me.btnBefore = New System.Windows.Forms.Button()
+        Me.lblMainIncomeAmount = New System.Windows.Forms.Label()
+        Me.lblMainIncomeDate = New System.Windows.Forms.Label()
+        Me.lblMainIncomeAmount_text = New System.Windows.Forms.Label()
+        Me.lblMainIncomeDate_text = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.dtpTo = New System.Windows.Forms.DateTimePicker()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.rbtnDeuxMois = New System.Windows.Forms.RadioButton()
         Me.rbtnHebdo = New System.Windows.Forms.RadioButton()
         Me.rbtnBiMensuel = New System.Windows.Forms.RadioButton()
         Me.rbtnMensuelle = New System.Windows.Forms.RadioButton()
-        Me.dtpFrom = New System.Windows.Forms.DateTimePicker()
         Me.grdBudget = New Syncfusion.Windows.Forms.Grid.GridControl()
+        Me.btnRefresh = New System.Windows.Forms.Button()
         Me.formController = New DMS_Application.ctlFormController()
+        Me.dtpTo = New Syncfusion.Windows.Forms.Tools.DateTimePickerAdv()
+        Me.btnDtpToDown = New System.Windows.Forms.Button()
+        Me.btnDtpToUp = New System.Windows.Forms.Button()
         Me.gbFilter.SuspendLayout()
+        CType(Me.dtpFrom, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dtpFrom.Calendar, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.grdBudget, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dtpTo, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dtpTo.Calendar, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'gbFilter
         '
         Me.gbFilter.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.gbFilter.Controls.Add(Me.btnRefresh)
-        Me.gbFilter.Controls.Add(Me.Label2)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.gbFilter.Controls.Add(Me.btnDtpToDown)
+        Me.gbFilter.Controls.Add(Me.btnDtpToUp)
         Me.gbFilter.Controls.Add(Me.dtpTo)
+        Me.gbFilter.Controls.Add(Me.dtpFrom)
+        Me.gbFilter.Controls.Add(Me.btnAfter)
+        Me.gbFilter.Controls.Add(Me.btnBefore)
+        Me.gbFilter.Controls.Add(Me.lblMainIncomeAmount)
+        Me.gbFilter.Controls.Add(Me.lblMainIncomeDate)
+        Me.gbFilter.Controls.Add(Me.lblMainIncomeAmount_text)
+        Me.gbFilter.Controls.Add(Me.lblMainIncomeDate_text)
+        Me.gbFilter.Controls.Add(Me.Label2)
         Me.gbFilter.Controls.Add(Me.Label1)
         Me.gbFilter.Controls.Add(Me.rbtnDeuxMois)
         Me.gbFilter.Controls.Add(Me.rbtnHebdo)
         Me.gbFilter.Controls.Add(Me.rbtnBiMensuel)
         Me.gbFilter.Controls.Add(Me.rbtnMensuelle)
-        Me.gbFilter.Controls.Add(Me.dtpFrom)
         Me.gbFilter.Location = New System.Drawing.Point(4, 2)
         Me.gbFilter.Name = "gbFilter"
-        Me.gbFilter.Size = New System.Drawing.Size(734, 64)
+        Me.gbFilter.Size = New System.Drawing.Size(688, 64)
         Me.gbFilter.TabIndex = 3
         Me.gbFilter.TabStop = False
         Me.gbFilter.Text = "Filtres"
         '
-        'btnRefresh
+        'dtpFrom
         '
-        Me.btnRefresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnRefresh.BackgroundImage = CType(resources.GetObject("btnRefresh.BackgroundImage"), System.Drawing.Image)
-        Me.btnRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.btnRefresh.Location = New System.Drawing.Point(687, 13)
-        Me.btnRefresh.Name = "btnRefresh"
-        Me.btnRefresh.Size = New System.Drawing.Size(40, 40)
-        Me.btnRefresh.TabIndex = 9
-        Me.btnRefresh.UseVisualStyleBackColor = True
+        Me.dtpFrom.Border3DStyle = System.Windows.Forms.Border3DStyle.Flat
+        Me.dtpFrom.BorderColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(211, Byte), Integer), CType(CType(212, Byte), Integer))
+        Me.dtpFrom.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        '
+        '
+        '
+        Me.dtpFrom.Calendar.AllowMultipleSelection = False
+        Me.dtpFrom.Calendar.BorderColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(211, Byte), Integer), CType(CType(212, Byte), Integer))
+        Me.dtpFrom.Calendar.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.dtpFrom.Calendar.Culture = New System.Globalization.CultureInfo("en-US")
+        Me.dtpFrom.Calendar.DayNamesColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.dtpFrom.Calendar.DayNamesFont = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold)
+        Me.dtpFrom.Calendar.DaysFont = New System.Drawing.Font("Verdana", 8.0!)
+        Me.dtpFrom.Calendar.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.dtpFrom.Calendar.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtpFrom.Calendar.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.dtpFrom.Calendar.GridLines = Syncfusion.Windows.Forms.Grid.GridBorderStyle.None
+        Me.dtpFrom.Calendar.HeaderEndColor = System.Drawing.Color.White
+        Me.dtpFrom.Calendar.HeaderStartColor = System.Drawing.Color.White
+        Me.dtpFrom.Calendar.HeadForeColor = System.Drawing.SystemColors.ControlText
+        Me.dtpFrom.Calendar.HighlightColor = System.Drawing.Color.White
+        Me.dtpFrom.Calendar.Iso8601CalenderFormat = False
+        Me.dtpFrom.Calendar.Location = New System.Drawing.Point(0, 0)
+        Me.dtpFrom.Calendar.MetroColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.dtpFrom.Calendar.Name = "monthCalendar"
+        Me.dtpFrom.Calendar.ScrollButtonSize = New System.Drawing.Size(24, 24)
+        Me.dtpFrom.Calendar.SelectedDates = New Date(-1) {}
+        Me.dtpFrom.Calendar.Size = New System.Drawing.Size(71, 174)
+        Me.dtpFrom.Calendar.SizeToFit = True
+        Me.dtpFrom.Calendar.Style = Syncfusion.Windows.Forms.VisualStyle.Metro
+        Me.dtpFrom.Calendar.TabIndex = 0
+        Me.dtpFrom.Calendar.ThemedEnabledScrollButtons = False
+        Me.dtpFrom.Calendar.WeekFont = New System.Drawing.Font("Verdana", 8.0!)
+        '
+        '
+        '
+        Me.dtpFrom.Calendar.NoneButton.Appearance = Syncfusion.Windows.Forms.ButtonAppearance.Metro
+        Me.dtpFrom.Calendar.NoneButton.BackColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.dtpFrom.Calendar.NoneButton.BeforeTouchSize = New System.Drawing.Size(75, 23)
+        Me.dtpFrom.Calendar.NoneButton.ForeColor = System.Drawing.Color.White
+        Me.dtpFrom.Calendar.NoneButton.IsBackStageButton = False
+        Me.dtpFrom.Calendar.NoneButton.Location = New System.Drawing.Point(-1, 0)
+        Me.dtpFrom.Calendar.NoneButton.Size = New System.Drawing.Size(72, 20)
+        Me.dtpFrom.Calendar.NoneButton.Text = "None"
+        Me.dtpFrom.Calendar.NoneButton.UseVisualStyle = True
+        '
+        '
+        '
+        Me.dtpFrom.Calendar.TodayButton.Appearance = Syncfusion.Windows.Forms.ButtonAppearance.Metro
+        Me.dtpFrom.Calendar.TodayButton.BackColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.dtpFrom.Calendar.TodayButton.BeforeTouchSize = New System.Drawing.Size(75, 23)
+        Me.dtpFrom.Calendar.TodayButton.ForeColor = System.Drawing.Color.White
+        Me.dtpFrom.Calendar.TodayButton.IsBackStageButton = False
+        Me.dtpFrom.Calendar.TodayButton.Location = New System.Drawing.Point(0, 0)
+        Me.dtpFrom.Calendar.TodayButton.Size = New System.Drawing.Size(0, 20)
+        Me.dtpFrom.Calendar.TodayButton.Text = "Today"
+        Me.dtpFrom.Calendar.TodayButton.UseVisualStyle = True
+        Me.dtpFrom.CalendarSize = New System.Drawing.Size(189, 176)
+        Me.dtpFrom.CalendarTitleForeColor = System.Drawing.SystemColors.ControlText
+        Me.dtpFrom.Culture = New System.Globalization.CultureInfo("en-US")
+        Me.dtpFrom.CustomFormat = "dd-MM-yyyy"
+        Me.dtpFrom.DropDownImage = Nothing
+        Me.dtpFrom.DropDownNormalColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.dtpFrom.DropDownPressedColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.dtpFrom.DropDownSelectedColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(237, Byte), Integer))
+        Me.dtpFrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpFrom.Location = New System.Drawing.Point(236, 13)
+        Me.dtpFrom.MetroColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.dtpFrom.MinValue = New Date(CType(0, Long))
+        Me.dtpFrom.Name = "dtpFrom"
+        Me.dtpFrom.ReadOnly = True
+        Me.dtpFrom.ShowCheckBox = False
+        Me.dtpFrom.ShowDropButton = False
+        Me.dtpFrom.Size = New System.Drawing.Size(73, 20)
+        Me.dtpFrom.Style = Syncfusion.Windows.Forms.VisualStyle.Metro
+        Me.dtpFrom.TabIndex = 11
+        Me.dtpFrom.Value = New Date(2015, 7, 15, 0, 0, 0, 0)
+        '
+        'btnAfter
+        '
+        Me.btnAfter.Font = New System.Drawing.Font("Arial", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnAfter.Location = New System.Drawing.Point(315, 38)
+        Me.btnAfter.Name = "btnAfter"
+        Me.btnAfter.Size = New System.Drawing.Size(23, 20)
+        Me.btnAfter.TabIndex = 14
+        Me.btnAfter.UseVisualStyleBackColor = True
+        '
+        'btnBefore
+        '
+        Me.btnBefore.Font = New System.Drawing.Font("Arial", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnBefore.Location = New System.Drawing.Point(315, 13)
+        Me.btnBefore.Name = "btnBefore"
+        Me.btnBefore.Size = New System.Drawing.Size(23, 20)
+        Me.btnBefore.TabIndex = 13
+        Me.btnBefore.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
+        Me.btnBefore.UseVisualStyleBackColor = True
+        '
+        'lblMainIncomeAmount
+        '
+        Me.lblMainIncomeAmount.Location = New System.Drawing.Point(575, 42)
+        Me.lblMainIncomeAmount.Name = "lblMainIncomeAmount"
+        Me.lblMainIncomeAmount.Size = New System.Drawing.Size(107, 16)
+        Me.lblMainIncomeAmount.TabIndex = 12
+        Me.lblMainIncomeAmount.Text = "nothing"
+        '
+        'lblMainIncomeDate
+        '
+        Me.lblMainIncomeDate.Location = New System.Drawing.Point(575, 19)
+        Me.lblMainIncomeDate.Name = "lblMainIncomeDate"
+        Me.lblMainIncomeDate.Size = New System.Drawing.Size(111, 16)
+        Me.lblMainIncomeDate.TabIndex = 11
+        Me.lblMainIncomeDate.Text = "nothing"
+        '
+        'lblMainIncomeAmount_text
+        '
+        Me.lblMainIncomeAmount_text.Location = New System.Drawing.Point(421, 42)
+        Me.lblMainIncomeAmount_text.Name = "lblMainIncomeAmount_text"
+        Me.lblMainIncomeAmount_text.Size = New System.Drawing.Size(148, 16)
+        Me.lblMainIncomeAmount_text.TabIndex = 9
+        Me.lblMainIncomeAmount_text.Text = "Montant du revenu principal:"
+        '
+        'lblMainIncomeDate_text
+        '
+        Me.lblMainIncomeDate_text.Location = New System.Drawing.Point(421, 17)
+        Me.lblMainIncomeDate_text.Name = "lblMainIncomeDate_text"
+        Me.lblMainIncomeDate_text.Size = New System.Drawing.Size(148, 16)
+        Me.lblMainIncomeDate_text.TabIndex = 8
+        Me.lblMainIncomeDate_text.Text = "Date du revenu principal:"
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(328, 42)
+        Me.Label2.Location = New System.Drawing.Point(206, 42)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(23, 13)
         Me.Label2.TabIndex = 7
         Me.Label2.Text = "Au:"
         '
-        'dtpTo
-        '
-        Me.dtpTo.CustomFormat = "dd-MMMM-yyyy"
-        Me.dtpTo.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpTo.Location = New System.Drawing.Point(358, 38)
-        Me.dtpTo.Name = "dtpTo"
-        Me.dtpTo.Size = New System.Drawing.Size(143, 20)
-        Me.dtpTo.TabIndex = 6
-        '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(327, 17)
+        Me.Label1.Location = New System.Drawing.Point(205, 17)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(24, 13)
         Me.Label1.TabIndex = 5
@@ -143,40 +274,31 @@ Partial Class frmBudgetManagement
         Me.rbtnMensuelle.Text = "Mensuelle"
         Me.rbtnMensuelle.UseVisualStyleBackColor = True
         '
-        'dtpFrom
-        '
-        Me.dtpFrom.CustomFormat = "dd-MMMM-yyyy"
-        Me.dtpFrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpFrom.Location = New System.Drawing.Point(357, 13)
-        Me.dtpFrom.Name = "dtpFrom"
-        Me.dtpFrom.Size = New System.Drawing.Size(144, 20)
-        Me.dtpFrom.TabIndex = 0
-        '
         'grdBudget
         '
         Me.grdBudget.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        GridBaseStyle1.Name = "Header"
-        GridBaseStyle1.StyleInfo.Borders.Bottom = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
-        GridBaseStyle1.StyleInfo.Borders.Left = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
-        GridBaseStyle1.StyleInfo.Borders.Right = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
-        GridBaseStyle1.StyleInfo.Borders.Top = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
-        GridBaseStyle1.StyleInfo.CellType = "Header"
-        GridBaseStyle1.StyleInfo.Font.Bold = True
-        GridBaseStyle1.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Vertical, System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(184, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(234, Byte), Integer), CType(CType(216, Byte), Integer)))
-        GridBaseStyle1.StyleInfo.VerticalAlignment = Syncfusion.Windows.Forms.Grid.GridVerticalAlignment.Middle
-        GridBaseStyle2.Name = "Standard"
-        GridBaseStyle2.StyleInfo.Font.Facename = "Tahoma"
-        GridBaseStyle2.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(System.Drawing.SystemColors.Window)
-        GridBaseStyle3.Name = "Column Header"
-        GridBaseStyle3.StyleInfo.BaseStyle = "Header"
-        GridBaseStyle3.StyleInfo.HorizontalAlignment = Syncfusion.Windows.Forms.Grid.GridHorizontalAlignment.Center
-        GridBaseStyle4.Name = "Row Header"
-        GridBaseStyle4.StyleInfo.BaseStyle = "Header"
-        GridBaseStyle4.StyleInfo.HorizontalAlignment = Syncfusion.Windows.Forms.Grid.GridHorizontalAlignment.Left
-        GridBaseStyle4.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(184, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(234, Byte), Integer), CType(CType(216, Byte), Integer)))
-        Me.grdBudget.BaseStylesMap.AddRange(New Syncfusion.Windows.Forms.Grid.GridBaseStyle() {GridBaseStyle1, GridBaseStyle2, GridBaseStyle3, GridBaseStyle4})
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        GridBaseStyle5.Name = "Header"
+        GridBaseStyle5.StyleInfo.Borders.Bottom = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
+        GridBaseStyle5.StyleInfo.Borders.Left = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
+        GridBaseStyle5.StyleInfo.Borders.Right = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
+        GridBaseStyle5.StyleInfo.Borders.Top = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
+        GridBaseStyle5.StyleInfo.CellType = "Header"
+        GridBaseStyle5.StyleInfo.Font.Bold = True
+        GridBaseStyle5.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Vertical, System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(184, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(234, Byte), Integer), CType(CType(216, Byte), Integer)))
+        GridBaseStyle5.StyleInfo.VerticalAlignment = Syncfusion.Windows.Forms.Grid.GridVerticalAlignment.Middle
+        GridBaseStyle6.Name = "Standard"
+        GridBaseStyle6.StyleInfo.Font.Facename = "Tahoma"
+        GridBaseStyle6.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(System.Drawing.SystemColors.Window)
+        GridBaseStyle7.Name = "Column Header"
+        GridBaseStyle7.StyleInfo.BaseStyle = "Header"
+        GridBaseStyle7.StyleInfo.HorizontalAlignment = Syncfusion.Windows.Forms.Grid.GridHorizontalAlignment.Center
+        GridBaseStyle8.Name = "Row Header"
+        GridBaseStyle8.StyleInfo.BaseStyle = "Header"
+        GridBaseStyle8.StyleInfo.HorizontalAlignment = Syncfusion.Windows.Forms.Grid.GridHorizontalAlignment.Left
+        GridBaseStyle8.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(184, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(234, Byte), Integer), CType(CType(216, Byte), Integer)))
+        Me.grdBudget.BaseStylesMap.AddRange(New Syncfusion.Windows.Forms.Grid.GridBaseStyle() {GridBaseStyle5, GridBaseStyle6, GridBaseStyle7, GridBaseStyle8})
         Me.grdBudget.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.grdBudget.ColWidthEntries.AddRange(New Syncfusion.Windows.Forms.Grid.GridColWidth() {New Syncfusion.Windows.Forms.Grid.GridColWidth(0, 35)})
         Me.grdBudget.Location = New System.Drawing.Point(4, 72)
@@ -190,6 +312,17 @@ Partial Class frmBudgetManagement
         Me.grdBudget.Text = "GridControl1"
         Me.grdBudget.UseRightToLeftCompatibleTextBox = True
         '
+        'btnRefresh
+        '
+        Me.btnRefresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnRefresh.BackgroundImage = CType(resources.GetObject("btnRefresh.BackgroundImage"), System.Drawing.Image)
+        Me.btnRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.btnRefresh.Location = New System.Drawing.Point(698, 5)
+        Me.btnRefresh.Name = "btnRefresh"
+        Me.btnRefresh.Size = New System.Drawing.Size(40, 40)
+        Me.btnRefresh.TabIndex = 10
+        Me.btnRefresh.UseVisualStyleBackColor = True
+        '
         'formController
         '
         Me.formController.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -202,11 +335,114 @@ Partial Class frmBudgetManagement
         Me.formController.Size = New System.Drawing.Size(85, 33)
         Me.formController.TabIndex = 4
         '
+        'dtpTo
+        '
+        Me.dtpTo.Border3DStyle = System.Windows.Forms.Border3DStyle.Flat
+        Me.dtpTo.BorderColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(211, Byte), Integer), CType(CType(212, Byte), Integer))
+        Me.dtpTo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        '
+        '
+        '
+        Me.dtpTo.Calendar.AllowMultipleSelection = False
+        Me.dtpTo.Calendar.BorderColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(211, Byte), Integer), CType(CType(212, Byte), Integer))
+        Me.dtpTo.Calendar.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.dtpTo.Calendar.Culture = New System.Globalization.CultureInfo("en-US")
+        Me.dtpTo.Calendar.DayNamesColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.dtpTo.Calendar.DayNamesFont = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold)
+        Me.dtpTo.Calendar.DaysFont = New System.Drawing.Font("Verdana", 8.0!)
+        Me.dtpTo.Calendar.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.dtpTo.Calendar.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtpTo.Calendar.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.dtpTo.Calendar.GridLines = Syncfusion.Windows.Forms.Grid.GridBorderStyle.None
+        Me.dtpTo.Calendar.HeaderEndColor = System.Drawing.Color.White
+        Me.dtpTo.Calendar.HeaderStartColor = System.Drawing.Color.White
+        Me.dtpTo.Calendar.HeadForeColor = System.Drawing.SystemColors.ControlText
+        Me.dtpTo.Calendar.HighlightColor = System.Drawing.Color.White
+        Me.dtpTo.Calendar.Iso8601CalenderFormat = False
+        Me.dtpTo.Calendar.Location = New System.Drawing.Point(0, 0)
+        Me.dtpTo.Calendar.MetroColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.dtpTo.Calendar.Name = "monthCalendar"
+        Me.dtpTo.Calendar.ScrollButtonSize = New System.Drawing.Size(24, 24)
+        Me.dtpTo.Calendar.SelectedDates = New Date(-1) {}
+        Me.dtpTo.Calendar.Size = New System.Drawing.Size(71, 174)
+        Me.dtpTo.Calendar.SizeToFit = True
+        Me.dtpTo.Calendar.Style = Syncfusion.Windows.Forms.VisualStyle.Metro
+        Me.dtpTo.Calendar.TabIndex = 0
+        Me.dtpTo.Calendar.ThemedEnabledScrollButtons = False
+        Me.dtpTo.Calendar.WeekFont = New System.Drawing.Font("Verdana", 8.0!)
+        '
+        '
+        '
+        Me.dtpTo.Calendar.NoneButton.Appearance = Syncfusion.Windows.Forms.ButtonAppearance.Metro
+        Me.dtpTo.Calendar.NoneButton.BackColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.dtpTo.Calendar.NoneButton.BeforeTouchSize = New System.Drawing.Size(75, 23)
+        Me.dtpTo.Calendar.NoneButton.ForeColor = System.Drawing.Color.White
+        Me.dtpTo.Calendar.NoneButton.IsBackStageButton = False
+        Me.dtpTo.Calendar.NoneButton.Location = New System.Drawing.Point(-1, 0)
+        Me.dtpTo.Calendar.NoneButton.Size = New System.Drawing.Size(72, 20)
+        Me.dtpTo.Calendar.NoneButton.Text = "None"
+        Me.dtpTo.Calendar.NoneButton.UseVisualStyle = True
+        '
+        '
+        '
+        Me.dtpTo.Calendar.TodayButton.Appearance = Syncfusion.Windows.Forms.ButtonAppearance.Metro
+        Me.dtpTo.Calendar.TodayButton.BackColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.dtpTo.Calendar.TodayButton.BeforeTouchSize = New System.Drawing.Size(75, 23)
+        Me.dtpTo.Calendar.TodayButton.ForeColor = System.Drawing.Color.White
+        Me.dtpTo.Calendar.TodayButton.IsBackStageButton = False
+        Me.dtpTo.Calendar.TodayButton.Location = New System.Drawing.Point(0, 0)
+        Me.dtpTo.Calendar.TodayButton.Size = New System.Drawing.Size(-1, 20)
+        Me.dtpTo.Calendar.TodayButton.Text = "Today"
+        Me.dtpTo.Calendar.TodayButton.UseVisualStyle = True
+        Me.dtpTo.CalendarSize = New System.Drawing.Size(189, 176)
+        Me.dtpTo.CalendarTitleForeColor = System.Drawing.SystemColors.ControlText
+        Me.dtpTo.Culture = New System.Globalization.CultureInfo("en-US")
+        Me.dtpTo.CustomFormat = "dd-MM-yyyy"
+        Me.dtpTo.DropDownImage = Nothing
+        Me.dtpTo.DropDownNormalColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.dtpTo.DropDownPressedColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.dtpTo.DropDownSelectedColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(237, Byte), Integer))
+        Me.dtpTo.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.dtpTo.Location = New System.Drawing.Point(236, 38)
+        Me.dtpTo.MetroColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
+        Me.dtpTo.MinValue = New Date(CType(0, Long))
+        Me.dtpTo.Name = "dtpTo"
+        Me.dtpTo.ReadOnly = True
+        Me.dtpTo.ShowCheckBox = False
+        Me.dtpTo.ShowDropButton = False
+        Me.dtpTo.Size = New System.Drawing.Size(73, 20)
+        Me.dtpTo.Style = Syncfusion.Windows.Forms.VisualStyle.Metro
+        Me.dtpTo.TabIndex = 15
+        Me.dtpTo.Value = New Date(2015, 7, 15, 0, 0, 0, 0)
+        '
+        'btnDtpToDown
+        '
+        Me.btnDtpToDown.Font = New System.Drawing.Font("Arial", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDtpToDown.Location = New System.Drawing.Point(363, 19)
+        Me.btnDtpToDown.Name = "btnDtpToDown"
+        Me.btnDtpToDown.Size = New System.Drawing.Size(23, 20)
+        Me.btnDtpToDown.TabIndex = 17
+        Me.btnDtpToDown.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
+        Me.btnDtpToDown.UseVisualStyleBackColor = True
+        Me.btnDtpToDown.Visible = False
+        '
+        'btnDtpToUp
+        '
+        Me.btnDtpToUp.Font = New System.Drawing.Font("Arial", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDtpToUp.Location = New System.Drawing.Point(392, 19)
+        Me.btnDtpToUp.Name = "btnDtpToUp"
+        Me.btnDtpToUp.Size = New System.Drawing.Size(23, 20)
+        Me.btnDtpToUp.TabIndex = 16
+        Me.btnDtpToUp.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
+        Me.btnDtpToUp.UseVisualStyleBackColor = True
+        Me.btnDtpToUp.Visible = False
+        '
         'frmBudgetManagement
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(743, 645)
+        Me.Controls.Add(Me.btnRefresh)
         Me.Controls.Add(Me.grdBudget)
         Me.Controls.Add(Me.gbFilter)
         Me.Controls.Add(Me.formController)
@@ -217,7 +453,11 @@ Partial Class frmBudgetManagement
         Me.Text = "Budget"
         Me.gbFilter.ResumeLayout(False)
         Me.gbFilter.PerformLayout()
+        CType(Me.dtpFrom.Calendar, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dtpFrom, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.grdBudget, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dtpTo.Calendar, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dtpTo, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -226,12 +466,20 @@ Partial Class frmBudgetManagement
     Friend WithEvents rbtnHebdo As System.Windows.Forms.RadioButton
     Friend WithEvents rbtnBiMensuel As System.Windows.Forms.RadioButton
     Friend WithEvents rbtnMensuelle As System.Windows.Forms.RadioButton
-    Friend WithEvents dtpFrom As System.Windows.Forms.DateTimePicker
     Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents dtpTo As System.Windows.Forms.DateTimePicker
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents btnRefresh As System.Windows.Forms.Button
     Public WithEvents formController As DMS_Application.ctlFormController
     Friend WithEvents grdBudget As Syncfusion.Windows.Forms.Grid.GridControl
+    Friend WithEvents lblMainIncomeDate_text As System.Windows.Forms.Label
+    Friend WithEvents btnRefresh As System.Windows.Forms.Button
+    Friend WithEvents lblMainIncomeAmount_text As System.Windows.Forms.Label
+    Friend WithEvents lblMainIncomeDate As System.Windows.Forms.Label
+    Friend WithEvents lblMainIncomeAmount As System.Windows.Forms.Label
+    Friend WithEvents btnAfter As System.Windows.Forms.Button
+    Friend WithEvents btnBefore As System.Windows.Forms.Button
+    Friend WithEvents dtpFrom As Syncfusion.Windows.Forms.Tools.DateTimePickerAdv
+    Friend WithEvents btnDtpToDown As System.Windows.Forms.Button
+    Friend WithEvents btnDtpToUp As System.Windows.Forms.Button
+    Friend WithEvents dtpTo As Syncfusion.Windows.Forms.Tools.DateTimePickerAdv
 
 End Class

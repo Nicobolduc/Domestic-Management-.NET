@@ -28,7 +28,10 @@ Partial Class test
         Me.grdSync = New Syncfusion.Windows.Forms.Grid.GridControl()
         Me.Populate = New System.Windows.Forms.Button()
         Me.Button1 = New System.Windows.Forms.Button()
+        Me.grdSync_2 = New Syncfusion.Windows.Forms.Grid.GridControl()
+        Me.Button3 = New System.Windows.Forms.Button()
         CType(Me.grdSync, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.grdSync_2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Grid2
@@ -92,11 +95,33 @@ Partial Class test
         Me.Button1.Text = "Feed DB"
         Me.Button1.UseVisualStyleBackColor = True
         '
+        'grdSync_2
+        '
+        Me.grdSync_2.Location = New System.Drawing.Point(12, 429)
+        Me.grdSync_2.Name = "grdSync_2"
+        Me.grdSync_2.SerializeCellsBehavior = Syncfusion.Windows.Forms.Grid.GridSerializeCellsBehavior.SerializeAsRangeStylesIntoCode
+        Me.grdSync_2.Size = New System.Drawing.Size(345, 168)
+        Me.grdSync_2.SmartSizeBox = False
+        Me.grdSync_2.TabIndex = 14
+        Me.grdSync_2.Text = "GridControl1"
+        Me.grdSync_2.UseRightToLeftCompatibleTextBox = True
+        '
+        'Button3
+        '
+        Me.Button3.Location = New System.Drawing.Point(363, 429)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(84, 40)
+        Me.Button3.TabIndex = 15
+        Me.Button3.Text = "Test"
+        Me.Button3.UseVisualStyleBackColor = True
+        '
         'test
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1178, 819)
+        Me.Controls.Add(Me.Button3)
+        Me.Controls.Add(Me.grdSync_2)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.Populate)
         Me.Controls.Add(Me.grdSync)
@@ -106,6 +131,7 @@ Partial Class test
         Me.Name = "test"
         Me.Text = "test"
         CType(Me.grdSync, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.grdSync_2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -117,4 +143,6 @@ Partial Class test
     Friend WithEvents grdSync As Syncfusion.Windows.Forms.Grid.GridControl
     Friend WithEvents Populate As System.Windows.Forms.Button
     Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents grdSync_2 As Syncfusion.Windows.Forms.Grid.GridControl
+    Friend WithEvents Button3 As System.Windows.Forms.Button
 End Class

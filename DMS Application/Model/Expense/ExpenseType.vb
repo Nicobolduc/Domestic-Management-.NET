@@ -1,11 +1,12 @@
 ﻿Namespace Model
 
-    Public Class ProductType
+    Public Class ExpenseType
         Inherits BaseModel
 
         'Private members
-        Private _intProductType_ID As Integer
+        Private _intExpenseType_ID As Integer
         Private _strName As String = String.Empty
+        Private _intArgbColor As Integer
 
         'Private class members
 
@@ -14,10 +15,10 @@
 
         Public Property ID As Integer
             Get
-                Return _intProductType_ID
+                Return _intExpenseType_ID
             End Get
             Set(value As Integer)
-                _intProductType_ID = value
+                _intExpenseType_ID = value
             End Set
         End Property
 
@@ -30,11 +31,20 @@
             End Set
         End Property
 
+        Public Property ArgbColor As Integer
+            Get
+                Return _intArgbColor
+            End Get
+            Set(value As Integer)
+                _intArgbColor = value
+            End Set
+        End Property
+
 #End Region
 
 #Region "Functions / Subs"
 
-        Public Function blnProductType_Save() As Boolean
+        Public Function blnExpenseType_Save() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
@@ -42,13 +52,13 @@
 
                     Select Case DLMCommand
                         Case mConstants.Form_Mode.INSERT_MODE
-                            blnValidReturn = blnProductType_Insert()
+                            blnValidReturn = blnExpenseType_Insert()
 
                         Case mConstants.Form_Mode.UPDATE_MODE
-                            blnValidReturn = blnProductType_Update()
+                            blnValidReturn = blnExpenseType_Update()
 
                         Case mConstants.Form_Mode.DELETE_MODE
-                            blnValidReturn = blnProductType_Delete()
+                            blnValidReturn = blnExpenseType_Delete()
 
                     End Select
                 Else
@@ -69,7 +79,8 @@
             Try
                 Select Case False
                     Case SQLController.bln_RefreshFields
-                    Case SQLController.bln_AddField("ProT_Name", _strName, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
+                    Case SQLController.bln_AddField("ExpT_Name", _strName, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
+                    Case SQLController.bln_AddField("ExpT_ArgbColor", _intArgbColor, MySQLController.MySQL_FieldTypes.INT_TYPE)
                     Case Else
                         blnValidReturn = True
                 End Select
@@ -82,14 +93,14 @@
             Return blnValidReturn
         End Function
 
-        Private Function blnProductType_Insert() As Boolean
+        Private Function blnExpenseType_Insert() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
                 Select Case False
                     Case blnProduct_AddFields()
-                    Case SQLController.bln_ADOInsert("ProductType", _intProductType_ID)
-                    Case _intProductType_ID > 0
+                    Case SQLController.bln_ADOInsert("ExpenseType", _intExpenseType_ID)
+                    Case _intExpenseType_ID > 0
                     Case Else
                         blnValidReturn = True
                 End Select
@@ -102,13 +113,13 @@
             Return blnValidReturn
         End Function
 
-        Private Function blnProductType_Update() As Boolean
+        Private Function blnExpenseType_Update() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
                 Select Case False
                     Case blnProduct_AddFields()
-                    Case SQLController.bln_ADOUpdate("ProductType", "ProT_ID = " & _intProductType_ID)
+                    Case SQLController.bln_ADOUpdate("ExpenseType", "ExpT_ID = " & _intExpenseType_ID)
                     Case Else
                         blnValidReturn = True
                 End Select
@@ -121,12 +132,12 @@
             Return blnValidReturn
         End Function
 
-        Private Function blnProductType_Delete() As Boolean
+        Private Function blnExpenseType_Delete() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
                 Select Case False
-                    Case SQLController.bln_ADODelete("ProductType", "ProT_ID = " & _intProductType_ID)
+                    Case SQLController.bln_ADODelete("ExpenseType", "ExpT_ID = " & _intExpenseType_ID)
                     Case Else
                         blnValidReturn = True
                 End Select
