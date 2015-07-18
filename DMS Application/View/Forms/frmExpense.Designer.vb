@@ -35,6 +35,7 @@ Partial Class frmExpense
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.cboType = New System.Windows.Forms.ComboBox()
+        Me.chkFixed = New System.Windows.Forms.CheckBox()
         Me.SuspendLayout()
         '
         'Label1
@@ -142,11 +143,22 @@ Partial Class frmExpense
         Me.cboType.Size = New System.Drawing.Size(158, 21)
         Me.cboType.TabIndex = 11
         '
+        'chkFixed
+        '
+        Me.chkFixed.AutoSize = True
+        Me.chkFixed.Location = New System.Drawing.Point(253, 57)
+        Me.chkFixed.Name = "chkFixed"
+        Me.chkFixed.Size = New System.Drawing.Size(45, 17)
+        Me.chkFixed.TabIndex = 12
+        Me.chkFixed.Text = "Fixe"
+        Me.chkFixed.UseVisualStyleBackColor = True
+        '
         'frmExpense
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(472, 144)
+        Me.Controls.Add(Me.chkFixed)
         Me.Controls.Add(Me.cboType)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.txtAmount)
@@ -182,4 +194,5 @@ Partial Class frmExpense
     Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents cboType As System.Windows.Forms.ComboBox
+    Friend WithEvents chkFixed As System.Windows.Forms.CheckBox
 End Class

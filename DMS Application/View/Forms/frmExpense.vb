@@ -17,6 +17,7 @@
 
                 txtName.Text = mcExpenseModel.Name
                 txtAmount.Text = mcExpenseModel.Amount.ToString
+                chkFixed.Checked = mcExpenseModel.Fixed
                 cboInterval.SelectedValue = CInt(mcExpenseModel.Period)
                 cboType.SelectedValue = CInt(mcExpenseModel.Type.ID)
                 cboType.BackColor = Color.FromArgb(mcExpenseModel.Type.ArgbColor)
@@ -121,7 +122,7 @@
             mcExpenseModel.Name = txtName.Text
             mcExpenseModel.Amount = Math.Round(Val(txtAmount.Text), 2)
             mcExpenseModel.Period = CType(cboInterval.SelectedValue, Period)
-
+            mcExpenseModel.Fixed = chkFixed.Checked
             mcExpenseModel.Type = New Model.ExpenseType
             mcExpenseModel.Type.ID = CInt(cboType.SelectedValue)
 
@@ -209,10 +210,15 @@
         formController.ChangeMade = True
     End Sub
 
-    Private Sub cboType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboType.SelectedIndexChanged
+    Private Sub cboType_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles cboType.SelectedIndexChanged
+        formController.ChangeMade = True
+    End Sub
+
+    Private Sub chkFixe_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkFixed.CheckedChanged
         formController.ChangeMade = True
     End Sub
 
 #End Region
+
 
 End Class

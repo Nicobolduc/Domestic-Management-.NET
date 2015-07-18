@@ -34,7 +34,6 @@
 
 #End Region
 
-
 #Region "Functions / Subs"
 
     Private Function blnFormData_Load() As Boolean
@@ -376,7 +375,6 @@
 
 #End Region
 
-
 #Region "Private Events"
 
     Private Sub formController_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
@@ -403,13 +401,10 @@
     Private Sub mcGrdGroceryController_SetDisplay() Handles mcGrdGroceryController.SetDisplay
         mcGrdGroceryController.SetColsSizeBehavior = ColsSizeBehaviorsController.colsSizeBehaviors.EXTEND_LAST_COL
 
-        grdGrocery.ColStyles(mintGrdGrocery_Sel_col).CellType = "CheckBox"
-        grdGrocery.ColStyles(mintGrdGrocery_Sel_col).CheckBoxOptions = New GridCheckBoxCellInfo(True.ToString(), False.ToString(), "", False)
-        grdGrocery.ColStyles(mintGrdGrocery_Sel_col).CellValueType = GetType(Boolean)
+        mcGrdGroceryController.blnSetColType_CheckBox(mintGrdGrocery_Sel_col, False)
+        mcGrdGroceryController.blnSetColType_CheckBox(mintGrdGrocery_Pro_Taxable_col, False)
+
         grdGrocery.ColStyles(mintGrdGrocery_ProP_Price_col).CellValueType = GetType(Double)
-        grdGrocery.ColStyles(mintGrdGrocery_Pro_Taxable_col).CellType = "CheckBox"
-        grdGrocery.ColStyles(mintGrdGrocery_Pro_Taxable_col).CheckBoxOptions = New GridCheckBoxCellInfo(True.ToString(), False.ToString(), "", False)
-        grdGrocery.ColStyles(mintGrdGrocery_Pro_Taxable_col).CellValueType = GetType(Boolean)
 
         grdGrocery.ColStyles(mintGrdGrocery_ProP_Price_col).Format = mConstants.DataFormat.CURRENCY
 
@@ -461,12 +456,6 @@
             Case Else
                 eventArgs.IsValid = True
         End Select
-    End Sub
-
-    Private Sub grdGrocery_CellMouseUp(ByVal sender As Object, ByVal e As Syncfusion.Windows.Forms.Grid.GridCellMouseEventArgs) Handles grdGrocery.CellMouseUp
-        If e.ColIndex = mintGrdGrocery_Sel_col And e.RowIndex <> -1 Then
-            grdGrocery.EndEdit()
-        End If
     End Sub
 
     Private Sub grdGrocery_CurrentCellChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles grdGrocery.CurrentCellChanged

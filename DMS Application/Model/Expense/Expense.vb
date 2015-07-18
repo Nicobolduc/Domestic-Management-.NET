@@ -9,6 +9,7 @@
         Private _dblAmount As Double
         Private _dtBillingDate As Nullable(Of Date)
         Private _period_ID As mConstants.Period
+        Private _fixed As Boolean
 
         'Private class members
         Private mcExpenseType As ExpenseType
@@ -70,6 +71,15 @@
             End Set
         End Property
 
+        Public Property Fixed As Boolean
+            Get
+                Return _fixed
+            End Get
+            Set(ByVal value As Boolean)
+                _fixed = value
+            End Set
+        End Property
+
 #End Region
 
 #Region "Functions / Subs"
@@ -114,6 +124,7 @@
                     Case SQLController.bln_AddField("Exp_Amount", _dblAmount, MySQLController.MySQL_FieldTypes.DOUBLE_TYPE)
                     Case SQLController.bln_AddField("ExpT_ID", mcExpenseType.ID, MySQLController.MySQL_FieldTypes.DOUBLE_TYPE)
                     Case SQLController.bln_AddField("Per_ID", CInt(_period_ID), MySQLController.MySQL_FieldTypes.ID_TYPE)
+                    Case SQLController.bln_AddField("Exp_Fixed", _fixed, MySQLController.MySQL_FieldTypes.BIT_TYPE)
                     Case Else
                         blnValidReturn = True
                 End Select

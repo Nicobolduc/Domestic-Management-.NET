@@ -13,7 +13,8 @@
             strSQL = strSQL & "        Expense.Exp_BillingDate, " & vbCrLf
             strSQL = strSQL & "        TRUNCATE(Expense.Exp_Amount, 2) AS Exp_Amount, " & vbCrLf
             strSQL = strSQL & "        Expense.Per_ID, " & vbCrLf
-            strSQL = strSQL & "        Expense.ExpT_ID " & vbCrLf
+            strSQL = strSQL & "        Expense.ExpT_ID, " & vbCrLf
+            strSQL = strSQL & "        Expense.Exp_Fixed " & vbCrLf
             strSQL = strSQL & " FROM Expense " & vbCrLf
             strSQL = strSQL & " WHERE Expense.Exp_ID = " & vintExpense_ID & vbCrLf
 
@@ -27,6 +28,7 @@
                 cExpense.BillingDate = CType(IIf(IsDBNull(mySQLReader.Item("Exp_BillingDate")), Nothing, mySQLReader.Item("Exp_BillingDate")), Date?)
                 cExpense.Amount = CDbl(mySQLReader.Item("Exp_Amount"))
                 cExpense.Period = CType(mySQLReader.Item("Per_ID"), Period)
+                cExpense.Fixed = CBool(mySQLReader.Item("Exp_Fixed"))
                 intExpType = CInt(mySQLReader.Item("ExpT_ID"))
 
                 mySQLReader.Dispose()

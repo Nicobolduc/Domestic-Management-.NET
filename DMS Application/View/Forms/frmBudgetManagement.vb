@@ -15,6 +15,7 @@
     Private mintGrdBudget_Income_Amount_col As Short = 12
     Private mintGrdBudget_Period_Name_col As Short = 13
     Private mintGrdBudget_Comment_col As Short = 14
+    Private mintGrdBudget_Sel_col As Short = 15
 
     'Private class members
     Private WithEvents mcGridBudgetController As SyncfusionGridController
@@ -46,7 +47,7 @@
     Private Function blnGrdBudget_Load() As Boolean
         Dim blnValidReturn As Boolean
         Dim strSQL As String = String.Empty
-
+        
         Try
             strSQL = strSQL & " SELECT " & DataGridViewController.GridRowActions.CONSULT_ACTION & " AS Action, " & vbCrLf
             strSQL = strSQL & "        Expense.Exp_ID, " & vbCrLf
@@ -61,7 +62,8 @@
             strSQL = strSQL & "        Income.Inc_Name, " & vbCrLf
             strSQL = strSQL & "        Income.Inc_Amount, " & vbCrLf
             strSQL = strSQL & "        Period.Per_Name, " & vbCrLf
-            strSQL = strSQL & "        NULL AS Comment " & vbCrLf 'Must be last col for extend
+            strSQL = strSQL & "        NULL AS Comment, " & vbCrLf
+            strSQL = strSQL & "        CASE WHEN Expense.Exp_Fixed = 1 THEN 'TRUE' ELSE 'FALSE' END AS SelCol " & vbCrLf
             strSQL = strSQL & " FROM Expense " & vbCrLf
             strSQL = strSQL & "     INNER JOIN ExpenseType ON ExpenseType.ExpT_ID = Expense.ExpT_ID " & vbCrLf
             strSQL = strSQL & "     INNER JOIN Income ON Income.Inc_IsMain = 1 " & vbCrLf
@@ -81,7 +83,6 @@
                 lblMainIncomeDate.Text = Format(grdBudget(grdBudget.RowCount, mintGrdBudget_Income_Date_col).CellValue, gcAppController.str_GetPCDateFormat)
                 lblMainIncomeAmount.Text = grdBudget(grdBudget.RowCount, mintGrdBudget_Income_Amount_col).CellValue.ToString & " $"
 
-
             End If
 
         Catch ex As Exception
@@ -91,8 +92,6 @@
 
         Return blnValidReturn
     End Function
-
-
 
 #End Region
 
@@ -108,6 +107,9 @@
     End Sub
 
     Private Sub mcGrid_SetDisplay() Handles mcGridBudgetController.SetDisplay
+        grdBudget.Model.Options.MergeCellsMode = GridMergeCellsMode.None
+        grdBudget.ColStyles(mintGrdBudget_Income_Date_col).MergeCell = GridMergeCellDirection.None
+        grdBudget.ColStyles(mintGrdBudget_Exp_BillingDate_col).MergeCell = GridMergeCellDirection.None
 
         grdBudget.ColWidths(mintGrdBudget_Exp_BillingDate_col) = 110
         grdBudget.ColWidths(mintGrdBudget_Exp_Name_col) = 200
@@ -115,7 +117,9 @@
         grdBudget.ColWidths(mintGrdBudget_Amount_Paid_col) = 100
         grdBudget.ColWidths(mintGrdBudget_Exp_PaidOn_col) = 110
         grdBudget.ColWidths(mintGrdBudget_Income_Date_col) = 110
+        grdBudget.ColWidths(mintGrdBudget_Comment_col) = 230
 
+        mcGridBudgetController.blnSetColType_CheckBox(mintGrdBudget_Sel_col, False)
 
         mcGridBudgetController.blnSetColType_DateTimePicker(mintGrdBudget_Exp_PaidOn_col, True)
 
@@ -125,6 +129,7 @@
         grdBudget.ColStyles(mintGrdBudget_Exp_BillingDate_col).Format = gcAppController.str_GetPCDateFormat
         grdBudget.ColStyles(mintGrdBudget_Income_Date_col).Format = gcAppController.str_GetPCDateFormat
         grdBudget.ColStyles(mintGrdBudget_Exp_Amount_col).Format = mConstants.DataFormat.CURRENCY
+        grdBudget.ColStyles(mintGrdBudget_Amount_Paid_col).Format = mConstants.DataFormat.CURRENCY
 
         grdBudget.Model.Options.MergeCellsMode = GridMergeCellsMode.OnDemandCalculation Or GridMergeCellsMode.MergeRowsInColumn
         grdBudget.ColStyles(mintGrdBudget_Income_Date_col).MergeCell = GridMergeCellDirection.RowsInColumn
@@ -135,7 +140,7 @@
         mcGridBudgetController.SetColsSizeBehavior = ColsSizeBehaviorsController.colsSizeBehaviors.EXTEND_LAST_COL
 
         For intCol As Integer = 1 To grdBudget.ColCount
-            If intCol <> mintGrdBudget_Exp_PaidOn_col And intCol <> mintGrdBudget_Comment_col Then
+            If intCol <> mintGrdBudget_Exp_PaidOn_col And intCol <> mintGrdBudget_Comment_col And intCol <> mintGrdBudget_Amount_Paid_col And intCol <> mintGrdBudget_Sel_col Then
                 grdBudget.ColStyles(intCol).ReadOnly = True
             End If
         Next
@@ -143,8 +148,10 @@
     End Sub
 
     Private Sub rbtnHedo_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnHebdo.CheckedChanged
+        Dim format() = {"dd/MM/yyyy", "d/M/yyyy", "dd-MM-yyyy"}
+
         If rbtnHebdo.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetPCDateFormat))
+            'dtpFrom.Value = CDate(format(DateTime.Today, gcAppController.str_GetPCDateTimeFormat))
             dtpTo.Value = DateAdd(DateInterval.Day, 7, dtpFrom.Value)
         End If
     End Sub
@@ -173,10 +180,8 @@
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
-        btnDtpToDown.Text = ChrW(9660)
         btnAfter.Text = ChrW(9660)
         btnBefore.Text = ChrW(9650)
-        btnDtpToUp.Text = ChrW(9650)
 
         Select Case False
             Case mcGridBudgetController.bln_Init(grdBudget)
@@ -242,5 +247,4 @@
 
 #End Region
 
-    
 End Class

@@ -354,6 +354,30 @@ Public Class SyncfusionGridController
         Return intReturnValue
     End Function
 
+    Public Function blnSetColType_CheckBox(ByVal vintColumnIndex As Integer, ByVal vblnAllowTriStates As Boolean) As Boolean
+        Dim blnValidReturn As Boolean
+
+        Try
+            mGrdSync.ColStyles(vintColumnIndex).CellType = "CheckBox"
+
+            If vblnAllowTriStates Then
+                mGrdSync.ColStyles(vintColumnIndex).CheckBoxOptions = New GridCheckBoxCellInfo(True.ToString(), False.ToString(), "2", False)
+            Else
+                mGrdSync.ColStyles(vintColumnIndex).CheckBoxOptions = New GridCheckBoxCellInfo(True.ToString(), False.ToString(), String.Empty, False)
+            End If
+
+            mGrdSync.ColStyles(vintColumnIndex).CellValueType = GetType(Boolean)
+
+            blnValidReturn = True
+
+        Catch ex As Exception
+            blnValidReturn = False
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source & " - " & System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name)
+        End Try
+
+        Return blnValidReturn
+    End Function
+
     Public Function blnSetColType_ComboBox(ByVal vstrSQL As String, ByVal vintColumnIndex As Integer, ByVal vstrValueMember As String, ByVal vstrDisplayMember As String, ByVal vblnAllowEmpty As Boolean) As Boolean
         Dim blnValidReturn As Boolean
         Dim mySQLCmd As MySqlCommand
