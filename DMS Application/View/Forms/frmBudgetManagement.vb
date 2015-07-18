@@ -124,6 +124,7 @@
         mcGridBudgetController.blnSetColType_DateTimePicker(mintGrdBudget_Exp_PaidOn_col, True)
 
         grdBudget.ColStyles(mintGrdBudget_Exp_Amount_col).CellValueType = GetType(Double)
+        grdBudget.ColStyles(mintGrdBudget_Amount_Paid_col).CellValueType = GetType(Double)
         grdBudget.ColStyles(mintGrdBudget_Exp_BillingDate_col).CellValueType = GetType(Date)
 
         grdBudget.ColStyles(mintGrdBudget_Exp_BillingDate_col).Format = gcAppController.str_GetPCDateFormat
@@ -147,15 +148,6 @@
 
     End Sub
 
-    Private Sub rbtnHedo_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnHebdo.CheckedChanged
-        Dim format() = {"dd/MM/yyyy", "d/M/yyyy", "dd-MM-yyyy"}
-
-        If rbtnHebdo.Checked Then
-            'dtpFrom.Value = CDate(format(DateTime.Today, gcAppController.str_GetPCDateTimeFormat))
-            dtpTo.Value = DateAdd(DateInterval.Day, 7, dtpFrom.Value)
-        End If
-    End Sub
-
     Private Sub rbtnBiMensuel_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnBiMensuel.CheckedChanged
         If rbtnBiMensuel.Checked Then
             dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetPCDateFormat))
@@ -174,6 +166,13 @@
         If rbtnDeuxMois.Checked Then
             dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetPCDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Month, 2, dtpFrom.Value)
+        End If
+    End Sub
+
+    Private Sub rbtnHebdo_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnHebdo.CheckedChanged
+        If rbtnHebdo.Checked Then
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetPCDateFormat))
+            dtpTo.Value = DateAdd(DateInterval.Day, 7, dtpFrom.Value)
         End If
     End Sub
 
