@@ -429,7 +429,10 @@ Public Class SyncfusionGridController
         Try
             'Syncfusion.GridHelperClasses.RegisterCellModel.GridCellType(grdBudget, Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker)
             'grdBudget(1, mintGrdBudget_Exp_PaidOn_col).CellType = Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker.ToString()
-            mGrdSync.CellModels.Add("DateTimePicker", dtPickerCell)
+            If Not mGrdSync.CellModels.ContainsKey("DateTimePicker") Then
+                mGrdSync.CellModels.Add("DateTimePicker", dtPickerCell)
+            End If
+
             mGrdSync.ColStyles(vintColumnIndex).CellType = "DateTimePicker"
             mGrdSync.ColStyles(vintColumnIndex).CellValueType = GetType(DateTime)
             mGrdSync.ColStyles(vintColumnIndex).Format = gcAppController.str_GetPCDateFormat
@@ -507,6 +510,7 @@ Public Class SyncfusionGridController
     End Sub
 
 #End Region
+
 
 End Class
 

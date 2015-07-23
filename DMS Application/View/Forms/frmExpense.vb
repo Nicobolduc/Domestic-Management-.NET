@@ -20,7 +20,7 @@
                 chkFixed.Checked = mcExpenseModel.Fixed
                 cboInterval.SelectedValue = CInt(mcExpenseModel.Period)
                 cboType.SelectedValue = CInt(mcExpenseModel.Type.ID)
-                cboType.BackColor = Color.FromArgb(mcExpenseModel.Type.ArgbColor)
+                cboType.BackColor = CType(IIf(mcExpenseModel.Type.ArgbColor <> 0, Color.FromArgb(mcExpenseModel.Type.ArgbColor), Control.DefaultBackColor), Color)
 
                 If Not mcExpenseModel.BillingDate Is Nothing Then
 
