@@ -69,7 +69,7 @@ Public Class MySQLController
         Dim strSQL As String = String.Empty
 
         Try
-            strSQL = "SELECT " & vstrField & " FROM " & vstrTable & " WHERE " & vstrWhere
+            strSQL = "SELECT " & vstrField & " AS " & gcAppController.str_FixStringForSQL(vstrField) & " FROM " & vstrTable & " WHERE " & vstrWhere
 
             mySQLCmd = New MySqlCommand(strSQL, gcAppController.MySQLConnection)
 

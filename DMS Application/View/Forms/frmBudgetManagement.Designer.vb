@@ -23,12 +23,15 @@ Partial Class frmBudgetManagement
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim GridBaseStyle5 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
-        Dim GridBaseStyle6 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
-        Dim GridBaseStyle7 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
-        Dim GridBaseStyle8 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
+        Dim GridBaseStyle1 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
+        Dim GridBaseStyle2 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
+        Dim GridBaseStyle3 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
+        Dim GridBaseStyle4 As Syncfusion.Windows.Forms.Grid.GridBaseStyle = New Syncfusion.Windows.Forms.Grid.GridBaseStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmBudgetManagement))
         Me.gbFilter = New System.Windows.Forms.GroupBox()
+        Me.lblIncomePeriodTo = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.rbtnNotPaid = New System.Windows.Forms.RadioButton()
         Me.rbtnPaid = New System.Windows.Forms.RadioButton()
         Me.dtpTo = New Syncfusion.Windows.Forms.Tools.DateTimePickerAdv()
@@ -36,7 +39,7 @@ Partial Class frmBudgetManagement
         Me.btnAfter = New System.Windows.Forms.Button()
         Me.btnBefore = New System.Windows.Forms.Button()
         Me.lblMainIncomeAmount = New System.Windows.Forms.Label()
-        Me.lblMainIncomeDate = New System.Windows.Forms.Label()
+        Me.lblIncomePeriodFrom = New System.Windows.Forms.Label()
         Me.lblMainIncomeAmount_text = New System.Windows.Forms.Label()
         Me.lblMainIncomeDate_text = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -50,6 +53,7 @@ Partial Class frmBudgetManagement
         Me.btnPay = New System.Windows.Forms.Button()
         Me.formController = New DMS_Application.ctlFormController()
         Me.gbFilter.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
         CType(Me.dtpTo, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dtpTo.Calendar, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dtpFrom, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -60,15 +64,16 @@ Partial Class frmBudgetManagement
         'gbFilter
         '
         Me.gbFilter.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.gbFilter.Controls.Add(Me.rbtnNotPaid)
-        Me.gbFilter.Controls.Add(Me.rbtnPaid)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.gbFilter.Controls.Add(Me.lblIncomePeriodTo)
+        Me.gbFilter.Controls.Add(Me.Label3)
+        Me.gbFilter.Controls.Add(Me.GroupBox1)
         Me.gbFilter.Controls.Add(Me.dtpTo)
         Me.gbFilter.Controls.Add(Me.dtpFrom)
         Me.gbFilter.Controls.Add(Me.btnAfter)
         Me.gbFilter.Controls.Add(Me.btnBefore)
         Me.gbFilter.Controls.Add(Me.lblMainIncomeAmount)
-        Me.gbFilter.Controls.Add(Me.lblMainIncomeDate)
+        Me.gbFilter.Controls.Add(Me.lblIncomePeriodFrom)
         Me.gbFilter.Controls.Add(Me.lblMainIncomeAmount_text)
         Me.gbFilter.Controls.Add(Me.lblMainIncomeDate_text)
         Me.gbFilter.Controls.Add(Me.Label2)
@@ -79,16 +84,43 @@ Partial Class frmBudgetManagement
         Me.gbFilter.Controls.Add(Me.rbtnMensuelle)
         Me.gbFilter.Location = New System.Drawing.Point(4, 2)
         Me.gbFilter.Name = "gbFilter"
-        Me.gbFilter.Size = New System.Drawing.Size(755, 64)
+        Me.gbFilter.Size = New System.Drawing.Size(755, 78)
         Me.gbFilter.TabIndex = 3
         Me.gbFilter.TabStop = False
         Me.gbFilter.Text = "Filtres"
+        '
+        'lblIncomePeriodTo
+        '
+        Me.lblIncomePeriodTo.Location = New System.Drawing.Point(691, 26)
+        Me.lblIncomePeriodTo.Name = "lblIncomePeriodTo"
+        Me.lblIncomePeriodTo.Size = New System.Drawing.Size(62, 16)
+        Me.lblIncomePeriodTo.TabIndex = 20
+        Me.lblIncomePeriodTo.Text = "13-13-2015"
+        '
+        'Label3
+        '
+        Me.Label3.Location = New System.Drawing.Point(665, 26)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(20, 16)
+        Me.Label3.TabIndex = 19
+        Me.Label3.Text = "Au"
+        '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.rbtnNotPaid)
+        Me.GroupBox1.Controls.Add(Me.rbtnPaid)
+        Me.GroupBox1.Location = New System.Drawing.Point(362, 13)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(90, 59)
+        Me.GroupBox1.TabIndex = 18
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Statut"
         '
         'rbtnNotPaid
         '
         Me.rbtnNotPaid.AutoSize = True
         Me.rbtnNotPaid.Checked = True
-        Me.rbtnNotPaid.Location = New System.Drawing.Point(372, 17)
+        Me.rbtnNotPaid.Location = New System.Drawing.Point(6, 16)
         Me.rbtnNotPaid.Name = "rbtnNotPaid"
         Me.rbtnNotPaid.Size = New System.Drawing.Size(71, 17)
         Me.rbtnNotPaid.TabIndex = 17
@@ -99,7 +131,7 @@ Partial Class frmBudgetManagement
         'rbtnPaid
         '
         Me.rbtnPaid.AutoSize = True
-        Me.rbtnPaid.Location = New System.Drawing.Point(372, 40)
+        Me.rbtnPaid.Location = New System.Drawing.Point(6, 36)
         Me.rbtnPaid.Name = "rbtnPaid"
         Me.rbtnPaid.Size = New System.Drawing.Size(49, 17)
         Me.rbtnPaid.TabIndex = 16
@@ -173,7 +205,7 @@ Partial Class frmBudgetManagement
         Me.dtpTo.DropDownPressedColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
         Me.dtpTo.DropDownSelectedColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(237, Byte), Integer))
         Me.dtpTo.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpTo.Location = New System.Drawing.Point(236, 38)
+        Me.dtpTo.Location = New System.Drawing.Point(236, 47)
         Me.dtpTo.MetroColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
         Me.dtpTo.MinValue = New Date(CType(0, Long))
         Me.dtpTo.Name = "dtpTo"
@@ -252,7 +284,7 @@ Partial Class frmBudgetManagement
         Me.dtpFrom.DropDownPressedColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
         Me.dtpFrom.DropDownSelectedColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(237, Byte), Integer))
         Me.dtpFrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpFrom.Location = New System.Drawing.Point(236, 13)
+        Me.dtpFrom.Location = New System.Drawing.Point(236, 22)
         Me.dtpFrom.MetroColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
         Me.dtpFrom.MinValue = New Date(CType(0, Long))
         Me.dtpFrom.Name = "dtpFrom"
@@ -267,7 +299,7 @@ Partial Class frmBudgetManagement
         'btnAfter
         '
         Me.btnAfter.Font = New System.Drawing.Font("Arial", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAfter.Location = New System.Drawing.Point(315, 38)
+        Me.btnAfter.Location = New System.Drawing.Point(315, 47)
         Me.btnAfter.Name = "btnAfter"
         Me.btnAfter.Size = New System.Drawing.Size(23, 20)
         Me.btnAfter.TabIndex = 14
@@ -276,7 +308,7 @@ Partial Class frmBudgetManagement
         'btnBefore
         '
         Me.btnBefore.Font = New System.Drawing.Font("Arial", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnBefore.Location = New System.Drawing.Point(315, 13)
+        Me.btnBefore.Location = New System.Drawing.Point(315, 22)
         Me.btnBefore.Name = "btnBefore"
         Me.btnBefore.Size = New System.Drawing.Size(23, 20)
         Me.btnBefore.TabIndex = 13
@@ -286,40 +318,40 @@ Partial Class frmBudgetManagement
         '
         'lblMainIncomeAmount
         '
-        Me.lblMainIncomeAmount.Location = New System.Drawing.Point(638, 42)
+        Me.lblMainIncomeAmount.Location = New System.Drawing.Point(597, 51)
         Me.lblMainIncomeAmount.Name = "lblMainIncomeAmount"
         Me.lblMainIncomeAmount.Size = New System.Drawing.Size(107, 16)
         Me.lblMainIncomeAmount.TabIndex = 12
         Me.lblMainIncomeAmount.Text = "nothing"
         '
-        'lblMainIncomeDate
+        'lblIncomePeriodFrom
         '
-        Me.lblMainIncomeDate.Location = New System.Drawing.Point(638, 18)
-        Me.lblMainIncomeDate.Name = "lblMainIncomeDate"
-        Me.lblMainIncomeDate.Size = New System.Drawing.Size(111, 16)
-        Me.lblMainIncomeDate.TabIndex = 11
-        Me.lblMainIncomeDate.Text = "nothing"
+        Me.lblIncomePeriodFrom.Location = New System.Drawing.Point(597, 26)
+        Me.lblIncomePeriodFrom.Name = "lblIncomePeriodFrom"
+        Me.lblIncomePeriodFrom.Size = New System.Drawing.Size(62, 16)
+        Me.lblIncomePeriodFrom.TabIndex = 11
+        Me.lblIncomePeriodFrom.Text = "13-13-2015"
         '
         'lblMainIncomeAmount_text
         '
-        Me.lblMainIncomeAmount_text.Location = New System.Drawing.Point(484, 42)
+        Me.lblMainIncomeAmount_text.Location = New System.Drawing.Point(463, 51)
         Me.lblMainIncomeAmount_text.Name = "lblMainIncomeAmount_text"
-        Me.lblMainIncomeAmount_text.Size = New System.Drawing.Size(148, 16)
+        Me.lblMainIncomeAmount_text.Size = New System.Drawing.Size(129, 16)
         Me.lblMainIncomeAmount_text.TabIndex = 9
-        Me.lblMainIncomeAmount_text.Text = "Montant du revenu principal:"
+        Me.lblMainIncomeAmount_text.Text = "Revenu pour la période:"
         '
         'lblMainIncomeDate_text
         '
-        Me.lblMainIncomeDate_text.Location = New System.Drawing.Point(484, 17)
+        Me.lblMainIncomeDate_text.Location = New System.Drawing.Point(463, 26)
         Me.lblMainIncomeDate_text.Name = "lblMainIncomeDate_text"
-        Me.lblMainIncomeDate_text.Size = New System.Drawing.Size(148, 16)
+        Me.lblMainIncomeDate_text.Size = New System.Drawing.Size(129, 16)
         Me.lblMainIncomeDate_text.TabIndex = 8
-        Me.lblMainIncomeDate_text.Text = "Date du revenu principal:"
+        Me.lblMainIncomeDate_text.Text = "Période de paie:"
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(206, 43)
+        Me.Label2.Location = New System.Drawing.Point(206, 52)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(23, 13)
         Me.Label2.TabIndex = 7
@@ -328,7 +360,7 @@ Partial Class frmBudgetManagement
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(205, 18)
+        Me.Label1.Location = New System.Drawing.Point(205, 27)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(24, 13)
         Me.Label1.TabIndex = 5
@@ -337,7 +369,7 @@ Partial Class frmBudgetManagement
         'rbtnDeuxMois
         '
         Me.rbtnDeuxMois.AutoSize = True
-        Me.rbtnDeuxMois.Location = New System.Drawing.Point(112, 40)
+        Me.rbtnDeuxMois.Location = New System.Drawing.Point(112, 49)
         Me.rbtnDeuxMois.Name = "rbtnDeuxMois"
         Me.rbtnDeuxMois.Size = New System.Drawing.Size(71, 17)
         Me.rbtnDeuxMois.TabIndex = 4
@@ -347,7 +379,7 @@ Partial Class frmBudgetManagement
         'rbtnHebdo
         '
         Me.rbtnHebdo.AutoSize = True
-        Me.rbtnHebdo.Location = New System.Drawing.Point(12, 17)
+        Me.rbtnHebdo.Location = New System.Drawing.Point(12, 24)
         Me.rbtnHebdo.Name = "rbtnHebdo"
         Me.rbtnHebdo.Size = New System.Drawing.Size(94, 17)
         Me.rbtnHebdo.TabIndex = 3
@@ -357,7 +389,7 @@ Partial Class frmBudgetManagement
         'rbtnBiMensuel
         '
         Me.rbtnBiMensuel.AutoSize = True
-        Me.rbtnBiMensuel.Location = New System.Drawing.Point(12, 40)
+        Me.rbtnBiMensuel.Location = New System.Drawing.Point(12, 49)
         Me.rbtnBiMensuel.Name = "rbtnBiMensuel"
         Me.rbtnBiMensuel.Size = New System.Drawing.Size(81, 17)
         Me.rbtnBiMensuel.TabIndex = 2
@@ -367,41 +399,42 @@ Partial Class frmBudgetManagement
         'rbtnMensuelle
         '
         Me.rbtnMensuelle.AutoSize = True
-        Me.rbtnMensuelle.Location = New System.Drawing.Point(112, 17)
+        Me.rbtnMensuelle.Checked = True
+        Me.rbtnMensuelle.Location = New System.Drawing.Point(112, 24)
         Me.rbtnMensuelle.Name = "rbtnMensuelle"
         Me.rbtnMensuelle.Size = New System.Drawing.Size(73, 17)
         Me.rbtnMensuelle.TabIndex = 1
+        Me.rbtnMensuelle.TabStop = True
         Me.rbtnMensuelle.Text = "Mensuelle"
         Me.rbtnMensuelle.UseVisualStyleBackColor = True
         '
         'grdBudget
         '
-        Me.grdBudget.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        GridBaseStyle5.Name = "Header"
-        GridBaseStyle5.StyleInfo.Borders.Bottom = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
-        GridBaseStyle5.StyleInfo.Borders.Left = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
-        GridBaseStyle5.StyleInfo.Borders.Right = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
-        GridBaseStyle5.StyleInfo.Borders.Top = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
-        GridBaseStyle5.StyleInfo.CellType = "Header"
-        GridBaseStyle5.StyleInfo.Font.Bold = True
-        GridBaseStyle5.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Vertical, System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(184, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(234, Byte), Integer), CType(CType(216, Byte), Integer)))
-        GridBaseStyle5.StyleInfo.VerticalAlignment = Syncfusion.Windows.Forms.Grid.GridVerticalAlignment.Middle
-        GridBaseStyle6.Name = "Standard"
-        GridBaseStyle6.StyleInfo.Font.Facename = "Tahoma"
-        GridBaseStyle6.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(System.Drawing.SystemColors.Window)
-        GridBaseStyle7.Name = "Column Header"
-        GridBaseStyle7.StyleInfo.BaseStyle = "Header"
-        GridBaseStyle7.StyleInfo.HorizontalAlignment = Syncfusion.Windows.Forms.Grid.GridHorizontalAlignment.Center
-        GridBaseStyle8.Name = "Row Header"
-        GridBaseStyle8.StyleInfo.BaseStyle = "Header"
-        GridBaseStyle8.StyleInfo.HorizontalAlignment = Syncfusion.Windows.Forms.Grid.GridHorizontalAlignment.Left
-        GridBaseStyle8.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(184, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(234, Byte), Integer), CType(CType(216, Byte), Integer)))
-        Me.grdBudget.BaseStylesMap.AddRange(New Syncfusion.Windows.Forms.Grid.GridBaseStyle() {GridBaseStyle5, GridBaseStyle6, GridBaseStyle7, GridBaseStyle8})
+        Me.grdBudget.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        GridBaseStyle1.Name = "Header"
+        GridBaseStyle1.StyleInfo.Borders.Bottom = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
+        GridBaseStyle1.StyleInfo.Borders.Left = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
+        GridBaseStyle1.StyleInfo.Borders.Right = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
+        GridBaseStyle1.StyleInfo.Borders.Top = New Syncfusion.Windows.Forms.Grid.GridBorder(Syncfusion.Windows.Forms.Grid.GridBorderStyle.None)
+        GridBaseStyle1.StyleInfo.CellType = "Header"
+        GridBaseStyle1.StyleInfo.Font.Bold = True
+        GridBaseStyle1.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Vertical, System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(184, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(234, Byte), Integer), CType(CType(216, Byte), Integer)))
+        GridBaseStyle1.StyleInfo.VerticalAlignment = Syncfusion.Windows.Forms.Grid.GridVerticalAlignment.Middle
+        GridBaseStyle2.Name = "Standard"
+        GridBaseStyle2.StyleInfo.Font.Facename = "Tahoma"
+        GridBaseStyle2.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(System.Drawing.SystemColors.Window)
+        GridBaseStyle3.Name = "Column Header"
+        GridBaseStyle3.StyleInfo.BaseStyle = "Header"
+        GridBaseStyle3.StyleInfo.HorizontalAlignment = Syncfusion.Windows.Forms.Grid.GridHorizontalAlignment.Center
+        GridBaseStyle4.Name = "Row Header"
+        GridBaseStyle4.StyleInfo.BaseStyle = "Header"
+        GridBaseStyle4.StyleInfo.HorizontalAlignment = Syncfusion.Windows.Forms.Grid.GridHorizontalAlignment.Left
+        GridBaseStyle4.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(184, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(234, Byte), Integer), CType(CType(216, Byte), Integer)))
+        Me.grdBudget.BaseStylesMap.AddRange(New Syncfusion.Windows.Forms.Grid.GridBaseStyle() {GridBaseStyle1, GridBaseStyle2, GridBaseStyle3, GridBaseStyle4})
         Me.grdBudget.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.grdBudget.ColWidthEntries.AddRange(New Syncfusion.Windows.Forms.Grid.GridColWidth() {New Syncfusion.Windows.Forms.Grid.GridColWidth(0, 35)})
-        Me.grdBudget.Location = New System.Drawing.Point(4, 72)
+        Me.grdBudget.Location = New System.Drawing.Point(4, 86)
         Me.grdBudget.Name = "grdBudget"
         Me.grdBudget.RowHeightEntries.AddRange(New Syncfusion.Windows.Forms.Grid.GridRowHeight() {New Syncfusion.Windows.Forms.Grid.GridRowHeight(0, 25)})
         Me.grdBudget.SerializeCellsBehavior = Syncfusion.Windows.Forms.Grid.GridSerializeCellsBehavior.SerializeAsRangeStylesIntoCode
@@ -426,7 +459,7 @@ Partial Class frmBudgetManagement
         'btnPay
         '
         Me.btnPay.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnPay.Location = New System.Drawing.Point(649, 619)
+        Me.btnPay.Location = New System.Drawing.Point(649, 632)
         Me.btnPay.Name = "btnPay"
         Me.btnPay.Size = New System.Drawing.Size(75, 23)
         Me.btnPay.TabIndex = 11
@@ -439,7 +472,7 @@ Partial Class frmBudgetManagement
         Me.formController.FormIsLoading = False
         Me.formController.FormMode = DMS_Application.mConstants.Form_Mode.CONSULT_MODE
         Me.formController.Item_ID = 0
-        Me.formController.Location = New System.Drawing.Point(725, 614)
+        Me.formController.Location = New System.Drawing.Point(725, 627)
         Me.formController.Name = "formController"
         Me.formController.ShowButtonQuitOnly = True
         Me.formController.Size = New System.Drawing.Size(85, 33)
@@ -449,7 +482,7 @@ Partial Class frmBudgetManagement
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(810, 645)
+        Me.ClientSize = New System.Drawing.Size(810, 658)
         Me.Controls.Add(Me.btnPay)
         Me.Controls.Add(Me.btnRefresh)
         Me.Controls.Add(Me.grdBudget)
@@ -462,6 +495,8 @@ Partial Class frmBudgetManagement
         Me.Text = "Budget"
         Me.gbFilter.ResumeLayout(False)
         Me.gbFilter.PerformLayout()
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
         CType(Me.dtpTo.Calendar, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dtpTo, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dtpFrom.Calendar, System.ComponentModel.ISupportInitialize).EndInit()
@@ -482,7 +517,7 @@ Partial Class frmBudgetManagement
     Friend WithEvents lblMainIncomeDate_text As System.Windows.Forms.Label
     Friend WithEvents btnRefresh As System.Windows.Forms.Button
     Friend WithEvents lblMainIncomeAmount_text As System.Windows.Forms.Label
-    Friend WithEvents lblMainIncomeDate As System.Windows.Forms.Label
+    Friend WithEvents lblIncomePeriodFrom As System.Windows.Forms.Label
     Friend WithEvents lblMainIncomeAmount As System.Windows.Forms.Label
     Friend WithEvents btnAfter As System.Windows.Forms.Button
     Friend WithEvents btnBefore As System.Windows.Forms.Button
@@ -491,5 +526,8 @@ Partial Class frmBudgetManagement
     Friend WithEvents btnPay As System.Windows.Forms.Button
     Friend WithEvents rbtnNotPaid As System.Windows.Forms.RadioButton
     Friend WithEvents rbtnPaid As System.Windows.Forms.RadioButton
+    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+    Friend WithEvents lblIncomePeriodTo As System.Windows.Forms.Label
+    Friend WithEvents Label3 As System.Windows.Forms.Label
 
 End Class
