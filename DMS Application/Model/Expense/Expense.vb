@@ -121,8 +121,8 @@
                     Case SQLController.bln_RefreshFields
                     Case SQLController.bln_AddField("Exp_Name", _strName, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
                     Case SQLController.bln_AddField("Exp_BillingDate", _dtBillingDate, MySQLController.MySQL_FieldTypes.DATETIME_TYPE)
-                    Case SQLController.bln_AddField("Exp_Amount", _dblAmount, MySQLController.MySQL_FieldTypes.DOUBLE_TYPE)
-                    Case SQLController.bln_AddField("ExpT_ID", mcExpenseType.ID, MySQLController.MySQL_FieldTypes.DOUBLE_TYPE)
+                    Case SQLController.bln_AddField("Exp_Amount", _dblAmount, MySQLController.MySQL_FieldTypes.DECIMAL_TYPE)
+                    Case SQLController.bln_AddField("ExpT_ID", mcExpenseType.ID, MySQLController.MySQL_FieldTypes.DECIMAL_TYPE)
                     Case SQLController.bln_AddField("Per_ID", CInt(_period_ID), MySQLController.MySQL_FieldTypes.ID_TYPE)
                     Case SQLController.bln_AddField("Exp_Fixed", _fixed, MySQLController.MySQL_FieldTypes.BIT_TYPE)
                     Case Else

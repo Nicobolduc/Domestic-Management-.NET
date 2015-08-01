@@ -10,6 +10,7 @@ Public Class SyncfusionGridController
     Private Const mintDefaultActionCol As Short = 1
     Private Const mstrSelectionColName As String = "SelCol"
     Private mintPreviousCellChangedRow As Integer
+    Private mstrUndeterminedCheckBoxState As String = "TO_DEFINE"
 
     'Private class members
     Private WithEvents mGrdSync As GridControl
@@ -117,6 +118,12 @@ Public Class SyncfusionGridController
                 End If
             End If
         End Set
+    End Property
+
+    Public ReadOnly Property GetUndeterminedCheckBoxState As String
+        Get
+            Return mstrUndeterminedCheckBoxState
+        End Get
     End Property
 
 #End Region
@@ -359,14 +366,8 @@ Public Class SyncfusionGridController
 
         Try
             mGrdSync.ColStyles(vintColumnIndex).CellType = "CheckBox"
-
-            If vblnAllowTriStates Then
-                mGrdSync.ColStyles(vintColumnIndex).CheckBoxOptions = New GridCheckBoxCellInfo(True.ToString(), False.ToString(), "2", False)
-            Else
-                mGrdSync.ColStyles(vintColumnIndex).CheckBoxOptions = New GridCheckBoxCellInfo(True.ToString(), False.ToString(), String.Empty, False)
-            End If
-
-            mGrdSync.ColStyles(vintColumnIndex).CellValueType = GetType(Boolean)
+            mGrdSync.ColStyles(vintColumnIndex).CheckBoxOptions = New GridCheckBoxCellInfo(True.ToString(), False.ToString(), mstrUndeterminedCheckBoxState, False)
+            mGrdSync.ColStyles(vintColumnIndex).TriState = vblnAllowTriStates
 
             blnValidReturn = True
 

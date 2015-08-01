@@ -55,8 +55,26 @@ Public NotInheritable Class AppController
 
     Public ReadOnly Property str_GetPCDateTimeFormat As String
         Get
-            Return "mm/dd/yyyy"
-            'Return System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern & " " & System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortTimePattern
+            'Return "mm/dd/yyyy"
+            Return System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern & " " & System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortTimePattern
+        End Get
+    End Property
+
+    Public ReadOnly Property str_GetServerTimeFormat As String
+        Get
+            Return "HH:mm:ss"
+        End Get
+    End Property
+
+    Public ReadOnly Property str_GetServerDateFormat() As String
+        Get
+            Return "yyyy-MM-dd"
+        End Get
+    End Property
+
+    Public ReadOnly Property str_GetServerDateTimeFormat() As String
+        Get
+            Return "yyyy-MM-dd HH:mm:ss"
         End Get
     End Property
 
@@ -90,8 +108,8 @@ Public NotInheritable Class AppController
 
         mcMySQLConnection = New MySqlConnection
 
-        'mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.107;Port=3306;userid=Nicolas;password=nicolas;database=dms_tests"
-        mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests" 'MultipleActiveResultSets=true
+        mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.107;Port=3306;userid=Nicolas;password=nicolas;database=dms_tests"
+        'mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests" 'MultipleActiveResultSets=true
 
         Try
             mcMySQLConnection.Open()
@@ -109,19 +127,6 @@ Public NotInheritable Class AppController
         End Try
 
         Return blnValidReturn
-    End Function
-
-    Public Function str_GetServerDateTimeFormat() As String
-        Dim strFormat As String = String.Empty
-
-        Try
-            strFormat = "yyyy-MM-dd hh:mm:ss"
-
-        Catch ex As MySqlException
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
-
-        Return strFormat
     End Function
 
     Public Function bln_CTLBindCaption(ByRef rControl As System.Windows.Forms.Control) As Boolean

@@ -134,6 +134,7 @@
     <Compile Include="Controller\Model Controllers\ProductController.vb" />
     <Compile Include="Model\BaseModel.vb" />
     <Compile Include="Model\Company.vb" />
+    <Compile Include="Model\Expense\PaidExpense.vb" />
     <Compile Include="Model\Income.vb" />
     <Compile Include="Model\Expense\Expense.vb" />
     <Compile Include="Model\Product\ProductBrand.vb" />

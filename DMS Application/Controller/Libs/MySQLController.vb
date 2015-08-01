@@ -13,7 +13,7 @@ Public Class MySQLController
     Public Enum MySQL_FieldTypes
         BIT_TYPE = 0
         INT_TYPE = 1
-        DOUBLE_TYPE = 2
+        DECIMAL_TYPE = 2
         VARCHAR_TYPE = 3
         DATETIME_TYPE = 4
         ID_TYPE = 5
@@ -175,7 +175,7 @@ Public Class MySQLController
                         vstrValue = Format(CDate(vstrValue), gcAppController.str_GetServerDateTimeFormat)
                         vstrValue = gcAppController.str_FixStringForSQL(vstrValue)
 
-                    Case MySQLController.MySQL_FieldTypes.DOUBLE_TYPE, MySQLController.MySQL_FieldTypes.INT_TYPE
+                    Case MySQLController.MySQL_FieldTypes.DECIMAL_TYPE, MySQLController.MySQL_FieldTypes.INT_TYPE
                         vstrValue = vstrValue.ToString
 
                     Case MySQLController.MySQL_FieldTypes.ID_TYPE
