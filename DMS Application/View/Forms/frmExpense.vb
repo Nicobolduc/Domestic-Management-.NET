@@ -25,7 +25,7 @@
                 If Not mcExpenseModel.BillingDate Is Nothing Then
 
                     dtpBillDate.Checked = True
-                    dtpBillDate.Value = CDate(Format(AppController.GetAppController.str_GetPCDateFormat, mcExpenseModel.BillingDate.Value.ToString))
+                    dtpBillDate.Value = CDate(Format(mcExpenseModel.BillingDate, AppController.GetAppController.str_GetPCDateFormat))
                 Else
                     dtpBillDate.Checked = False
                 End If
@@ -128,7 +128,7 @@
 
             If Not IsDBNull(dtpBillDate.Value) And dtpBillDate.Checked Then
 
-                mcExpenseModel.BillingDate = dtpBillDate.Value
+                mcExpenseModel.BillingDate = gcAppController.str_SetDateToMidnightServerFormat(dtpBillDate.Value)
             Else
                 mcExpenseModel.BillingDate = Nothing
             End If
@@ -201,8 +201,12 @@
                 cboInterval.Focus()
 
             Case Else
-                eventArgs.IsValid = True
+                If formController.FormMode = Form_Mode.DELETE_MODE Then
 
+                    eventArgs.IsValid = MySQLController.bln_CheckReferenceIntegrity("Expense", "Exp_ID", formController.Item_ID)
+                Else
+                    eventArgs.IsValid = True
+                End If
         End Select
     End Sub
 

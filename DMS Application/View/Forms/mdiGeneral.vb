@@ -48,9 +48,6 @@
 
         frmGestionBudget.MdiParent = Me
 
-        frmGestionBudget.Width = 1024
-        frmGestionBudget.Height = 768
-
         frmGestionBudget.formController.ShowForm(mConstants.Form_Mode.UPDATE_MODE)
     End Sub
 

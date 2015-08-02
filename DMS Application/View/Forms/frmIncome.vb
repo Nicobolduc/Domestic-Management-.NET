@@ -23,7 +23,7 @@
                 If Not mcIncomeModel.ReceptionDate Is Nothing Then
 
                     dtpPayDate.Checked = True
-                    dtpPayDate.Value = CDate(Format(AppController.GetAppController.str_GetPCDateFormat, mcIncomeModel.ReceptionDate.Value.ToString))
+                    dtpPayDate.Value = CDate(Format(mcIncomeModel.ReceptionDate.Value, AppController.GetAppController.str_GetPCDateFormat))
                 Else
                     dtpPayDate.Checked = False
                 End If
@@ -104,7 +104,7 @@
 
             If Not IsDBNull(dtpPayDate.Value) And dtpPayDate.Checked Then
 
-                mcIncomeModel.ReceptionDate = dtpPayDate.Value
+                mcIncomeModel.ReceptionDate = gcAppController.str_SetDateToMidnightServerFormat(dtpPayDate.Value)
             Else
                 mcIncomeModel.ReceptionDate = Nothing
             End If

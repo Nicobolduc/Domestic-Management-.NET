@@ -18,6 +18,7 @@ Public Module mConstants
 
     Public Enum Error_Message
         ERROR_SAVE_MSG = 5
+        ERROR_DELETE_MSG = 19
     End Enum
 
     Public Enum Validation_Message

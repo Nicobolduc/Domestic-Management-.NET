@@ -1,6 +1,8 @@
 ﻿Public Class frmBudgetManagement
 
     'Private members
+
+    'GrdBudget grid
     Private mintGrdBudget_Action_col As Short = 1
     Private mintGrdBudget_Exp_ID_col As Short = 2
     Private mintGrdBudget_NextIncomeDateToUse_col As Short = 3
@@ -302,7 +304,7 @@
         End If
     End Sub
 
-    Private Sub btnRefresh_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnRefresh.Click
+    Private Sub btnRefresh_Click() Handles btnRefresh.Click
         Me.Cursor = Windows.Forms.Cursors.WaitCursor
         blnGrdBudget_Load()
         Me.Cursor = Windows.Forms.Cursors.Default
@@ -357,6 +359,8 @@
     Private Sub rbtnNotPaid_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnNotPaid.CheckedChanged
 
         btnPay.Enabled = rbtnNotPaid.Checked
+
+        btnRefresh.SetToRefresh = True
     End Sub
 
     Private Sub grdBudget_CellDoubleClick(sender As Object, e As EventArgs) Handles grdBudget.CellDoubleClick
@@ -384,6 +388,29 @@
 
     Private Sub btnUnselectAll_Click(sender As Object, e As System.EventArgs) Handles btnUnselectAll.Click
         CheckUncheckAll(False, True)
+    End Sub
+
+    Private Sub dtpFrom_ValueChanged(sender As Object, e As EventArgs) Handles dtpFrom.ValueChanged, dtpTo.ValueChanged
+        If dtpFrom.Value > dtpTo.Value Then
+            dtpTo.Value = DateAdd(DateInterval.Day, 7, dtpFrom.Value)
+        End If
+        If formController.FormIsLoading Then
+
+        End If
+        btnRefresh.SetToRefresh = True
+    End Sub
+
+    Private Sub rbtnAll_CheckedChanged(sender As Object, e As EventArgs) Handles rbtnAll.CheckedChanged
+
+        If rbtnAll.IsHandleCreated Then
+
+            btnRefresh.SetToRefresh = True
+
+        End If
+    End Sub
+
+    Private Sub rbtnPaid_CheckedChanged(sender As Object, e As EventArgs) Handles rbtnPaid.CheckedChanged
+        btnRefresh.SetToRefresh = True
     End Sub
 
 #End Region
