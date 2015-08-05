@@ -214,6 +214,8 @@ Public Class SyncfusionGridController
 
             mGrdSync.Model.PopulateValues(GridRangeInfo.Cells(1, 1, myDataTable.Rows.Count, myDataTable.Columns.Count), dataTableArray)
 
+            mySQLReader.Dispose()
+
             blnValidReturn = blnSetColsDisplay()
 
             RaiseEvent SetDisplay()

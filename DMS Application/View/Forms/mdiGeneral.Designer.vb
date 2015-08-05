@@ -32,6 +32,8 @@ Partial Class mdiGeneral
         Me.mnuFinance = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiExpense = New System.Windows.Forms.ToolStripMenuItem()
         Me.TypeDeDépenseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.RevenuToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuProduit = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiProducts = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuiProductType = New System.Windows.Forms.ToolStripMenuItem()
@@ -44,8 +46,7 @@ Partial Class mdiGeneral
         Me.statusBar = New System.Windows.Forms.StatusStrip()
         Me.lblStatusUser = New System.Windows.Forms.ToolStripStatusLabel()
         Me.lblStatusBD = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.RevenuToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RepasToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuMain.SuspendLayout()
         Me.statusBar.SuspendLayout()
         Me.SuspendLayout()
@@ -75,7 +76,7 @@ Partial Class mdiGeneral
         '
         'mnuGestion
         '
-        Me.mnuGestion.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuiBudget, Me.mnuiGrocery})
+        Me.mnuGestion.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuiBudget, Me.mnuiGrocery, Me.RepasToolStripMenuItem})
         Me.mnuGestion.Name = "mnuGestion"
         Me.mnuGestion.Size = New System.Drawing.Size(59, 20)
         Me.mnuGestion.Text = "Gestion"
@@ -83,13 +84,13 @@ Partial Class mdiGeneral
         'mnuiBudget
         '
         Me.mnuiBudget.Name = "mnuiBudget"
-        Me.mnuiBudget.Size = New System.Drawing.Size(115, 22)
+        Me.mnuiBudget.Size = New System.Drawing.Size(152, 22)
         Me.mnuiBudget.Text = "Budget"
         '
         'mnuiGrocery
         '
         Me.mnuiGrocery.Name = "mnuiGrocery"
-        Me.mnuiGrocery.Size = New System.Drawing.Size(115, 22)
+        Me.mnuiGrocery.Size = New System.Drawing.Size(152, 22)
         Me.mnuiGrocery.Text = "Épicerie"
         '
         'mnuFinance
@@ -110,6 +111,17 @@ Partial Class mdiGeneral
         Me.TypeDeDépenseToolStripMenuItem.Name = "TypeDeDépenseToolStripMenuItem"
         Me.TypeDeDépenseToolStripMenuItem.Size = New System.Drawing.Size(163, 22)
         Me.TypeDeDépenseToolStripMenuItem.Text = "Type de dépense"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(160, 6)
+        '
+        'RevenuToolStripMenuItem
+        '
+        Me.RevenuToolStripMenuItem.Name = "RevenuToolStripMenuItem"
+        Me.RevenuToolStripMenuItem.Size = New System.Drawing.Size(163, 22)
+        Me.RevenuToolStripMenuItem.Text = "Revenu"
         '
         'mnuProduit
         '
@@ -192,16 +204,11 @@ Partial Class mdiGeneral
         Me.lblStatusBD.Size = New System.Drawing.Size(30, 20)
         Me.lblStatusBD.Text = "BD:"
         '
-        'ToolStripSeparator1
+        'RepasToolStripMenuItem
         '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(160, 6)
-        '
-        'RevenuToolStripMenuItem
-        '
-        Me.RevenuToolStripMenuItem.Name = "RevenuToolStripMenuItem"
-        Me.RevenuToolStripMenuItem.Size = New System.Drawing.Size(163, 22)
-        Me.RevenuToolStripMenuItem.Text = "Revenu"
+        Me.RepasToolStripMenuItem.Name = "RepasToolStripMenuItem"
+        Me.RepasToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.RepasToolStripMenuItem.Text = "Repas"
         '
         'mdiGeneral
         '
@@ -247,4 +254,5 @@ Partial Class mdiGeneral
     Friend WithEvents TypeDeDépenseToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents RevenuToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents RepasToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 End Class

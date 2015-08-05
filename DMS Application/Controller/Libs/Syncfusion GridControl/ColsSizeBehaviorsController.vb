@@ -3,6 +3,7 @@
     Private grdSync As GridControlBase = Nothing
     Private _colsSizeBehavior As colsSizeBehaviors
     Private colRatios() As Double = Nothing
+    Private colsSize() As Double = Nothing
     Private blnLastColWidthChanged As Boolean
 
     Public Enum colsSizeBehaviors
@@ -25,26 +26,30 @@
     Protected Friend Sub AttachGrid(ByVal grid As GridControlBase)
         Dim dblGridWidth As Double
 
-        If Me.grdSync IsNot grid Then
-            If Me.grdSync IsNot Nothing Then
+        If grdSync IsNot grid Then
+            If grdSync IsNot Nothing Then
                 DetachGrid()
             End If
 
-            Me.grdSync = grid
+            grdSync = grid
 
-            dblGridWidth = Me.grdSync.ClientSize.Width
+            dblGridWidth = grdSync.Width - grdSync.GetColWidth(0) + 4
 
             If TypeOf grid Is GridDataBoundGrid Then
-                CType(Me.grdSync, GridDataBoundGrid).SmoothControlResize = False
+                CType(grdSync, GridDataBoundGrid).SmoothControlResize = False
             ElseIf TypeOf grid Is GridControl Then
-                CType(Me.grdSync, GridControl).SmoothControlResize = False
+                CType(grdSync, GridControl).SmoothControlResize = False
             End If
 
             'Save original col ratios
-            colRatios = New Double(Me.grdSync.Model.ColCount) {}
+            'colRatios = New Double(grdSync.Model.ColCount) {}
+            colsSize = New Double(grdSync.Model.ColCount) {}
 
-            For col As Integer = 0 To Me.grdSync.Model.ColCount
-                colRatios(col) = Me.grdSync.Model.ColWidths(col) / dblGridWidth
+            colsSize(0) = grdSync.GetColWidth(0)
+
+            For col As Integer = 1 To grdSync.Model.ColCount
+                'colRatios(col) = grdSync.Model.ColWidths(col) / dblGridWidth
+                colsSize(col) = dblGridWidth / grdSync.Model.ColCount - 1
             Next col
 
             AddHandler grid.Model.QueryColWidth, AddressOf grid_QueryColWidth
@@ -58,16 +63,16 @@
         RemoveHandler grdSync.Model.ColWidthsChanged, AddressOf grid_ColWidthsChanged
         RemoveHandler grdSync.ResizingColumns, AddressOf grid_ResizingColumns
 
-        Me.grdSync = Nothing
+        grdSync = Nothing
     End Sub
 
     Private Sub grid_ResizingColumns(ByVal sender As Object, ByVal e As GridResizingColumnsEventArgs)
 
         If _colsSizeBehavior = colsSizeBehaviors.ALL_COLS_EQUALS Then
             e.Cancel = True
-        ElseIf _colsSizeBehavior = colsSizeBehaviors.EXTEND_LAST_COL AndAlso e.Columns.Right = Me.grdSync.Model.ColCount Then
+        ElseIf _colsSizeBehavior = colsSizeBehaviors.EXTEND_LAST_COL AndAlso e.Columns.Right = grdSync.Model.ColCount Then
             e.Cancel = True
-        ElseIf _colsSizeBehavior = colsSizeBehaviors.EXTEND_FIRST_COL AndAlso e.Columns.Left = Me.grdSync.Model.Cols.HeaderCount + 1 Then
+        ElseIf _colsSizeBehavior = colsSizeBehaviors.EXTEND_FIRST_COL AndAlso e.Columns.Left = grdSync.Model.Cols.HeaderCount + 1 Then
             e.Cancel = True
         End If
     End Sub
@@ -76,16 +81,16 @@
 
         Select Case _colsSizeBehavior
             Case colsSizeBehaviors.EXTEND_LAST_COL
-                If e.Index = Me.grdSync.Model.ColCount Then
-                    e.Size = Me.grdSync.ClientSize.Width - Me.grdSync.Model.ColWidths.GetTotal(0, Me.grdSync.Model.ColCount - 1)
+                If e.Index = grdSync.Model.ColCount Then
+                    e.Size = grdSync.ClientSize.Width - grdSync.Model.ColWidths.GetTotal(0, grdSync.Model.ColCount - 1)
                     e.Handled = True
                 End If
 
             Case colsSizeBehaviors.EXTEND_FIRST_COL
-                If e.Index = Me.grdSync.Model.Cols.FrozenCount + 1 Then
-                    Dim leftPiece As Integer = Me.grdSync.Model.ColWidths.GetTotal(0, Me.grdSync.Model.Cols.FrozenCount)
-                    Dim rightPiece As Integer = Me.grdSync.Model.ColWidths.GetTotal(Me.grdSync.Model.Cols.FrozenCount + 2, Me.grdSync.Model.ColCount)
-                    e.Size = Me.grdSync.ClientSize.Width - leftPiece - rightPiece
+                If e.Index = grdSync.Model.Cols.FrozenCount + 1 Then
+                    Dim leftPiece As Integer = grdSync.Model.ColWidths.GetTotal(0, grdSync.Model.Cols.FrozenCount)
+                    Dim rightPiece As Integer = grdSync.Model.ColWidths.GetTotal(grdSync.Model.Cols.FrozenCount + 2, grdSync.Model.ColCount)
+                    e.Size = grdSync.ClientSize.Width - leftPiece - rightPiece
                     e.Handled = True
                 End If
                 '				case GridColSizeBehavior.FixedProportional:
@@ -101,10 +106,15 @@
                 '					break;
 
             Case colsSizeBehaviors.ALL_COLS_EQUALS
-                If e.Index = Me.grdSync.Model.ColCount Then
-                    e.Size = Me.grdSync.ClientSize.Width - Me.grdSync.Model.ColWidths.GetTotal(0, Me.grdSync.Model.ColCount - 1)
+                'If e.Index = grdSync.Model.ColCount Then
+                '    e.Size = grdSync.ClientSize.Width - grdSync.Model.ColWidths.GetTotal(0, grdSync.Model.ColCount - 1)
+                'Else
+                '    e.Size = CInt(Fix(colRatios(e.Index) * (grdSync.ClientSize.Width)))
+                'End If
+                If e.Index <> 0 Then
+                    e.Size = CInt(Fix(colsSize(e.Index)))
                 Else
-                    e.Size = CInt(Fix(Me.colRatios(e.Index) * Me.grdSync.ClientSize.Width))
+                    e.Size = CInt(Fix(colsSize(e.Index)))
                 End If
 
                 e.Handled = True
@@ -114,19 +124,19 @@
     End Sub
 
     Private Sub grid_ColWidthsChanged(ByVal sender As Object, ByVal e As GridRowColSizeChangedEventArgs)
-        Dim dWidth As Double = Me.grdSync.ClientSize.Width
+        Dim dWidth As Double = grdSync.ClientSize.Width
 
-        If Me.blnLastColWidthChanged Then
+        If blnLastColWidthChanged Then
             Return
         End If
 
         blnLastColWidthChanged = True
 
-        If Me._colsSizeBehavior <> colsSizeBehaviors.ALL_COLS_EQUALS Then
-            Me.colRatios = New Double(Me.grdSync.Model.ColCount) {}
+        If _colsSizeBehavior <> colsSizeBehaviors.ALL_COLS_EQUALS Then
+            colRatios = New Double(grdSync.Model.ColCount) {}
 
-            For col As Integer = 0 To Me.grdSync.Model.ColCount
-                Me.colRatios(col) = Me.grdSync.Model.ColWidths(col) / dWidth
+            For col As Integer = 0 To grdSync.Model.ColCount
+                colRatios(col) = grdSync.Model.ColWidths(col) / dWidth
             Next col
         End If
 

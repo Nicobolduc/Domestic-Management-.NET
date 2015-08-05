@@ -87,6 +87,14 @@
         mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.INCOME_LIST_ID)
     End Sub
 
+    Private Sub RepasToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RepasToolStripMenuItem.Click
+        Dim frmMealManagement As New frmMealManagement
+
+        frmMealManagement.MdiParent = Me
+
+        frmMealManagement.formController.ShowForm(mConstants.Form_Mode.UPDATE_MODE)
+    End Sub
+
 #End Region
 
     Private Sub TestsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestsToolStripMenuItem.Click
@@ -94,6 +102,5 @@
 
         test.Show()
     End Sub
-
 
 End Class
