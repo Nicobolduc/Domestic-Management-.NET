@@ -132,18 +132,15 @@ Public Class frmProduct
                 strSQL = strSQL & " FROM ProductBrand " & vbCrLf
                 strSQL = strSQL & " ORDER BY ProductBrand.ProB_Name " & vbCrLf
 
-                blnValidReturn = mcGrdPricesController.blnSetColType_ComboBox(strSQL, mintGrdPrices_ProB_Name_col, "ProB_ID", "ProB_Name", False)
+                mcGrdPricesController.SetColType_ComboBox(strSQL, mintGrdPrices_ProB_Name_col, "ProB_ID", "ProB_Name", False)
 
-                If blnValidReturn Then
+                strSQL = String.Empty
+                strSQL = strSQL & " SELECT Company.Cy_ID, " & vbCrLf
+                strSQL = strSQL & "        Company.Cy_Name " & vbCrLf
+                strSQL = strSQL & " FROM Company " & vbCrLf
+                strSQL = strSQL & " ORDER BY Company.Cy_Name " & vbCrLf
 
-                    strSQL = String.Empty
-                    strSQL = strSQL & " SELECT Company.Cy_ID, " & vbCrLf
-                    strSQL = strSQL & "        Company.Cy_Name " & vbCrLf
-                    strSQL = strSQL & " FROM Company " & vbCrLf
-                    strSQL = strSQL & " ORDER BY Company.Cy_Name " & vbCrLf
-
-                    blnValidReturn = mcGrdPricesController.blnSetColType_ComboBox(strSQL, mintGrdPrices_Cy_Seller_Name_col, "Cy_ID", "Cy_Name", False)
-                End If
+                mcGrdPricesController.SetColType_ComboBox(strSQL, mintGrdPrices_Cy_Seller_Name_col, "Cy_ID", "Cy_Name", False)
             End If
 
         Catch ex As Exception

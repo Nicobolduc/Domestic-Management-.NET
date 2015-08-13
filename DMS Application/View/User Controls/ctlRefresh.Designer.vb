@@ -26,6 +26,7 @@ Partial Class ctlRefresh
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ctlRefresh))
         Me.tmrBlink = New System.Windows.Forms.Timer(Me.components)
         Me.btnRefresh = New System.Windows.Forms.Button()
+        Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.SuspendLayout()
         '
         'tmrBlink
@@ -41,6 +42,7 @@ Partial Class ctlRefresh
         Me.btnRefresh.Name = "btnRefresh"
         Me.btnRefresh.Size = New System.Drawing.Size(40, 40)
         Me.btnRefresh.TabIndex = 11
+        Me.ToolTip.SetToolTip(Me.btnRefresh, "Rafraichir")
         Me.btnRefresh.UseVisualStyleBackColor = True
         '
         'ctlRefresh
@@ -55,5 +57,6 @@ Partial Class ctlRefresh
     End Sub
     Friend WithEvents btnRefresh As System.Windows.Forms.Button
     Friend WithEvents tmrBlink As System.Windows.Forms.Timer
+    Friend WithEvents ToolTip As System.Windows.Forms.ToolTip
 
 End Class

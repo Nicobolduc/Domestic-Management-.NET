@@ -41,5 +41,18 @@
 
 #End Region
 
+    Private Function X() As Boolean
+        Dim blnValidReturn As Boolean
+
+        Try
+
+        Catch ex As Exception
+            blnValidReturn = False
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnValidReturn
+    End Function
+
 
 End Class

@@ -36,10 +36,10 @@
             If strMainIncome <> String.Empty Then
 
                 dtpFrom.Value = Date.Today
-                dtpFrom.CustomFormat = gcAppController.str_GetPCDateFormat
+                dtpFrom.CustomFormat = gcAppController.str_GetUserDateFormat
 
                 dtpTo.Value = DateAdd(DateInterval.Month, 1, Date.Today)
-                dtpTo.CustomFormat = gcAppController.str_GetPCDateFormat
+                dtpTo.CustomFormat = gcAppController.str_GetUserDateFormat
 
                 blnValidReturn = True
             Else
@@ -110,13 +110,13 @@
         Try
             grdBudget.Rows.InsertRange(vintRowIndexToAdd, 1)
 
-            grdBudget.RowStyles(vintRowIndexToAdd).CellType = "Default"
+            'grdBudget.RowStyles(vintRowIndexToAdd).CellType = "Default"
             grdBudget.RowStyles(vintRowIndexToAdd).Borders.Bottom = newRowBorders
 
             grdBudget(vintRowIndexToAdd, mintGrdBudget_Action_col).CellValue = SyncfusionGridController.GridRowActions.NO_ACTION
 
             grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).Borders.All = newRowBorders
-            grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).HorizontalAlignment = GridHorizontalAlignment.Right
+            'grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).HorizontalAlignment = GridHorizontalAlignment.Right
             'grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellValueType = GetType(String)
             'grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellType = GridCellTypeName.FormulaCell
             'grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).Text = "=B4"
@@ -128,13 +128,13 @@
 
             grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellValue = dblPeriodTotal
 
-            For intColIdx As Short = 1 To CShort(grdBudget.ColCount)
+            'For intColIdx As Short = 1 To CShort(grdBudget.ColCount)
 
-                grdBudget(vintRowIndexToAdd, intColIdx).ReadOnly = True
-            Next
+            '    grdBudget(vintRowIndexToAdd, intColIdx).ReadOnly = True
+            'Next
 
             rintLastRowAddedIndex = vintRowIndexToAdd + 1
-
+            'grdBudget(vintRowIndexToAdd, -1) = grdBudget(vintRowIndexToAdd - 1, -1)
         Catch ex As Exception
             blnValidReturn = False
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
@@ -228,16 +228,16 @@
         grdBudget.ColWidths(mintGrdBudget_PExp_Comment_col) = 185
         grdBudget.ColWidths(mintGrdBudget_Sel_col) = 50
 
-        mcGridBudgetController.blnSetColType_CheckBox(mintGrdBudget_Sel_col, True)
+        mcGridBudgetController.SetColType_CheckBox(mintGrdBudget_Sel_col, True)
 
-        mcGridBudgetController.blnSetColType_DateTimePicker(mintGrdBudget_PExp_DatePaid_col, True)
+        mcGridBudgetController.SetColType_DateTimePicker(mintGrdBudget_PExp_DatePaid_col, True)
 
         grdBudget.ColStyles(mintGrdBudget_Exp_Amount_col).CellValueType = GetType(Double)
         grdBudget.ColStyles(mintGrdBudget_PExp_AmountPaid_col).CellValueType = GetType(Double)
         grdBudget.ColStyles(mintGrdBudget_Exp_NextBillingDate_col).CellValueType = GetType(Date)
 
-        grdBudget.ColStyles(mintGrdBudget_Exp_NextBillingDate_col).Format = gcAppController.str_GetPCDateFormat
-        grdBudget.ColStyles(mintGrdBudget_NextIncomeDateToUse_col).Format = gcAppController.str_GetPCDateFormat
+        grdBudget.ColStyles(mintGrdBudget_Exp_NextBillingDate_col).Format = gcAppController.str_GetUserDateFormat
+        grdBudget.ColStyles(mintGrdBudget_NextIncomeDateToUse_col).Format = gcAppController.str_GetUserDateFormat
         grdBudget.ColStyles(mintGrdBudget_Exp_Amount_col).Format = mConstants.DataFormat.CURRENCY
         grdBudget.ColStyles(mintGrdBudget_PExp_AmountPaid_col).Format = mConstants.DataFormat.CURRENCY
 
@@ -259,28 +259,28 @@
 
     Private Sub rbtnBiMensuel_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnBiMensuel.CheckedChanged
         If rbtnBiMensuel.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetPCDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetUserDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Day, 14, dtpFrom.Value)
         End If
     End Sub
 
     Private Sub rbtnMensuelle_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnMensuelle.CheckedChanged
         If rbtnMensuelle.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetPCDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetUserDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Month, 1, dtpFrom.Value)
         End If
     End Sub
 
     Private Sub rbtnDeuxMois_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnDeuxMois.CheckedChanged
         If rbtnDeuxMois.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetPCDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetUserDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Month, 2, dtpFrom.Value)
         End If
     End Sub
 
     Private Sub rbtnHebdo_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnHebdo.CheckedChanged
         If rbtnHebdo.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetPCDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetUserDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Day, 7, dtpFrom.Value)
         End If
     End Sub

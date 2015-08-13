@@ -352,7 +352,7 @@ Public Class test
         grdSync_2.CellModels.Add("DateTimePicker", New DateTimePickerCell.DateTimePickerCellModel(grdSync_2.Model, False))
         grdSync_2.ColStyles(1).CellType = "DateTimePicker"
         grdSync_2.ColStyles(1).CellValueType = GetType(DateTime)
-        grdSync_2.ColStyles(1).Format = gcAppController.str_GetPCDateFormat
+        grdSync_2.ColStyles(1).Format = gcAppController.str_GetUserDateFormat
         grdSync_2(2, 1).CellValue = DateTime.Now
 
     End Sub

@@ -30,7 +30,8 @@ Partial Class frmMealManagement
         Me.grdMeals = New Syncfusion.Windows.Forms.Grid.GridControl()
         Me.lblDate = New System.Windows.Forms.Label()
         Me.btnLeft = New System.Windows.Forms.Button()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.btnRight = New System.Windows.Forms.Button()
+        Me.btnToday = New System.Windows.Forms.Button()
         Me.formController = New DMS_Application.ctlFormController()
         CType(Me.grdMeals, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -58,9 +59,7 @@ Partial Class frmMealManagement
         GridBaseStyle4.StyleInfo.Interior = New Syncfusion.Drawing.BrushInfo(Syncfusion.Drawing.GradientStyle.Horizontal, System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(199, Byte), Integer), CType(CType(184, Byte), Integer)), System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(234, Byte), Integer), CType(CType(216, Byte), Integer)))
         Me.grdMeals.BaseStylesMap.AddRange(New Syncfusion.Windows.Forms.Grid.GridBaseStyle() {GridBaseStyle1, GridBaseStyle2, GridBaseStyle3, GridBaseStyle4})
         Me.grdMeals.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.grdMeals.ColorStyles = Syncfusion.Windows.Forms.ColorStyles.Office2010Blue
         Me.grdMeals.ColWidthEntries.AddRange(New Syncfusion.Windows.Forms.Grid.GridColWidth() {New Syncfusion.Windows.Forms.Grid.GridColWidth(0, 35)})
-        Me.grdMeals.GridVisualStyles = Syncfusion.Windows.Forms.GridVisualStyles.Office2010Blue
         Me.grdMeals.Location = New System.Drawing.Point(12, 52)
         Me.grdMeals.Name = "grdMeals"
         Me.grdMeals.Properties.ForceImmediateRepaint = False
@@ -69,7 +68,6 @@ Partial Class frmMealManagement
         Me.grdMeals.RowHeightEntries.AddRange(New Syncfusion.Windows.Forms.Grid.GridRowHeight() {New Syncfusion.Windows.Forms.Grid.GridRowHeight(0, 25)})
         Me.grdMeals.SerializeCellsBehavior = Syncfusion.Windows.Forms.Grid.GridSerializeCellsBehavior.SerializeAsRangeStylesIntoCode
         Me.grdMeals.Size = New System.Drawing.Size(787, 629)
-        Me.grdMeals.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
         Me.grdMeals.SmartSizeBox = False
         Me.grdMeals.TabIndex = 4
         Me.grdMeals.Tag = "20"
@@ -99,17 +97,30 @@ Partial Class frmMealManagement
         Me.btnLeft.TabIndex = 8
         Me.btnLeft.UseVisualStyleBackColor = False
         '
-        'Button1
+        'btnRight
         '
-        Me.Button1.BackColor = System.Drawing.Color.Transparent
-        Me.Button1.FlatAppearance.BorderSize = 0
-        Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.Button1.Image = CType(resources.GetObject("Button1.Image"), System.Drawing.Image)
-        Me.Button1.Location = New System.Drawing.Point(505, 15)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(32, 32)
-        Me.Button1.TabIndex = 9
-        Me.Button1.UseVisualStyleBackColor = False
+        Me.btnRight.BackColor = System.Drawing.Color.Transparent
+        Me.btnRight.FlatAppearance.BorderSize = 0
+        Me.btnRight.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnRight.Image = CType(resources.GetObject("btnRight.Image"), System.Drawing.Image)
+        Me.btnRight.Location = New System.Drawing.Point(505, 15)
+        Me.btnRight.Name = "btnRight"
+        Me.btnRight.Size = New System.Drawing.Size(32, 32)
+        Me.btnRight.TabIndex = 9
+        Me.btnRight.UseVisualStyleBackColor = False
+        '
+        'btnToday
+        '
+        Me.btnToday.FlatAppearance.BorderSize = 0
+        Me.btnToday.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.btnToday.Font = New System.Drawing.Font("Lucida Handwriting", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnToday.ForeColor = System.Drawing.Color.Blue
+        Me.btnToday.Location = New System.Drawing.Point(351, 687)
+        Me.btnToday.Name = "btnToday"
+        Me.btnToday.Size = New System.Drawing.Size(75, 23)
+        Me.btnToday.TabIndex = 10
+        Me.btnToday.Text = "Today"
+        Me.btnToday.UseVisualStyleBackColor = True
         '
         'formController
         '
@@ -128,11 +139,13 @@ Partial Class frmMealManagement
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(804, 720)
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.btnToday)
+        Me.Controls.Add(Me.btnRight)
         Me.Controls.Add(Me.btnLeft)
         Me.Controls.Add(Me.lblDate)
         Me.Controls.Add(Me.grdMeals)
         Me.Controls.Add(Me.formController)
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmMealManagement"
         Me.Text = "Repas"
@@ -144,5 +157,6 @@ Partial Class frmMealManagement
     Friend WithEvents grdMeals As Syncfusion.Windows.Forms.Grid.GridControl
     Friend WithEvents lblDate As System.Windows.Forms.Label
     Friend WithEvents btnLeft As System.Windows.Forms.Button
-    Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents btnRight As System.Windows.Forms.Button
+    Friend WithEvents btnToday As System.Windows.Forms.Button
 End Class

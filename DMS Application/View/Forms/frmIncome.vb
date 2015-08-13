@@ -23,7 +23,7 @@
                 If Not mcIncomeModel.ReceptionDate Is Nothing Then
 
                     dtpPayDate.Checked = True
-                    dtpPayDate.Value = CDate(Format(mcIncomeModel.ReceptionDate.Value, AppController.GetAppController.str_GetPCDateFormat))
+                    dtpPayDate.Value = CDate(Format(mcIncomeModel.ReceptionDate.Value, AppController.GetAppController.str_GetUserDateFormat))
                 Else
                     dtpPayDate.Checked = False
                 End If

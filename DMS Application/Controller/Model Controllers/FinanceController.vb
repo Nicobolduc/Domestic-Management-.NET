@@ -10,12 +10,18 @@
         Try
             strSQL = strSQL & " SELECT Expense.Exp_ID, " & vbCrLf
             strSQL = strSQL & "        Expense.Exp_Name, " & vbCrLf
-            strSQL = strSQL & "        Expense.Exp_BillingDate, " & vbCrLf
-            strSQL = strSQL & "        TRUNCATE(Expense.Exp_Amount, 2) AS Exp_Amount, " & vbCrLf
+            strSQL = strSQL & "        ExpenseAmount.ExpA_DtBegin, " & vbCrLf
+            strSQL = strSQL & "        ExpenseAmount.ExpA_DtEnd, " & vbCrLf
+            strSQL = strSQL & "        TRUNCATE(ExpenseAmount.ExpA_Amount, 2) AS ExpAmount, " & vbCrLf
             strSQL = strSQL & "        Expense.Per_ID, " & vbCrLf
             strSQL = strSQL & "        Expense.ExpT_ID, " & vbCrLf
             strSQL = strSQL & "        Expense.Exp_Fixed " & vbCrLf
             strSQL = strSQL & " FROM Expense " & vbCrLf
+            strSQL = strSQL & "     INNER JOIN (SELECT * " & vbCrLf
+            strSQL = strSQL & "                 FROM ExpenseAmount " & vbCrLf
+            strSQL = strSQL & "     			GROUP BY Exp_ID" & vbCrLf
+            strSQL = strSQL & "                 HAVING ExpenseAmount.ExpA_DtBegin = MAX(ExpenseAmount.ExpA_DtBegin) " & vbCrLf
+            strSQL = strSQL & "     		   ) AS ExpenseAmount ON ExpenseAmount.Exp_ID = Expense.Exp_ID " & vbCrLf
             strSQL = strSQL & " WHERE Expense.Exp_ID = " & vintExpense_ID & vbCrLf
 
             mySQLReader = MySQLController.ADOSelect(strSQL)
@@ -24,12 +30,22 @@
 
                 cExpense = New Model.Expense
                 cExpense.ID = vintExpense_ID
-                cExpense.Name = mySQLReader.Item("Exp_Name").ToString
-                cExpense.BillingDate = CType(IIf(IsDBNull(mySQLReader.Item("Exp_BillingDate")), Nothing, mySQLReader.Item("Exp_BillingDate")), Date?)
-                cExpense.Amount = CDbl(mySQLReader.Item("Exp_Amount"))
+                cExpense.Name = mySQLReader.Item("Exp_Name").ToString    
                 cExpense.Period = CType(mySQLReader.Item("Per_ID"), Period)
                 cExpense.Fixed = CBool(mySQLReader.Item("Exp_Fixed"))
+
                 intExpType = CInt(mySQLReader.Item("ExpT_ID"))
+
+                cExpense.CurrentExpAmount = New Model.Expense.ExpenseAmount
+                cExpense.CurrentExpAmount.DateBegin = CDate(mySQLReader.Item("ExpA_DtBegin"))
+
+                If IsDBNull(mySQLReader.Item("ExpA_DtEnd")) Then
+                    cExpense.CurrentExpAmount.DateEnd = Nothing
+                Else
+                    cExpense.CurrentExpAmount.DateEnd = CDate(mySQLReader.Item("ExpA_DtEnd"))
+                End If
+
+                cExpense.CurrentExpAmount.Amount = CDbl(mySQLReader.Item("ExpAmount"))
 
                 mySQLReader.Dispose()
 

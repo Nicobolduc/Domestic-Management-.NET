@@ -1,6 +1,11 @@
 ﻿
 Public Module mConstants
 
+    Public Enum Language
+        FRENCH_QC = 1
+        ENGLISH_CA = 2
+    End Enum
+
     Public Enum Period
         WEEKLY = 1
         FORTNIGHTLY = 2

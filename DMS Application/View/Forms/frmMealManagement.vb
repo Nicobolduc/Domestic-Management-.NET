@@ -1,6 +1,4 @@
-﻿Imports Syncfusion.Schedule
-
-Public Class frmMealManagement
+﻿Public Class frmMealManagement
 
     'Public members
 
@@ -91,7 +89,8 @@ Public Class frmMealManagement
         mcGridMealsController.SetColsSizeBehavior = ColsSizeBehaviorsController.colsSizeBehaviors.ALL_COLS_EQUALS
 
         grdMeals.ListBoxSelectionMode = SelectionMode.None
-        grdMeals.DefaultRowHeight = 100
+        'grdMeals.DefaultRowHeight = 100
+        grdMeals.Model.TableStyle.ReadOnly = True
 
     End Sub
 
@@ -105,7 +104,7 @@ Public Class frmMealManagement
         End If
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Sub btnRight_Click(sender As Object, e As EventArgs) Handles btnRight.Click
 
         dtCurrentMonth = DateAdd(DateInterval.Month, 1, dtCurrentMonth)
 
@@ -117,9 +116,18 @@ Public Class frmMealManagement
         dtCurrentMonth = DateAdd(DateInterval.Month, -1, dtCurrentMonth)
 
         blnGrdMeals_Load()
+
+    End Sub
+
+    Private Sub btnToday_Click(sender As Object, e As EventArgs) Handles btnToday.Click
+
+        dtCurrentMonth = New Date(Date.Today.Year, Date.Today.Month, 1)
+
+        blnGrdMeals_Load()
     End Sub
 
 #End Region
+
 
 
 End Class

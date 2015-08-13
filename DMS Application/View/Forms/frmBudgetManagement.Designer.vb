@@ -53,6 +53,7 @@ Partial Class frmBudgetManagement
         Me.btnSelectAll = New System.Windows.Forms.Button()
         Me.btnRefresh = New DMS_Application.ctlRefresh()
         Me.formController = New DMS_Application.ctlFormController()
+        Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.gbFilter.SuspendLayout()
         CType(Me.dtpToHr, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dtpToHr.Calendar, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -148,7 +149,7 @@ Partial Class frmBudgetManagement
         Me.dtpToHr.CalendarSize = New System.Drawing.Size(189, 176)
         Me.dtpToHr.CalendarTitleForeColor = System.Drawing.SystemColors.ControlText
         Me.dtpToHr.Culture = New System.Globalization.CultureInfo("en-US")
-        Me.dtpToHr.CustomFormat = "HH:mm:ss"
+        Me.dtpToHr.CustomFormat = "HH:mm"
         Me.dtpToHr.DropDownImage = Nothing
         Me.dtpToHr.DropDownNormalColor = System.Drawing.SystemColors.Control
         Me.dtpToHr.DropDownPressedColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
@@ -228,7 +229,7 @@ Partial Class frmBudgetManagement
         Me.dtpFromHr.CalendarSize = New System.Drawing.Size(189, 176)
         Me.dtpFromHr.CalendarTitleForeColor = System.Drawing.SystemColors.ControlText
         Me.dtpFromHr.Culture = New System.Globalization.CultureInfo("en-US")
-        Me.dtpFromHr.CustomFormat = "HH:mm:ss"
+        Me.dtpFromHr.CustomFormat = "HH:mm"
         Me.dtpFromHr.DropDownImage = Nothing
         Me.dtpFromHr.DropDownNormalColor = System.Drawing.SystemColors.Control
         Me.dtpFromHr.DropDownPressedColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(220, Byte), Integer))
@@ -578,6 +579,7 @@ Partial Class frmBudgetManagement
         Me.btnPay.Name = "btnPay"
         Me.btnPay.Size = New System.Drawing.Size(40, 40)
         Me.btnPay.TabIndex = 11
+        Me.ToolTip.SetToolTip(Me.btnPay, "Payer les factures sélectionnées")
         Me.btnPay.UseVisualStyleBackColor = True
         '
         'lblMainIncomeAmount
@@ -605,6 +607,7 @@ Partial Class frmBudgetManagement
         Me.btnUnselectAll.Name = "btnUnselectAll"
         Me.btnUnselectAll.Size = New System.Drawing.Size(25, 25)
         Me.btnUnselectAll.TabIndex = 16
+        Me.ToolTip.SetToolTip(Me.btnUnselectAll, "Désélectionner toutes les dépenses d'une période")
         Me.btnUnselectAll.UseVisualStyleBackColor = False
         '
         'btnSelectAll
@@ -616,6 +619,7 @@ Partial Class frmBudgetManagement
         Me.btnSelectAll.Name = "btnSelectAll"
         Me.btnSelectAll.Size = New System.Drawing.Size(25, 25)
         Me.btnSelectAll.TabIndex = 15
+        Me.ToolTip.SetToolTip(Me.btnSelectAll, "Sélectionner toutes les dépenses d'une période")
         Me.btnSelectAll.UseVisualStyleBackColor = True
         '
         'btnRefresh
@@ -697,5 +701,6 @@ Partial Class frmBudgetManagement
     Friend WithEvents btnSelectAll As System.Windows.Forms.Button
     Friend WithEvents rbtnAll As System.Windows.Forms.RadioButton
     Friend WithEvents btnRefresh As DMS_Application.ctlRefresh
+    Friend WithEvents ToolTip As System.Windows.Forms.ToolTip
 
 End Class
