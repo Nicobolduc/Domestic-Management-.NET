@@ -401,8 +401,8 @@
     Private Sub mcGrdGroceryController_SetDisplay() Handles mcGrdGroceryController.SetDisplay
         mcGrdGroceryController.SetColsSizeBehavior = ColsSizeBehaviorsController.colsSizeBehaviors.EXTEND_LAST_COL
 
-        mcGrdGroceryController.blnSetColType_CheckBox(mintGrdGrocery_Sel_col, False)
-        mcGrdGroceryController.blnSetColType_CheckBox(mintGrdGrocery_Pro_Taxable_col, False)
+        mcGrdGroceryController.SetColType_CheckBox(mintGrdGrocery_Sel_col, False)
+        mcGrdGroceryController.SetColType_CheckBox(mintGrdGrocery_Pro_Taxable_col, False)
 
         grdGrocery.ColStyles(mintGrdGrocery_ProP_Price_col).CellValueType = GetType(Double)
 

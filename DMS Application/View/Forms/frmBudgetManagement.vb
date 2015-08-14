@@ -1,17 +1,19 @@
 ﻿Public Class frmBudgetManagement
 
     'Private members
+
+    'GrdBudget grid
     Private mintGrdBudget_Action_col As Short = 1
     Private mintGrdBudget_Exp_ID_col As Short = 2
     Private mintGrdBudget_NextIncomeDateToUse_col As Short = 3
     Private mintGrdBudget_Exp_NextBillingDate_col As Short = 4
     Private mintGrdBudget_Exp_Name_col As Short = 5
     Private mintGrdBudget_Exp_Amount_col As Short = 6
-    Private mintGrdBudget_PInc_Amount_Paid_col As Short = 7
-    Private mintGrdBudget_PInc_PaidOn_col As Short = 8
+    Private mintGrdBudget_PExp_AmountPaid_col As Short = 7
+    Private mintGrdBudget_PExp_DatePaid_col As Short = 8
     Private mintGrdBudget_ExpT_ArgbColor_col As Short = 9
     Private mintGrdBudget_Income_Amount_col As Short = 10
-    Private mintGrdBudget_PInc_Comment_col As Short = 11
+    Private mintGrdBudget_PExp_Comment_col As Short = 11
     Private mintGrdBudget_Sel_col As Short = 12
 
     'Messages
@@ -26,16 +28,18 @@
 
     Private Function blnFormData_Load() As Boolean
         Dim blnValidReturn As Boolean
+        Dim strMainIncome As String = String.Empty
 
         Try
-            blnValidReturn = blnCalculateNextPayDate()
+            strMainIncome = MySQLController.str_ADOSingleLookUp("Inc_ID", "Income", "Income.Inc_IsMain = 1")
 
-            If blnValidReturn Then
+            If strMainIncome <> String.Empty Then
+
                 dtpFrom.Value = Date.Today
-                dtpFrom.CustomFormat = gcAppController.str_GetPCDateFormat
+                dtpFrom.CustomFormat = gcAppController.str_GetUserDateFormat
 
                 dtpTo.Value = DateAdd(DateInterval.Month, 1, Date.Today)
-                dtpTo.CustomFormat = gcAppController.str_GetPCDateFormat
+                dtpTo.CustomFormat = gcAppController.str_GetUserDateFormat
 
                 blnValidReturn = True
             Else
@@ -55,187 +59,11 @@
     Private Function blnGrdBudget_Load() As Boolean
         Dim blnValidReturn As Boolean
         Dim strSQL As String = String.Empty
-        '#Date limite du paiment  = date de revenu - 3 jours
-
-        'SELECT  0 AS Action,
-        '		T2.Exp_ID,
-        '		T2.NextBillingDate,
-        '		T2.Exp_Name,
-        '		T2.Exp_Amount,
-        '		CASE WHEN NextBillingDate <= ClosestIncomeDate
-        '			 THEN CASE T2.IncomePeriod
-        '				       WHEN 1 THEN DATE_SUB(ClosestIncomeDate, INTERVAL 1 WEEK)
-        '					   WHEN 2 THEN DATE_SUB(ClosestIncomeDate, INTERVAL 2 WEEK)
-        '					   WHEN 3 THEN DATE_SUB(ClosestIncomeDate, INTERVAL 1 MONTH)
-        '					   WHEN 4 THEN DATE_SUB(ClosestIncomeDate, INTERVAL 2 MONTH)
-        '                End
-        '			 ELSE CASE WHEN TIMESTAMPDIFF(DAY, NextBillingDate, ClosestIncomeDate) >= 3 #TODO Jours ouvrables
-        '					   THEN ClosestIncomeDate
-        '					   ELSE CASE T2.IncomePeriod
-        '							     WHEN 1 THEN DATE_SUB(ClosestIncomeDate, INTERVAL 1 WEEK)
-        '							     WHEN 2 THEN DATE_SUB(ClosestIncomeDate, INTERVAL 2 WEEK)
-        '							     WHEN 3 THEN DATE_SUB(ClosestIncomeDate, INTERVAL 1 MONTH)
-        '							     WHEN 4 THEN DATE_SUB(ClosestIncomeDate, INTERVAL 2 MONTH)
-        '                End
-        '                End
-        '		END AS NextPayToUseDate,
-        '		T2.Amount_Paid,
-        '		T2.PaidOn,
-        '		T2.ExpT_ArgbColor,
-        '		T2.Inc_Amount,
-        '		T2.Comment,
-        '		CASE WHEN T2.Exp_Fixed = 1 THEN 'TRUE' ELSE 'FALSE' END AS SelCol
-        '                FROM()
-        '        	 (SELECT *,
-        '            Case T1.IncomePeriod
-        '						 WHEN 1 THEN DATE_ADD(Inc_ReceptDate, INTERVAL (TIMESTAMPDIFF(WEEK, Inc_ReceptDate, NextBillingDate) + IF(LEFT(TIMESTAMPDIFF(WEEK, Inc_ReceptDate, NextBillingDate), 1) % 2 <> 0, 1 , 0))  WEEK) 
-        '						 WHEN 2 THEN DATE_ADD(Inc_ReceptDate, INTERVAL (TIMESTAMPDIFF(WEEK, Inc_ReceptDate, NextBillingDate) + IF(LEFT(TIMESTAMPDIFF(WEEK, Inc_ReceptDate, NextBillingDate), 1) % 2 <> 0, 1 , 0))  WEEK) 
-        '						 WHEN 3 THEN DATE_ADD(Inc_ReceptDate, INTERVAL (TIMESTAMPDIFF(WEEK, Inc_ReceptDate, NextBillingDate) + IF(LEFT(TIMESTAMPDIFF(WEEK, Inc_ReceptDate, NextBillingDate), 1) % 2 <> 0, 1 , 0))  MONTH) 
-        '						 WHEN 4 THEN DATE_ADD(Inc_ReceptDate, INTERVAL (TIMESTAMPDIFF(WEEK, Inc_ReceptDate, NextBillingDate) + IF(LEFT(TIMESTAMPDIFF(WEEK, Inc_ReceptDate, NextBillingDate), 1) % 2 <> 0, 1 , 0))  MONTH) 
-        '				 ELSE NULL 
-        '				 END AS ClosestIncomeDate
-        '        	 FROM (SELECT 0 AS Action, 
-        '        				  Expense.Exp_ID,
-        '        				  Income.Per_ID AS IncomePeriod,
-        '        				  Income.Inc_ReceptDate,
-        '        				  CASE WHEN Expense.Exp_BillingDate < '2015-07-23 12:00:00' 
-        '        					   THEN CASE Expense.Per_ID 
-        '        						    WHEN 1 THEN DATE_ADD(Expense.Exp_BillingDate, INTERVAL (TIMESTAMPDIFF(WEEK, Expense.Exp_BillingDate, '2015-07-23 12:00:00') + 1)  WEEK) 
-        '        						    WHEN 2 THEN DATE_ADD(Expense.Exp_BillingDate, INTERVAL (TIMESTAMPDIFF(WEEK, Expense.Exp_BillingDate, '2015-07-23 12:00:00') * 2 + 1)  WEEK) 
-        '        						    WHEN 3 THEN DATE_ADD(Expense.Exp_BillingDate, INTERVAL (TIMESTAMPDIFF(MONTH, Expense.Exp_BillingDate, '2015-07-23 12:00:00') + 1)  MONTH) 
-        '        						    WHEN 4 THEN DATE_ADD(Expense.Exp_BillingDate, INTERVAL (TIMESTAMPDIFF(MONTH, Expense.Exp_BillingDate, '2015-07-23 12:00:00') * 2 + 1)  MONTH) 
-        '        						    ELSE NULL 
-        '                End
-        '        					  ELSE Expense.Exp_BillingDate
-        '        				 END AS NextBillingDate, 
-        '        				 Expense.Exp_Name, 
-        '        				 Expense.Exp_Amount, 
-        '        				 Expense.Exp_Fixed,
-        '        				 NULL AS Amount_Paid, 
-        '        				 NULL As PaidOn, 
-        '        				 ExpenseType.ExpT_Name, 
-        '        				 ExpenseType.ExpT_ArgbColor, 
-        '        				 Income.Inc_Amount, 
-        '        				 NULL AS Comment
-        '                FROM(Expense)
-        '        				INNER JOIN ExpenseType ON ExpenseType.ExpT_ID = Expense.ExpT_ID 
-        '        				INNER JOIN Income ON Income.Inc_IsMain = 1 
-        '        	 ) AS T1 
-
-        '        	 WHERE T1.NextBillingDate BETWEEN '2015-07-23 12:00:00' AND '2015-08-23 12:00:00'
-
-        '        ) AS T2
-
-        'ORDER BY NextPayToUseDate, T2.NextBillingDate 
+        Dim intRowIdx As Integer = 2
+        Dim intLastRowAddedIndex As Integer = 1
 
         Try
-            'strSQL = strSQL & " SELECT * " & vbCrLf
-            'strSQL = strSQL & " FROM ( " & vbCrLf
-            'strSQL = strSQL & "     SELECT " & DataGridViewController.GridRowActions.CONSULT_ACTION & " AS Action, " & vbCrLf
-            'strSQL = strSQL & "             Expense.Exp_ID, " & vbCrLf
-            ''strSQL = strSQL & "             Income.Per_ID AS IncomePeriod, " & vbCrLf
-            'strSQL = strSQL & "             CASE Income.Per_ID " & vbCrLf
-            'strSQL = strSQL & "                 WHEN 1 THEN DATE_ADD(Income.Inc_ReceptDate, INTERVAL (TIMESTAMPDIFF(WEEK, Income.Inc_ReceptDate, " & MySQLController.str_FixDateForSelect(dtpFrom.Value) & "))  WEEK) " & vbCrLf
-            'strSQL = strSQL & "                 WHEN 2 THEN DATE_ADD(Income.Inc_ReceptDate, INTERVAL (TIMESTAMPDIFF(WEEK, Income.Inc_ReceptDate, " & MySQLController.str_FixDateForSelect(dtpFrom.Value) & ") * 2)  WEEK) " & vbCrLf
-            'strSQL = strSQL & "                 WHEN 3 THEN DATE_ADD(Income.Inc_ReceptDate, INTERVAL (TIMESTAMPDIFF(WEEK, Income.Inc_ReceptDate, " & MySQLController.str_FixDateForSelect(dtpFrom.Value) & "))  MONTH) " & vbCrLf
-            'strSQL = strSQL & "                 WHEN 4 THEN DATE_ADD(Income.Inc_ReceptDate, INTERVAL (TIMESTAMPDIFF(WEEK, Income.Inc_ReceptDate, " & MySQLController.str_FixDateForSelect(dtpFrom.Value) & ")* 2)  MONTH) " & vbCrLf
-            'strSQL = strSQL & "             ELSE NULL " & vbCrLf
-            'strSQL = strSQL & "             END AS PreviousReceptionDate, " & vbCrLf
-            'strSQL = strSQL & "             CASE Expense.Per_ID " & vbCrLf
-            'strSQL = strSQL & "                 WHEN 1 THEN DATE_ADD(Expense.Exp_BillingDate, INTERVAL (TIMESTAMPDIFF(WEEK, Expense.Exp_BillingDate, " & MySQLController.str_FixDateForSelect(dtpFrom.Value) & "))  WEEK) " & vbCrLf
-            'strSQL = strSQL & "                 WHEN 2 THEN DATE_ADD(Expense.Exp_BillingDate, INTERVAL (TIMESTAMPDIFF(WEEK, Expense.Exp_BillingDate, " & MySQLController.str_FixDateForSelect(dtpFrom.Value) & ") * 2)  WEEK) " & vbCrLf
-            'strSQL = strSQL & "                 WHEN 3 THEN DATE_ADD(Expense.Exp_BillingDate, INTERVAL (TIMESTAMPDIFF(MONTH, Expense.Exp_BillingDate, " & MySQLController.str_FixDateForSelect(dtpFrom.Value) & "))  MONTH) " & vbCrLf
-            'strSQL = strSQL & "                 WHEN 4 THEN DATE_ADD(Expense.Exp_BillingDate, INTERVAL (TIMESTAMPDIFF(MONTH, Expense.Exp_BillingDate, " & MySQLController.str_FixDateForSelect(dtpFrom.Value) & ") * 2)  MONTH) " & vbCrLf
-            'strSQL = strSQL & "             ELSE NULL " & vbCrLf
-            'strSQL = strSQL & "             END AS NextBillingDate, " & vbCrLf
-            'strSQL = strSQL & "             Expense.Exp_Name, " & vbCrLf
-            'strSQL = strSQL & "             Expense.Exp_Amount, " & vbCrLf
-            'strSQL = strSQL & "             NULL AS Amount_Paid, " & vbCrLf
-            'strSQL = strSQL & "             NULL As PaidOn, " & vbCrLf
-            'strSQL = strSQL & "             ExpenseType.ExpT_Name, " & vbCrLf
-            'strSQL = strSQL & "             ExpenseType.ExpT_ArgbColor, " & vbCrLf
-            'strSQL = strSQL & "             Income.Inc_Name, " & vbCrLf
-            'strSQL = strSQL & "             Income.Inc_Amount, " & vbCrLf
-            'strSQL = strSQL & "             NULL AS Comment, " & vbCrLf
-            'strSQL = strSQL & "             CASE WHEN Expense.Exp_Fixed = 1 THEN 'TRUE' ELSE 'FALSE' END AS SelCol " & vbCrLf
-            'strSQL = strSQL & "     FROM Expense " & vbCrLf
-            'strSQL = strSQL & "         INNER JOIN ExpenseType ON ExpenseType.ExpT_ID = Expense.ExpT_ID " & vbCrLf
-            'strSQL = strSQL & "         INNER JOIN Income ON Income.Inc_IsMain = 1 " & vbCrLf
-            'strSQL = strSQL & " ) AS T1 " & vbCrLf
-            'strSQL = strSQL & "  WHERE T1.NextBillingDate BETWEEN " & MySQLController.str_FixDateForSelect(dtpFrom.Value) & " AND " & MySQLController.str_FixDateForSelect(dtpTo.Value) & vbCrLf
-            'strSQL = strSQL & " ORDER BY T1.PreviousReceptionDate, T1.NextBillingDate " & vbCrLf
-
-
-            strSQL = strSQL & "  SELECT  0 AS Action," & vbCrLf
-            strSQL = strSQL & "  		T2.Exp_ID," & vbCrLf
-            strSQL = strSQL & "  		CASE WHEN NextBillingDate <= ClosestIncomeDate" & vbCrLf
-            strSQL = strSQL & "  			 THEN CASE T2.IncomePeriod" & vbCrLf
-            strSQL = strSQL & "  				       WHEN 1 THEN DATE_SUB(ClosestIncomeDate, INTERVAL 1 WEEK)" & vbCrLf
-            strSQL = strSQL & "  					   WHEN 2 THEN DATE_SUB(ClosestIncomeDate, INTERVAL 2 WEEK)" & vbCrLf
-            strSQL = strSQL & "  					   WHEN 3 THEN DATE_SUB(ClosestIncomeDate, INTERVAL 1 MONTH)" & vbCrLf
-            strSQL = strSQL & "  					   WHEN 4 THEN DATE_SUB(ClosestIncomeDate, INTERVAL 2 MONTH)" & vbCrLf
-            strSQL = strSQL & "                      End" & vbCrLf
-            strSQL = strSQL & "  			 ELSE CASE WHEN TIMESTAMPDIFF(DAY, NextBillingDate, ClosestIncomeDate) >= 3 #TODO Jours ouvrables" & vbCrLf
-            strSQL = strSQL & "  					   THEN ClosestIncomeDate" & vbCrLf
-            strSQL = strSQL & "  					   ELSE CASE T2.IncomePeriod" & vbCrLf
-            strSQL = strSQL & "  							     WHEN 1 THEN DATE_SUB(ClosestIncomeDate, INTERVAL 1 WEEK)" & vbCrLf
-            strSQL = strSQL & "  							     WHEN 2 THEN DATE_SUB(ClosestIncomeDate, INTERVAL 2 WEEK)" & vbCrLf
-            strSQL = strSQL & "  							     WHEN 3 THEN DATE_SUB(ClosestIncomeDate, INTERVAL 1 MONTH)" & vbCrLf
-            strSQL = strSQL & "  							     WHEN 4 THEN DATE_SUB(ClosestIncomeDate, INTERVAL 2 MONTH)" & vbCrLf
-            strSQL = strSQL & "                      End" & vbCrLf
-            strSQL = strSQL & "                      End" & vbCrLf
-            strSQL = strSQL & "  		END AS NextIncomeDateToUse," & vbCrLf
-            strSQL = strSQL & "  		T2.NextBillingDate," & vbCrLf
-            strSQL = strSQL & "  		T2.Exp_Name," & vbCrLf
-            strSQL = strSQL & "  		T2.Exp_Amount," & vbCrLf
-            strSQL = strSQL & "  		T2.Amount_Paid," & vbCrLf
-            strSQL = strSQL & "  		T2.PaidOn," & vbCrLf
-            strSQL = strSQL & "  		T2.ExpT_ArgbColor," & vbCrLf
-            strSQL = strSQL & "  		T2.Inc_Amount," & vbCrLf
-            strSQL = strSQL & "  		T2.Comment," & vbCrLf
-            strSQL = strSQL & "  		CASE WHEN T2.Exp_Fixed = 1 THEN 'TRUE' ELSE 'FALSE' END AS SelCol" & vbCrLf
-            strSQL = strSQL & "                      FROM " & vbCrLf
-            strSQL = strSQL & "          	 (SELECT *," & vbCrLf
-            strSQL = strSQL & "                  Case T1.IncomePeriod" & vbCrLf
-            strSQL = strSQL & "  						 WHEN 1 THEN DATE_ADD(Inc_ReceptDate, INTERVAL (TIMESTAMPDIFF(WEEK, Inc_ReceptDate, NextBillingDate) + IF(LEFT (TIMESTAMPDIFF(WEEK, Inc_ReceptDate, NextBillingDate), 1) % 2 <> 0, 1 , 0))  WEEK) " & vbCrLf
-            strSQL = strSQL & "  						 WHEN 2 THEN DATE_ADD(Inc_ReceptDate, INTERVAL (TIMESTAMPDIFF(WEEK, Inc_ReceptDate, NextBillingDate) + IF(LEFT (TIMESTAMPDIFF(WEEK, Inc_ReceptDate, NextBillingDate), 1) % 2 <> 0, 1 , 0))  WEEK) " & vbCrLf
-            strSQL = strSQL & "  						 WHEN 3 THEN DATE_ADD(Inc_ReceptDate, INTERVAL (TIMESTAMPDIFF(WEEK, Inc_ReceptDate, NextBillingDate) + IF(LEFT (TIMESTAMPDIFF(WEEK, Inc_ReceptDate, NextBillingDate), 1) % 2 <> 0, 1 , 0))  MONTH) " & vbCrLf
-            strSQL = strSQL & "  						 WHEN 4 THEN DATE_ADD(Inc_ReceptDate, INTERVAL (TIMESTAMPDIFF(WEEK, Inc_ReceptDate, NextBillingDate) + IF(LEFT (TIMESTAMPDIFF(WEEK, Inc_ReceptDate, NextBillingDate), 1) % 2 <> 0, 1 , 0))  MONTH) " & vbCrLf
-            strSQL = strSQL & "  				 ELSE NULL " & vbCrLf
-            strSQL = strSQL & "  				 END AS ClosestIncomeDate" & vbCrLf
-            strSQL = strSQL & "          	 FROM (SELECT 0 AS Action, " & vbCrLf
-            strSQL = strSQL & "          				  Expense.Exp_ID," & vbCrLf
-            strSQL = strSQL & "          				  Income.Per_ID AS IncomePeriod," & vbCrLf
-            strSQL = strSQL & "          				  Income.Inc_ReceptDate," & vbCrLf
-            strSQL = strSQL & "          				  CASE WHEN Expense.Exp_BillingDate < '2015-07-23 12:00:00' " & vbCrLf
-            strSQL = strSQL & "          					   THEN CASE Expense.Per_ID " & vbCrLf
-            strSQL = strSQL & "          						    WHEN 1 THEN DATE_ADD(Expense.Exp_BillingDate, INTERVAL (TIMESTAMPDIFF(WEEK, Expense.Exp_BillingDate,  '2015-07-23 12:00:00') + 1)  WEEK) " & vbCrLf
-            strSQL = strSQL & "          						    WHEN 2 THEN DATE_ADD(Expense.Exp_BillingDate, INTERVAL (TIMESTAMPDIFF(WEEK, Expense.Exp_BillingDate,   '2015-07-23 12:00:00') * 2 + 1)  WEEK) " & vbCrLf
-            strSQL = strSQL & "          						    WHEN 3 THEN DATE_ADD(Expense.Exp_BillingDate, INTERVAL (TIMESTAMPDIFF(MONTH, Expense.Exp_BillingDate,   '2015-07-23 12:00:00') + 1)  MONTH) " & vbCrLf
-            strSQL = strSQL & "          						    WHEN 4 THEN DATE_ADD(Expense.Exp_BillingDate, INTERVAL (TIMESTAMPDIFF(MONTH, Expense.Exp_BillingDate,  '2015-07-23 12:00:00') * 2 + 1)  MONTH) " & vbCrLf
-            strSQL = strSQL & "          						    ELSE NULL " & vbCrLf
-            strSQL = strSQL & "                      End" & vbCrLf
-            strSQL = strSQL & "          					  ELSE Expense.Exp_BillingDate" & vbCrLf
-            strSQL = strSQL & "          				 END AS NextBillingDate, " & vbCrLf
-            strSQL = strSQL & "          				 Expense.Exp_Name, " & vbCrLf
-            strSQL = strSQL & "          				 Expense.Exp_Amount, " & vbCrLf
-            strSQL = strSQL & "          				 Expense.Exp_Fixed," & vbCrLf
-            strSQL = strSQL & "          				 NULL AS Amount_Paid, " & vbCrLf
-            strSQL = strSQL & "          				 NULL As PaidOn, " & vbCrLf
-            strSQL = strSQL & "          				 ExpenseType.ExpT_Name, " & vbCrLf
-            strSQL = strSQL & "          				 ExpenseType.ExpT_ArgbColor, " & vbCrLf
-            strSQL = strSQL & "          				 Income.Inc_Amount, " & vbCrLf
-            strSQL = strSQL & "          				 NULL AS Comment" & vbCrLf
-            strSQL = strSQL & "                      FROM(Expense)" & vbCrLf
-            strSQL = strSQL & "          				INNER JOIN ExpenseType ON ExpenseType.ExpT_ID = Expense.ExpT_ID " & vbCrLf
-            strSQL = strSQL & "          				INNER JOIN Income ON Income.Inc_IsMain = 1 " & vbCrLf
-            strSQL = strSQL & "          	 ) AS T1 " & vbCrLf
-
-            strSQL = strSQL & "          	 WHERE T1.NextBillingDate BETWEEN '2015-07-23 12:00:00' AND '2015-08-23 12:00:00'" & vbCrLf
-
-            strSQL = strSQL & "          ) AS T2" & vbCrLf
-
-            strSQL = strSQL & "  ORDER BY NextIncomeDateToUse, T2.NextBillingDate "
+            strSQL = strSQL & " CALL sp_LoadBudgetGrid (" & gcAppController.str_FixStringForSQL(Format(dtpFrom.Value, gcAppController.str_GetServerDateFormat) & " " & Format(dtpFromHr.Value, gcAppController.str_GetServerTimeFormat)) & ", " & gcAppController.str_FixStringForSQL(Format(dtpTo.Value, gcAppController.str_GetServerDateFormat) & " " & Format(dtpToHr.Value, gcAppController.str_GetServerTimeFormat)) & ");" & vbCrLf
 
             blnValidReturn = mcGridBudgetController.bln_FillData(strSQL)
 
@@ -243,21 +71,26 @@
 
                 lblMainIncomeAmount.Text = grdBudget(grdBudget.RowCount, mintGrdBudget_Income_Amount_col).CellValue.ToString & " $"
 
-                For intRowIdx As Integer = 2 To grdBudget.RowCount + 1
+                While intRowIdx <= grdBudget.RowCount + 1
 
                     grdBudget(intRowIdx - 1, mintGrdBudget_Exp_Name_col).BackColor = Color.FromArgb(CInt(grdBudget(intRowIdx - 1, mintGrdBudget_ExpT_ArgbColor_col).CellValue))
 
                     If intRowIdx = grdBudget.RowCount + 1 Then
 
-                        blnGrdBudget_AddSummaryRow(intRowIdx)
+                        blnGrdBudget_AddSummaryRow(intRowIdx, intLastRowAddedIndex)
+
+                        intRowIdx += 1
 
                     ElseIf CDate(grdBudget(intRowIdx - 1, mintGrdBudget_NextIncomeDateToUse_col).CellValue) < CDate(grdBudget(intRowIdx, mintGrdBudget_NextIncomeDateToUse_col).CellValue) Then
 
-                        blnGrdBudget_AddSummaryRow(intRowIdx)
+                        blnGrdBudget_AddSummaryRow(intRowIdx, intLastRowAddedIndex)
+
+                        intRowIdx += 1
 
                     End If
 
-                Next
+                    intRowIdx += 1
+                End While
 
             End If
 
@@ -269,77 +102,39 @@
         Return blnValidReturn
     End Function
 
-    Private Function blnCalculateNextPayDate() As Boolean
-        Dim blnValidReturn As Boolean = True
-        Dim strIncomeDate As String = String.Empty
-        Dim strIncomeInterval As String = String.Empty
-
-        Try
-            strIncomeInterval = MySQLController.str_ADOSingleLookUp("Income.Per_ID", "Income", "Income.Inc_IsMain = 1")
-
-            Select Case Val(strIncomeInterval)
-                Case mConstants.Period.WEEKLY
-                    strIncomeDate = MySQLController.str_ADOSingleLookUp("DATE_ADD(Income.Inc_ReceptDate, INTERVAL (TIMESTAMPDIFF(WEEK, Income.Inc_ReceptDate, " & MySQLController.str_FixDateForSelect(dtpFrom.Value) & "))  WEEK)", "Income", "Income.Inc_IsMain = 1")
-                    lblIncomePeriodTo.Text = Format(DateAdd(DateInterval.Day, 7, CDate(strIncomeDate)), gcAppController.str_GetPCDateFormat)
-
-                Case mConstants.Period.FORTNIGHTLY
-                    strIncomeDate = MySQLController.str_ADOSingleLookUp("DATE_ADD(Income.Inc_ReceptDate, INTERVAL (TIMESTAMPDIFF(WEEK, Income.Inc_ReceptDate, " & MySQLController.str_FixDateForSelect(dtpFrom.Value) & ") * 2)  WEEK)", "Income", "Income.Inc_IsMain = 1")
-                    lblIncomePeriodTo.Text = Format(DateAdd(DateInterval.Day, 14, CDate(strIncomeDate)), gcAppController.str_GetPCDateFormat)
-
-                Case mConstants.Period.MONTHLY
-                    strIncomeDate = MySQLController.str_ADOSingleLookUp("DATE_ADD(Income.Inc_ReceptDate, INTERVAL (TIMESTAMPDIFF(MONTH, Income.Inc_ReceptDate, " & MySQLController.str_FixDateForSelect(dtpFrom.Value) & "))  MONTH)", "Income", "Income.Inc_IsMain = 1")
-                    lblIncomePeriodTo.Text = Format(DateAdd(DateInterval.Month, 1, CDate(strIncomeDate)), gcAppController.str_GetPCDateFormat)
-
-                Case mConstants.Period.TWO_MONTHS
-                    strIncomeDate = MySQLController.str_ADOSingleLookUp("DATE_ADD(Income.Inc_ReceptDate, INTERVAL (TIMESTAMPDIFF(MONTH, Income.Inc_ReceptDate, " & MySQLController.str_FixDateForSelect(dtpFrom.Value) & ") * 2)  MONTH)", "Income", "Income.Inc_IsMain = 1")
-                    lblIncomePeriodTo.Text = Format(DateAdd(DateInterval.Month, 2, CDate(strIncomeDate)), gcAppController.str_GetPCDateFormat)
-
-                Case Else
-                    blnValidReturn = False
-
-            End Select
-
-            lblIncomePeriodFrom.Text = Format(CDate(strIncomeDate), gcAppController.str_GetPCDateFormat)
-
-        Catch ex As Exception
-            blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
-
-        Return blnValidReturn
-    End Function
-
-    Private Function blnGrdBudget_AddSummaryRow(ByVal vintRowIndexToAdd As Integer) As Boolean
+    Private Function blnGrdBudget_AddSummaryRow(ByVal vintRowIndexToAdd As Integer, ByRef rintLastRowAddedIndex As Integer) As Boolean
         Dim blnValidReturn As Boolean
         Dim dblPeriodTotal As Double
+        Dim newRowBorders As New GridBorder(GridBorderStyle.Dashed, Color.LightSkyBlue, GridBorderWeight.Medium)
 
         Try
             grdBudget.Rows.InsertRange(vintRowIndexToAdd, 1)
 
-            grdBudget.RowStyles(vintRowIndexToAdd).CellType = "Default"
+            'grdBudget.RowStyles(vintRowIndexToAdd).CellType = "Default"
+            grdBudget.RowStyles(vintRowIndexToAdd).Borders.Bottom = newRowBorders
 
             grdBudget(vintRowIndexToAdd, mintGrdBudget_Action_col).CellValue = SyncfusionGridController.GridRowActions.NO_ACTION
 
-            grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).HorizontalAlignment = GridHorizontalAlignment.Right
+            grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).Borders.All = newRowBorders
+            'grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).HorizontalAlignment = GridHorizontalAlignment.Right
             'grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellValueType = GetType(String)
             'grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellType = GridCellTypeName.FormulaCell
             'grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).Text = "=B4"
 
-            For intRowIdx As Integer = 1 To vintRowIndexToAdd - 1
+            For intRowIdx As Integer = rintLastRowAddedIndex To vintRowIndexToAdd - 1
 
                 dblPeriodTotal += Val(grdBudget(intRowIdx, mintGrdBudget_Exp_Amount_col).CellValue)
             Next
 
             grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellValue = dblPeriodTotal
 
-            grdBudget(vintRowIndexToAdd, mintGrdBudget_NextIncomeDateToUse_col).CellValue = lblIncomePeriodTo.Text
-            grdBudget(vintRowIndexToAdd, mintGrdBudget_NextIncomeDateToUse_col).HorizontalAlignment = GridHorizontalAlignment.Center
+            'For intColIdx As Short = 1 To CShort(grdBudget.ColCount)
 
-            For intColIdx As Short = 1 To CShort(grdBudget.ColCount)
+            '    grdBudget(vintRowIndexToAdd, intColIdx).ReadOnly = True
+            'Next
 
-                grdBudget(vintRowIndexToAdd, intColIdx).ReadOnly = True
-            Next
-
+            rintLastRowAddedIndex = vintRowIndexToAdd + 1
+            'grdBudget(vintRowIndexToAdd, -1) = grdBudget(vintRowIndexToAdd - 1, -1)
         Catch ex As Exception
             blnValidReturn = False
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
@@ -347,6 +142,64 @@
 
         Return blnValidReturn
     End Function
+
+    Private Function blnPayExpenses() As Boolean
+        Dim blnValidReturn As Boolean
+        Dim cPaidExpense As Model.PaidExpense
+
+        Me.Cursor = Cursors.WaitCursor
+
+        mcSQL = New MySQLController
+
+        blnValidReturn = mcSQL.bln_BeginTransaction()
+
+        Try
+            For intRowIdx As Integer = 1 To grdBudget.RowCount
+
+                If Not blnValidReturn Then Exit For
+
+                If grdBudget(intRowIdx, mintGrdBudget_Sel_col).CellValue.ToString.ToUpper = "TRUE" And CInt(grdBudget(intRowIdx, mintGrdBudget_Action_col).CellValue) = SyncfusionGridController.GridRowActions.UPDATE_ACTION Then
+
+                    cPaidExpense = New Model.PaidExpense
+                    cPaidExpense.DLMCommand = Form_Mode.INSERT_MODE
+                    cPaidExpense.SQLController = mcSQL
+
+                    cPaidExpense.Expense_ID = CInt(grdBudget(intRowIdx, mintGrdBudget_Exp_ID_col).CellValue)
+                    cPaidExpense.ExpenseBillingDate_ID = CDate(grdBudget(intRowIdx, mintGrdBudget_Exp_NextBillingDate_col).CellValue)
+                    cPaidExpense.AmountPaid = CDbl(IIf(grdBudget(intRowIdx, mintGrdBudget_PExp_AmountPaid_col).CellValue.ToString <> String.Empty, grdBudget(intRowIdx, mintGrdBudget_PExp_AmountPaid_col).CellValue, grdBudget(intRowIdx, mintGrdBudget_Exp_Amount_col).CellValue))
+                    cPaidExpense.DatePaid = CDate(grdBudget(intRowIdx, mintGrdBudget_PExp_DatePaid_col).CellValue)
+                    cPaidExpense.Comment = grdBudget(intRowIdx, mintGrdBudget_PExp_Comment_col).CellValue.ToString
+
+                    blnValidReturn = cPaidExpense.blnPaidExpense_Save()
+                End If
+            Next
+
+        Catch ex As Exception
+            blnValidReturn = False
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        Finally
+            mcSQL.bln_EndTransaction(blnValidReturn)
+            Me.Cursor = Cursors.Default
+        End Try
+
+        Return blnValidReturn
+    End Function
+
+    Private Sub CheckUncheckAll(ByVal vblnCheckAll As Boolean, ByVal vblnCheckTriStateOnly As Boolean)
+
+        Try
+            For intRow As Integer = 1 To grdBudget.RowCount
+
+                If grdBudget(intRow, mintGrdBudget_Sel_col).CellValue.ToString = mcGridBudgetController.GetUndeterminedCheckBoxState Or Not vblnCheckTriStateOnly Then
+                    grdBudget(intRow, mintGrdBudget_Sel_col).CellValue = vblnCheckAll
+                End If
+            Next
+
+        Catch ex As Exception
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+    End Sub
 
 #End Region
 
@@ -361,30 +214,32 @@
     End Sub
 
     Private Sub mcGrid_SetDisplay() Handles mcGridBudgetController.SetDisplay
+
         grdBudget.Model.Options.MergeCellsMode = GridMergeCellsMode.None
         grdBudget.ColStyles(mintGrdBudget_NextIncomeDateToUse_col).MergeCell = GridMergeCellDirection.None
         grdBudget.ColStyles(mintGrdBudget_Exp_NextBillingDate_col).MergeCell = GridMergeCellDirection.None
 
-        grdBudget.ColWidths(mintGrdBudget_Exp_NextBillingDate_col) = 110
-        grdBudget.ColWidths(mintGrdBudget_Exp_Name_col) = 200
+        grdBudget.ColWidths(mintGrdBudget_Exp_NextBillingDate_col) = 105
+        grdBudget.ColWidths(mintGrdBudget_Exp_Name_col) = 205
         grdBudget.ColWidths(mintGrdBudget_Exp_Amount_col) = 100
-        grdBudget.ColWidths(mintGrdBudget_PInc_Amount_Paid_col) = 100
-        grdBudget.ColWidths(mintGrdBudget_PInc_PaidOn_col) = 110
-        grdBudget.ColWidths(mintGrdBudget_NextIncomeDateToUse_col) = 110
-        grdBudget.ColWidths(mintGrdBudget_PInc_Comment_col) = 225
+        grdBudget.ColWidths(mintGrdBudget_PExp_AmountPaid_col) = 85
+        grdBudget.ColWidths(mintGrdBudget_PExp_DatePaid_col) = 95
+        grdBudget.ColWidths(mintGrdBudget_NextIncomeDateToUse_col) = 105
+        grdBudget.ColWidths(mintGrdBudget_PExp_Comment_col) = 185
+        grdBudget.ColWidths(mintGrdBudget_Sel_col) = 50
 
-        mcGridBudgetController.blnSetColType_CheckBox(mintGrdBudget_Sel_col, False)
+        mcGridBudgetController.SetColType_CheckBox(mintGrdBudget_Sel_col, True)
 
-        mcGridBudgetController.blnSetColType_DateTimePicker(mintGrdBudget_PInc_PaidOn_col, True)
+        mcGridBudgetController.SetColType_DateTimePicker(mintGrdBudget_PExp_DatePaid_col, True)
 
         grdBudget.ColStyles(mintGrdBudget_Exp_Amount_col).CellValueType = GetType(Double)
-        grdBudget.ColStyles(mintGrdBudget_PInc_Amount_Paid_col).CellValueType = GetType(Double)
+        grdBudget.ColStyles(mintGrdBudget_PExp_AmountPaid_col).CellValueType = GetType(Double)
         grdBudget.ColStyles(mintGrdBudget_Exp_NextBillingDate_col).CellValueType = GetType(Date)
 
-        grdBudget.ColStyles(mintGrdBudget_Exp_NextBillingDate_col).Format = gcAppController.str_GetPCDateFormat
-        grdBudget.ColStyles(mintGrdBudget_NextIncomeDateToUse_col).Format = gcAppController.str_GetPCDateFormat
+        grdBudget.ColStyles(mintGrdBudget_Exp_NextBillingDate_col).Format = gcAppController.str_GetUserDateFormat
+        grdBudget.ColStyles(mintGrdBudget_NextIncomeDateToUse_col).Format = gcAppController.str_GetUserDateFormat
         grdBudget.ColStyles(mintGrdBudget_Exp_Amount_col).Format = mConstants.DataFormat.CURRENCY
-        grdBudget.ColStyles(mintGrdBudget_PInc_Amount_Paid_col).Format = mConstants.DataFormat.CURRENCY
+        grdBudget.ColStyles(mintGrdBudget_PExp_AmountPaid_col).Format = mConstants.DataFormat.CURRENCY
 
         grdBudget.Model.Options.MergeCellsMode = GridMergeCellsMode.OnDemandCalculation Or GridMergeCellsMode.MergeRowsInColumn
         grdBudget.ColStyles(mintGrdBudget_NextIncomeDateToUse_col).MergeCell = GridMergeCellDirection.RowsInColumn
@@ -395,7 +250,7 @@
         mcGridBudgetController.SetColsSizeBehavior = ColsSizeBehaviorsController.colsSizeBehaviors.EXTEND_LAST_COL
 
         For intCol As Integer = 1 To grdBudget.ColCount
-            If intCol <> mintGrdBudget_PInc_PaidOn_col And intCol <> mintGrdBudget_PInc_Comment_col And intCol <> mintGrdBudget_PInc_Amount_Paid_col And intCol <> mintGrdBudget_Sel_col Then
+            If intCol <> mintGrdBudget_PExp_DatePaid_col And intCol <> mintGrdBudget_PExp_Comment_col And intCol <> mintGrdBudget_PExp_AmountPaid_col And intCol <> mintGrdBudget_Sel_col Then
                 grdBudget.ColStyles(intCol).ReadOnly = True
             End If
         Next
@@ -404,28 +259,28 @@
 
     Private Sub rbtnBiMensuel_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnBiMensuel.CheckedChanged
         If rbtnBiMensuel.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetPCDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetUserDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Day, 14, dtpFrom.Value)
         End If
     End Sub
 
     Private Sub rbtnMensuelle_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnMensuelle.CheckedChanged
         If rbtnMensuelle.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetPCDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetUserDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Month, 1, dtpFrom.Value)
         End If
     End Sub
 
     Private Sub rbtnDeuxMois_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnDeuxMois.CheckedChanged
         If rbtnDeuxMois.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetPCDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetUserDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Month, 2, dtpFrom.Value)
         End If
     End Sub
 
     Private Sub rbtnHebdo_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnHebdo.CheckedChanged
         If rbtnHebdo.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetPCDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetUserDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Day, 7, dtpFrom.Value)
         End If
     End Sub
@@ -449,8 +304,10 @@
         End If
     End Sub
 
-    Private Sub btnRefresh_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnRefresh.Click
+    Private Sub btnRefresh_Click() Handles btnRefresh.Click
+        Me.Cursor = Windows.Forms.Cursors.WaitCursor
         blnGrdBudget_Load()
+        Me.Cursor = Windows.Forms.Cursors.Default
     End Sub
 
     Private Sub btnBefore_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnBefore.Click
@@ -474,7 +331,6 @@
 
         End Select
 
-        blnCalculateNextPayDate()
     End Sub
 
     Private Sub btnAfter_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnAfter.Click
@@ -498,12 +354,63 @@
 
         End Select
 
-        blnCalculateNextPayDate()
     End Sub
 
     Private Sub rbtnNotPaid_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnNotPaid.CheckedChanged
 
         btnPay.Enabled = rbtnNotPaid.Checked
+
+        btnRefresh.SetToRefresh = True
+    End Sub
+
+    Private Sub grdBudget_CellDoubleClick(sender As Object, e As EventArgs) Handles grdBudget.CellDoubleClick
+        Dim frmExpense As frmExpense
+
+        Select Case mcGridBudgetController.GetSelectedCol
+            Case mintGrdBudget_Exp_Name_col
+
+                If Not String.IsNullOrEmpty(grdBudget(mcGridBudgetController.GetSelectedRow, mintGrdBudget_Exp_ID_col).CellValue.ToString) Then
+
+                    frmExpense = New frmExpense
+                    frmExpense.formController.ShowForm(formController.FormMode, CInt(grdBudget(mcGridBudgetController.GetSelectedRow, mintGrdBudget_Exp_ID_col).CellValue), True)
+                    frmExpense = Nothing
+                End If
+        End Select
+    End Sub
+
+    Private Sub btnPay_Click(sender As Object, e As EventArgs) Handles btnPay.Click
+        blnPayExpenses()
+    End Sub
+
+    Private Sub btnSelectAll_Click(sender As Object, e As EventArgs) Handles btnSelectAll.Click
+        CheckUncheckAll(True, True)
+    End Sub
+
+    Private Sub btnUnselectAll_Click(sender As Object, e As System.EventArgs) Handles btnUnselectAll.Click
+        CheckUncheckAll(False, True)
+    End Sub
+
+    Private Sub dtpFrom_ValueChanged(sender As Object, e As EventArgs) Handles dtpFrom.ValueChanged, dtpTo.ValueChanged
+        If dtpFrom.Value > dtpTo.Value Then
+            dtpTo.Value = DateAdd(DateInterval.Day, 7, dtpFrom.Value)
+        End If
+        If formController.FormIsLoading Then
+
+        End If
+        btnRefresh.SetToRefresh = True
+    End Sub
+
+    Private Sub rbtnAll_CheckedChanged(sender As Object, e As EventArgs) Handles rbtnAll.CheckedChanged
+
+        If rbtnAll.IsHandleCreated Then
+
+            btnRefresh.SetToRefresh = True
+
+        End If
+    End Sub
+
+    Private Sub rbtnPaid_CheckedChanged(sender As Object, e As EventArgs) Handles rbtnPaid.CheckedChanged
+        btnRefresh.SetToRefresh = True
     End Sub
 
 #End Region

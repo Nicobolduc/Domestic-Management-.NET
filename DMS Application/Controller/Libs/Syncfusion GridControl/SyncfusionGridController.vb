@@ -2,6 +2,7 @@
 
 Imports System.ComponentModel
 
+
 Public Class SyncfusionGridController
 
     'Col 0 is the RowHeader and Row 0 is the Header of cols
@@ -10,6 +11,8 @@ Public Class SyncfusionGridController
     Private Const mintDefaultActionCol As Short = 1
     Private Const mstrSelectionColName As String = "SelCol"
     Private mintPreviousCellChangedRow As Integer
+    Private mstrUndeterminedCheckBoxState As String = "TO_DEFINE"
+    Private mblnHasNoActionColumn As Boolean
 
     'Private class members
     Private WithEvents mGrdSync As GridControl
@@ -33,6 +36,16 @@ Public Class SyncfusionGridController
 
 
 #Region "Properties"
+
+    Default Public Property Item(intRowIndex As Integer, intColIndex As Integer) As String
+        Get
+            Return mGrdSync(intRowIndex, intColIndex).CellValue.ToString
+        End Get
+        Set(value As String)
+            mGrdSync(intRowIndex, intColIndex).CellValue = value
+        End Set
+    End Property
+
 
     Public WriteOnly Property SetColsSizeBehavior As ColsSizeBehaviorsController.colsSizeBehaviors
         Set(ByVal value As ColsSizeBehaviorsController.colsSizeBehaviors)
@@ -119,6 +132,17 @@ Public Class SyncfusionGridController
         End Set
     End Property
 
+    Public ReadOnly Property GetUndeterminedCheckBoxState As String
+        Get
+            Return mstrUndeterminedCheckBoxState
+        End Get
+    End Property
+
+    Public WriteOnly Property SetNoActionColumn As Boolean
+        Set(value As Boolean)
+            mblnHasNoActionColumn = value
+        End Set
+    End Property
 #End Region
 
 #Region "Functions / Subs"
@@ -174,8 +198,12 @@ Public Class SyncfusionGridController
         Dim myDataTable As DataTable = New DataTable
         Dim strGridCaption As String = String.Empty
         Dim dataTableArray(,) As Object
+        Dim blnBrowseOnly As Boolean
 
         Try
+            blnBrowseOnly = mGrdSync.BrowseOnly
+            mGrdSync.BrowseOnly = False
+
             'Retrieve grid data from database
             sqlCmd = New MySqlCommand(vstrSQL, gcAppController.MySQLConnection)
 
@@ -207,6 +235,8 @@ Public Class SyncfusionGridController
 
             mGrdSync.Model.PopulateValues(GridRangeInfo.Cells(1, 1, myDataTable.Rows.Count, myDataTable.Columns.Count), dataTableArray)
 
+            mySQLReader.Dispose()
+
             blnValidReturn = blnSetColsDisplay()
 
             RaiseEvent SetDisplay()
@@ -220,10 +250,28 @@ Public Class SyncfusionGridController
             End If
 
             mGrdSync.EndUpdate(True)
+
+            mGrdSync.BrowseOnly = blnBrowseOnly
         End Try
 
         Return blnValidReturn
     End Function
+
+    Public Sub AddRow(Optional ByVal vintPosition As Integer = -1)
+        mGrdSync.IgnoreReadOnly = True
+
+        mGrdSync.Rows.InsertRange(IIf(vintPosition - 1, mGrdSync.RowCount + 1, vintPosition), 1)
+        mGrdSync(mGrdSync.RowCount, -1) = mGrdSync(1, -1)
+
+        If Not mblnHasNoActionColumn Then
+
+            mGrdSync(mGrdSync.RowCount, mintDefaultActionCol).CellValue = SyncfusionGridController.GridRowActions.INSERT_ACTION
+        End If
+
+        mGrdSync.RowStyles(mGrdSync.RowCount).BackColor = Color.LightGreen
+
+        mGrdSync.IgnoreReadOnly = False
+    End Sub
 
     Public Function CellIsEmpty(ByVal vintRow As Integer, ByVal vintCol As Integer) As Boolean
         Dim blnIsEmpty As Boolean = True
@@ -299,7 +347,8 @@ Public Class SyncfusionGridController
 
                     End Select
 
-                    mGrdSync.ChangeCells(GridRangeInfo.Cells(0, colHeaderCpt, mGrdSync.RowCount, colHeaderCpt), individualColStyle)
+                    'mGrdSync.ChangeCells(GridRangeInfo.Cells(0, colHeaderCpt, mGrdSync.RowCount, colHeaderCpt), individualColStyle)
+                    mGrdSync.ColStyles(colHeaderCpt) = individualColStyle
                 End If
 
             Next
@@ -354,32 +403,14 @@ Public Class SyncfusionGridController
         Return intReturnValue
     End Function
 
-    Public Function blnSetColType_CheckBox(ByVal vintColumnIndex As Integer, ByVal vblnAllowTriStates As Boolean) As Boolean
-        Dim blnValidReturn As Boolean
+    Public Sub SetColType_CheckBox(ByVal vintColumnIndex As Integer, Optional ByVal vblnAllowTriStates As Boolean = False)
 
-        Try
-            mGrdSync.ColStyles(vintColumnIndex).CellType = "CheckBox"
+        mGrdSync.ColStyles(vintColumnIndex).CellType = "CheckBox"
+        mGrdSync.ColStyles(vintColumnIndex).CheckBoxOptions = New GridCheckBoxCellInfo(True.ToString(), False.ToString(), mstrUndeterminedCheckBoxState, False)
+        mGrdSync.ColStyles(vintColumnIndex).TriState = vblnAllowTriStates
+    End Sub
 
-            If vblnAllowTriStates Then
-                mGrdSync.ColStyles(vintColumnIndex).CheckBoxOptions = New GridCheckBoxCellInfo(True.ToString(), False.ToString(), "2", False)
-            Else
-                mGrdSync.ColStyles(vintColumnIndex).CheckBoxOptions = New GridCheckBoxCellInfo(True.ToString(), False.ToString(), String.Empty, False)
-            End If
-
-            mGrdSync.ColStyles(vintColumnIndex).CellValueType = GetType(Boolean)
-
-            blnValidReturn = True
-
-        Catch ex As Exception
-            blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source & " - " & System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name)
-        End Try
-
-        Return blnValidReturn
-    End Function
-
-    Public Function blnSetColType_ComboBox(ByVal vstrSQL As String, ByVal vintColumnIndex As Integer, ByVal vstrValueMember As String, ByVal vstrDisplayMember As String, ByVal vblnAllowEmpty As Boolean) As Boolean
-        Dim blnValidReturn As Boolean
+    Public Sub SetColType_ComboBox(ByVal vstrSQL As String, ByVal vintColumnIndex As Integer, ByVal vstrValueMember As String, ByVal vstrDisplayMember As String, ByVal vblnAllowEmpty As Boolean)
         Dim mySQLCmd As MySqlCommand
         Dim mySQLReader As MySqlDataReader = Nothing
         Dim myBindingList As New BindingList(Of KeyValuePair(Of Integer, String))
@@ -408,45 +439,39 @@ Public Class SyncfusionGridController
             mGrdSync.ColStyles(vintColumnIndex).ValueMember = "Key"
             mGrdSync.ColStyles(vintColumnIndex).DisplayMember = "Value"
 
-            blnValidReturn = True
-
         Catch ex As Exception
-            blnValidReturn = False
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source & " - " & System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Dispose()
             End If
         End Try
+    End Sub
 
-        Return blnValidReturn
-    End Function
-
-    Public Function blnSetColType_DateTimePicker(ByVal vintColumnIndex As Integer, ByVal vblnShowCheckBox As Boolean) As Boolean
-        Dim blnValidReturn As Boolean
-        Dim dtPickerCell As New DateTimePickerCell.DateTimePickerCellModel(mGrdSync.Model, vblnShowCheckBox)
+    Public Sub SetColType_DateTimePicker(ByVal vintColumnIndex As Integer, ByVal vblnNullable As Boolean)
+        Dim dtPickerCell As New DateTimePickerCell.DateTimePickerCellModel(mGrdSync.Model, vblnNullable)
 
         Try
-            'Syncfusion.GridHelperClasses.RegisterCellModel.GridCellType(grdBudget, Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker)
-            'grdBudget(1, mintGrdBudget_Exp_PaidOn_col).CellType = Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker.ToString()
-            If Not mGrdSync.CellModels.ContainsKey("DateTimePicker") Then
-                mGrdSync.CellModels.Add("DateTimePicker", dtPickerCell)
+            If Not mGrdSync.CellModels.ContainsKey(Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker.ToString) Then
+                Syncfusion.GridHelperClasses.RegisterCellModel.GridCellType(mGrdSync, Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker)
             End If
 
-            mGrdSync.ColStyles(vintColumnIndex).CellType = "DateTimePicker"
-            mGrdSync.ColStyles(vintColumnIndex).CellValueType = GetType(DateTime)
-            mGrdSync.ColStyles(vintColumnIndex).Format = gcAppController.str_GetPCDateFormat
-            mGrdSync.ColStyles(vintColumnIndex).CellValue = String.Empty
+            mGrdSync.ColStyles(vintColumnIndex).CellType = Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker.ToString()
+            'If Not mGrdSync.CellModels.ContainsKey("DateTimePicker") Then
+            '    mGrdSync.CellModels.Add("DateTimePicker", dtPickerCell)
+            'End If
 
-            blnValidReturn = True
+            'mGrdSync.ColStyles(vintColumnIndex).CellType = "DateTimePicker"
+            mGrdSync.ColStyles(vintColumnIndex).CellValueType = GetType(DateTime)
+            mGrdSync.ColStyles(vintColumnIndex).CellValue = String.Empty
+            mGrdSync.ColStyles(vintColumnIndex).Format = gcAppController.str_GetUserDateFormat
+
+            mGrdSync.ColWidths(vintColumnIndex) = 85
 
         Catch ex As Exception
-            blnValidReturn = False
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source & " - " & System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name)
         End Try
-
-        Return blnValidReturn
-    End Function
+    End Sub
 
 #End Region
 
@@ -497,12 +522,20 @@ Public Class SyncfusionGridController
         'End If
     End Sub
 
-    Private Sub GrdSyncController_CurrentCellChanged(ByVal sender As Object, ByVal e As EventArgs) Handles mGrdSync.CurrentCellChanged
+    Private Sub mGrdSync_CurrentCellAcceptedChanges(sender As Object, e As CancelEventArgs) Handles mGrdSync.CurrentCellAcceptedChanges
 
-        If mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue <> GridRowActions.INSERT_ACTION Then
+        If Not mblnHasNoActionColumn And Val(mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue) <> GridRowActions.INSERT_ACTION Then
             mGrdSync.RowStyles(GetSelectedRow).BackColor = Color.Yellow
             mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue = GridRowActions.UPDATE_ACTION
         End If
+    End Sub
+
+    Private Sub GrdSyncController_CurrentCellChanged(ByVal sender As Object, ByVal e As EventArgs) Handles mGrdSync.CurrentCellChanged
+
+        'If Not mblnHasNoActionColumn And Val(mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue) <> GridRowActions.INSERT_ACTION Then
+        '    mGrdSync.RowStyles(GetSelectedRow).BackColor = Color.Yellow
+        '    mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue = GridRowActions.UPDATE_ACTION
+        'End If
     End Sub
 
     Private Sub GrdSyncController_CurrentCellCloseDropDown(sender As Object, e As Syncfusion.Windows.Forms.PopupClosedEventArgs) Handles mGrdSync.CurrentCellCloseDropDown

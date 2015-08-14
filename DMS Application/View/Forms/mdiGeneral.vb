@@ -48,10 +48,7 @@
 
         frmGestionBudget.MdiParent = Me
 
-        frmGestionBudget.Width = 1024
-        frmGestionBudget.Height = 768
-
-        frmGestionBudget.formController.ShowForm(mConstants.Form_Mode.CONSULT_MODE)
+        frmGestionBudget.formController.ShowForm(mConstants.Form_Mode.UPDATE_MODE)
     End Sub
 
     Private Sub mnuiExpenseToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiExpense.Click
@@ -90,6 +87,14 @@
         mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.INCOME_LIST_ID)
     End Sub
 
+    Private Sub RepasToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RepasToolStripMenuItem.Click
+        Dim frmMealManagement As New frmMealManagement
+
+        frmMealManagement.MdiParent = Me
+
+        frmMealManagement.formController.ShowForm(mConstants.Form_Mode.UPDATE_MODE)
+    End Sub
+
 #End Region
 
     Private Sub TestsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestsToolStripMenuItem.Click
@@ -97,6 +102,5 @@
 
         test.Show()
     End Sub
-
 
 End Class

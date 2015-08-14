@@ -47,16 +47,53 @@ Public NotInheritable Class AppController
         End Get
     End Property
 
-    Public ReadOnly Property str_GetPCDateFormat As String
+    Public ReadOnly Property str_GetUserDateFormat As String
         Get
-            Return System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern()
+            Select Case mcUser.GetLanguage
+                Case CInt(mConstants.Language.FRENCH_QC)
+                    Return "dd/MM/yyyy"
+
+                Case CInt(mConstants.Language.ENGLISH_CA)
+                    Return "mm/dd/yyyy"
+
+                Case Else
+                    Return System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern()
+
+            End Select
         End Get
     End Property
 
-    Public ReadOnly Property str_GetPCDateTimeFormat As String
+    Public ReadOnly Property str_GetUserDateTimeFormat As String
         Get
-            Return "mm/dd/yyyy"
-            'Return System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern & " " & System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortTimePattern
+            Select Case mcUser.GetLanguage
+                Case CInt(mConstants.Language.FRENCH_QC)
+                    Return "dd/MM/yyyy HH:mm:ss"
+
+                Case CInt(mConstants.Language.ENGLISH_CA)
+                    Return "mm/dd/yyyy HH:mm:ss"
+
+                Case Else
+                    Return System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern & " " & System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortTimePattern
+
+            End Select
+        End Get
+    End Property
+
+    Public ReadOnly Property str_GetServerTimeFormat As String
+        Get
+            Return "HH:mm:ss"
+        End Get
+    End Property
+
+    Public ReadOnly Property str_GetServerDateFormat() As String
+        Get
+            Return "yyyy-MM-dd"
+        End Get
+    End Property
+
+    Public ReadOnly Property str_GetServerDateTimeFormat() As String
+        Get
+            Return "yyyy-MM-dd HH:mm:ss"
         End Get
     End Property
 
@@ -111,19 +148,6 @@ Public NotInheritable Class AppController
         Return blnValidReturn
     End Function
 
-    Public Function str_GetServerDateTimeFormat() As String
-        Dim strFormat As String = String.Empty
-
-        Try
-            strFormat = "yyyy-MM-dd hh:mm:ss"
-
-        Catch ex As MySqlException
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        End Try
-
-        Return strFormat
-    End Function
-
     Public Function bln_CTLBindCaption(ByRef rControl As System.Windows.Forms.Control) As Boolean
         Dim blnValidReturn As Boolean
         Dim strCaption As String = String.Empty
@@ -166,7 +190,19 @@ Public NotInheritable Class AppController
 
     End Function
 
-    Public Sub ShowMessage(ByVal vintCaption_ID As Integer, ByVal vmsgType As MsgBoxStyle)
+    Public Function str_FixDateForSQL(ByVal vstrDateToFix As Date) As String
+
+        Return str_FixStringForSQL(Format(vstrDateToFix, str_GetServerDateTimeFormat))
+
+    End Function
+
+    Public Function str_SetDateToMidnightServerFormat(ByVal vdtDateToSet As Date) As Date
+
+        Return CDate(Format(CDate(vdtDateToSet & " 00:00:00"), gcAppController.str_GetServerDateTimeFormat))
+
+    End Function
+
+    Public Sub ShowMessage(ByVal vintCaption_ID As Integer, Optional ByVal vmsgType As MsgBoxStyle = MsgBoxStyle.Information)
         Dim strMessage As String = String.Empty
 
         Try
@@ -201,6 +237,9 @@ Public NotInheritable Class AppController
 
                     Case "DataGridView"
                         DirectCast(objControl, DataGridView).ReadOnly = True
+
+                    Case "GridControl"
+                        DirectCast(objControl, GridControl).BrowseOnly = True
 
                     Case "TabControl"
                         For Each tp As TabPage In DirectCast(objControl, TabControl).TabPages

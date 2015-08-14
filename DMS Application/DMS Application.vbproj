@@ -22,14 +22,17 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
+    <DefineTrace>false</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>DMS Application.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <NoWarn>
     </NoWarn>
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
     <Prefer32Bit>false</Prefer32Bit>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG=1</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -38,7 +41,8 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>DMS Application.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <NoWarn>
     </NoWarn>
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
@@ -76,12 +80,20 @@
       <HintPath>..\External Libs\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.Core, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=632609b4d040f6b4" />
+    <Reference Include="Syncfusion.Diagram.Base, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
+    <Reference Include="Syncfusion.Diagram.Windows, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
+    <Reference Include="Syncfusion.Edit.Windows, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
     <Reference Include="Syncfusion.Grid.Base, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="Syncfusion.Grid.Windows, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
     <Reference Include="Syncfusion.GridHelperClasses.Windows, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External Libs\Syncfusion.GridHelperClasses.Windows.dll</HintPath>
     </Reference>
+    <Reference Include="Syncfusion.Linq.Base, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
+    <Reference Include="Syncfusion.PivotAnalysis.Base, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
+    <Reference Include="Syncfusion.PivotAnalysis.Windows, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
+    <Reference Include="Syncfusion.Schedule.Base, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
+    <Reference Include="Syncfusion.Schedule.Windows, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
     <Reference Include="Syncfusion.Shared.Base, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="Syncfusion.Shared.Windows, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="Syncfusion.Tools.Base, Version=13.1451.0.21, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
@@ -134,6 +146,7 @@
     <Compile Include="Controller\Model Controllers\ProductController.vb" />
     <Compile Include="Model\BaseModel.vb" />
     <Compile Include="Model\Company.vb" />
+    <Compile Include="Model\Expense\PaidExpense.vb" />
     <Compile Include="Model\Income.vb" />
     <Compile Include="Model\Expense\Expense.vb" />
     <Compile Include="Model\Product\ProductBrand.vb" />
@@ -149,6 +162,12 @@
       <DependentUpon>frmExpenseType.vb</DependentUpon>
     </Compile>
     <Compile Include="View\Forms\frmExpenseType.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Forms\frmMealManagement.Designer.vb">
+      <DependentUpon>frmMealManagement.vb</DependentUpon>
+    </Compile>
+    <Compile Include="View\Forms\frmMealManagement.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\User Controls\ctlDateTimePicker.Designer.vb">
@@ -266,6 +285,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="View\User Controls\ctlRefresh.Designer.vb">
+      <DependentUpon>ctlRefresh.vb</DependentUpon>
+    </Compile>
+    <Compile Include="View\User Controls\ctlRefresh.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="View\Forms\frmIncome.resx">
@@ -273,6 +298,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\Forms\frmExpenseType.resx">
       <DependentUpon>frmExpenseType.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Forms\frmMealManagement.resx">
+      <DependentUpon>frmMealManagement.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\User Controls\ctlDateTimePicker.resx">
       <DependentUpon>ctlDateTimePicker.vb</DependentUpon>
@@ -325,6 +353,9 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\User Controls\ctlRefresh.resx">
+      <DependentUpon>ctlRefresh.vb</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -350,6 +381,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Consult.png" />
+    <None Include="Resources\Untitled.bmp" />
+    <None Include="Resources\Image1.bmp" />
     <None Include="Resources\MagnifyGlass.png" />
   </ItemGroup>
   <ItemGroup />

@@ -27,15 +27,15 @@ Partial Class frmExpense
         Me.txtName = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.cboInterval = New System.Windows.Forms.ComboBox()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.dtpBillDate = New System.Windows.Forms.DateTimePicker()
         Me.formController = New DMS_Application.ctlFormController()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.txtAmount = New System.Windows.Forms.TextBox()
-        Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.cboType = New System.Windows.Forms.ComboBox()
         Me.chkFixed = New System.Windows.Forms.CheckBox()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.grdAmount = New Syncfusion.Windows.Forms.Grid.GridControl()
+        Me.btnAddRow = New System.Windows.Forms.Button()
+        Me.GroupBox1.SuspendLayout()
+        CType(Me.grdAmount, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label1
@@ -55,7 +55,7 @@ Partial Class frmExpense
         '
         'Label2
         '
-        Me.Label2.Location = New System.Drawing.Point(237, 89)
+        Me.Label2.Location = New System.Drawing.Point(4, 61)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(71, 13)
         Me.Label2.TabIndex = 3
@@ -65,29 +65,10 @@ Partial Class frmExpense
         '
         Me.cboInterval.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboInterval.FormattingEnabled = True
-        Me.cboInterval.Location = New System.Drawing.Point(305, 86)
+        Me.cboInterval.Location = New System.Drawing.Point(73, 58)
         Me.cboInterval.Name = "cboInterval"
         Me.cboInterval.Size = New System.Drawing.Size(163, 21)
         Me.cboInterval.TabIndex = 3
-        '
-        'Label3
-        '
-        Me.Label3.Location = New System.Drawing.Point(4, 89)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(128, 13)
-        Me.Label3.TabIndex = 5
-        Me.Label3.Text = "Prochaine facturation le:"
-        '
-        'dtpBillDate
-        '
-        Me.dtpBillDate.CustomFormat = "dd/MM/yy"
-        Me.dtpBillDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpBillDate.Location = New System.Drawing.Point(129, 86)
-        Me.dtpBillDate.Name = "dtpBillDate"
-        Me.dtpBillDate.ShowCheckBox = True
-        Me.dtpBillDate.Size = New System.Drawing.Size(102, 20)
-        Me.dtpBillDate.TabIndex = 2
-        Me.dtpBillDate.Value = New Date(2014, 9, 4, 1, 12, 37, 0)
         '
         'formController
         '
@@ -95,39 +76,15 @@ Partial Class frmExpense
         Me.formController.FormIsLoading = False
         Me.formController.FormMode = DMS_Application.mConstants.Form_Mode.CONSULT_MODE
         Me.formController.Item_ID = 0
-        Me.formController.Location = New System.Drawing.Point(0, 113)
+        Me.formController.Location = New System.Drawing.Point(-86, 241)
         Me.formController.Name = "formController"
         Me.formController.ShowButtonQuitOnly = False
         Me.formController.Size = New System.Drawing.Size(473, 33)
         Me.formController.TabIndex = 4
         '
-        'Label4
-        '
-        Me.Label4.Location = New System.Drawing.Point(4, 31)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(54, 13)
-        Me.Label4.TabIndex = 7
-        Me.Label4.Text = "Montant:"
-        '
-        'txtAmount
-        '
-        Me.txtAmount.Location = New System.Drawing.Point(73, 28)
-        Me.txtAmount.Name = "txtAmount"
-        Me.txtAmount.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.txtAmount.Size = New System.Drawing.Size(75, 20)
-        Me.txtAmount.TabIndex = 1
-        '
-        'Label5
-        '
-        Me.Label5.Location = New System.Drawing.Point(148, 31)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(35, 13)
-        Me.Label5.TabIndex = 9
-        Me.Label5.Text = "$"
-        '
         'Label6
         '
-        Me.Label6.Location = New System.Drawing.Point(4, 58)
+        Me.Label6.Location = New System.Drawing.Point(4, 34)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(54, 13)
         Me.Label6.TabIndex = 10
@@ -138,39 +95,69 @@ Partial Class frmExpense
         Me.cboType.BackColor = System.Drawing.SystemColors.Window
         Me.cboType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboType.FormattingEnabled = True
-        Me.cboType.Location = New System.Drawing.Point(73, 55)
+        Me.cboType.Location = New System.Drawing.Point(73, 31)
         Me.cboType.Name = "cboType"
-        Me.cboType.Size = New System.Drawing.Size(158, 21)
+        Me.cboType.Size = New System.Drawing.Size(163, 21)
         Me.cboType.TabIndex = 11
         '
         'chkFixed
         '
         Me.chkFixed.AutoSize = True
-        Me.chkFixed.Location = New System.Drawing.Point(253, 57)
+        Me.chkFixed.Location = New System.Drawing.Point(253, 33)
         Me.chkFixed.Name = "chkFixed"
         Me.chkFixed.Size = New System.Drawing.Size(45, 17)
         Me.chkFixed.TabIndex = 12
         Me.chkFixed.Text = "Fixe"
         Me.chkFixed.UseVisualStyleBackColor = True
         '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.btnAddRow)
+        Me.GroupBox1.Controls.Add(Me.grdAmount)
+        Me.GroupBox1.Location = New System.Drawing.Point(7, 93)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(373, 143)
+        Me.GroupBox1.TabIndex = 14
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Périodes et montants"
+        '
+        'grdAmount
+        '
+        Me.grdAmount.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.grdAmount.Location = New System.Drawing.Point(6, 19)
+        Me.grdAmount.Name = "grdAmount"
+        Me.grdAmount.SerializeCellsBehavior = Syncfusion.Windows.Forms.Grid.GridSerializeCellsBehavior.SerializeAsRangeStylesIntoCode
+        Me.grdAmount.Size = New System.Drawing.Size(318, 116)
+        Me.grdAmount.SmartSizeBox = False
+        Me.grdAmount.TabIndex = 14
+        Me.grdAmount.Tag = "21"
+        Me.grdAmount.Text = "GridControl1"
+        Me.grdAmount.UseRightToLeftCompatibleTextBox = True
+        '
+        'btnAddRow
+        '
+        Me.btnAddRow.BackgroundImage = CType(resources.GetObject("btnAddRow.BackgroundImage"), System.Drawing.Image)
+        Me.btnAddRow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.btnAddRow.Location = New System.Drawing.Point(330, 19)
+        Me.btnAddRow.Name = "btnAddRow"
+        Me.btnAddRow.Size = New System.Drawing.Size(35, 35)
+        Me.btnAddRow.TabIndex = 15
+        Me.btnAddRow.UseVisualStyleBackColor = True
+        '
         'frmExpense
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(472, 144)
+        Me.ClientSize = New System.Drawing.Size(386, 272)
+        Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.chkFixed)
         Me.Controls.Add(Me.cboType)
         Me.Controls.Add(Me.Label6)
-        Me.Controls.Add(Me.txtAmount)
-        Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.cboInterval)
-        Me.Controls.Add(Me.dtpBillDate)
-        Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.formController)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.txtName)
         Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.Label5)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
@@ -178,6 +165,8 @@ Partial Class frmExpense
         Me.Name = "frmExpense"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Dépense"
+        Me.GroupBox1.ResumeLayout(False)
+        CType(Me.grdAmount, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -187,12 +176,10 @@ Partial Class frmExpense
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents cboInterval As System.Windows.Forms.ComboBox
     Public WithEvents formController As DMS_Application.ctlFormController
-    Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents dtpBillDate As System.Windows.Forms.DateTimePicker
-    Friend WithEvents Label4 As System.Windows.Forms.Label
-    Friend WithEvents txtAmount As System.Windows.Forms.TextBox
-    Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents cboType As System.Windows.Forms.ComboBox
     Friend WithEvents chkFixed As System.Windows.Forms.CheckBox
+    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+    Friend WithEvents grdAmount As Syncfusion.Windows.Forms.Grid.GridControl
+    Friend WithEvents btnAddRow As System.Windows.Forms.Button
 End Class

@@ -1,72 +1,70 @@
 ﻿Namespace Model
 
-    Public Class Income
+    Public Class PaidExpense
         Inherits BaseModel
 
         'Private members
-        Private _intIncome_ID As Integer
-        Private _strName As String = String.Empty
-        Private _dblAmount As Double
-        Private _dtReceptionDate As Nullable(Of Date)
-        Private _period_ID As mConstants.Period
-        Private _isMainIncome As Boolean
-
-        'Private class members
+        Private _intPaidExpense_ID As Integer
+        Private _intExpense_ID As Integer
+        Private _dtExpenseBillingDate_ID As DateTime
+        Private _dblAmountPaid As Double
+        Private _dtDatePaid As Date
+        Private _strComment As String = String.Empty
 
 
 #Region "Properties"
 
         Public Property ID As Integer
             Get
-                Return _intIncome_ID
+                Return _intPaidExpense_ID
             End Get
             Set(ByVal value As Integer)
-                _intIncome_ID = value
+                _intPaidExpense_ID = value
             End Set
         End Property
 
-        Public Property Name As String
+        Public Property Expense_ID As Integer
             Get
-                Return _strName
+                Return _intExpense_ID
             End Get
-            Set(ByVal value As String)
-                _strName = value
+            Set(ByVal value As Integer)
+                _intExpense_ID = value
             End Set
         End Property
 
-        Public Property Amount As Double
+        Public Property ExpenseBillingDate_ID As DateTime
             Get
-                Return _dblAmount
+                Return _dtExpenseBillingDate_ID
+            End Get
+            Set(value As DateTime)
+                _dtExpenseBillingDate_ID = value
+            End Set
+        End Property
+
+        Public Property AmountPaid As Double
+            Get
+                Return _dblAmountPaid
             End Get
             Set(ByVal value As Double)
-                _dblAmount = value
+                _dblAmountPaid = value
             End Set
         End Property
 
-        Public Property ReceptionDate As Nullable(Of Date)
+        Public Property DatePaid As Date
             Get
-                Return _dtReceptionDate
+                Return _dtDatePaid
             End Get
-            Set(ByVal value As Nullable(Of Date))
-                _dtReceptionDate = value
+            Set(ByVal value As Date)
+                _dtDatePaid = value
             End Set
         End Property
 
-        Public Property Period As mConstants.Period
+        Public Property Comment As String
             Get
-                Return _period_ID
+                Return _strComment
             End Get
-            Set(ByVal value As mConstants.Period)
-                _period_ID = value
-            End Set
-        End Property
-
-        Public Property IsMainIncome As Boolean
-            Get
-                Return _isMainIncome
-            End Get
-            Set(value As Boolean)
-                _isMainIncome = value
+            Set(ByVal value As String)
+                _strComment = value
             End Set
         End Property
 
@@ -74,7 +72,7 @@
 
 #Region "Functions / Subs"
 
-        Public Function blnIncome_Save() As Boolean
+        Public Function blnPaidExpense_Save() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
@@ -82,13 +80,13 @@
 
                     Select Case DLMCommand
                         Case mConstants.Form_Mode.INSERT_MODE
-                            blnValidReturn = blnIncome_Insert()
+                            blnValidReturn = blnPaidExpense_Insert()
 
                         Case mConstants.Form_Mode.UPDATE_MODE
-                            blnValidReturn = blnIncome_Update()
+                            blnValidReturn = blnPaidExense_Update()
 
                         Case mConstants.Form_Mode.DELETE_MODE
-                            blnValidReturn = blnIncome_Delete()
+                            blnValidReturn = blnExpense_Delete()
 
                     End Select
                 Else
@@ -103,17 +101,17 @@
             Return blnValidReturn
         End Function
 
-        Private Function blnIncome_AddFields() As Boolean
+        Private Function blnPaidExpense_AddFields() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
                 Select Case False
                     Case SQLController.bln_RefreshFields
-                    Case SQLController.bln_AddField("Inc_Name", _strName, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
-                    Case SQLController.bln_AddField("Inc_ReceptDate", _dtReceptionDate, MySQLController.MySQL_FieldTypes.DATETIME_TYPE)
-                    Case SQLController.bln_AddField("Inc_Amount", _dblAmount, MySQLController.MySQL_FieldTypes.DECIMAL_TYPE)
-                    Case SQLController.bln_AddField("Inc_IsMain", _isMainIncome, MySQLController.MySQL_FieldTypes.BIT_TYPE)
-                    Case SQLController.bln_AddField("Per_ID", CInt(_period_ID), MySQLController.MySQL_FieldTypes.ID_TYPE)
+                    Case SQLController.bln_AddField("Exp_ID", _intExpense_ID, MySQLController.MySQL_FieldTypes.ID_TYPE)
+                    Case SQLController.bln_AddField("Exp_BilledDate", _dtExpenseBillingDate_ID, MySQLController.MySQL_FieldTypes.DATETIME_TYPE)
+                    Case SQLController.bln_AddField("PExp_AmountPaid", _dblAmountPaid, MySQLController.MySQL_FieldTypes.DECIMAL_TYPE)
+                    Case SQLController.bln_AddField("PExp_DatePaid", _dtDatePaid, MySQLController.MySQL_FieldTypes.DATETIME_TYPE)
+                    Case SQLController.bln_AddField("PExp_Comment", _strComment, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
                     Case Else
                         blnValidReturn = True
                 End Select
@@ -126,14 +124,14 @@
             Return blnValidReturn
         End Function
 
-        Private Function blnIncome_Insert() As Boolean
+        Private Function blnPaidExpense_Insert() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
                 Select Case False
-                    Case blnIncome_AddFields()
-                    Case SQLController.bln_ADOInsert("Income", _intIncome_ID)
-                    Case _intIncome_ID > 0
+                    Case blnPaidExpense_AddFields()
+                    Case SQLController.bln_ADOInsert("PaidExpense", _intPaidExpense_ID)
+                    Case _intPaidExpense_ID > 0
                     Case Else
                         blnValidReturn = True
                 End Select
@@ -146,13 +144,13 @@
             Return blnValidReturn
         End Function
 
-        Private Function blnIncome_Update() As Boolean
+        Private Function blnPaidExense_Update() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
                 Select Case False
-                    Case blnIncome_AddFields()
-                    Case SQLController.bln_ADOUpdate("Income", "Inc_ID = " & _intIncome_ID)
+                    Case blnPaidExpense_AddFields()
+                    Case SQLController.bln_ADOUpdate("PaidExpense", "PExp_ID = " & _intPaidExpense_ID)
                     Case Else
                         blnValidReturn = True
                 End Select
@@ -165,12 +163,12 @@
             Return blnValidReturn
         End Function
 
-        Private Function blnIncome_Delete() As Boolean
+        Private Function blnExpense_Delete() As Boolean
             Dim blnValidReturn As Boolean
 
             Try
                 Select Case False
-                    Case SQLController.bln_ADODelete("Income", "Inc_ID = " & _intIncome_ID)
+                    Case SQLController.bln_ADODelete("PaidExpense", "PExp_ID = " & _intPaidExpense_ID)
                     Case Else
                         blnValidReturn = True
                 End Select

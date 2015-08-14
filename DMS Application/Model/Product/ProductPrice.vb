@@ -127,7 +127,7 @@
                 Case mcSQL.bln_AddField("Cy_ID_Seller", _intCompanySeller_ID, MySQLController.MySQL_FieldTypes.ID_TYPE)
                 Case mcSQL.bln_AddField("ProB_ID", _intProductBrand_ID, MySQLController.MySQL_FieldTypes.ID_TYPE)
                 Case mcSQL.bln_AddField("Pro_ID", _intProduct_ID, MySQLController.MySQL_FieldTypes.ID_TYPE)
-                Case mcSQL.bln_AddField("ProP_Price", _dblPrice, MySQLController.MySQL_FieldTypes.DOUBLE_TYPE)
+                Case mcSQL.bln_AddField("ProP_Price", _dblPrice, MySQLController.MySQL_FieldTypes.DECIMAL_TYPE)
                 Case Else
                     blnValidReturn = True
             End Select

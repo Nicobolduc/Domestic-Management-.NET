@@ -1,6 +1,11 @@
 ﻿
 Public Module mConstants
 
+    Public Enum Language
+        FRENCH_QC = 1
+        ENGLISH_CA = 2
+    End Enum
+
     Public Enum Period
         WEEKLY = 1
         FORTNIGHTLY = 2
@@ -18,6 +23,7 @@ Public Module mConstants
 
     Public Enum Error_Message
         ERROR_SAVE_MSG = 5
+        ERROR_DELETE_MSG = 19
     End Enum
 
     Public Enum Validation_Message

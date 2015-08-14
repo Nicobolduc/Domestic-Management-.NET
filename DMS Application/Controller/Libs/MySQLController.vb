@@ -10,10 +10,11 @@ Public Class MySQLController
 
     Private mColFields As Collections.Specialized.StringDictionary
 
+
     Public Enum MySQL_FieldTypes
         BIT_TYPE = 0
         INT_TYPE = 1
-        DOUBLE_TYPE = 2
+        DECIMAL_TYPE = 2
         VARCHAR_TYPE = 3
         DATETIME_TYPE = 4
         ID_TYPE = 5
@@ -62,6 +63,30 @@ Public Class MySQLController
         Return mySQLReader
     End Function
 
+    Public Shared Function bln_ADOExecute(ByVal vstrSQL As String) As Boolean
+        Dim blnValidReturn As Boolean
+        Dim mySQLCmd As MySqlCommand = Nothing
+        Dim mySQLReader As MySqlDataReader = Nothing
+
+        Try
+            mySQLCmd = New MySqlCommand(vstrSQL, gcAppController.MySQLConnection)
+
+            mySQLReader = mySQLCmd.ExecuteReader()
+
+            blnValidReturn = True
+
+        Catch ex As Exception
+            blnValidReturn = False
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        Finally
+            If Not IsNothing(mySQLCmd) Then
+                mySQLCmd.Dispose()
+            End If
+        End Try
+
+        Return blnValidReturn
+    End Function
+
     Public Shared Function str_ADOSingleLookUp(ByVal vstrField As String, ByVal vstrTable As String, ByVal vstrWhere As String) As String
         Dim strReturnValue As String = String.Empty
         Dim mySQLCmd As MySqlCommand = Nothing
@@ -90,10 +115,6 @@ Public Class MySQLController
         End Try
 
         Return strReturnValue
-    End Function
-
-    Public Shared Function str_FixDateForSelect(ByVal vstrDateToFix As DateTime) As String
-        Return gcAppController.str_FixStringForSQL(Format(vstrDateToFix, gcAppController.str_GetServerDateTimeFormat))
     End Function
 
 #End Region
@@ -175,7 +196,7 @@ Public Class MySQLController
                         vstrValue = Format(CDate(vstrValue), gcAppController.str_GetServerDateTimeFormat)
                         vstrValue = gcAppController.str_FixStringForSQL(vstrValue)
 
-                    Case MySQLController.MySQL_FieldTypes.DOUBLE_TYPE, MySQLController.MySQL_FieldTypes.INT_TYPE
+                    Case MySQLController.MySQL_FieldTypes.DECIMAL_TYPE, MySQLController.MySQL_FieldTypes.INT_TYPE
                         vstrValue = vstrValue.ToString
 
                     Case MySQLController.MySQL_FieldTypes.ID_TYPE
@@ -302,53 +323,26 @@ Public Class MySQLController
         Return blnValidReturn
     End Function
 
-    Private Function bln_CheckReferenceIntegrity(ByVal vstrForeignKeyName As String, ByVal vlngForeignKeyValue As Integer, ByRef rblnValide As Boolean, Optional ByRef vvarTableExceptionList As Object = Nothing) As Boolean
-        Return True
-        'Dim blnReturn As Boolean
-        'Dim intCptr As Short
-        'Dim strReturn As String = gvbNullstring
-        'Dim strSQL As String = gvbNullstring
-        'Dim recTables As New ADODB.Recordset
-        'Dim strExeptTableList As String = gvbNullstring
+    Public Shared Function bln_CheckReferenceIntegrity(ByVal vstrForeignTableName As String, ByVal vstrForeignKeyName As String, ByVal vintForeignKeyValue As Integer) As Boolean
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
 
-        'blnReturn = True
-        'rblnValide = True
-        'strExeptTableList = gvbNullstring
+        Try
+            strSQL = "DELETE FROM " & vstrForeignTableName & " WHERE " & vstrForeignKeyName & " = " & vintForeignKeyValue
 
-        'For intCptr = 0 To UBound(vvarTableExceptionList)
+            blnValidReturn = bln_ADOExecute(strSQL)
 
-        '    strExeptTableList = strExeptTableList & "'" & vvarTableExceptionList(intCptr) & "',"
-        'Next
+        Catch ex As Exception
+            blnValidReturn = False
+            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
 
-        ''trim last comma
-        'strExeptTableList = Left(strExeptTableList, Len(strExeptTableList) - 1)
+        If Not blnValidReturn Then
+            gcAppController.ShowMessage(mConstants.Error_Message.ERROR_DELETE_MSG, MsgBoxStyle.Exclamation)
+        End If
 
-        'strSQL = " SELECT DISTINCT  NomTable, NomCleReel " & vbCrLf
-        'strSQL = strSQL & " FROM   TTCheckIntegrity " & vbCrLf
-        'strSQL = strSQL & " WHERE      NomTable NOT IN ( " & strExeptTableList & ")" & vbCrLf
-        'strSQL = strSQL & " AND NomCle = '" & vstrForeignKeyName & "'"
-
-        ''Appel sa propre fonction
-        'Call bln_ADOSelect(strSQL, recTables)
-
-        'Do While Not recTables.EOF
-        '    strSQL = gvbNullstring
-        '    blnReturn = bln_ADOSingleLookUp(recTables.Fields("NomTable").Value, recTables.Fields("NomCleReel").Value, strReturn, recTables.Fields("NomCleReel").Value & " = " & vlngForeignKeyValue)
-
-        '    If blnReturn Then
-        '        If strReturn <> gvbNullstring Then
-        '            rblnValide = False
-        '            Exit Do
-        '        Else
-        '            'Valid for this table
-        '        End If
-        '    Else
-        '        rblnValide = False
-        '        Exit Do
-        '    End If
-        '    recTables.MoveNext()
-        'Loop
-
+        Return blnValidReturn
+        
     End Function
 
 #End Region

@@ -108,20 +108,24 @@ Public Class ctlFormController
 
             LoadFormData()
 
-            If Not vblnIsModal Then
-                mfrmParent.MdiParent = My.Forms.mdiGeneral
+            If Not mfrmParent.IsDisposed Then
+                If Not vblnIsModal Then
+                    mfrmParent.MdiParent = My.Forms.mdiGeneral
 
-                mfrmParent.Show()
+                    mfrmParent.Show()
+                Else
+                    mfrmParent.MdiParent = Nothing
+                    mfrmParent.ShowInTaskbar = False
+
+                    Me.Cursor = System.Windows.Forms.Cursors.Default
+
+                    mfrmParent.ShowDialog()
+                End If
+
+                rintItem_ID = mintItem_ID
             Else
-                mfrmParent.MdiParent = Nothing
-                mfrmParent.ShowInTaskbar = False
-
-                Me.Cursor = System.Windows.Forms.Cursors.Default
-
-                mfrmParent.ShowDialog()
+                Me.Dispose()
             End If
-
-            rintItem_ID = mintItem_ID
 
         Catch ex As Exception
             gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
