@@ -265,7 +265,7 @@
     End Sub
 
     Private Sub rbtnMensuelle_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnMensuelle.CheckedChanged
-        If rbtnMensuelle.Checked Then
+        If rbtnMensuelle.Checked And Not formController.FormIsLoading Then
             dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetUserDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Month, 1, dtpFrom.Value)
         End If

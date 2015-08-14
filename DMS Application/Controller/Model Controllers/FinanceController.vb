@@ -17,11 +17,14 @@
             strSQL = strSQL & "        Expense.ExpT_ID, " & vbCrLf
             strSQL = strSQL & "        Expense.Exp_Fixed " & vbCrLf
             strSQL = strSQL & " FROM Expense " & vbCrLf
-            strSQL = strSQL & "     INNER JOIN (SELECT * " & vbCrLf
-            strSQL = strSQL & "                 FROM ExpenseAmount " & vbCrLf
-            strSQL = strSQL & "     			GROUP BY Exp_ID" & vbCrLf
-            strSQL = strSQL & "                 HAVING ExpenseAmount.ExpA_DtBegin = MAX(ExpenseAmount.ExpA_DtBegin) " & vbCrLf
-            strSQL = strSQL & "     		   ) AS ExpenseAmount ON ExpenseAmount.Exp_ID = Expense.Exp_ID " & vbCrLf
+            strSQL = strSQL & "     INNER JOIN (SELECT ExpenseAmount.* " & vbCrLf
+            strSQL = strSQL & "                 FROM (SELECT MAX(ExpenseAmount.ExpA_DtBegin) AS ExpA_DtBegin, ExpenseAmount.Exp_ID " & vbCrLf
+            strSQL = strSQL & "                       FROM ExpenseAmount " & vbCrLf
+            strSQL = strSQL & "                       WHERE ExpenseAmount.Exp_ID = " & vintExpense_ID & vbCrLf
+            strSQL = strSQL & "                       GROUP BY ExpenseAmount.Exp_ID " & vbCrLf
+            strSQL = strSQL & "                     ) AS TMax " & vbCrLf
+            strSQL = strSQL & "                  		INNER JOIN ExpenseAmount USING(Exp_ID, ExpA_DtBegin) " & vbCrLf
+            strSQL = strSQL & "                 ) AS ExpenseAmount " & vbCrLf
             strSQL = strSQL & " WHERE Expense.Exp_ID = " & vintExpense_ID & vbCrLf
 
             mySQLReader = MySQLController.ADOSelect(strSQL)

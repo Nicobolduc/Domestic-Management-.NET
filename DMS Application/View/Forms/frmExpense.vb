@@ -7,6 +7,8 @@
     Private Const mintGrdAmount_Amount_col As Short = 4
     Private Const mintGrdAmount_Active_col As Short = 5
 
+    Private mintSelectedRow As Integer
+
     'Messages
     Private Const mintDateBeginRestriction_msg As Short = 22
     Private Const mintDateEndRestriction_msg As Short = 23
@@ -57,7 +59,7 @@
             strSQL = strSQL & "         CASE WHEN ExpenseAmount.ExpA_DtEnd IS NULL THEN 'TRUE' ELSE 'FALSE' END " & vbCrLf
             strSQL = strSQL & " FROM ExpenseAmount " & vbCrLf
             strSQL = strSQL & " WHERE ExpenseAmount.Exp_ID = " & mcExpenseModel.ID & vbCrLf
-            strSQL = strSQL & " ORDER BY ExpenseAmount.ExpA_DtBegin DESC" & vbCrLf
+            strSQL = strSQL & " ORDER BY ExpenseAmount.ExpA_DtBegin ASC " & vbCrLf
 
             blnValidReturn = mcGridAmountController.bln_FillData(strSQL)
 
@@ -202,6 +204,8 @@
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
+        mintSelectedRow = 0
+
         Select Case False
             Case mcGridAmountController.bln_Init(grdAmount, btnAddRow)
             Case blnCboInterval_Load()
@@ -229,19 +233,20 @@
         formController.ChangeMade = True
     End Sub
 
+    Private Sub formController_SetReadRights() Handles formController.SetReadRights
+        btnAddRow.Enabled = True
+    End Sub
+
     Private Sub myFormControler_ValidateForm(ByVal eventArgs As ValidateFormEventArgs) Handles formController.ValidateForm
+        Dim gridEventArgs As New ValidateGridEventArgs
+
+        mcGridAmountController_ValidateData(gridEventArgs)
+
         Select Case False
+            Case gridEventArgs.IsValid
             Case txtName.Text <> String.Empty
                 gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtName.Focus()
-
-                'Case txtAmount.Text <> String.Empty
-                '    gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
-                '    txtAmount.Focus()
-
-                'Case IsNumeric(txtAmount.Text)
-                '    gcAppController.ShowMessage(mConstants.Validation_Message.NUMERIC_VALUE, MsgBoxStyle.Information)
-                '    txtAmount.Focus()
 
             Case cboInterval.SelectedIndex > -1
                 gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
@@ -295,14 +300,21 @@
 
     End Sub
 
+    Private Sub grdAmount_CellClick(ByVal sender As Object, ByVal e As Syncfusion.Windows.Forms.Grid.GridCellClickEventArgs) Handles grdAmount.CellClick
+        mintSelectedRow = e.RowIndex
+    End Sub
+
     Private Sub grdAmount_CurrentCellAcceptedChanges(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles grdAmount.CurrentCellAcceptedChanges
 
-        'grdAmount(mcGridAmountController.GetSelectedRow, mcGridAmountController.GetSelectedCol).CellValue = Format(CDate(grdAmount(mcGridAmountController.GetSelectedRow, mcGridAmountController.GetSelectedCol).CellValue), gcAppController.str_GetUserDateFormat)
+        If Not String.IsNullOrEmpty(mcGridAmountController(mintSelectedRow, mcGridAmountController.GetSelectedCol)) Then
+
+            grdAmount(mintSelectedRow, mcGridAmountController.GetSelectedCol).CellValue = Format(CDate(grdAmount(mintSelectedRow, mcGridAmountController.GetSelectedCol).CellValue), gcAppController.str_GetUserDateFormat)
+        End If
 
         Select Case mcGridAmountController.GetSelectedCol
             Case mintGrdAmount_DtBegin_col
 
-                If Not String.IsNullOrEmpty(mcGridAmountController(mcGridAmountController.GetSelectedRow, mintGrdAmount_DtBegin_col)) And CDate(grdAmount(mcGridAmountController.GetSelectedRow, mintGrdAmount_DtBegin_col).CellValue) < CDate(grdAmount(mcGridAmountController.GetSelectedRow - 1, mintGrdAmount_DtEnd_col).CellValue) Then
+                If Not String.IsNullOrEmpty(mcGridAmountController(mintSelectedRow, mintGrdAmount_DtBegin_col)) AndAlso mintSelectedRow > 1 AndAlso CDate(grdAmount(mintSelectedRow, mintGrdAmount_DtBegin_col).CellValue) <= CDate(grdAmount(mintSelectedRow - 1, mintGrdAmount_DtEnd_col).CellValue) Then
 
                     gcAppController.ShowMessage(mintDateBeginRestriction_msg)
                     e.Cancel = True
@@ -310,7 +322,7 @@
 
             Case mintGrdAmount_DtEnd_col
 
-                If Not String.IsNullOrEmpty(mcGridAmountController(mcGridAmountController.GetSelectedRow, mintGrdAmount_DtEnd_col)) AndAlso CDate(grdAmount(mcGridAmountController.GetSelectedRow, mintGrdAmount_DtEnd_col).CellValue) < CDate(grdAmount(mcGridAmountController.GetSelectedRow, mintGrdAmount_DtBegin_col).CellValue) Then
+                If Not String.IsNullOrEmpty(mcGridAmountController(mintSelectedRow, mintGrdAmount_DtEnd_col)) AndAlso CDate(grdAmount(mintSelectedRow, mintGrdAmount_DtEnd_col).CellValue) < CDate(grdAmount(mintSelectedRow, mintGrdAmount_DtBegin_col).CellValue) Then
 
                     gcAppController.ShowMessage(mintDateEndRestriction_msg)
                     e.Cancel = True
@@ -320,34 +332,42 @@
         If Not e.Cancel Then
 
             formController.ChangeMade = True
-
-            For intRowIdx As Integer = 1 To grdAmount.RowCount
-
-                If String.IsNullOrEmpty(grdAmount(intRowIdx, mintGrdAmount_DtBegin_col).CellValue.ToString) Then
-                    formController.ChangeMade = False
-                End If
-            Next
         End If
-
     End Sub
 
     Private Sub mcGridAmountController_ValidateData(eventArgs As ValidateGridEventArgs) Handles mcGridAmountController.ValidateData
 
-        eventArgs.IsValid = False
-        Select Case False
-            Case String.IsNullOrEmpty(mcGridAmountController(grdAmount.RowCount, mintGrdAmount_Amount_col))
-                gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
-                mcGridAmountController.SetSelectedCol() = mintGrdAmount_Amount_col
+        For intRowIdx As Integer = 1 To grdAmount.RowCount
 
-            Case String.IsNullOrEmpty(mcGridAmountController(grdAmount.RowCount, mintGrdAmount_DtBegin_col))
-                gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
-                mcGridAmountController.SetSelectedCol() = mintGrdAmount_DtBegin_col
+            eventArgs.IsValid = False
+            Select Case True
+                Case String.IsNullOrEmpty(mcGridAmountController(intRowIdx, mintGrdAmount_Amount_col))
+                    gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
+                    mcGridAmountController.SetSelectedCell(intRowIdx, mintGrdAmount_Amount_col)
 
-            Case Else
-                eventArgs.IsValid = True
-        End Select
+                Case String.IsNullOrEmpty(mcGridAmountController(intRowIdx, mintGrdAmount_DtBegin_col))
+                    gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
+                    mcGridAmountController.SetSelectedCell(intRowIdx, mintGrdAmount_DtBegin_col)
+
+                Case intRowIdx < grdAmount.RowCount AndAlso String.IsNullOrEmpty(mcGridAmountController(intRowIdx, mintGrdAmount_DtEnd_col))
+                    gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
+                    mcGridAmountController.SetSelectedCell(intRowIdx, mintGrdAmount_DtEnd_col)
+
+                Case Else
+                    eventArgs.IsValid = True
+
+            End Select
+
+            If Not eventArgs.IsValid Then Exit For
+        Next
+    End Sub
+
+    Private Sub btnAddRow_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnAddRow.Click
+
+        btnAddRow.Enabled = False
     End Sub
 
 #End Region
+
 
 End Class

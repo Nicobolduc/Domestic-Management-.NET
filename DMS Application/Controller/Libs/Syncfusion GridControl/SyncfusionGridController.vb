@@ -403,6 +403,23 @@ Public Class SyncfusionGridController
         Return intReturnValue
     End Function
 
+    Public Sub SetSelectedCell(ByVal vintRowIndex As Integer, ByVal vintColIndex As Integer, Optional ByVal vblnShowDropDown As Boolean = False)
+
+        If vintRowIndex <= mGrdSync.RowCount AndAlso vintColIndex <= mGrdSync.ColCount AndAlso vintRowIndex > 0 And vintColIndex > 0 Then
+
+            mGrdSync.CurrentCell.MoveTo(GridRangeInfo.Cell(vintRowIndex, vintColIndex), GridSetCurrentCellOptions.SetFocus And GridSetCurrentCellOptions.ScrollInView)
+
+            If vblnShowDropDown Then
+
+                mGrdSync.CurrentCell.ShowDropDown()
+            Else
+                mGrdSync.CurrentCell.BeginEdit()
+            End If
+        Else
+            'Do nothing
+        End If
+    End Sub
+
     Public Sub SetColType_CheckBox(ByVal vintColumnIndex As Integer, Optional ByVal vblnAllowTriStates As Boolean = False)
 
         mGrdSync.ColStyles(vintColumnIndex).CellType = "CheckBox"
