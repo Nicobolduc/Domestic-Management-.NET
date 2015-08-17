@@ -298,26 +298,54 @@
 
         grdAmount.ColStyles(mintGrdAmount_Active_col).ReadOnly = True
 
+        For intRowRdx As Integer = 1 To grdAmount.RowCount
+
+            If intRowRdx <> grdAmount.RowCount Then
+
+                grdAmount.Item(intRowRdx, mintGrdAmount_DtBegin_col).ReadOnly = True
+                grdAmount.Item(intRowRdx, mintGrdAmount_DtEnd_col).ReadOnly = True
+                grdAmount.Item(intRowRdx, mintGrdAmount_Amount_col).ReadOnly = True
+            End If
+        Next
+
     End Sub
 
     Private Sub grdAmount_CellClick(ByVal sender As Object, ByVal e As Syncfusion.Windows.Forms.Grid.GridCellClickEventArgs) Handles grdAmount.CellClick
         mintSelectedRow = e.RowIndex
     End Sub
 
-    Private Sub grdAmount_CurrentCellAcceptedChanges(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles grdAmount.CurrentCellAcceptedChanges
+    Private Sub grdAmount_CurrentCellAcceptedChanges(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles grdAmount.CurrentCellAcceptedChanges
+        Dim strPaidExpense As String = String.Empty
 
-        If Not String.IsNullOrEmpty(mcGridAmountController(mintSelectedRow, mcGridAmountController.GetSelectedCol)) Then
-
-            grdAmount(mintSelectedRow, mcGridAmountController.GetSelectedCol).CellValue = Format(CDate(grdAmount(mintSelectedRow, mcGridAmountController.GetSelectedCol).CellValue), gcAppController.str_GetUserDateFormat)
-        End If
+        Select Case True
+            Case String.IsNullOrEmpty(mcGridAmountController(mintSelectedRow, mcGridAmountController.GetSelectedCol))
+            Case mcGridAmountController.GetSelectedCol <> mintGrdAmount_DtBegin_col
+            Case mcGridAmountController.GetSelectedCol <> mintGrdAmount_DtEnd_col
+            Case Else
+                grdAmount(mintSelectedRow, mcGridAmountController.GetSelectedCol).CellValue = Format(CDate(grdAmount(mintSelectedRow, mcGridAmountController.GetSelectedCol).CellValue), gcAppController.str_GetUserDateFormat)
+        End Select
 
         Select Case mcGridAmountController.GetSelectedCol
             Case mintGrdAmount_DtBegin_col
 
-                If Not String.IsNullOrEmpty(mcGridAmountController(mintSelectedRow, mintGrdAmount_DtBegin_col)) AndAlso mintSelectedRow > 1 AndAlso CDate(grdAmount(mintSelectedRow, mintGrdAmount_DtBegin_col).CellValue) <= CDate(grdAmount(mintSelectedRow - 1, mintGrdAmount_DtEnd_col).CellValue) Then
+                Select Case False
+                    Case mintSelectedRow > 1
+                    Case Not String.IsNullOrEmpty(mcGridAmountController(mintSelectedRow, mintGrdAmount_DtBegin_col))
+                    Case CDate(grdAmount(mintSelectedRow, mintGrdAmount_DtBegin_col).CellValue) <= CDate(grdAmount(mintSelectedRow - 1, mintGrdAmount_DtEnd_col).CellValue)
+                    Case Else
+                        gcAppController.ShowMessage(mintDateBeginRestriction_msg)
+                        e.Cancel = True
+                End Select
 
-                    gcAppController.ShowMessage(mintDateBeginRestriction_msg)
-                    e.Cancel = True
+                If Not e.Cancel Then
+
+                    strPaidExpense = MySQLController.str_ADOSingleLookUp("PExp_ID", "PaidExpense", "Exp_BilledDate <= " & gcAppController.str_FixStringForSQL(gcAppController.str_SetDateToMidnightServerFormat(grdAmount(grdAmount.RowCount, mintGrdAmount_DtBegin_col).CellValue.ToString).ToString) & " AND Exp_ID = " & formController.Item_ID) 'TODO Mettre dans un event avec valeur avant et apres ou ben you know
+
+                    If strPaidExpense <> String.Empty Then
+
+                        gcAppController.ShowMessage(mConstants.Error_Message.ERROR_ITEM_USED_MSG)
+                        e.Cancel = True
+                    End If
                 End If
 
             Case mintGrdAmount_DtEnd_col

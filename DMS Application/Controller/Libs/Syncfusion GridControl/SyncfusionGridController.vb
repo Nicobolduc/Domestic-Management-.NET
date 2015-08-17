@@ -541,9 +541,18 @@ Public Class SyncfusionGridController
 
     Private Sub mGrdSync_CurrentCellAcceptedChanges(sender As Object, e As CancelEventArgs) Handles mGrdSync.CurrentCellAcceptedChanges
 
-        If Not mblnHasNoActionColumn And Val(mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue) <> GridRowActions.INSERT_ACTION Then
+        If Not mblnHasNoActionColumn And Val(mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue) <> GridRowActions.INSERT_ACTION And Not mGrdSync(GetSelectedRow, GetSelectedCol).ReadOnly Then
+
             mGrdSync.RowStyles(GetSelectedRow).BackColor = Color.Yellow
             mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue = GridRowActions.UPDATE_ACTION
+        End If
+    End Sub
+
+    Private Sub mGrdSync_CurrentCellActivating(ByVal sender As Object, ByVal e As Syncfusion.Windows.Forms.Grid.GridCurrentCellActivatingEventArgs) Handles mGrdSync.CurrentCellActivating
+
+        If mGrdSync(e.RowIndex, e.ColIndex).CellModel.Description = Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker.ToString AndAlso mGrdSync(e.RowIndex, e.ColIndex).ReadOnly Then 'TODO DESCRIPTION EST EMPTY
+
+            e.Cancel = True
         End If
     End Sub
 
@@ -560,7 +569,6 @@ Public Class SyncfusionGridController
     End Sub
 
 #End Region
-
 
 End Class
 

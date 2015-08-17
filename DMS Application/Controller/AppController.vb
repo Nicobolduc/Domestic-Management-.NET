@@ -196,9 +196,9 @@ Public NotInheritable Class AppController
 
     End Function
 
-    Public Function str_SetDateToMidnightServerFormat(ByVal vdtDateToSet As Date) As Date
+    Public Function str_SetDateToMidnightServerFormat(ByVal vdtDateToSet As String) As Date
 
-        Return CDate(Format(CDate(vdtDateToSet & " 00:00:00"), gcAppController.str_GetServerDateTimeFormat))
+        Return CDate(Format(CDate(Format(CType(vdtDateToSet, Date), str_GetServerDateFormat) & " 00:00:00"), str_GetServerDateTimeFormat))
 
     End Function
 

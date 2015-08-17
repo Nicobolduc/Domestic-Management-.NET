@@ -338,7 +338,7 @@ Public Class MySQLController
         End Try
 
         If Not blnValidReturn Then
-            gcAppController.ShowMessage(mConstants.Error_Message.ERROR_DELETE_MSG, MsgBoxStyle.Exclamation)
+            gcAppController.ShowMessage(mConstants.Error_Message.ERROR_ITEM_USED_MSG, MsgBoxStyle.Exclamation)
         End If
 
         Return blnValidReturn

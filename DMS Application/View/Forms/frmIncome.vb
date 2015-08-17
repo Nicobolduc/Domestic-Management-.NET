@@ -104,7 +104,7 @@
 
             If Not IsDBNull(dtpPayDate.Value) And dtpPayDate.Checked Then
 
-                mcIncomeModel.ReceptionDate = gcAppController.str_SetDateToMidnightServerFormat(dtpPayDate.Value)
+                mcIncomeModel.ReceptionDate = gcAppController.str_SetDateToMidnightServerFormat(dtpPayDate.Value.ToString)
             Else
                 mcIncomeModel.ReceptionDate = Nothing
             End If
