@@ -34,7 +34,7 @@ Public Class frmProduct
         Dim blnValidReturn As Boolean
 
         Try
-            mcProductModel = gcAppController.GetCoreModelController.GetProductController.Value.GetProduct(formController.Item_ID)
+            mcProductModel = gcAppCtrl.GetCoreModelController.GetProductController.Value.GetProduct(formController.Item_ID)
 
             If Not mcProductModel Is Nothing Then
 
@@ -55,7 +55,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -98,7 +98,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -145,7 +145,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -165,7 +165,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -194,7 +194,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -217,7 +217,7 @@ Public Class frmProduct
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mcSQL.bln_EndTransaction(blnValidReturn)
         End Try
@@ -315,16 +315,16 @@ Public Class frmProduct
 
         Select Case False
             Case txtName.Text <> String.Empty
-                gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtName.Focus()
 
             Case cboType.SelectedIndex > -1
-                gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 cboType.DroppedDown = True
                 cboType.Focus()
 
             Case cboCategory.SelectedIndex > -1
-                gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 cboType.DroppedDown = True
                 cboType.Focus()
 
@@ -341,17 +341,17 @@ Public Class frmProduct
 
                 Select Case True
                     Case mcGrdPricesController.CellIsEmpty(intRowIndex, mintGrdPrices_Cy_Seller_ID_col)
-                        gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+                        gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
 
                         mcGrdPricesController.SetSelectedCol(True) = mintGrdPrices_Cy_Seller_Name_col
 
                     Case mcGrdPricesController.CellIsEmpty(intRowIndex, mintGrdPrices_ProB_ID_col)
-                        gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+                        gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
 
                         mcGrdPricesController.SetSelectedCol(True) = mintGrdPrices_ProB_Name_col
 
                     Case mcGrdPricesController.CellIsEmpty(intRowIndex, mintGrdPrices_Price_col)
-                        gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+                        gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
 
                         mcGrdPricesController.SetSelectedCol() = mintGrdPrices_Price_col
 
@@ -397,7 +397,7 @@ Public Class frmProduct
                 Case mintGrdPrices_Price_col
                     If Not IsNumeric(grdPrices(mcGrdPricesController.GetSelectedRow, mcGrdPricesController.GetSelectedCol).CellValue) And mcGrdPricesController.CurrentCellIsEmpty Then
 
-                        gcAppController.ShowMessage(mConstants.Validation_Message.NUMERIC_VALUE, MsgBoxStyle.Information)
+                        gcAppCtrl.ShowMessage(mConstants.Validation_Message.NUMERIC_VALUE, MsgBoxStyle.Information)
 
                         e.Cancel = True
                     End If
@@ -432,7 +432,7 @@ Public Class frmProduct
     Private Sub mcGrdPrices_ValidateData(ByVal eventArgs As ValidateGridEventArgs) Handles mcGrdPricesController.ValidateData
         If grdPrices.RowCount < 1 Then
 
-            gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+            gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
             eventArgs.IsValid = False
         Else
             eventArgs.IsValid = True

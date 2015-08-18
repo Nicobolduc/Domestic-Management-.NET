@@ -30,8 +30,8 @@
 #Region "Private Events"
 
     Private Sub mdiGeneral_Disposed(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Disposed
-        gcAppController.MySQLConnection.Close()
-        gcAppController.MySQLConnection.Dispose()
+        gcAppCtrl.MySQLConnection.Close()
+        gcAppCtrl.MySQLConnection.Dispose()
     End Sub
 
     Private Sub mdiGeneral_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -39,7 +39,7 @@
 
         mChildsFormsCol = New Collection()
 
-        lblStatusBD.Text = lblStatusBD.Text & gcAppController.MySQLConnection.Database
+        lblStatusBD.Text = lblStatusBD.Text & gcAppCtrl.MySQLConnection.Database
         lblStatusUser.Text = lblStatusUser.Text & " Nicolas"
     End Sub
 

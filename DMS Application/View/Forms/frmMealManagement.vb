@@ -28,7 +28,7 @@
             blnValidReturn = True
 
         Catch ex As Exception
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             blnValidReturn = False
         Finally
             If Not blnValidReturn Then Me.Close()
@@ -45,8 +45,8 @@
         Try
             lblDate.Text = Format(dtCurrentMonth, "MMMM yyyy")
 
-            strSQL = strSQL & " CALL sp_LoadCalendarGrid (" & gcAppController.str_FixStringForSQL(Format(dtCurrentMonth, gcAppController.str_GetServerDateFormat)) & _
-                              ", " & gcAppController.str_FixStringForSQL(Format(DateAdd(DateInterval.Month, 1, DateAdd(DateInterval.Day, -1, dtCurrentMonth)), gcAppController.str_GetServerDateFormat)) & ");"
+            strSQL = strSQL & " CALL sp_LoadCalendarGrid (" & gcAppCtrl.str_FixStringForSQL(Format(dtCurrentMonth, gcAppCtrl.str_GetServerDateFormat)) & _
+                              ", " & gcAppCtrl.str_FixStringForSQL(Format(DateAdd(DateInterval.Month, 1, DateAdd(DateInterval.Day, -1, dtCurrentMonth)), gcAppCtrl.str_GetServerDateFormat)) & ");"
 
             blnValidReturn = mcGridMealsController.bln_FillData(strSQL)
 
@@ -57,7 +57,7 @@
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn

@@ -100,7 +100,7 @@ Public Class test
         strSQL = strSQL & "  WHERE ProductPrice.Pro_ID = " & 42 & vbCrLf
         strSQL = strSQL & "  ORDER BY Company.Cy_name " & vbCrLf
         'Get the grid data
-        sqlCmd = New MySqlCommand(strSQL, gcAppController.MySQLConnection)
+        sqlCmd = New MySqlCommand(strSQL, gcAppCtrl.MySQLConnection)
 
         mySQLReader = sqlCmd.ExecuteReader
 
@@ -108,7 +108,7 @@ Public Class test
 
         dataTableArray = New Object(myDataTable.Rows.Count - 1, myDataTable.Columns.Count) {}
 
-        strGridCaption = gcAppController.str_GetCaption(9, gcAppController.cUser.GetLanguage)
+        strGridCaption = gcAppCtrl.str_GetCaption(9, gcAppCtrl.cUser.GetLanguage)
 
         lstColumns = Split(strGridCaption.Insert(0, "|"), "|")
 
@@ -206,7 +206,7 @@ Public Class test
         Dim lstColumns As String()
         Dim individualColStyle As GridStyleInfo
 
-        strGridCaption = gcAppController.str_GetCaption(8, gcAppController.cUser.GetLanguage)
+        strGridCaption = gcAppCtrl.str_GetCaption(8, gcAppCtrl.cUser.GetLanguage)
 
         lstColumns = Split(strGridCaption.Insert(0, "|"), "|")
 
@@ -255,7 +255,7 @@ Public Class test
         strSQL = strSQL & "  FROM Company " & vbCrLf
         strSQL = strSQL & "  ORDER BY Company.Cy_Name " & vbCrLf
 
-        sqlCmd = New MySqlCommand(strSQL, gcAppController.MySQLConnection)
+        sqlCmd = New MySqlCommand(strSQL, gcAppCtrl.MySQLConnection)
 
         mySQLReader = sqlCmd.ExecuteReader
 
@@ -352,7 +352,7 @@ Public Class test
         grdSync_2.CellModels.Add("DateTimePicker", New DateTimePickerCell.DateTimePickerCellModel(grdSync_2.Model, False))
         grdSync_2.ColStyles(1).CellType = "DateTimePicker"
         grdSync_2.ColStyles(1).CellValueType = GetType(DateTime)
-        grdSync_2.ColStyles(1).Format = gcAppController.str_GetUserDateFormat
+        grdSync_2.ColStyles(1).Format = gcAppCtrl.str_GetUserDateFormat
         grdSync_2(2, 1).CellValue = DateTime.Now
 
     End Sub

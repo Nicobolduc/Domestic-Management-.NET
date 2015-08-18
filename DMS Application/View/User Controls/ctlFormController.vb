@@ -128,7 +128,7 @@ Public Class ctlFormController
             End If
 
         Catch ex As Exception
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             Me.Cursor = System.Windows.Forms.Cursors.Default
         End Try
@@ -235,7 +235,7 @@ Public Class ctlFormController
 
                 End Select
             Else
-                gcAppController.ShowMessage(mConstants.Error_Message.ERROR_SAVE_MSG, MsgBoxStyle.Critical)
+                gcAppCtrl.ShowMessage(mConstants.Error_Message.ERROR_SAVE_MSG, MsgBoxStyle.Critical)
             End If
 
         End If
@@ -244,7 +244,7 @@ Public Class ctlFormController
     End Sub
 
     Private Sub btnCancel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCancel.Click
-        gcAppController.EmptyAllFormControls(mfrmParent)
+        gcAppCtrl.EmptyAllFormControls(mfrmParent)
         LoadFormData()
     End Sub
 

@@ -53,6 +53,10 @@ Public Class ctlRefresh
 
         btnRefresh.BackgroundImage = imgOriginalImage
 
+        Me.Cursor = Windows.Forms.Cursors.WaitCursor
+
         RaiseEvent Click()
+
+        Me.Cursor = Windows.Forms.Cursors.Default
     End Sub
 End Class

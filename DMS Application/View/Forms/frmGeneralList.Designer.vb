@@ -34,9 +34,9 @@ Partial Class frmGeneralList
         Me.btnUpdate = New System.Windows.Forms.Button()
         Me.btnAdd = New System.Windows.Forms.Button()
         Me.ToolTips = New System.Windows.Forms.ToolTip(Me.components)
-        Me.btnRefresh = New System.Windows.Forms.Button()
         Me.grdList = New Syncfusion.Windows.Forms.Grid.GridControl()
         Me.formController = New DMS_Application.ctlFormController()
+        Me.btnRefresh = New DMS_Application.ctlRefresh()
         CType(Me.grdList, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -93,17 +93,6 @@ Partial Class frmGeneralList
         '
         Me.ToolTips.IsBalloon = True
         '
-        'btnRefresh
-        '
-        Me.btnRefresh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnRefresh.BackgroundImage = CType(resources.GetObject("btnRefresh.BackgroundImage"), System.Drawing.Image)
-        Me.btnRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.btnRefresh.Location = New System.Drawing.Point(529, 9)
-        Me.btnRefresh.Name = "btnRefresh"
-        Me.btnRefresh.Size = New System.Drawing.Size(40, 40)
-        Me.btnRefresh.TabIndex = 1
-        Me.btnRefresh.UseVisualStyleBackColor = True
-        '
         'grdList
         '
         Me.grdList.AllowColumnResizeUsingCellBoundaries = True
@@ -154,13 +143,20 @@ Partial Class frmGeneralList
         Me.formController.Size = New System.Drawing.Size(85, 33)
         Me.formController.TabIndex = 5
         '
+        'btnRefresh
+        '
+        Me.btnRefresh.Location = New System.Drawing.Point(527, 9)
+        Me.btnRefresh.Name = "btnRefresh"
+        Me.btnRefresh.Size = New System.Drawing.Size(40, 40)
+        Me.btnRefresh.TabIndex = 7
+        '
         'frmGeneralList
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(579, 602)
-        Me.Controls.Add(Me.grdList)
         Me.Controls.Add(Me.btnRefresh)
+        Me.Controls.Add(Me.grdList)
         Me.Controls.Add(Me.formController)
         Me.Controls.Add(Me.btnAdd)
         Me.Controls.Add(Me.btnUpdate)
@@ -184,6 +180,6 @@ Partial Class frmGeneralList
     Friend WithEvents btnAdd As System.Windows.Forms.Button
     Friend WithEvents ToolTips As System.Windows.Forms.ToolTip
     Public WithEvents formController As DMS_Application.ctlFormController
-    Friend WithEvents btnRefresh As System.Windows.Forms.Button
     Friend WithEvents grdList As Syncfusion.Windows.Forms.Grid.GridControl
+    Friend WithEvents btnRefresh As DMS_Application.ctlRefresh
 End Class

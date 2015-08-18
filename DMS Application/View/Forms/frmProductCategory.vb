@@ -12,7 +12,7 @@
         Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
-            mcProductCategoryModel = gcAppController.GetCoreModelController.GetProductController.Value.GetProductCategory(formController.Item_ID)
+            mcProductCategoryModel = gcAppCtrl.GetCoreModelController.GetProductController.Value.GetProductCategory(formController.Item_ID)
 
             If Not mcProductCategoryModel Is Nothing Then
 
@@ -25,7 +25,7 @@
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Dispose()
@@ -52,7 +52,7 @@
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mcSQL.bln_EndTransaction(blnValidReturn)
         End Try
@@ -74,7 +74,7 @@
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -99,7 +99,7 @@
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -129,11 +129,11 @@
     Private Sub myFormControler_ValidateForm(ByVal eventArgs As ValidateFormEventArgs) Handles formController.ValidateForm
         Select Case False
             Case txtName.Text <> String.Empty
-                gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtName.Focus()
 
             Case cboType.SelectedIndex > -1
-                gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 cboType.DroppedDown = True
                 cboType.Focus()
 

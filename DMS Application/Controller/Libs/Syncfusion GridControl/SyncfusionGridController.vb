@@ -39,7 +39,12 @@ Public Class SyncfusionGridController
 
     Default Public Property Item(intRowIndex As Integer, intColIndex As Integer) As String
         Get
-            Return mGrdSync(intRowIndex, intColIndex).CellValue.ToString
+            If mGrdSync(intRowIndex, intColIndex).CellType = Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker.ToString Then
+
+                Return mGrdSync(intRowIndex, intColIndex).FormattedText
+            Else
+                Return mGrdSync(intRowIndex, intColIndex).CellValue.ToString
+            End If
         End Get
         Set(value As String)
             mGrdSync(intRowIndex, intColIndex).CellValue = value
@@ -159,6 +164,10 @@ Public Class SyncfusionGridController
             mbtnDeleteRow = rbtnRemoveRow
 
             mGrdSync.BeginInit()
+
+            mGrdSync.RowCount = 0
+            mGrdSync.ColCount = 0
+
             mGrdSync.ControllerOptions = GridControllerOptions.ClickCells Or GridControllerOptions.ResizeCells Or GridControllerOptions.SelectCells
             mGrdSync.CommandStack.Enabled = True
             mGrdSync.ResizeColsBehavior = GridResizeCellsBehavior.ResizeSingle Or GridResizeCellsBehavior.OutlineHeaders Or GridResizeCellsBehavior.InsideGrid
@@ -181,9 +190,11 @@ Public Class SyncfusionGridController
             mGrdSync.DefaultColWidth = 70
             mGrdSync.SetColWidth(0, 0, 9)
 
+            RaiseEvent SetDisplay()
+
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mGrdSync.EndInit()
         End Try
@@ -205,7 +216,7 @@ Public Class SyncfusionGridController
             mGrdSync.BrowseOnly = False
 
             'Retrieve grid data from database
-            sqlCmd = New MySqlCommand(vstrSQL, gcAppController.MySQLConnection)
+            sqlCmd = New MySqlCommand(vstrSQL, gcAppCtrl.MySQLConnection)
 
             mySQLReader = sqlCmd.ExecuteReader
 
@@ -241,9 +252,14 @@ Public Class SyncfusionGridController
 
             RaiseEvent SetDisplay()
 
+            If mGrdSync.RowCount > 0 Then
+
+                SetSelectedRow = 1
+            End If
+
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Dispose()
@@ -286,7 +302,7 @@ Public Class SyncfusionGridController
             End Select
 
         Catch ex As Exception
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnIsEmpty
@@ -305,7 +321,7 @@ Public Class SyncfusionGridController
             End Select
 
         Catch ex As Exception
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnIsEmpty
@@ -318,9 +334,11 @@ Public Class SyncfusionGridController
         Dim individualColStyle As GridStyleInfo
 
         Try
-            strGridCaption = gcAppController.str_GetCaption(CInt(mGrdSync.Tag), gcAppController.cUser.GetLanguage)
+            strGridCaption = gcAppCtrl.str_GetCaption(CInt(mGrdSync.Tag), gcAppCtrl.cUser.GetLanguage)
 
             lstColumns = Split(strGridCaption.Insert(0, "|"), "|")
+
+            mGrdSync.ColCount = lstColumns.Count - 1
 
             'Definition of columns
             For colHeaderCpt As Integer = 1 To lstColumns.Count - 1
@@ -365,7 +383,7 @@ Public Class SyncfusionGridController
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -438,7 +456,7 @@ Public Class SyncfusionGridController
             mGrdSync.ColStyles(vintColumnIndex).DataSource = Nothing
             mGrdSync.ColStyles(vintColumnIndex).ExclusiveChoiceList = True
 
-            mySQLCmd = New MySqlCommand(vstrSQL, gcAppController.MySQLConnection)
+            mySQLCmd = New MySqlCommand(vstrSQL, gcAppCtrl.MySQLConnection)
 
             mySQLReader = mySQLCmd.ExecuteReader
 
@@ -457,7 +475,7 @@ Public Class SyncfusionGridController
             mGrdSync.ColStyles(vintColumnIndex).DisplayMember = "Value"
 
         Catch ex As Exception
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source & " - " & System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source & " - " & System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Dispose()
@@ -480,13 +498,13 @@ Public Class SyncfusionGridController
 
             'mGrdSync.ColStyles(vintColumnIndex).CellType = "DateTimePicker"
             mGrdSync.ColStyles(vintColumnIndex).CellValueType = GetType(DateTime)
-            mGrdSync.ColStyles(vintColumnIndex).CellValue = String.Empty
-            mGrdSync.ColStyles(vintColumnIndex).Format = gcAppController.str_GetUserDateFormat
+            mGrdSync.ColStyles(vintColumnIndex).CellValue = Nothing
+            mGrdSync.ColStyles(vintColumnIndex).Format = gcAppCtrl.str_GetUserDateFormat
 
             mGrdSync.ColWidths(vintColumnIndex) = 85
 
         Catch ex As Exception
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source & " - " & System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source & " - " & System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name)
         End Try
     End Sub
 
@@ -526,10 +544,12 @@ Public Class SyncfusionGridController
 
     Private Sub mGrdSync_CellsChanged(sender As Object, e As GridCellsChangedEventArgs) Handles mGrdSync.CellsChanged
 
-        'If Not mfrmGridParent.formController.FormIsLoading And e.Range.Top > 0 And mGrdSync(e.Range.Top, mintDefaultActionCol).CellValue <> GridRowActions.INSERT_ACTION Then
+        'If Not mblnHasNoActionColumn AndAlso Not mfrmGridParent.formController.FormIsLoading AndAlso e.Range.Top > 0 AndAlso mGrdSync(e.Range.Top, mintDefaultActionCol).CellValue <> GridRowActions.INSERT_ACTION Then
+
         '    mGrdSync.BeginUpdate()
 
         '    If mintPreviousCellChangedRow <> e.Range.Top Then
+
         '        mintPreviousCellChangedRow = e.Range.Top
         '        mGrdSync.RowStyles(e.Range.Top).BackColor = Color.Yellow
         '        mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue = GridRowActions.UPDATE_ACTION
@@ -539,9 +559,13 @@ Public Class SyncfusionGridController
         'End If
     End Sub
 
+    Private Sub mGrdSync_CheckBoxClick(sender As Object, e As GridCellClickEventArgs) Handles mGrdSync.CheckBoxClick
+        Dim lol As Integer = 23
+    End Sub
+
     Private Sub mGrdSync_CurrentCellAcceptedChanges(sender As Object, e As CancelEventArgs) Handles mGrdSync.CurrentCellAcceptedChanges
 
-        If Not mblnHasNoActionColumn And Val(mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue) <> GridRowActions.INSERT_ACTION And Not mGrdSync(GetSelectedRow, GetSelectedCol).ReadOnly Then
+        If Not mblnHasNoActionColumn AndAlso Val(mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue) <> GridRowActions.INSERT_ACTION AndAlso Not mGrdSync(GetSelectedRow, GetSelectedCol).ReadOnly Then
 
             mGrdSync.RowStyles(GetSelectedRow).BackColor = Color.Yellow
             mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue = GridRowActions.UPDATE_ACTION
@@ -550,7 +574,7 @@ Public Class SyncfusionGridController
 
     Private Sub mGrdSync_CurrentCellActivating(ByVal sender As Object, ByVal e As Syncfusion.Windows.Forms.Grid.GridCurrentCellActivatingEventArgs) Handles mGrdSync.CurrentCellActivating
 
-        If mGrdSync(e.RowIndex, e.ColIndex).CellModel.Description = Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker.ToString AndAlso mGrdSync(e.RowIndex, e.ColIndex).ReadOnly Then 'TODO DESCRIPTION EST EMPTY
+        If mGrdSync(e.RowIndex, e.ColIndex).CellType = Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker.ToString AndAlso mGrdSync(e.RowIndex, e.ColIndex).ReadOnly Then
 
             e.Cancel = True
         End If
@@ -558,18 +582,24 @@ Public Class SyncfusionGridController
 
     Private Sub GrdSyncController_CurrentCellChanged(ByVal sender As Object, ByVal e As EventArgs) Handles mGrdSync.CurrentCellChanged
 
-        'If Not mblnHasNoActionColumn And Val(mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue) <> GridRowActions.INSERT_ACTION Then
-        '    mGrdSync.RowStyles(GetSelectedRow).BackColor = Color.Yellow
-        '    mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue = GridRowActions.UPDATE_ACTION
-        'End If
+        If Not mblnHasNoActionColumn AndAlso Val(mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue) <> GridRowActions.INSERT_ACTION AndAlso Not mGrdSync(GetSelectedRow, GetSelectedCol).ReadOnly Then
+
+            mGrdSync.RowStyles(GetSelectedRow).BackColor = Color.Yellow
+            mGrdSync(GetSelectedRow, mintDefaultActionCol).CellValue = GridRowActions.UPDATE_ACTION
+        End If
     End Sub
 
     Private Sub GrdSyncController_CurrentCellCloseDropDown(sender As Object, e As Syncfusion.Windows.Forms.PopupClosedEventArgs) Handles mGrdSync.CurrentCellCloseDropDown
         mGrdSync.CurrentCell.ConfirmChanges()
     End Sub
 
+    Private Sub SyncfusionGridController_SetDisplay() Handles Me.SetDisplay
+        blnSetColsDisplay()
+    End Sub
+
 #End Region
 
+    
 End Class
 
 #Region "Custom events"

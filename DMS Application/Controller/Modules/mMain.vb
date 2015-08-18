@@ -1,11 +1,18 @@
-﻿Module mMain
+﻿Imports System.Threading
+Imports System.Globalization
+
+Module mMain
 
 
-    Public gcAppController As AppController
+    Public gcAppCtrl As AppController
 
     Sub main()
 
-        gcAppController = AppController.GetAppController
+        Thread.CurrentThread.CurrentCulture = New CultureInfo("en-CA")
+
+        Thread.CurrentThread.CurrentUICulture = New CultureInfo("en-CA")
+
+        gcAppCtrl = AppController.GetAppController
 
     End Sub
 

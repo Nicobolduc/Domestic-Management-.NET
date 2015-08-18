@@ -65,7 +65,7 @@ Public Class frmGeneralList
                     frmToOpen.formController.ShowForm(vFormMode, intItem_ID, True)
 
                 Case mConstants.Form_Mode.DELETE_MODE
-                    gcAppController.DisableAllFormControls(frmToOpen)
+                    gcAppCtrl.DisableAllFormControls(frmToOpen)
                     frmToOpen.formController.ShowForm(vFormMode, intItem_ID, True)
 
             End Select
@@ -95,7 +95,7 @@ Public Class frmGeneralList
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -116,7 +116,7 @@ Public Class frmGeneralList
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             ResumeLayout()
         End Try
@@ -140,7 +140,7 @@ Public Class frmGeneralList
             blnOpenForm(mConstants.Form_Mode.INSERT_MODE)
 
         Catch ex As Exception
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
     End Sub
 
@@ -152,7 +152,7 @@ Public Class frmGeneralList
             End If
 
         Catch ex As Exception
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -166,7 +166,7 @@ Public Class frmGeneralList
             End If
 
         Catch ex As Exception
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -236,7 +236,7 @@ Public Class frmGeneralList
         Me.Dispose()
     End Sub
 
-    Private Sub btnRefresh_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnRefresh.Click
+    Private Sub btnRefresh_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
         blnGrdList_Load()
     End Sub
 

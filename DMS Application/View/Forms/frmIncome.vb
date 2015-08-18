@@ -11,7 +11,7 @@
         Dim blnValidReturn As Boolean
 
         Try
-            mcIncomeModel = gcAppController.GetCoreModelController.GetFinanceController.GetIncome(formController.Item_ID)
+            mcIncomeModel = gcAppCtrl.GetCoreModelController.GetFinanceController.GetIncome(formController.Item_ID)
 
             If Not mcIncomeModel Is Nothing Then
 
@@ -33,7 +33,7 @@
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -53,7 +53,7 @@
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -76,7 +76,7 @@
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mcSQL.bln_EndTransaction(blnValidReturn)
             mcSQL = Nothing
@@ -104,7 +104,7 @@
 
             If Not IsDBNull(dtpPayDate.Value) And dtpPayDate.Checked Then
 
-                mcIncomeModel.ReceptionDate = gcAppController.str_SetDateToMidnightServerFormat(dtpPayDate.Value.ToString)
+                mcIncomeModel.ReceptionDate = gcAppCtrl.str_SetDateToMidnightServerFormat(dtpPayDate.Value.ToString)
             Else
                 mcIncomeModel.ReceptionDate = Nothing
             End If
@@ -113,7 +113,7 @@
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -158,24 +158,24 @@
 
         Select Case False
             Case txtName.Text <> String.Empty
-                gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtName.Focus()
 
             Case txtAmount.Text <> String.Empty
-                gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtAmount.Focus()
 
             Case IsNumeric(txtAmount.Text)
-                gcAppController.ShowMessage(mConstants.Validation_Message.NUMERIC_VALUE, MsgBoxStyle.Information)
+                gcAppCtrl.ShowMessage(mConstants.Validation_Message.NUMERIC_VALUE, MsgBoxStyle.Information)
                 txtAmount.Focus()
 
             Case cboFrequency.SelectedIndex > -1
-                gcAppController.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+                gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 cboFrequency.DroppedDown = True
                 cboFrequency.Focus()
 
             Case strMainIncome = String.Empty
-                gcAppController.ShowMessage(mConstants.Validation_Message.UNIQUE_ATTRIBUTE, MsgBoxStyle.Information)
+                gcAppCtrl.ShowMessage(mConstants.Validation_Message.UNIQUE_ATTRIBUTE, MsgBoxStyle.Information)
                 chkMainIncome.Focus()
 
             Case Else

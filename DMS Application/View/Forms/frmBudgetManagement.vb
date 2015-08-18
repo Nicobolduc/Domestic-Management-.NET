@@ -18,6 +18,7 @@
 
     'Messages
     Private mintMustDefineMainIncome_msg As Short = 18
+    Private mintDtFromToRestrictions_msg As Short = 26
 
     'Private class members
     Private WithEvents mcGridBudgetController As SyncfusionGridController
@@ -36,18 +37,18 @@
             If strMainIncome <> String.Empty Then
 
                 dtpFrom.Value = Date.Today
-                dtpFrom.CustomFormat = gcAppController.str_GetUserDateFormat
+                dtpFrom.CustomFormat = gcAppCtrl.str_GetUserDateFormat
 
                 dtpTo.Value = DateAdd(DateInterval.Month, 1, Date.Today)
-                dtpTo.CustomFormat = gcAppController.str_GetUserDateFormat
+                dtpTo.CustomFormat = gcAppCtrl.str_GetUserDateFormat
 
                 blnValidReturn = True
             Else
-                gcAppController.ShowMessage(mintMustDefineMainIncome_msg, MsgBoxStyle.Information)
+                gcAppCtrl.ShowMessage(mintMustDefineMainIncome_msg, MsgBoxStyle.Information)
             End If
 
         Catch ex As Exception
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             blnValidReturn = False
         Finally
             If Not blnValidReturn Then Me.Close()
@@ -63,7 +64,7 @@
         Dim intLastRowAddedIndex As Integer = 1
 
         Try
-            strSQL = strSQL & " CALL sp_LoadBudgetGrid (" & gcAppController.str_FixStringForSQL(Format(dtpFrom.Value, gcAppController.str_GetServerDateFormat) & " " & Format(dtpFromHr.Value, gcAppController.str_GetServerTimeFormat)) & ", " & gcAppController.str_FixStringForSQL(Format(dtpTo.Value, gcAppController.str_GetServerDateFormat) & " " & Format(dtpToHr.Value, gcAppController.str_GetServerTimeFormat)) & ");" & vbCrLf
+            strSQL = strSQL & " CALL sp_LoadBudgetGrid (" & gcAppCtrl.str_FixStringForSQL(Format(dtpFrom.Value, gcAppCtrl.str_GetServerDateFormat) & " " & Format(dtpFromHr.Value, gcAppCtrl.str_GetServerTimeFormat)) & ", " & gcAppCtrl.str_FixStringForSQL(Format(dtpTo.Value, gcAppCtrl.str_GetServerDateFormat) & " " & Format(dtpToHr.Value, gcAppCtrl.str_GetServerTimeFormat)) & ");" & vbCrLf
 
             blnValidReturn = mcGridBudgetController.bln_FillData(strSQL)
 
@@ -96,7 +97,7 @@
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -111,7 +112,6 @@
             grdBudget.Rows.InsertRange(vintRowIndexToAdd, 1)
 
             'grdBudget.RowStyles(vintRowIndexToAdd).CellType = "Default"
-            grdBudget.RowStyles(vintRowIndexToAdd).Borders.Bottom = newRowBorders
 
             grdBudget(vintRowIndexToAdd, mintGrdBudget_Action_col).CellValue = SyncfusionGridController.GridRowActions.NO_ACTION
 
@@ -127,17 +127,21 @@
             Next
 
             grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellValue = dblPeriodTotal
+            grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).Font.Bold = True
 
-            'For intColIdx As Short = 1 To CShort(grdBudget.ColCount)
+            For intColIdx As Short = 1 To CShort(grdBudget.ColCount)
 
-            '    grdBudget(vintRowIndexToAdd, intColIdx).ReadOnly = True
-            'Next
+                grdBudget(vintRowIndexToAdd, intColIdx).ReadOnly = True
+            Next
 
             rintLastRowAddedIndex = vintRowIndexToAdd + 1
-            'grdBudget(vintRowIndexToAdd, -1) = grdBudget(vintRowIndexToAdd - 1, -1)
+
+            grdBudget.RowStyles(vintRowIndexToAdd).MergeCell = GridMergeCellDirection.ColumnsInRow
+            
+
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -176,7 +180,7 @@
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mcSQL.bln_EndTransaction(blnValidReturn)
             Me.Cursor = Cursors.Default
@@ -186,17 +190,19 @@
     End Function
 
     Private Sub CheckUncheckAll(ByVal vblnCheckAll As Boolean, ByVal vblnCheckTriStateOnly As Boolean)
+        Dim strCurrentPeriod As String = mcGridBudgetController(mcGridBudgetController.GetSelectedRow, mintGrdBudget_NextIncomeDateToUse_col)
 
         Try
             For intRow As Integer = 1 To grdBudget.RowCount
 
-                If grdBudget(intRow, mintGrdBudget_Sel_col).CellValue.ToString = mcGridBudgetController.GetUndeterminedCheckBoxState Or Not vblnCheckTriStateOnly Then
-                    grdBudget(intRow, mintGrdBudget_Sel_col).CellValue = vblnCheckAll
+                If mcGridBudgetController(intRow, mintGrdBudget_NextIncomeDateToUse_col) = strCurrentPeriod Then
+
+                    grdBudget(intRow, mintGrdBudget_Sel_col).CellValue = vblnCheckAll 'TODO bln_UpdateRow
                 End If
             Next
 
         Catch ex As Exception
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -228,7 +234,7 @@
         grdBudget.ColWidths(mintGrdBudget_PExp_Comment_col) = 185
         grdBudget.ColWidths(mintGrdBudget_Sel_col) = 50
 
-        mcGridBudgetController.SetColType_CheckBox(mintGrdBudget_Sel_col, True)
+        mcGridBudgetController.SetColType_CheckBox(mintGrdBudget_Sel_col, False)
 
         mcGridBudgetController.SetColType_DateTimePicker(mintGrdBudget_PExp_DatePaid_col, True)
 
@@ -236,12 +242,12 @@
         grdBudget.ColStyles(mintGrdBudget_PExp_AmountPaid_col).CellValueType = GetType(Double)
         grdBudget.ColStyles(mintGrdBudget_Exp_NextBillingDate_col).CellValueType = GetType(Date)
 
-        grdBudget.ColStyles(mintGrdBudget_Exp_NextBillingDate_col).Format = gcAppController.str_GetUserDateFormat
-        grdBudget.ColStyles(mintGrdBudget_NextIncomeDateToUse_col).Format = gcAppController.str_GetUserDateFormat
+        grdBudget.ColStyles(mintGrdBudget_Exp_NextBillingDate_col).Format = gcAppCtrl.str_GetUserDateFormat
+        grdBudget.ColStyles(mintGrdBudget_NextIncomeDateToUse_col).Format = gcAppCtrl.str_GetUserDateFormat
         grdBudget.ColStyles(mintGrdBudget_Exp_Amount_col).Format = mConstants.DataFormat.CURRENCY
         grdBudget.ColStyles(mintGrdBudget_PExp_AmountPaid_col).Format = mConstants.DataFormat.CURRENCY
 
-        grdBudget.Model.Options.MergeCellsMode = GridMergeCellsMode.OnDemandCalculation Or GridMergeCellsMode.MergeRowsInColumn
+        grdBudget.Model.Options.MergeCellsMode = GridMergeCellsMode.OnDemandCalculation Or GridMergeCellsMode.MergeRowsInColumn Or GridMergeCellsMode.SkipHiddencells
         grdBudget.ColStyles(mintGrdBudget_NextIncomeDateToUse_col).MergeCell = GridMergeCellDirection.RowsInColumn
         grdBudget.ColStyles(mintGrdBudget_Exp_NextBillingDate_col).MergeCell = GridMergeCellDirection.RowsInColumn
 
@@ -259,28 +265,28 @@
 
     Private Sub rbtnBiMensuel_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnBiMensuel.CheckedChanged
         If rbtnBiMensuel.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetUserDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppCtrl.str_GetUserDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Day, 14, dtpFrom.Value)
         End If
     End Sub
 
     Private Sub rbtnMensuelle_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnMensuelle.CheckedChanged
         If rbtnMensuelle.Checked And Not formController.FormIsLoading Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetUserDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppCtrl.str_GetUserDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Month, 1, dtpFrom.Value)
         End If
     End Sub
 
     Private Sub rbtnDeuxMois_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnDeuxMois.CheckedChanged
         If rbtnDeuxMois.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetUserDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppCtrl.str_GetUserDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Month, 2, dtpFrom.Value)
         End If
     End Sub
 
     Private Sub rbtnHebdo_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles rbtnHebdo.CheckedChanged
         If rbtnHebdo.Checked Then
-            dtpFrom.Value = CDate(Format(Date.Today, gcAppController.str_GetUserDateFormat))
+            dtpFrom.Value = CDate(Format(Date.Today, gcAppCtrl.str_GetUserDateFormat))
             dtpTo.Value = DateAdd(DateInterval.Day, 7, dtpFrom.Value)
         End If
     End Sub
@@ -305,9 +311,13 @@
     End Sub
 
     Private Sub btnRefresh_Click() Handles btnRefresh.Click
-        Me.Cursor = Windows.Forms.Cursors.WaitCursor
-        blnGrdBudget_Load()
-        Me.Cursor = Windows.Forms.Cursors.Default
+
+        If dtpFrom.Value > dtpTo.Value Then
+
+            gcAppCtrl.ShowMessage(mintDtFromToRestrictions_msg)
+        Else
+            blnGrdBudget_Load()
+        End If
     End Sub
 
     Private Sub btnBefore_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btnBefore.Click
@@ -391,12 +401,7 @@
     End Sub
 
     Private Sub dtpFrom_ValueChanged(sender As Object, e As EventArgs) Handles dtpFrom.ValueChanged, dtpTo.ValueChanged
-        If dtpFrom.Value > dtpTo.Value Then
-            dtpTo.Value = DateAdd(DateInterval.Day, 7, dtpFrom.Value)
-        End If
-        If formController.FormIsLoading Then
 
-        End If
         btnRefresh.SetToRefresh = True
     End Sub
 

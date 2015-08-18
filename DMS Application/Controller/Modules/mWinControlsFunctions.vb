@@ -12,7 +12,7 @@ Namespace mWinControlsFunctions
             Try
                 rcboToLoad.DataSource = Nothing
 
-                mySQLCmd = New MySqlCommand(vstrSQL, gcAppController.MySQLConnection)
+                mySQLCmd = New MySqlCommand(vstrSQL, gcAppCtrl.MySQLConnection)
 
                 mySQLReader = mySQLCmd.ExecuteReader
 
@@ -35,7 +35,7 @@ Namespace mWinControlsFunctions
 
             Catch ex As Exception
                 blnValidReturn = False
-                gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source & " - " & System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name)
+                gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source & " - " & System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name)
             Finally
                 If Not IsNothing(mySQLReader) Then
                     mySQLReader.Dispose()

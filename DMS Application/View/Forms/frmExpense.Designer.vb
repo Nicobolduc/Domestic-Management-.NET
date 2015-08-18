@@ -32,8 +32,8 @@ Partial Class frmExpense
         Me.cboType = New System.Windows.Forms.ComboBox()
         Me.chkFixed = New System.Windows.Forms.CheckBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.grdAmount = New Syncfusion.Windows.Forms.Grid.GridControl()
         Me.btnAddRow = New System.Windows.Forms.Button()
+        Me.grdAmount = New Syncfusion.Windows.Forms.Grid.GridControl()
         Me.GroupBox1.SuspendLayout()
         CType(Me.grdAmount, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -72,14 +72,15 @@ Partial Class frmExpense
         '
         'formController
         '
-        Me.formController.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.formController.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.formController.FormIsLoading = False
         Me.formController.FormMode = DMS_Application.mConstants.Form_Mode.CONSULT_MODE
         Me.formController.Item_ID = 0
-        Me.formController.Location = New System.Drawing.Point(-86, 241)
+        Me.formController.Location = New System.Drawing.Point(-1, 241)
         Me.formController.Name = "formController"
         Me.formController.ShowButtonQuitOnly = False
-        Me.formController.Size = New System.Drawing.Size(473, 33)
+        Me.formController.Size = New System.Drawing.Size(388, 33)
         Me.formController.TabIndex = 4
         '
         'Label6
@@ -121,6 +122,16 @@ Partial Class frmExpense
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Périodes et montants"
         '
+        'btnAddRow
+        '
+        Me.btnAddRow.BackgroundImage = CType(resources.GetObject("btnAddRow.BackgroundImage"), System.Drawing.Image)
+        Me.btnAddRow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.btnAddRow.Location = New System.Drawing.Point(330, 19)
+        Me.btnAddRow.Name = "btnAddRow"
+        Me.btnAddRow.Size = New System.Drawing.Size(35, 35)
+        Me.btnAddRow.TabIndex = 15
+        Me.btnAddRow.UseVisualStyleBackColor = True
+        '
         'grdAmount
         '
         Me.grdAmount.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
@@ -133,16 +144,6 @@ Partial Class frmExpense
         Me.grdAmount.Tag = "21"
         Me.grdAmount.Text = "GridControl1"
         Me.grdAmount.UseRightToLeftCompatibleTextBox = True
-        '
-        'btnAddRow
-        '
-        Me.btnAddRow.BackgroundImage = CType(resources.GetObject("btnAddRow.BackgroundImage"), System.Drawing.Image)
-        Me.btnAddRow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.btnAddRow.Location = New System.Drawing.Point(330, 19)
-        Me.btnAddRow.Name = "btnAddRow"
-        Me.btnAddRow.Size = New System.Drawing.Size(35, 35)
-        Me.btnAddRow.TabIndex = 15
-        Me.btnAddRow.UseVisualStyleBackColor = True
         '
         'frmExpense
         '

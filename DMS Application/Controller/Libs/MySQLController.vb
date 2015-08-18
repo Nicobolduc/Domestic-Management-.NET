@@ -48,12 +48,12 @@ Public Class MySQLController
         Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
-            mySQLCmd = New MySqlCommand(vstrSQL, gcAppController.MySQLConnection)
+            mySQLCmd = New MySqlCommand(vstrSQL, gcAppCtrl.MySQLConnection)
 
             mySQLReader = mySQLCmd.ExecuteReader
 
         Catch ex As Exception
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLCmd) Then
                 mySQLCmd.Dispose()
@@ -69,7 +69,7 @@ Public Class MySQLController
         Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
-            mySQLCmd = New MySqlCommand(vstrSQL, gcAppController.MySQLConnection)
+            mySQLCmd = New MySqlCommand(vstrSQL, gcAppCtrl.MySQLConnection)
 
             mySQLReader = mySQLCmd.ExecuteReader()
 
@@ -77,7 +77,7 @@ Public Class MySQLController
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLCmd) Then
                 mySQLCmd.Dispose()
@@ -94,9 +94,9 @@ Public Class MySQLController
         Dim strSQL As String = String.Empty
 
         Try
-            strSQL = "SELECT " & vstrField & " AS " & gcAppController.str_FixStringForSQL(vstrField) & " FROM " & vstrTable & " WHERE " & vstrWhere
+            strSQL = "SELECT " & vstrField & " AS " & gcAppCtrl.str_FixStringForSQL(vstrField) & " FROM " & vstrTable & " WHERE " & vstrWhere
 
-            mySQLCmd = New MySqlCommand(strSQL, gcAppController.MySQLConnection)
+            mySQLCmd = New MySqlCommand(strSQL, gcAppCtrl.MySQLConnection)
 
             mySQLReader = mySQLCmd.ExecuteReader
 
@@ -107,7 +107,7 @@ Public Class MySQLController
             mySQLCmd.Dispose()
 
         Catch ex As Exception
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             If Not IsNothing(mySQLReader) Then
                 mySQLReader.Dispose()
@@ -134,17 +134,17 @@ Public Class MySQLController
         Dim blnValidReturn As Boolean
 
         Try
-            mMySQLTransaction = gcAppController.MySQLConnection.BeginTransaction(IsolationLevel.ReadCommitted)
+            mMySQLTransaction = gcAppCtrl.MySQLConnection.BeginTransaction(IsolationLevel.ReadCommitted)
             mblnTransactionStarted = True
             mMySQLCmd.Transaction = mMySQLTransaction
-            mMySQLCmd.Connection = gcAppController.MySQLConnection
+            mMySQLCmd.Connection = gcAppCtrl.MySQLConnection
             mMySQLCmd.CommandType = CommandType.Text
 
             blnValidReturn = True
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -164,7 +164,7 @@ Public Class MySQLController
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mblnTransactionStarted = False
             mMySQLTransaction.Dispose()
@@ -190,11 +190,11 @@ Public Class MySQLController
             Else
                 Select Case vintDBType
                     Case MySQLController.MySQL_FieldTypes.VARCHAR_TYPE
-                        vstrValue = gcAppController.str_FixStringForSQL(vstrValue)
+                        vstrValue = gcAppCtrl.str_FixStringForSQL(vstrValue)
 
                     Case MySQLController.MySQL_FieldTypes.DATETIME_TYPE
-                        vstrValue = Format(CDate(vstrValue), gcAppController.str_GetServerDateTimeFormat)
-                        vstrValue = gcAppController.str_FixStringForSQL(vstrValue)
+                        vstrValue = Format(CDate(vstrValue), gcAppCtrl.str_GetServerDateTimeFormat)
+                        vstrValue = gcAppCtrl.str_FixStringForSQL(vstrValue)
 
                     Case MySQLController.MySQL_FieldTypes.DECIMAL_TYPE, MySQLController.MySQL_FieldTypes.INT_TYPE
                         vstrValue = vstrValue.ToString
@@ -222,7 +222,7 @@ Public Class MySQLController
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -261,7 +261,7 @@ Public Class MySQLController
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -292,7 +292,7 @@ Public Class MySQLController
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         Finally
             mColFields.Clear()
         End Try
@@ -317,7 +317,7 @@ Public Class MySQLController
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -334,15 +334,15 @@ Public Class MySQLController
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         If Not blnValidReturn Then
-            gcAppController.ShowMessage(mConstants.Error_Message.ERROR_ITEM_USED_MSG, MsgBoxStyle.Exclamation)
+            gcAppCtrl.ShowMessage(mConstants.Error_Message.ERROR_ITEM_USED_MSG, MsgBoxStyle.Exclamation)
         End If
 
         Return blnValidReturn
-        
+
     End Function
 
 #End Region

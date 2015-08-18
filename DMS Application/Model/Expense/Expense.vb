@@ -134,7 +134,6 @@
 
                             If Not blnValidReturn Then Exit For
                         Next
-
                     End If
                 Else
                     'Error
@@ -142,7 +141,7 @@
 
             Catch ex As Exception
                 blnValidReturn = False
-                gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             End Try
 
             Return blnValidReturn
@@ -164,7 +163,7 @@
 
             Catch ex As Exception
                 blnValidReturn = False
-                gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             End Try
 
             Return blnValidReturn
@@ -184,7 +183,7 @@
 
             Catch ex As Exception
                 blnValidReturn = False
-                gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             End Try
 
             Return blnValidReturn
@@ -203,7 +202,7 @@
 
             Catch ex As Exception
                 blnValidReturn = False
-                gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             End Try
 
             Return blnValidReturn
@@ -214,6 +213,7 @@
 
             Try
                 Select Case False
+                    Case SQLController.bln_ADODelete("ExpenseAmount", "Exp_ID = " & _intExpense_ID)
                     Case SQLController.bln_ADODelete("Expense", "Exp_ID = " & _intExpense_ID)
                     Case Else
                         blnValidReturn = True
@@ -221,7 +221,7 @@
 
             Catch ex As Exception
                 blnValidReturn = False
-                gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             End Try
 
             Return blnValidReturn
@@ -231,6 +231,7 @@
 #End Region
 
 
+        'Class for historic of amount over differents periods
         Public Class ExpenseAmount
             Inherits BaseModel
 
@@ -279,11 +280,14 @@
                     If SQLController.blnTransactionStarted Then
 
                         Select Case DLMCommand
-                            Case mConstants.Form_Mode.INSERT_MODE
+                            Case Form_Mode.INSERT_MODE
                                 blnValidReturn = blnExpenseAmount_Insert()
 
-                            Case mConstants.Form_Mode.UPDATE_MODE
+                            Case Form_Mode.UPDATE_MODE
                                 blnValidReturn = blnExenseAmount_Update()
+
+                            Case Form_Mode.DELETE_MODE
+                                blnValidReturn = blnExenseAmount_Delete()
 
                         End Select
                     Else
@@ -292,7 +296,7 @@
 
                 Catch ex As Exception
                     blnValidReturn = False
-                    gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                    gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
                 End Try
 
                 Return blnValidReturn
@@ -314,7 +318,7 @@
 
                 Catch ex As Exception
                     blnValidReturn = False
-                    gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                    gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
                 End Try
 
                 Return blnValidReturn
@@ -333,7 +337,7 @@
 
                 Catch ex As Exception
                     blnValidReturn = False
-                    gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                    gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
                 End Try
 
                 Return blnValidReturn
@@ -345,18 +349,37 @@
                 Try
                     Select Case False
                         Case blnExpenseAmount_AddFields()
-                        Case SQLController.bln_ADOUpdate("ExpenseAmount", "ExpA_DtBegin = " & gcAppController.str_FixDateForSQL(_dtDateBegin) & " AND Exp_ID = " & _intExpense_ID)
+                        Case SQLController.bln_ADOUpdate("ExpenseAmount", "Exp_ID = " & _intExpense_ID & " AND CASE WHEN (SELECT TNb.Nb FROM (SELECT COUNT(*) AS Nb FROM ExpenseAmount WHERE ExpenseAmount.Exp_ID = " & _intExpense_ID & ") AS TNb) = 1 THEN 1=1 ELSE ExpA_DtBegin = " & gcAppCtrl.str_FixDateForSQL(_dtDateBegin.ToString) & " END ")
                         Case Else
                             blnValidReturn = True
                     End Select
 
                 Catch ex As Exception
                     blnValidReturn = False
-                    gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                    gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
                 End Try
 
                 Return blnValidReturn
             End Function
+
+            Private Function blnExenseAmount_Delete() As Boolean
+                Dim blnValidReturn As Boolean
+
+                Try
+                    Select Case False
+                        Case SQLController.bln_ADODelete("ExpenseAmount", "Exp_ID = " & _intExpense_ID)
+                        Case Else
+                            blnValidReturn = True
+                    End Select
+
+                Catch ex As Exception
+                    blnValidReturn = False
+                    gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                End Try
+
+                Return blnValidReturn
+            End Function
+
         End Class
 
     End Class

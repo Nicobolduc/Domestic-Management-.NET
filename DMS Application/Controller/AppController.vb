@@ -51,10 +51,12 @@ Public NotInheritable Class AppController
         Get
             Select Case mcUser.GetLanguage
                 Case CInt(mConstants.Language.FRENCH_QC)
-                    Return "dd/MM/yyyy"
+                    ' Return "dd-MM-yyyy"
+                    Return "yyyy-MM-dd"
 
                 Case CInt(mConstants.Language.ENGLISH_CA)
-                    Return "mm/dd/yyyy"
+                    ' Return "MM-dd-yyyy"
+                    Return "yyyy-MM-dd"
 
                 Case Else
                     Return System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern()
@@ -67,10 +69,12 @@ Public NotInheritable Class AppController
         Get
             Select Case mcUser.GetLanguage
                 Case CInt(mConstants.Language.FRENCH_QC)
-                    Return "dd/MM/yyyy HH:mm:ss"
+                    'Return "dd-MM-yyyy HH:mm:ss"
+                    Return "yyyy-MM-dd HH:mm:ss"
 
                 Case CInt(mConstants.Language.ENGLISH_CA)
-                    Return "mm/dd/yyyy HH:mm:ss"
+                    'Return "MM-dd-yyyy HH:mm:ss"
+                    Return "yyyy-MM-dd HH:mm:ss"
 
                 Case Else
                     Return System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern & " " & System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.ShortTimePattern
@@ -127,8 +131,8 @@ Public NotInheritable Class AppController
 
         mcMySQLConnection = New MySqlConnection
 
-        'mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.107;Port=3306;userid=Nicolas;password=nicolas;database=dms_tests"
-        mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests" 'MultipleActiveResultSets=true
+        mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.107;Port=3306;userid=Nicolas;password=nicolas;database=dms_tests"
+        'mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests" 'MultipleActiveResultSets=true
 
         Try
             mcMySQLConnection.Open()
@@ -162,7 +166,7 @@ Public NotInheritable Class AppController
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return blnValidReturn
@@ -178,7 +182,7 @@ Public NotInheritable Class AppController
 
         Catch ex As Exception
             blnValidReturn = False
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
         Return strCaption
@@ -190,9 +194,9 @@ Public NotInheritable Class AppController
 
     End Function
 
-    Public Function str_FixDateForSQL(ByVal vstrDateToFix As Date) As String
+    Public Function str_FixDateForSQL(ByVal vstrDateToFix As String) As String
 
-        Return str_FixStringForSQL(Format(vstrDateToFix, str_GetServerDateTimeFormat))
+        Return str_FixStringForSQL(Format(CDate(vstrDateToFix), str_GetServerDateTimeFormat))
 
     End Function
 
@@ -202,16 +206,21 @@ Public NotInheritable Class AppController
 
     End Function
 
+    Public Function GetFormatedDate(ByVal vdtToFormat As String) As Date
+
+        Return DateTime.ParseExact(vdtToFormat, str_GetUserDateFormat, Globalization.CultureInfo.InvariantCulture)
+    End Function
+
     Public Sub ShowMessage(ByVal vintCaption_ID As Integer, Optional ByVal vmsgType As MsgBoxStyle = MsgBoxStyle.Information)
         Dim strMessage As String = String.Empty
 
         Try
-            strMessage = gcAppController.str_GetCaption(vintCaption_ID, mcUser.GetLanguage)
+            strMessage = gcAppCtrl.str_GetCaption(vintCaption_ID, mcUser.GetLanguage)
 
             MsgBox(strMessage, vmsgType)
 
         Catch ex As Exception
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -254,7 +263,7 @@ Public NotInheritable Class AppController
             Next objControl
 
         Catch ex As Exception
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
@@ -298,7 +307,7 @@ Public NotInheritable Class AppController
             Next objControl
 
         Catch ex As Exception
-            gcAppController.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
         End Try
 
     End Sub
