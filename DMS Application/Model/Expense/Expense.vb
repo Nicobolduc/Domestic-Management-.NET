@@ -11,7 +11,7 @@
 
         'Private class members
         Private mcExpenseType As ExpenseType
-        Private mcLstExpAmount As List(Of ExpenseAmount)
+        Private mcLstExpPeriod As List(Of ExpensePeriod)
 
 
 #Region "Properties"
@@ -34,34 +34,33 @@
             End Set
         End Property
 
-        Public Property LstExpAmount As List(Of ExpenseAmount)
+        Public Property LstExpPeriod As List(Of ExpensePeriod)
             Get
-                Return mcLstExpAmount
+                Return mcLstExpPeriod
             End Get
-            Set(value As List(Of ExpenseAmount))
-                mcLstExpAmount = value
+            Set(value As List(Of ExpensePeriod))
+                mcLstExpPeriod = value
             End Set
         End Property
 
-        Public Property CurrentExpAmount As ExpenseAmount
+        Public Property CurrentExpPeriod As ExpensePeriod
             Get
-                Return mcLstExpAmount(mcLstExpAmount.Count - 1)
+                Return mcLstExpPeriod(mcLstExpPeriod.Count - 1)
             End Get
-            Set(value As ExpenseAmount)
+            Set(value As ExpensePeriod)
 
-                If mcLstExpAmount.Count = 0 Then
+                If mcLstExpPeriod.Count = 0 Then
 
-                    mcLstExpAmount.Add(value)
+                    mcLstExpPeriod.Add(value)
                 Else
-                    mcLstExpAmount(mcLstExpAmount.Count - 1) = value
+                    mcLstExpPeriod(mcLstExpPeriod.Count - 1) = value
                 End If
-
             End Set
         End Property
 
         Public ReadOnly Property BillingDate As Date
             Get
-                Return mcLstExpAmount(mcLstExpAmount.Count - 1).DateBegin
+                Return mcLstExpPeriod(mcLstExpPeriod.Count - 1).DateBegin
             End Get
         End Property
 
@@ -97,7 +96,7 @@
 #Region "Constructors"
 
         Public Sub New()
-            mcLstExpAmount = New List(Of ExpenseAmount)
+            mcLstExpPeriod = New List(Of ExpensePeriod)
             mcExpenseType = New ExpenseType
         End Sub
 
@@ -125,12 +124,12 @@
 
                     If blnValidReturn Then
 
-                        For Each ExpAmount As ExpenseAmount In mcLstExpAmount
+                        For Each ExpAmount As ExpensePeriod In mcLstExpPeriod
 
                             ExpAmount.SQLController = Me.SQLController
                             ExpAmount._intExpense_ID = _intExpense_ID
 
-                            blnValidReturn = ExpAmount.blnExpenseAmount_Save
+                            blnValidReturn = ExpAmount.blnExpensePeriod_Save
 
                             If Not blnValidReturn Then Exit For
                         Next
@@ -213,7 +212,7 @@
 
             Try
                 Select Case False
-                    Case SQLController.bln_ADODelete("ExpenseAmount", "Exp_ID = " & _intExpense_ID)
+                    Case SQLController.bln_ADODelete("ExpensePeriod", "Exp_ID = " & _intExpense_ID)
                     Case SQLController.bln_ADODelete("Expense", "Exp_ID = " & _intExpense_ID)
                     Case Else
                         blnValidReturn = True
@@ -232,7 +231,7 @@
 
 
         'Class for historic of amount over differents periods
-        Public Class ExpenseAmount
+        Public Class ExpensePeriod
             Inherits BaseModel
 
             'Private members
@@ -273,7 +272,7 @@
 
 #End Region
 
-            Friend Function blnExpenseAmount_Save() As Boolean
+            Friend Function blnExpensePeriod_Save() As Boolean
                 Dim blnValidReturn As Boolean
 
                 Try
@@ -281,13 +280,13 @@
 
                         Select Case DLMCommand
                             Case Form_Mode.INSERT_MODE
-                                blnValidReturn = blnExpenseAmount_Insert()
+                                blnValidReturn = blnExpensePeriod_Insert()
 
                             Case Form_Mode.UPDATE_MODE
-                                blnValidReturn = blnExenseAmount_Update()
+                                blnValidReturn = blnExensePeriod_Update()
 
                             Case Form_Mode.DELETE_MODE
-                                blnValidReturn = blnExenseAmount_Delete()
+                                blnValidReturn = blnExensePeriod_Delete()
 
                         End Select
                     Else
@@ -302,7 +301,7 @@
                 Return blnValidReturn
             End Function
 
-            Private Function blnExpenseAmount_AddFields() As Boolean
+            Private Function blnExpensePeriod_AddFields() As Boolean
                 Dim blnValidReturn As Boolean
 
                 Try
@@ -324,13 +323,13 @@
                 Return blnValidReturn
             End Function
 
-            Private Function blnExpenseAmount_Insert() As Boolean
+            Private Function blnExpensePeriod_Insert() As Boolean
                 Dim blnValidReturn As Boolean
 
                 Try
                     Select Case False
-                        Case blnExpenseAmount_AddFields()
-                        Case SQLController.bln_ADOInsert("ExpenseAmount")
+                        Case blnExpensePeriod_AddFields()
+                        Case SQLController.bln_ADOInsert("ExpensePeriod")
                         Case Else
                             blnValidReturn = True
                     End Select
@@ -343,13 +342,13 @@
                 Return blnValidReturn
             End Function
 
-            Private Function blnExenseAmount_Update() As Boolean
+            Private Function blnExensePeriod_Update() As Boolean
                 Dim blnValidReturn As Boolean
 
                 Try
                     Select Case False
-                        Case blnExpenseAmount_AddFields()
-                        Case SQLController.bln_ADOUpdate("ExpenseAmount", "Exp_ID = " & _intExpense_ID & " AND CASE WHEN (SELECT TNb.Nb FROM (SELECT COUNT(*) AS Nb FROM ExpenseAmount WHERE ExpenseAmount.Exp_ID = " & _intExpense_ID & ") AS TNb) = 1 THEN 1=1 ELSE ExpA_DtBegin = " & gcAppCtrl.str_FixDateForSQL(_dtDateBegin.ToString) & " END ")
+                        Case blnExpensePeriod_AddFields()
+                        Case SQLController.bln_ADOUpdate("ExpensePeriod", "Exp_ID = " & _intExpense_ID & " AND CASE WHEN (SELECT TNb.Nb FROM (SELECT COUNT(*) AS Nb FROM ExpensePeriod WHERE ExpensePeriod.Exp_ID = " & _intExpense_ID & ") AS TNb) = 1 THEN 1=1 ELSE ExpA_DtBegin = " & gcAppCtrl.str_FixDateForSQL(_dtDateBegin.ToString) & " END ")
                         Case Else
                             blnValidReturn = True
                     End Select
@@ -362,12 +361,12 @@
                 Return blnValidReturn
             End Function
 
-            Private Function blnExenseAmount_Delete() As Boolean
+            Private Function blnExensePeriod_Delete() As Boolean
                 Dim blnValidReturn As Boolean
 
                 Try
                     Select Case False
-                        Case SQLController.bln_ADODelete("ExpenseAmount", "Exp_ID = " & _intExpense_ID)
+                        Case SQLController.bln_ADODelete("ExpensePeriod", "Exp_ID = " & _intExpense_ID)
                         Case Else
                             blnValidReturn = True
                     End Select

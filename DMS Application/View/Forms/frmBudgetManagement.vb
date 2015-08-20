@@ -10,10 +10,10 @@
     Private mintGrdBudget_Exp_Name_col As Short = 5
     Private mintGrdBudget_Exp_Amount_col As Short = 6
     Private mintGrdBudget_PExp_AmountPaid_col As Short = 7
-    Private mintGrdBudget_PExp_DatePaid_col As Short = 8
-    Private mintGrdBudget_ExpT_ArgbColor_col As Short = 9
-    Private mintGrdBudget_Income_Amount_col As Short = 10
-    Private mintGrdBudget_PExp_Comment_col As Short = 11
+    Private mintGrdBudget_PExp_DatePaid_col As Short = 8 
+    Private mintGrdBudget_PExp_Comment_col As Short = 9
+    Private mintGrdBudget_ExpT_ArgbColor_col As Short = 10
+    Private mintGrdBudget_Income_Amount_col As Short = 11
     Private mintGrdBudget_Sel_col As Short = 12
 
     'Messages
@@ -80,13 +80,13 @@
 
                         blnGrdBudget_AddSummaryRow(intRowIdx, intLastRowAddedIndex)
 
-                        intRowIdx += 1
+                        intRowIdx = intLastRowAddedIndex
 
                     ElseIf CDate(grdBudget(intRowIdx - 1, mintGrdBudget_NextIncomeDateToUse_col).CellValue) < CDate(grdBudget(intRowIdx, mintGrdBudget_NextIncomeDateToUse_col).CellValue) Then
 
                         blnGrdBudget_AddSummaryRow(intRowIdx, intLastRowAddedIndex)
 
-                        intRowIdx += 1
+                        intRowIdx = intLastRowAddedIndex
 
                     End If
 
@@ -106,16 +106,19 @@
     Private Function blnGrdBudget_AddSummaryRow(ByVal vintRowIndexToAdd As Integer, ByRef rintLastRowAddedIndex As Integer) As Boolean
         Dim blnValidReturn As Boolean
         Dim dblPeriodTotal As Double
+        Dim intNbRowsAdded As Byte = 2
+        Dim newCellsStyle As New GridStyleInfo
         Dim newRowBorders As New GridBorder(GridBorderStyle.Dashed, Color.LightSkyBlue, GridBorderWeight.Medium)
 
         Try
-            grdBudget.Rows.InsertRange(vintRowIndexToAdd, 1)
+            grdBudget.IgnoreReadOnly = True
 
-            'grdBudget.RowStyles(vintRowIndexToAdd).CellType = "Default"
+            'Row for total to pay column
+            grdBudget.Rows.InsertRange(vintRowIndexToAdd, 1)
 
             grdBudget(vintRowIndexToAdd, mintGrdBudget_Action_col).CellValue = SyncfusionGridController.GridRowActions.NO_ACTION
 
-            grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).Borders.All = newRowBorders
+            'grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).Borders.All = newRowBorders
             'grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).HorizontalAlignment = GridHorizontalAlignment.Right
             'grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellValueType = GetType(String)
             'grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellType = GridCellTypeName.FormulaCell
@@ -129,15 +132,43 @@
             grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellValue = dblPeriodTotal
             grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).Font.Bold = True
 
-            For intColIdx As Short = 1 To CShort(grdBudget.ColCount)
 
-                grdBudget(vintRowIndexToAdd, intColIdx).ReadOnly = True
-            Next
+            'Row for total of deficit or extra
+            vintRowIndexToAdd += 1
+
+            grdBudget.Rows.InsertRange(vintRowIndexToAdd, 1)
+            grdBudget(vintRowIndexToAdd, mintGrdBudget_Action_col).CellValue = SyncfusionGridController.GridRowActions.NO_ACTION
+
+            If CDbl(grdBudget(vintRowIndexToAdd - 1, mintGrdBudget_Exp_Amount_col).CellValue) < CDbl(lblMainIncomeAmount.Text) Then
+
+                grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Name_col).HorizontalAlignment = GridHorizontalAlignment.Right
+                grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellValue = "+" & CStr(Val(lblMainIncomeAmount.Text) - Val(grdBudget(vintRowIndexToAdd - 1, mintGrdBudget_Exp_Amount_col).CellValue))
+                grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).TextColor = Color.Green
+                grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).Font.Bold = True
+                grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).Format = mConstants.DataFormat.CURRENCY
+
+            ElseIf CDbl(grdBudget(vintRowIndexToAdd - 1, mintGrdBudget_Exp_Amount_col).CellValue) > CDbl(lblMainIncomeAmount.Text) Then
+
+                grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Name_col).HorizontalAlignment = GridHorizontalAlignment.Right
+                grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellValue = CDbl(lblMainIncomeAmount.Text) - CDbl(grdBudget(vintRowIndexToAdd - 1, mintGrdBudget_Exp_Amount_col).CellValue)
+                grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).TextColor = Color.Red
+                grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).Font.Bold = True
+                grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).Format = mConstants.DataFormat.CURRENCY
+            Else
+                grdBudget.Rows.RemoveRange(vintRowIndexToAdd, vintRowIndexToAdd)
+                vintRowIndexToAdd -= 1
+                intNbRowsAdded = 1
+            End If
+
+            newCellsStyle.CellType = "Default"
+            newCellsStyle.ReadOnly = True
+            newCellsStyle.MergeCell = GridMergeCellDirection.Both
+
+            grdBudget.ChangeCells(GridRangeInfo.Cells(CInt(IIf(intNbRowsAdded = 2, vintRowIndexToAdd - 1, vintRowIndexToAdd)), 1, vintRowIndexToAdd, grdBudget.ColCount), newCellsStyle)
 
             rintLastRowAddedIndex = vintRowIndexToAdd + 1
 
-            grdBudget.RowStyles(vintRowIndexToAdd).MergeCell = GridMergeCellDirection.ColumnsInRow
-            
+            grdBudget.IgnoreReadOnly = False
 
         Catch ex As Exception
             blnValidReturn = False
@@ -231,8 +262,8 @@
         grdBudget.ColWidths(mintGrdBudget_PExp_AmountPaid_col) = 85
         grdBudget.ColWidths(mintGrdBudget_PExp_DatePaid_col) = 95
         grdBudget.ColWidths(mintGrdBudget_NextIncomeDateToUse_col) = 105
-        grdBudget.ColWidths(mintGrdBudget_PExp_Comment_col) = 185
-        grdBudget.ColWidths(mintGrdBudget_Sel_col) = 50
+        grdBudget.ColWidths(mintGrdBudget_PExp_Comment_col) = 195
+        grdBudget.ColWidths(mintGrdBudget_Sel_col) = 40
 
         mcGridBudgetController.SetColType_CheckBox(mintGrdBudget_Sel_col, False)
 
@@ -247,7 +278,7 @@
         grdBudget.ColStyles(mintGrdBudget_Exp_Amount_col).Format = mConstants.DataFormat.CURRENCY
         grdBudget.ColStyles(mintGrdBudget_PExp_AmountPaid_col).Format = mConstants.DataFormat.CURRENCY
 
-        grdBudget.Model.Options.MergeCellsMode = GridMergeCellsMode.OnDemandCalculation Or GridMergeCellsMode.MergeRowsInColumn Or GridMergeCellsMode.SkipHiddencells
+        grdBudget.Model.Options.MergeCellsMode = GridMergeCellsMode.SkipHiddencells Or GridMergeCellsMode.OnDemandCalculation Or GridMergeCellsMode.MergeRowsInColumn 'Or GridMergeCellsMode.MergeColumnsInRow
         grdBudget.ColStyles(mintGrdBudget_NextIncomeDateToUse_col).MergeCell = GridMergeCellDirection.RowsInColumn
         grdBudget.ColStyles(mintGrdBudget_Exp_NextBillingDate_col).MergeCell = GridMergeCellDirection.RowsInColumn
 

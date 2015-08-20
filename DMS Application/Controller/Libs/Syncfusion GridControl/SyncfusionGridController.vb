@@ -366,6 +366,7 @@ Public Class SyncfusionGridController
                     End Select
 
                     'mGrdSync.ChangeCells(GridRangeInfo.Cells(0, colHeaderCpt, mGrdSync.RowCount, colHeaderCpt), individualColStyle)
+                    mGrdSync(0, colHeaderCpt).HorizontalAlignment = individualColStyle.HorizontalAlignment
                     mGrdSync.ColStyles(colHeaderCpt) = individualColStyle
                 End If
 
@@ -498,7 +499,6 @@ Public Class SyncfusionGridController
 
             'mGrdSync.ColStyles(vintColumnIndex).CellType = "DateTimePicker"
             mGrdSync.ColStyles(vintColumnIndex).CellValueType = GetType(DateTime)
-            mGrdSync.ColStyles(vintColumnIndex).CellValue = Nothing
             mGrdSync.ColStyles(vintColumnIndex).Format = gcAppCtrl.str_GetUserDateFormat
 
             mGrdSync.ColWidths(vintColumnIndex) = 85

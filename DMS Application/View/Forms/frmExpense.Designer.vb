@@ -33,9 +33,9 @@ Partial Class frmExpense
         Me.chkFixed = New System.Windows.Forms.CheckBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.btnAddRow = New System.Windows.Forms.Button()
-        Me.grdAmount = New Syncfusion.Windows.Forms.Grid.GridControl()
+        Me.grdPeriod = New Syncfusion.Windows.Forms.Grid.GridControl()
         Me.GroupBox1.SuspendLayout()
-        CType(Me.grdAmount, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.grdPeriod, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label1
@@ -114,7 +114,7 @@ Partial Class frmExpense
         'GroupBox1
         '
         Me.GroupBox1.Controls.Add(Me.btnAddRow)
-        Me.GroupBox1.Controls.Add(Me.grdAmount)
+        Me.GroupBox1.Controls.Add(Me.grdPeriod)
         Me.GroupBox1.Location = New System.Drawing.Point(7, 93)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(373, 143)
@@ -126,24 +126,24 @@ Partial Class frmExpense
         '
         Me.btnAddRow.BackgroundImage = CType(resources.GetObject("btnAddRow.BackgroundImage"), System.Drawing.Image)
         Me.btnAddRow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.btnAddRow.Location = New System.Drawing.Point(330, 19)
+        Me.btnAddRow.Location = New System.Drawing.Point(330, 20)
         Me.btnAddRow.Name = "btnAddRow"
         Me.btnAddRow.Size = New System.Drawing.Size(35, 35)
         Me.btnAddRow.TabIndex = 15
         Me.btnAddRow.UseVisualStyleBackColor = True
         '
-        'grdAmount
+        'grdPeriod
         '
-        Me.grdAmount.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.grdAmount.Location = New System.Drawing.Point(6, 19)
-        Me.grdAmount.Name = "grdAmount"
-        Me.grdAmount.SerializeCellsBehavior = Syncfusion.Windows.Forms.Grid.GridSerializeCellsBehavior.SerializeAsRangeStylesIntoCode
-        Me.grdAmount.Size = New System.Drawing.Size(318, 116)
-        Me.grdAmount.SmartSizeBox = False
-        Me.grdAmount.TabIndex = 14
-        Me.grdAmount.Tag = "21"
-        Me.grdAmount.Text = "GridControl1"
-        Me.grdAmount.UseRightToLeftCompatibleTextBox = True
+        Me.grdPeriod.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.grdPeriod.Location = New System.Drawing.Point(6, 20)
+        Me.grdPeriod.Name = "grdPeriod"
+        Me.grdPeriod.SerializeCellsBehavior = Syncfusion.Windows.Forms.Grid.GridSerializeCellsBehavior.SerializeAsRangeStylesIntoCode
+        Me.grdPeriod.Size = New System.Drawing.Size(318, 116)
+        Me.grdPeriod.SmartSizeBox = False
+        Me.grdPeriod.TabIndex = 14
+        Me.grdPeriod.Tag = "21"
+        Me.grdPeriod.Text = "GridControl1"
+        Me.grdPeriod.UseRightToLeftCompatibleTextBox = True
         '
         'frmExpense
         '
@@ -167,7 +167,7 @@ Partial Class frmExpense
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Dépense"
         Me.GroupBox1.ResumeLayout(False)
-        CType(Me.grdAmount, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.grdPeriod, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -181,6 +181,6 @@ Partial Class frmExpense
     Friend WithEvents cboType As System.Windows.Forms.ComboBox
     Friend WithEvents chkFixed As System.Windows.Forms.CheckBox
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
-    Friend WithEvents grdAmount As Syncfusion.Windows.Forms.Grid.GridControl
+    Friend WithEvents grdPeriod As Syncfusion.Windows.Forms.Grid.GridControl
     Friend WithEvents btnAddRow As System.Windows.Forms.Button
 End Class

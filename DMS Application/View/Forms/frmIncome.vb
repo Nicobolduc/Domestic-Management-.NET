@@ -1,9 +1,17 @@
 ﻿Public Class frmIncome
 
-    'Private members
+
+    'Private class members
     Private mcSQL As MySQLController
     Private mcIncomeModel As Model.Income
+    Private WithEvents mcGridPeriodController As SyncfusionGridController
 
+    'GrdPeriod
+    Private Const mintGrdPeriod_Action_col As Short = 1
+    Private Const mintGrdPeriod_DtBegin_col As Short = 2
+    Private Const mintGrdPeriod_DtEnd_col As Short = 3
+    Private Const mintGrdPeriod_Amount_col As Short = 4
+    Private Const mintGrdPeriod_Active_col As Short = 5
 
 #Region "Functions / Subs"
 
@@ -16,17 +24,9 @@
             If Not mcIncomeModel Is Nothing Then
 
                 txtName.Text = mcIncomeModel.Name
-                txtAmount.Text = mcIncomeModel.Amount.ToString
+
                 cboFrequency.SelectedValue = CInt(mcIncomeModel.Period)
                 chkMainIncome.Checked = mcIncomeModel.IsMainIncome
-
-                If Not mcIncomeModel.ReceptionDate Is Nothing Then
-
-                    dtpPayDate.Checked = True
-                    dtpPayDate.Value = CDate(Format(mcIncomeModel.ReceptionDate.Value, AppController.GetAppController.str_GetUserDateFormat))
-                Else
-                    dtpPayDate.Checked = False
-                End If
 
                 blnValidReturn = True
             End If
@@ -85,6 +85,30 @@
         Return blnValidReturn
     End Function
 
+    Private Function blnGrdPeriod_Load() As Boolean
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
+
+        Try
+            strSQL = strSQL & " SELECT " & SyncfusionGridController.GridRowActions.NO_ACTION & " AS ActionCol, " & vbCrLf
+            strSQL = strSQL & "         IncomePeriod.ExpA_DtBegin, " & vbCrLf
+            strSQL = strSQL & "         IncomePeriod.ExpA_DtEnd, " & vbCrLf
+            strSQL = strSQL & "         IncomePeriod.ExpA_Amount, " & vbCrLf
+            strSQL = strSQL & "         CASE WHEN ExpensePeriod.ExpA_DtEnd IS NULL THEN 'TRUE' ELSE 'FALSE' END " & vbCrLf
+            strSQL = strSQL & " FROM IncomePeriod " & vbCrLf
+            strSQL = strSQL & " WHERE IncomePeriod.Exp_ID = " & mcIncomeModel.ID & vbCrLf
+            strSQL = strSQL & " ORDER BY IncomePeriod.ExpA_DtBegin ASC " & vbCrLf
+
+            blnValidReturn = mcGridPeriodController.bln_FillData(strSQL)
+
+        Catch ex As Exception
+            blnValidReturn = False
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnValidReturn
+    End Function
+
     Public Function blnSyncIncomeModel() As Boolean
         Dim blnValidReturn As Boolean
 
@@ -98,16 +122,9 @@
             mcIncomeModel.DLMCommand = formController.FormMode
             mcIncomeModel.ID = formController.Item_ID
             mcIncomeModel.Name = txtName.Text
-            mcIncomeModel.Amount = Math.Round(Val(txtAmount.Text), 2)
+            'mcIncomeModel.Amount = Math.Round(Val(txtAmount.Text), 2)
             mcIncomeModel.Period = CType(cboFrequency.SelectedValue, Period)
             mcIncomeModel.IsMainIncome = chkMainIncome.Checked
-
-            If Not IsDBNull(dtpPayDate.Value) And dtpPayDate.Checked Then
-
-                mcIncomeModel.ReceptionDate = gcAppCtrl.str_SetDateToMidnightServerFormat(dtpPayDate.Value.ToString)
-            Else
-                mcIncomeModel.ReceptionDate = Nothing
-            End If
 
             blnValidReturn = True
 
@@ -126,13 +143,12 @@
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
-        dtpPayDate.Value = DateTime.Today
-
         Select Case False
             Case blnCboFrequency_Load()
             Case formController.FormMode <> mConstants.Form_Mode.INSERT_MODE
                 blnValidReturn = True
             Case blnFormData_Load()
+            Case blnGrdPeriod_Load()
             Case Else
                 blnValidReturn = True
         End Select
@@ -143,7 +159,7 @@
         eventArgs.SaveSuccessful = blnFormData_Save()
     End Sub
 
-    Private Sub txtCode_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtName.TextChanged, txtAmount.TextChanged
+    Private Sub txtCode_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtName.TextChanged
         formController.ChangeMade = True
     End Sub
 
@@ -161,14 +177,6 @@
                 gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtName.Focus()
 
-            Case txtAmount.Text <> String.Empty
-                gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
-                txtAmount.Focus()
-
-            Case IsNumeric(txtAmount.Text)
-                gcAppCtrl.ShowMessage(mConstants.Validation_Message.NUMERIC_VALUE, MsgBoxStyle.Information)
-                txtAmount.Focus()
-
             Case cboFrequency.SelectedIndex > -1
                 gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 cboFrequency.DroppedDown = True
@@ -184,7 +192,7 @@
         End Select
     End Sub
 
-    Private Sub dtpBillDate_ValueChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles dtpPayDate.ValueChanged
+    Private Sub dtpBillDate_ValueChanged(ByVal sender As Object, ByVal e As System.EventArgs)
         formController.ChangeMade = True
     End Sub
 

@@ -51,9 +51,9 @@ Partial Class frmBudgetManagement
         Me.lblMainIncomeAmount_text = New System.Windows.Forms.Label()
         Me.btnUnselectAll = New System.Windows.Forms.Button()
         Me.btnSelectAll = New System.Windows.Forms.Button()
+        Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnRefresh = New DMS_Application.ctlRefresh()
         Me.formController = New DMS_Application.ctlFormController()
-        Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.gbFilter.SuspendLayout()
         CType(Me.dtpToHr, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dtpToHr.Calendar, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -657,6 +657,7 @@ Partial Class frmBudgetManagement
         Me.Controls.Add(Me.formController)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.MaximizeBox = False
         Me.Name = "frmBudgetManagement"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.Manual
         Me.Text = "Budget"

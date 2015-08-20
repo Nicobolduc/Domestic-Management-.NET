@@ -1,11 +1,11 @@
 ﻿Public Class frmExpense
 
     'Private members
-    Private Const mintGrdAmount_Action_col As Short = 1
-    Private Const mintGrdAmount_DtBegin_col As Short = 2
-    Private Const mintGrdAmount_DtEnd_col As Short = 3
-    Private Const mintGrdAmount_Amount_col As Short = 4
-    Private Const mintGrdAmount_Active_col As Short = 5
+    Private Const mintGrdPeriod_Action_col As Short = 1
+    Private Const mintGrdPeriod_DtBegin_col As Short = 2
+    Private Const mintGrdPeriod_DtEnd_col As Short = 3
+    Private Const mintGrdPeriod_Amount_col As Short = 4
+    Private Const mintGrdPeriod_Active_col As Short = 5
 
     Private mintSelectedRow As Integer
 
@@ -17,7 +17,7 @@
 
     'Private class members
     Private mcSQL As MySQLController
-    Private WithEvents mcGridAmountController As SyncfusionGridController
+    Private WithEvents mcGridPeriodController As SyncfusionGridController
     Private mcExpenseModel As Model.Expense
 
 
@@ -49,21 +49,21 @@
         Return blnValidReturn
     End Function
 
-    Private Function blnGrdAmount_Load() As Boolean
+    Private Function blnGrdPeriod_Load() As Boolean
         Dim blnValidReturn As Boolean
         Dim strSQL As String = String.Empty
 
         Try
             strSQL = strSQL & " SELECT " & SyncfusionGridController.GridRowActions.NO_ACTION & " AS ActionCol, " & vbCrLf
-            strSQL = strSQL & "         ExpenseAmount.ExpA_DtBegin, " & vbCrLf
-            strSQL = strSQL & "         ExpenseAmount.ExpA_DtEnd, " & vbCrLf
-            strSQL = strSQL & "         ExpenseAmount.ExpA_Amount, " & vbCrLf
-            strSQL = strSQL & "         CASE WHEN ExpenseAmount.ExpA_DtEnd IS NULL THEN 'TRUE' ELSE 'FALSE' END " & vbCrLf
-            strSQL = strSQL & " FROM ExpenseAmount " & vbCrLf
-            strSQL = strSQL & " WHERE ExpenseAmount.Exp_ID = " & mcExpenseModel.ID & vbCrLf
-            strSQL = strSQL & " ORDER BY ExpenseAmount.ExpA_DtBegin ASC " & vbCrLf
+            strSQL = strSQL & "         ExpensePeriod.ExpA_DtBegin, " & vbCrLf
+            strSQL = strSQL & "         ExpensePeriod.ExpA_DtEnd, " & vbCrLf
+            strSQL = strSQL & "         ExpensePeriod.ExpA_Amount, " & vbCrLf
+            strSQL = strSQL & "         CASE WHEN ExpensePeriod.ExpA_DtEnd IS NULL THEN 'TRUE' ELSE 'FALSE' END " & vbCrLf
+            strSQL = strSQL & " FROM ExpensePeriod " & vbCrLf
+            strSQL = strSQL & " WHERE ExpensePeriod.Exp_ID = " & mcExpenseModel.ID & vbCrLf
+            strSQL = strSQL & " ORDER BY ExpensePeriod.ExpA_DtBegin ASC " & vbCrLf
 
-            blnValidReturn = mcGridAmountController.bln_FillData(strSQL)
+            blnValidReturn = mcGridPeriodController.bln_FillData(strSQL)
 
         Catch ex As Exception
             blnValidReturn = False
@@ -141,7 +141,7 @@
 
     Public Function blnSyncExpenseModel() As Boolean
         Dim blnValidReturn As Boolean
-        Dim cExpAmount As Model.Expense.ExpenseAmount
+        Dim cExpAmount As Model.Expense.ExpensePeriod
 
         Try
             If mcExpenseModel Is Nothing Then
@@ -156,25 +156,25 @@
             mcExpenseModel.Period = CType(cboInterval.SelectedValue, Period)
             mcExpenseModel.Fixed = chkFixed.Checked
 
-            mcExpenseModel.LstExpAmount = New List(Of Model.Expense.ExpenseAmount)
+            mcExpenseModel.LstExpPeriod = New List(Of Model.Expense.ExpensePeriod)
 
-            For intRowIdx As Integer = 1 To grdAmount.RowCount
+            For intRowIdx As Integer = 1 To grdPeriod.RowCount
 
-                If CInt(grdAmount(intRowIdx, mintGrdAmount_Action_col).CellValue) <> SyncfusionGridController.GridRowActions.NO_ACTION Then
+                If CInt(grdPeriod(intRowIdx, mintGrdPeriod_Action_col).CellValue) <> SyncfusionGridController.GridRowActions.NO_ACTION Then
 
-                    cExpAmount = New Model.Expense.ExpenseAmount
+                    cExpAmount = New Model.Expense.ExpensePeriod
 
-                    cExpAmount.Amount = Math.Round(Val(grdAmount(grdAmount.RowCount, mintGrdAmount_Amount_col).CellValue), 2)
-                    cExpAmount.DateBegin = gcAppCtrl.GetFormatedDate(grdAmount(grdAmount.RowCount, mintGrdAmount_DtBegin_col).FormattedText)
+                    cExpAmount.Amount = Math.Round(Val(grdPeriod(grdPeriod.RowCount, mintGrdPeriod_Amount_col).CellValue), 2)
+                    cExpAmount.DateBegin = gcAppCtrl.GetFormatedDate(grdPeriod(grdPeriod.RowCount, mintGrdPeriod_DtBegin_col).FormattedText)
 
-                    If Not mcGridAmountController(grdAmount.RowCount, mintGrdAmount_DtEnd_col) = String.Empty Then
+                    If Not mcGridPeriodController(grdPeriod.RowCount, mintGrdPeriod_DtEnd_col) = String.Empty Then
 
-                        cExpAmount.DateEnd = gcAppCtrl.GetFormatedDate(grdAmount(grdAmount.RowCount, mintGrdAmount_DtEnd_col).FormattedText)
+                        cExpAmount.DateEnd = gcAppCtrl.GetFormatedDate(grdPeriod(grdPeriod.RowCount, mintGrdPeriod_DtEnd_col).FormattedText)
                     End If
 
-                    cExpAmount.DLMCommand = CType(grdAmount(grdAmount.RowCount, mintGrdAmount_Action_col).CellValue, Form_Mode)
+                    cExpAmount.DLMCommand = CType(grdPeriod(grdPeriod.RowCount, mintGrdPeriod_Action_col).CellValue, Form_Mode)
 
-                    mcExpenseModel.LstExpAmount.Add(cExpAmount)
+                    mcExpenseModel.LstExpPeriod.Add(cExpAmount)
                 End If
             Next
 
@@ -200,7 +200,7 @@
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        mcGridAmountController = New SyncfusionGridController
+        mcGridPeriodController = New SyncfusionGridController
     End Sub
 
     Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
@@ -209,14 +209,14 @@
         mintSelectedRow = 0
 
         Select Case False
-            Case mcGridAmountController.bln_Init(grdAmount, btnAddRow)
+            Case mcGridPeriodController.bln_Init(grdPeriod, btnAddRow)
             Case blnCboInterval_Load()
             Case blnCboType_Load()
             Case formController.FormMode <> mConstants.Form_Mode.INSERT_MODE
-                mcGridAmountController.AddRow()
+                mcGridPeriodController.AddRow()
                 blnValidReturn = True
             Case blnFormData_Load()
-            Case blnGrdAmount_Load()
+            Case blnGrdPeriod_Load()
             Case Else
                 blnValidReturn = True
         End Select
@@ -292,54 +292,54 @@
         formController.ChangeMade = True
     End Sub
 
-    Private Sub mcGridAmountController_SetDisplay() Handles mcGridAmountController.SetDisplay
+    Private Sub mcGridAmountController_SetDisplay() Handles mcGridPeriodController.SetDisplay
 
-        grdAmount.ColWidths(mintGrdAmount_Active_col) = 60
+        grdPeriod.ColWidths(mintGrdPeriod_Active_col) = 60
 
-        mcGridAmountController.SetColType_CheckBox(mintGrdAmount_Active_col)
-        mcGridAmountController.SetColType_DateTimePicker(mintGrdAmount_DtBegin_col, False)
-        mcGridAmountController.SetColType_DateTimePicker(mintGrdAmount_DtEnd_col, True)
+        mcGridPeriodController.SetColType_CheckBox(mintGrdPeriod_Active_col)
+        mcGridPeriodController.SetColType_DateTimePicker(mintGrdPeriod_DtBegin_col, False)
+        mcGridPeriodController.SetColType_DateTimePicker(mintGrdPeriod_DtEnd_col, True)
 
-        grdAmount.ColStyles(mintGrdAmount_Amount_col).CellValueType = GetType(Double)
+        grdPeriod.ColStyles(mintGrdPeriod_Amount_col).CellValueType = GetType(Double)
 
-        grdAmount.ColStyles(mintGrdAmount_Amount_col).Format = mConstants.DataFormat.CURRENCY
+        grdPeriod.ColStyles(mintGrdPeriod_Amount_col).Format = mConstants.DataFormat.CURRENCY
 
-        grdAmount.ColStyles(mintGrdAmount_Active_col).ReadOnly = True
+        grdPeriod.ColStyles(mintGrdPeriod_Active_col).ReadOnly = True
 
-        For intRowRdx As Integer = 1 To grdAmount.RowCount
+        For intRowRdx As Integer = 1 To grdPeriod.RowCount
 
-            If intRowRdx <> grdAmount.RowCount Then
+            If intRowRdx <> grdPeriod.RowCount Then
 
-                grdAmount.Item(intRowRdx, mintGrdAmount_DtBegin_col).ReadOnly = True
-                grdAmount.Item(intRowRdx, mintGrdAmount_DtEnd_col).ReadOnly = True
-                grdAmount.Item(intRowRdx, mintGrdAmount_Amount_col).ReadOnly = True
+                grdPeriod.Item(intRowRdx, mintGrdPeriod_DtBegin_col).ReadOnly = True
+                grdPeriod.Item(intRowRdx, mintGrdPeriod_DtEnd_col).ReadOnly = True
+                grdPeriod.Item(intRowRdx, mintGrdPeriod_Amount_col).ReadOnly = True
             End If
         Next
 
     End Sub
 
-    Private Sub grdAmount_CellClick(ByVal sender As Object, ByVal e As Syncfusion.Windows.Forms.Grid.GridCellClickEventArgs) Handles grdAmount.CellClick
+    Private Sub grdAmount_CellClick(ByVal sender As Object, ByVal e As Syncfusion.Windows.Forms.Grid.GridCellClickEventArgs) Handles grdPeriod.CellClick
         mintSelectedRow = e.RowIndex
     End Sub
 
-    Private Sub grdAmount_CurrentCellAcceptedChanges(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles grdAmount.CurrentCellAcceptedChanges
+    Private Sub grdAmount_CurrentCellAcceptedChanges(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles grdPeriod.CurrentCellAcceptedChanges
         Dim strPaidExpense As String = String.Empty
 
-        Select Case mcGridAmountController.GetSelectedCol
-            Case mintGrdAmount_DtBegin_col
+        Select Case mcGridPeriodController.GetSelectedCol
+            Case mintGrdPeriod_DtBegin_col
 
-                If mintSelectedRow > 1 And Not String.IsNullOrEmpty(mcGridAmountController(mintSelectedRow, mintGrdAmount_DtBegin_col)) Then
+                If mintSelectedRow > 1 And Not String.IsNullOrEmpty(mcGridPeriodController(mintSelectedRow, mintGrdPeriod_DtBegin_col)) Then
 
-                    If gcAppCtrl.GetFormatedDate(grdAmount(mintSelectedRow, mintGrdAmount_DtBegin_col).FormattedText) <= gcAppCtrl.GetFormatedDate(grdAmount(mintSelectedRow - 1, mintGrdAmount_DtEnd_col).FormattedText) Then
+                    If gcAppCtrl.GetFormatedDate(grdPeriod(mintSelectedRow, mintGrdPeriod_DtBegin_col).FormattedText) <= gcAppCtrl.GetFormatedDate(grdPeriod(mintSelectedRow - 1, mintGrdPeriod_DtEnd_col).FormattedText) Then
 
                         gcAppCtrl.ShowMessage(mintDateBeginRestriction_msg)
                         e.Cancel = True
                     End If
                 End If
 
-                If Not e.Cancel And Not String.IsNullOrEmpty(mcGridAmountController(mintSelectedRow, mintGrdAmount_DtBegin_col)) Then
+                If Not e.Cancel And Not String.IsNullOrEmpty(mcGridPeriodController(mintSelectedRow, mintGrdPeriod_DtBegin_col)) Then
 
-                    strPaidExpense = MySQLController.str_ADOSingleLookUp("PExp_ID", "PaidExpense", "Exp_BilledDate <= " & gcAppCtrl.str_FixDateForSQL(grdAmount(mintSelectedRow, mintGrdAmount_DtBegin_col).FormattedText) & " AND Exp_ID = " & formController.Item_ID & " AND NOT EXISTS(SELECT * FROM ExpenseAmount WHERE ExpenseAmount.ExpA_DtEnd < " & gcAppCtrl.str_FixDateForSQL(grdAmount(mintSelectedRow, mintGrdAmount_DtBegin_col).FormattedText) & ") LIMIT 1")
+                    strPaidExpense = MySQLController.str_ADOSingleLookUp("PExp_ID", "PaidExpense", "Exp_BilledDate <= " & gcAppCtrl.str_FixDateForSQL(grdPeriod(mintSelectedRow, mintGrdPeriod_DtBegin_col).FormattedText) & " AND Exp_ID = " & formController.Item_ID & " AND NOT EXISTS(SELECT * FROM ExpensePeriod WHERE ExpensePeriod.ExpA_DtEnd < " & gcAppCtrl.str_FixDateForSQL(grdPeriod(mintSelectedRow, mintGrdPeriod_DtBegin_col).FormattedText) & ") LIMIT 1")
 
                     If strPaidExpense <> String.Empty Then
 
@@ -348,17 +348,17 @@
                     End If
                 End If
 
-            Case mintGrdAmount_DtEnd_col
+            Case mintGrdPeriod_DtEnd_col
 
-                If Not String.IsNullOrEmpty(mcGridAmountController(mintSelectedRow, mintGrdAmount_DtEnd_col)) AndAlso gcAppCtrl.GetFormatedDate(grdAmount(mintSelectedRow, mintGrdAmount_DtEnd_col).FormattedText) < gcAppCtrl.GetFormatedDate(grdAmount(mintSelectedRow, mintGrdAmount_DtBegin_col).FormattedText) Then
+                If Not String.IsNullOrEmpty(mcGridPeriodController(mintSelectedRow, mintGrdPeriod_DtEnd_col)) AndAlso gcAppCtrl.GetFormatedDate(grdPeriod(mintSelectedRow, mintGrdPeriod_DtEnd_col).FormattedText) < gcAppCtrl.GetFormatedDate(grdPeriod(mintSelectedRow, mintGrdPeriod_DtBegin_col).FormattedText) Then
 
                     gcAppCtrl.ShowMessage(mintDateEndRestriction_msg)
                     e.Cancel = True
                 End If
 
-                If Not e.Cancel And Not String.IsNullOrEmpty(mcGridAmountController(mintSelectedRow, mintGrdAmount_DtEnd_col)) Then
+                If Not e.Cancel And Not String.IsNullOrEmpty(mcGridPeriodController(mintSelectedRow, mintGrdPeriod_DtEnd_col)) Then
 
-                    strPaidExpense = MySQLController.str_ADOSingleLookUp("PExp_ID", "PaidExpense", "Exp_BilledDate > " & gcAppCtrl.str_FixDateForSQL(grdAmount(mintSelectedRow, mintGrdAmount_DtEnd_col).FormattedText) & " AND Exp_ID = " & formController.Item_ID & " LIMIT 1")
+                    strPaidExpense = MySQLController.str_ADOSingleLookUp("PExp_ID", "PaidExpense", "Exp_BilledDate > " & gcAppCtrl.str_FixDateForSQL(grdPeriod(mintSelectedRow, mintGrdPeriod_DtEnd_col).FormattedText) & " AND Exp_ID = " & formController.Item_ID & " LIMIT 1")
 
                     If strPaidExpense <> String.Empty Then
 
@@ -374,31 +374,31 @@
         End If
     End Sub
 
-    Private Sub mcGridAmountController_ValidateData(eventArgs As ValidateGridEventArgs) Handles mcGridAmountController.ValidateData
+    Private Sub mcGridAmountController_ValidateData(eventArgs As ValidateGridEventArgs) Handles mcGridPeriodController.ValidateData
 
-            For intRowIdx As Integer = 1 To grdAmount.RowCount
+        For intRowIdx As Integer = 1 To grdPeriod.RowCount
 
-                eventArgs.IsValid = False
-                Select Case True
-                    Case String.IsNullOrEmpty(mcGridAmountController(intRowIdx, mintGrdAmount_Amount_col))
-                        gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
-                        mcGridAmountController.SetSelectedCell(intRowIdx, mintGrdAmount_Amount_col)
+            eventArgs.IsValid = False
+            Select Case True
+                Case String.IsNullOrEmpty(mcGridPeriodController(intRowIdx, mintGrdPeriod_Amount_col))
+                    gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
+                    mcGridPeriodController.SetSelectedCell(intRowIdx, mintGrdPeriod_Amount_col)
 
-                    Case String.IsNullOrEmpty(mcGridAmountController(intRowIdx, mintGrdAmount_DtBegin_col))
-                        gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
-                        mcGridAmountController.SetSelectedCell(intRowIdx, mintGrdAmount_DtBegin_col)
+                Case String.IsNullOrEmpty(mcGridPeriodController(intRowIdx, mintGrdPeriod_DtBegin_col))
+                    gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
+                    mcGridPeriodController.SetSelectedCell(intRowIdx, mintGrdPeriod_DtBegin_col)
 
-                    Case intRowIdx < grdAmount.RowCount AndAlso String.IsNullOrEmpty(mcGridAmountController(intRowIdx, mintGrdAmount_DtEnd_col))
-                        gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
-                        mcGridAmountController.SetSelectedCell(intRowIdx, mintGrdAmount_DtEnd_col)
+                Case intRowIdx < grdPeriod.RowCount AndAlso String.IsNullOrEmpty(mcGridPeriodController(intRowIdx, mintGrdPeriod_DtEnd_col))
+                    gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
+                    mcGridPeriodController.SetSelectedCell(intRowIdx, mintGrdPeriod_DtEnd_col)
 
-                    Case Else
-                        eventArgs.IsValid = True
+                Case Else
+                    eventArgs.IsValid = True
 
-                End Select
+            End Select
 
-                If Not eventArgs.IsValid Then Exit For
-            Next
+            If Not eventArgs.IsValid Then Exit For
+        Next
 
     End Sub
 
