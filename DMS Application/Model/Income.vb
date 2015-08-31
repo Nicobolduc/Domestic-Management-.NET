@@ -72,6 +72,14 @@
             End Set
         End Property
 
+        Public Property LstIncPeriod As List(Of IncomePeriod)
+            Get
+                Return mcLstIncPeriod
+            End Get
+            Set(ByVal value As List(Of IncomePeriod))
+                mcLstIncPeriod = value
+            End Set
+        End Property
 #End Region
 
 #Region "Constructors"
@@ -207,159 +215,158 @@
 
 #End Region
 
-    End Class
 
+        'Class for historic of amount over differents periods
+        Public Class IncomePeriod
+            Inherits BaseModel
 
-    'Class for historic of amount over differents periods
-    Public Class IncomePeriod
-        Inherits BaseModel
-
-        'Private members
-        Friend _intIncome_ID As Integer
-        Private _dtDateBegin As Date
-        Private _dtDateEnd As Nullable(Of Date)
-        Private _dblAmount As Double
+            'Private members
+            Friend _intIncome_ID As Integer
+            Private _dtDateBegin As Date
+            Private _dtDateEnd As Nullable(Of Date)
+            Private _dblAmount As Double
 
 
 #Region "Properties"
 
-        Public Property DateBegin As Date
-            Get
-                Return _dtDateBegin
-            End Get
-            Set(value As Date)
-                _dtDateBegin = value
-            End Set
-        End Property
+            Public Property DateBegin As Date
+                Get
+                    Return _dtDateBegin
+                End Get
+                Set(ByVal value As Date)
+                    _dtDateBegin = value
+                End Set
+            End Property
 
-        Public Property DateEnd As Nullable(Of Date)
-            Get
-                Return _dtDateEnd
-            End Get
-            Set(value As Nullable(Of Date))
-                _dtDateEnd = value
-            End Set
-        End Property
+            Public Property DateEnd As Nullable(Of Date)
+                Get
+                    Return _dtDateEnd
+                End Get
+                Set(ByVal value As Nullable(Of Date))
+                    _dtDateEnd = value
+                End Set
+            End Property
 
-        Public Property Amount As Double
-            Get
-                Return _dblAmount
-            End Get
-            Set(value As Double)
-                _dblAmount = value
-            End Set
-        End Property
+            Public Property Amount As Double
+                Get
+                    Return _dblAmount
+                End Get
+                Set(ByVal value As Double)
+                    _dblAmount = value
+                End Set
+            End Property
 
 #End Region
 
-        Friend Function blnIncomePeriod_Save() As Boolean
-            Dim blnValidReturn As Boolean
+            Friend Function blnIncomePeriod_Save() As Boolean
+                Dim blnValidReturn As Boolean
 
-            Try
-                If SQLController.blnTransactionStarted Then
+                Try
+                    If SQLController.blnTransactionStarted Then
 
-                    Select Case DLMCommand
-                        Case Form_Mode.INSERT_MODE
-                            blnValidReturn = blnIncomeAmount_Insert()
+                        Select Case DLMCommand
+                            Case Form_Mode.INSERT_MODE
+                                blnValidReturn = blnIncomeAmount_Insert()
 
-                        Case Form_Mode.UPDATE_MODE
-                            blnValidReturn = blnIncomeAmount_Update()
+                            Case Form_Mode.UPDATE_MODE
+                                blnValidReturn = blnIncomeAmount_Update()
 
-                        Case Form_Mode.DELETE_MODE
-                            blnValidReturn = blnIncomeAmount_Delete()
+                            Case Form_Mode.DELETE_MODE
+                                blnValidReturn = blnIncomeAmount_Delete()
 
+                        End Select
+                    Else
+                        'Error
+                    End If
+
+                Catch ex As Exception
+                    blnValidReturn = False
+                    gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                End Try
+
+                Return blnValidReturn
+            End Function
+
+            Private Function blnIncomeAmount_AddFields() As Boolean
+                Dim blnValidReturn As Boolean
+
+                Try
+                    Select Case False
+                        Case SQLController.bln_RefreshFields
+                        Case SQLController.bln_AddField("Inc_ID", _intIncome_ID, MySQLController.MySQL_FieldTypes.ID_TYPE)
+                        Case SQLController.bln_AddField("IncP_DtBegin", _dtDateBegin, MySQLController.MySQL_FieldTypes.DATETIME_TYPE)
+                        Case SQLController.bln_AddField("IncP_DtEnd", _dtDateEnd, MySQLController.MySQL_FieldTypes.DATETIME_TYPE)
+                        Case SQLController.bln_AddField("IncP_Amount", _dblAmount, MySQLController.MySQL_FieldTypes.DECIMAL_TYPE)
+                        Case Else
+                            blnValidReturn = True
                     End Select
-                Else
-                    'Error
-                End If
 
-            Catch ex As Exception
-                blnValidReturn = False
-                gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-            End Try
+                Catch ex As Exception
+                    blnValidReturn = False
+                    gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                End Try
 
-            Return blnValidReturn
-        End Function
+                Return blnValidReturn
+            End Function
 
-        Private Function blnIncomeAmount_AddFields() As Boolean
-            Dim blnValidReturn As Boolean
+            Private Function blnIncomeAmount_Insert() As Boolean
+                Dim blnValidReturn As Boolean
 
-            Try
-                Select Case False
-                    Case SQLController.bln_RefreshFields
-                    Case SQLController.bln_AddField("Inc_ID", _intIncome_ID, MySQLController.MySQL_FieldTypes.ID_TYPE)
-                    Case SQLController.bln_AddField("IncA_DtBegin", _dtDateBegin, MySQLController.MySQL_FieldTypes.DATETIME_TYPE)
-                    Case SQLController.bln_AddField("IncA_DtEnd", _dtDateEnd, MySQLController.MySQL_FieldTypes.DATETIME_TYPE)
-                    Case SQLController.bln_AddField("IncA_Amount", _dblAmount, MySQLController.MySQL_FieldTypes.DECIMAL_TYPE)
-                    Case Else
-                        blnValidReturn = True
-                End Select
+                Try
+                    Select Case False
+                        Case blnIncomeAmount_AddFields()
+                        Case SQLController.bln_ADOInsert("IncomePeriod")
+                        Case Else
+                            blnValidReturn = True
+                    End Select
 
-            Catch ex As Exception
-                blnValidReturn = False
-                gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-            End Try
+                Catch ex As Exception
+                    blnValidReturn = False
+                    gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                End Try
 
-            Return blnValidReturn
-        End Function
+                Return blnValidReturn
+            End Function
 
-        Private Function blnIncomeAmount_Insert() As Boolean
-            Dim blnValidReturn As Boolean
+            Private Function blnIncomeAmount_Update() As Boolean
+                Dim blnValidReturn As Boolean
 
-            Try
-                Select Case False
-                    Case blnIncomeAmount_AddFields()
-                    Case SQLController.bln_ADOInsert("IncomePeriod")
-                    Case Else
-                        blnValidReturn = True
-                End Select
+                Try
+                    Select Case False
+                        Case blnIncomeAmount_AddFields()
+                        Case SQLController.bln_ADOUpdate("IncomePeriod", "Inc_ID = " & _intIncome_ID & " AND CASE WHEN (SELECT TNb.Nb FROM (SELECT COUNT(*) AS Nb FROM IncomePeriod WHERE IncomePeriod.Inc_ID = " & _intIncome_ID & ") AS TNb) = 1 THEN 1=1 ELSE IncP_DtBegin = " & gcAppCtrl.str_FixDateForSQL(_dtDateBegin.ToString) & " END ")
+                        Case Else
+                            blnValidReturn = True
+                    End Select
 
-            Catch ex As Exception
-                blnValidReturn = False
-                gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-            End Try
+                Catch ex As Exception
+                    blnValidReturn = False
+                    gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                End Try
 
-            Return blnValidReturn
-        End Function
+                Return blnValidReturn
+            End Function
 
-        Private Function blnIncomeAmount_Update() As Boolean
-            Dim blnValidReturn As Boolean
+            Private Function blnIncomeAmount_Delete() As Boolean
+                Dim blnValidReturn As Boolean
 
-            Try
-                Select Case False
-                    Case blnIncomeAmount_AddFields()
-                    Case SQLController.bln_ADOUpdate("IncomePeriod", "Inc_ID = " & _intIncome_ID & " AND CASE WHEN (SELECT TNb.Nb FROM (SELECT COUNT(*) AS Nb FROM IncomePeriod WHERE IncomePeriod.Inc_ID = " & _intIncome_ID & ") AS TNb) = 1 THEN 1=1 ELSE IncA_DtBegin = " & gcAppCtrl.str_FixDateForSQL(_dtDateBegin.ToString) & " END ")
-                    Case Else
-                        blnValidReturn = True
-                End Select
+                Try
+                    Select Case False
+                        Case SQLController.bln_ADODelete("IncomePeriod", "Inc_ID = " & _intIncome_ID)
+                        Case Else
+                            blnValidReturn = True
+                    End Select
 
-            Catch ex As Exception
-                blnValidReturn = False
-                gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-            End Try
+                Catch ex As Exception
+                    blnValidReturn = False
+                    gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+                End Try
 
-            Return blnValidReturn
-        End Function
+                Return blnValidReturn
+            End Function
 
-        Private Function blnIncomeAmount_Delete() As Boolean
-            Dim blnValidReturn As Boolean
-
-            Try
-                Select Case False
-                    Case SQLController.bln_ADODelete("IncomePeriod", "Inc_ID = " & _intIncome_ID)
-                    Case Else
-                        blnValidReturn = True
-                End Select
-
-            Catch ex As Exception
-                blnValidReturn = False
-                gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-            End Try
-
-            Return blnValidReturn
-        End Function
+        End Class
 
     End Class
-
 
 End Namespace

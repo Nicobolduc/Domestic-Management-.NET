@@ -93,6 +93,8 @@ Public Class frmGeneralList
             txtFilter.Focus()
             txtFilter.SelectAll()
 
+            grdList.RefreshRange(GridRangeInfo.Cols(1, grdList.ColCount))
+
         Catch ex As Exception
             blnValidReturn = False
             gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)

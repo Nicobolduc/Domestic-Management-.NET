@@ -12,6 +12,7 @@ Public Module mConstants
         MONTHLY = 3
         TWO_MONTHS = 4
         ANNUEL = 5
+        ONCE = 6
     End Enum
 
     Public Enum Form_Mode

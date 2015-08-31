@@ -24,6 +24,17 @@
     Private WithEvents mcGridBudgetController As SyncfusionGridController
     Private WithEvents mcSQL As MySQLController
 
+#Region "Constructors"
+
+    Public Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        mcGridBudgetController = New SyncfusionGridController
+    End Sub
+
+#End Region
 
 #Region "Functions / Subs"
 
@@ -160,6 +171,8 @@
                 intNbRowsAdded = 1
             End If
 
+            grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Name_col).CellValue = "Revenus: " & grdBudget(vintRowIndexToAdd - intNbRowsAdded, mintGrdBudget_Income_Amount_col).CellValue.ToString
+
             newCellsStyle.CellType = "Default"
             newCellsStyle.ReadOnly = True
             newCellsStyle.MergeCell = GridMergeCellDirection.Both
@@ -241,14 +254,6 @@
 #End Region
 
 #Region "Private events"
-
-    Public Sub New()
-
-        ' This call is required by the designer.
-        InitializeComponent()
-
-        mcGridBudgetController = New SyncfusionGridController
-    End Sub
 
     Private Sub mcGrid_SetDisplay() Handles mcGridBudgetController.SetDisplay
 

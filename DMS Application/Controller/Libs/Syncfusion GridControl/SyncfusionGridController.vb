@@ -502,6 +502,9 @@ Public Class SyncfusionGridController
             mGrdSync.ColStyles(vintColumnIndex).Format = gcAppCtrl.str_GetUserDateFormat
 
             mGrdSync.ColWidths(vintColumnIndex) = 85
+            Dim render As Syncfusion.GridHelperClasses.DateTimeCellRenderer = mGrdSync.CellRenderers(Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker.ToString())
+            render = mGrdSync.CellRenderers(Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker.ToString())
+            DirectCast(render.Grid.Controls(0), Syncfusion.Windows.Forms.Tools.DateTimePickerAdv).NoneButtonVisible() = False
 
         Catch ex As Exception
             gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source & " - " & System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name)

@@ -272,7 +272,6 @@
 
             strSQL = strSQL & "  SELECT Income.Inc_ID, " & vbCrLf
             strSQL = strSQL & "         Income.Inc_Name, " & vbCrLf
-            strSQL = strSQL & "         TRUNCATE(Income.Inc_Amount, 2) AS Inc_Amount, " & vbCrLf
             strSQL = strSQL & "         Period.Per_Name " & vbCrLf
             strSQL = strSQL & "  FROM Income " & vbCrLf
             strSQL = strSQL & "     INNER JOIN Period ON Period.Per_ID = Income.Per_ID " & vbCrLf

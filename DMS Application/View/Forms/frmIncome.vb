@@ -10,8 +10,31 @@
     Private Const mintGrdPeriod_Action_col As Short = 1
     Private Const mintGrdPeriod_DtBegin_col As Short = 2
     Private Const mintGrdPeriod_DtEnd_col As Short = 3
-    Private Const mintGrdPeriod_Amount_col As Short = 4
-    Private Const mintGrdPeriod_Active_col As Short = 5
+    Private Const mintGrdPeriod_DtPeriod_col As Short = 4
+    Private Const mintGrdPeriod_Amount_col As Short = 5
+    Private Const mintGrdPeriod_Active_col As Short = 6
+
+    'Messages
+    Private Const mintDateBeginRestriction_msg As Short = 22
+    Private Const mintDateEndRestriction_msg As Short = 23
+    Private Const mintDateBeginUsed_msg As Short = 24
+    Private Const mintDateEndUsed_msg As Short = 25
+
+    'Private members
+    Private mintSelectedRow As Integer
+
+
+#Region "Constructors"
+
+    Public Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        mcGridPeriodController = New SyncfusionGridController
+    End Sub
+
+#End Region 
 
 #Region "Functions / Subs"
 
@@ -91,13 +114,14 @@
 
         Try
             strSQL = strSQL & " SELECT " & SyncfusionGridController.GridRowActions.NO_ACTION & " AS ActionCol, " & vbCrLf
-            strSQL = strSQL & "         IncomePeriod.ExpA_DtBegin, " & vbCrLf
-            strSQL = strSQL & "         IncomePeriod.ExpA_DtEnd, " & vbCrLf
-            strSQL = strSQL & "         IncomePeriod.ExpA_Amount, " & vbCrLf
-            strSQL = strSQL & "         CASE WHEN ExpensePeriod.ExpA_DtEnd IS NULL THEN 'TRUE' ELSE 'FALSE' END " & vbCrLf
+            strSQL = strSQL & "         IncomePeriod.IncP_DtBegin, " & vbCrLf
+            strSQL = strSQL & "         IncomePeriod.IncP_DtEnd, " & vbCrLf
+            strSQL = strSQL & "         IncomePeriod.IncP_DtPeriod, " & vbCrLf
+            strSQL = strSQL & "         IncomePeriod.IncP_Amount, " & vbCrLf
+            strSQL = strSQL & "         CASE WHEN IncomePeriod.IncP_DtEnd IS NULL THEN 'TRUE' ELSE 'FALSE' END " & vbCrLf
             strSQL = strSQL & " FROM IncomePeriod " & vbCrLf
-            strSQL = strSQL & " WHERE IncomePeriod.Exp_ID = " & mcIncomeModel.ID & vbCrLf
-            strSQL = strSQL & " ORDER BY IncomePeriod.ExpA_DtBegin ASC " & vbCrLf
+            strSQL = strSQL & " WHERE IncomePeriod.Inc_ID = " & mcIncomeModel.ID & vbCrLf
+            strSQL = strSQL & " ORDER BY IncomePeriod.IncP_DtBegin ASC " & vbCrLf
 
             blnValidReturn = mcGridPeriodController.bln_FillData(strSQL)
 
@@ -111,6 +135,7 @@
 
     Public Function blnSyncIncomeModel() As Boolean
         Dim blnValidReturn As Boolean
+        Dim cIncPeriod As Model.Income.IncomePeriod
 
         Try
             If mcIncomeModel Is Nothing Then
@@ -122,9 +147,30 @@
             mcIncomeModel.DLMCommand = formController.FormMode
             mcIncomeModel.ID = formController.Item_ID
             mcIncomeModel.Name = txtName.Text
-            'mcIncomeModel.Amount = Math.Round(Val(txtAmount.Text), 2)
             mcIncomeModel.Period = CType(cboFrequency.SelectedValue, Period)
             mcIncomeModel.IsMainIncome = chkMainIncome.Checked
+
+            mcIncomeModel.LstIncPeriod = New List(Of Model.Income.IncomePeriod)
+
+            For intRowIdx As Integer = 1 To grdPeriod.RowCount
+
+                If CInt(grdPeriod(intRowIdx, mintGrdPeriod_Action_col).CellValue) <> SyncfusionGridController.GridRowActions.NO_ACTION Then
+
+                    cIncPeriod = New Model.Income.IncomePeriod
+
+                    cIncPeriod.Amount = Math.Round(Val(grdPeriod(grdPeriod.RowCount, mintGrdPeriod_Amount_col).CellValue), 2)
+                    cIncPeriod.DateBegin = gcAppCtrl.GetFormatedDate(grdPeriod(grdPeriod.RowCount, mintGrdPeriod_DtBegin_col).FormattedText)
+
+                    If Not mcGridPeriodController(grdPeriod.RowCount, mintGrdPeriod_DtEnd_col) = String.Empty Then
+
+                        cIncPeriod.DateEnd = gcAppCtrl.GetFormatedDate(grdPeriod(grdPeriod.RowCount, mintGrdPeriod_DtEnd_col).FormattedText)
+                    End If
+
+                    cIncPeriod.DLMCommand = CType(grdPeriod(grdPeriod.RowCount, mintGrdPeriod_Action_col).CellValue, Form_Mode)
+
+                    mcIncomeModel.LstIncPeriod.Add(cIncPeriod)
+                End If
+            Next
 
             blnValidReturn = True
 
@@ -140,10 +186,11 @@
 
 #Region "Private events"
 
-    Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
+    Private Sub myFormController_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
         Select Case False
+            Case mcGridPeriodController.bln_Init(grdPeriod, btnAddRow, btnRemoveRow)
             Case blnCboFrequency_Load()
             Case formController.FormMode <> mConstants.Form_Mode.INSERT_MODE
                 blnValidReturn = True
@@ -167,10 +214,16 @@
         formController.ChangeMade = True
     End Sub
 
+    Private Sub formController_SetReadRights() Handles formController.SetReadRights
+        btnAddRow.Enabled = True
+    End Sub
+
     Private Sub myFormControler_ValidateForm(ByVal eventArgs As ValidateFormEventArgs) Handles formController.ValidateForm
         Dim strMainIncome As String = String.Empty
 
-        strMainIncome = MySQLController.str_ADOSingleLookUp("Inc_IsMain", "Income", "Inc_IsMain = 1 AND Income.Inc_ID <> " & mcIncomeModel.ID)
+        If chkMainIncome.Checked Then
+            strMainIncome = MySQLController.str_ADOSingleLookUp("Inc_IsMain", "Income", "Inc_IsMain = 1 AND Income.Inc_ID <> " & formController.Item_ID)
+        End If
 
         Select Case False
             Case txtName.Text <> String.Empty
@@ -192,18 +245,128 @@
         End Select
     End Sub
 
-    Private Sub dtpBillDate_ValueChanged(ByVal sender As Object, ByVal e As System.EventArgs)
-        formController.ChangeMade = True
-    End Sub
-
-    Private Sub cboType_SelectedIndexChanged(sender As Object, e As EventArgs)
-        formController.ChangeMade = True
-    End Sub
-
     Private Sub chkMainIncome_CheckedChanged(sender As Object, e As EventArgs) Handles chkMainIncome.CheckedChanged
         formController.ChangeMade = True
     End Sub
 
+    Private Sub mcGridPeriodController_SetDisplay() Handles mcGridPeriodController.SetDisplay
+
+        mcGridPeriodController.SetColType_CheckBox(mintGrdPeriod_Active_col)
+
+        mcGridPeriodController.SetColType_DateTimePicker(mintGrdPeriod_DtBegin_col, False)
+        mcGridPeriodController.SetColType_DateTimePicker(mintGrdPeriod_DtEnd_col, True)
+        mcGridPeriodController.SetColType_DateTimePicker(mintGrdPeriod_DtPeriod_col, True)
+
+        grdPeriod.ColWidths(mintGrdPeriod_Active_col) = 60
+        grdPeriod.ColWidths(mintGrdPeriod_DtBegin_col) = 75
+        grdPeriod.ColWidths(mintGrdPeriod_DtEnd_col) = 75
+        grdPeriod.ColWidths(mintGrdPeriod_DtPeriod_col) = 75
+        grdPeriod.ColWidths(mintGrdPeriod_Active_col) = 40
+
+        grdPeriod.ColStyles(mintGrdPeriod_Amount_col).CellValueType = GetType(Double)
+        grdPeriod.ColStyles(mintGrdPeriod_Amount_col).Format = mConstants.DataFormat.CURRENCY
+
+        grdPeriod.ColStyles(mintGrdPeriod_Active_col).ReadOnly = True
+
+        For intRowRdx As Integer = 1 To grdPeriod.RowCount
+
+            If intRowRdx <> grdPeriod.RowCount Then
+
+                grdPeriod.Item(intRowRdx, mintGrdPeriod_DtBegin_col).ReadOnly = True
+                grdPeriod.Item(intRowRdx, mintGrdPeriod_DtEnd_col).ReadOnly = True
+                grdPeriod.Item(intRowRdx, mintGrdPeriod_Amount_col).ReadOnly = True
+            End If
+        Next
+    End Sub
+
 #End Region
 
+
+
+    Private Sub grdPeriod_CellClick(ByVal sender As Object, ByVal e As Syncfusion.Windows.Forms.Grid.GridCellClickEventArgs) Handles grdPeriod.CellClick
+        mintSelectedRow = e.RowIndex
+    End Sub
+
+    Private Sub grdPeriod_CurrentCellAcceptedChanges(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles grdPeriod.CurrentCellAcceptedChanges
+        Dim strPaidExpense As String = String.Empty
+
+        Select Case mcGridPeriodController.GetSelectedCol
+            Case mintGrdPeriod_DtBegin_col
+
+                If mintSelectedRow > 1 And Not String.IsNullOrEmpty(mcGridPeriodController(mintSelectedRow, mintGrdPeriod_DtBegin_col)) Then
+
+                    If gcAppCtrl.GetFormatedDate(grdPeriod(mintSelectedRow, mintGrdPeriod_DtBegin_col).FormattedText) <= gcAppCtrl.GetFormatedDate(grdPeriod(mintSelectedRow - 1, mintGrdPeriod_DtEnd_col).FormattedText) Then
+
+                        gcAppCtrl.ShowMessage(mintDateBeginRestriction_msg)
+                        e.Cancel = True
+                    End If
+                End If
+
+                'If Not e.Cancel And Not String.IsNullOrEmpty(mcGridPeriodController(mintSelectedRow, mintGrdPeriod_DtBegin_col)) Then
+
+                '    strPaidExpense = MySQLController.str_ADOSingleLookUp("PExp_ID", "PaidExpense", "Exp_BilledDate <= " & gcAppCtrl.str_FixDateForSQL(grdPeriod(mintSelectedRow, mintGrdPeriod_DtBegin_col).FormattedText) & " AND Exp_ID = " & formController.Item_ID & " AND NOT EXISTS(SELECT * FROM ExpensePeriod WHERE ExpensePeriod.ExpA_DtEnd < " & gcAppCtrl.str_FixDateForSQL(grdPeriod(mintSelectedRow, mintGrdPeriod_DtBegin_col).FormattedText) & ") LIMIT 1")
+
+                '    If strPaidExpense <> String.Empty Then
+
+                '        gcAppCtrl.ShowMessage(mintDateBeginUsed_msg)
+                '        e.Cancel = True
+                '    End If
+                'End If
+
+            Case mintGrdPeriod_DtEnd_col
+
+                If Not String.IsNullOrEmpty(mcGridPeriodController(mintSelectedRow, mintGrdPeriod_DtEnd_col)) AndAlso gcAppCtrl.GetFormatedDate(grdPeriod(mintSelectedRow, mintGrdPeriod_DtEnd_col).FormattedText) < gcAppCtrl.GetFormatedDate(grdPeriod(mintSelectedRow, mintGrdPeriod_DtBegin_col).FormattedText) Then
+
+                    gcAppCtrl.ShowMessage(mintDateEndRestriction_msg)
+                    e.Cancel = True
+                End If
+
+                'If Not e.Cancel And Not String.IsNullOrEmpty(mcGridPeriodController(mintSelectedRow, mintGrdPeriod_DtEnd_col)) Then
+
+                '    strPaidExpense = MySQLController.str_ADOSingleLookUp("PExp_ID", "PaidExpense", "Exp_BilledDate > " & gcAppCtrl.str_FixDateForSQL(grdPeriod(mintSelectedRow, mintGrdPeriod_DtEnd_col).FormattedText) & " AND Exp_ID = " & formController.Item_ID & " LIMIT 1")
+
+                '    If strPaidExpense <> String.Empty Then
+
+                '        gcAppCtrl.ShowMessage(mintDateEndUsed_msg)
+                '        e.Cancel = True
+                '    End If
+                'End If
+        End Select
+
+        If Not e.Cancel Then
+
+            formController.ChangeMade = True
+        End If
+    End Sub
+
+    Private Sub btnAddRow_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnAddRow.Click
+        btnAddRow.Enabled = False
+    End Sub
+
+    Private Sub mcGridPeriodController_ValidateData(ByVal eventArgs As ValidateGridEventArgs) Handles mcGridPeriodController.ValidateData
+
+        For intRowIdx As Integer = 1 To grdPeriod.RowCount
+
+            eventArgs.IsValid = False
+            Select Case True
+                Case String.IsNullOrEmpty(mcGridPeriodController(intRowIdx, mintGrdPeriod_Amount_col))
+                    gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
+                    mcGridPeriodController.SetSelectedCell(intRowIdx, mintGrdPeriod_Amount_col)
+
+                Case String.IsNullOrEmpty(mcGridPeriodController(intRowIdx, mintGrdPeriod_DtBegin_col))
+                    gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
+                    mcGridPeriodController.SetSelectedCell(intRowIdx, mintGrdPeriod_DtBegin_col)
+
+                Case intRowIdx < grdPeriod.RowCount AndAlso String.IsNullOrEmpty(mcGridPeriodController(intRowIdx, mintGrdPeriod_DtEnd_col))
+                    gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
+                    mcGridPeriodController.SetSelectedCell(intRowIdx, mintGrdPeriod_DtEnd_col)
+
+                Case Else
+                    eventArgs.IsValid = True
+
+            End Select
+
+            If Not eventArgs.IsValid Then Exit For
+        Next
+    End Sub
 End Class

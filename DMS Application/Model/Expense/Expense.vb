@@ -308,9 +308,9 @@
                     Select Case False
                         Case SQLController.bln_RefreshFields
                         Case SQLController.bln_AddField("Exp_ID", _intExpense_ID, MySQLController.MySQL_FieldTypes.ID_TYPE)
-                        Case SQLController.bln_AddField("ExpA_DtBegin", _dtDateBegin, MySQLController.MySQL_FieldTypes.DATETIME_TYPE)
-                        Case SQLController.bln_AddField("ExpA_DtEnd", _dtDateEnd, MySQLController.MySQL_FieldTypes.DATETIME_TYPE)
-                        Case SQLController.bln_AddField("ExpA_Amount", _dblAmount, MySQLController.MySQL_FieldTypes.DECIMAL_TYPE)
+                        Case SQLController.bln_AddField("ExpP_DtBegin", _dtDateBegin, MySQLController.MySQL_FieldTypes.DATETIME_TYPE)
+                        Case SQLController.bln_AddField("ExpP_DtEnd", _dtDateEnd, MySQLController.MySQL_FieldTypes.DATETIME_TYPE)
+                        Case SQLController.bln_AddField("ExpP_Amount", _dblAmount, MySQLController.MySQL_FieldTypes.DECIMAL_TYPE)
                         Case Else
                             blnValidReturn = True
                     End Select
@@ -348,7 +348,7 @@
                 Try
                     Select Case False
                         Case blnExpensePeriod_AddFields()
-                        Case SQLController.bln_ADOUpdate("ExpensePeriod", "Exp_ID = " & _intExpense_ID & " AND CASE WHEN (SELECT TNb.Nb FROM (SELECT COUNT(*) AS Nb FROM ExpensePeriod WHERE ExpensePeriod.Exp_ID = " & _intExpense_ID & ") AS TNb) = 1 THEN 1=1 ELSE ExpA_DtBegin = " & gcAppCtrl.str_FixDateForSQL(_dtDateBegin.ToString) & " END ")
+                        Case SQLController.bln_ADOUpdate("ExpensePeriod", "Exp_ID = " & _intExpense_ID & " AND CASE WHEN (SELECT TNb.Nb FROM (SELECT COUNT(*) AS Nb FROM ExpensePeriod WHERE ExpensePeriod.Exp_ID = " & _intExpense_ID & ") AS TNb) = 1 THEN 1=1 ELSE ExpP_DtBegin = " & gcAppCtrl.str_FixDateForSQL(_dtDateBegin.ToString) & " END ")
                         Case Else
                             blnValidReturn = True
                     End Select

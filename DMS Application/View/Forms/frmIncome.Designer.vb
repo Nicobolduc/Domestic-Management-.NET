@@ -28,6 +28,7 @@ Partial Class frmIncome
         Me.formController = New DMS_Application.ctlFormController()
         Me.chkMainIncome = New System.Windows.Forms.CheckBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.btnRemoveRow = New System.Windows.Forms.Button()
         Me.btnAddRow = New System.Windows.Forms.Button()
         Me.grdPeriod = New Syncfusion.Windows.Forms.Grid.GridControl()
         Me.cboFrequency = New System.Windows.Forms.ComboBox()
@@ -54,7 +55,7 @@ Partial Class frmIncome
         'formController
         '
         Me.formController.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.formController.FormIsLoading = False
         Me.formController.FormMode = DMS_Application.mConstants.Form_Mode.CONSULT_MODE
         Me.formController.Item_ID = 0
@@ -77,6 +78,7 @@ Partial Class frmIncome
         'GroupBox1
         '
         Me.GroupBox1.Controls.Add(Me.btnAddRow)
+        Me.GroupBox1.Controls.Add(Me.btnRemoveRow)
         Me.GroupBox1.Controls.Add(Me.grdPeriod)
         Me.GroupBox1.Location = New System.Drawing.Point(7, 59)
         Me.GroupBox1.Name = "GroupBox1"
@@ -85,11 +87,21 @@ Partial Class frmIncome
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Périodes et montants"
         '
+        'btnRemoveRow
+        '
+        Me.btnRemoveRow.BackgroundImage = CType(resources.GetObject("btnRemoveRow.BackgroundImage"), System.Drawing.Image)
+        Me.btnRemoveRow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.btnRemoveRow.Location = New System.Drawing.Point(362, 60)
+        Me.btnRemoveRow.Name = "btnRemoveRow"
+        Me.btnRemoveRow.Size = New System.Drawing.Size(35, 35)
+        Me.btnRemoveRow.TabIndex = 16
+        Me.btnRemoveRow.UseVisualStyleBackColor = True
+        '
         'btnAddRow
         '
         Me.btnAddRow.BackgroundImage = CType(resources.GetObject("btnAddRow.BackgroundImage"), System.Drawing.Image)
         Me.btnAddRow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.btnAddRow.Location = New System.Drawing.Point(330, 20)
+        Me.btnAddRow.Location = New System.Drawing.Point(362, 19)
         Me.btnAddRow.Name = "btnAddRow"
         Me.btnAddRow.Size = New System.Drawing.Size(35, 35)
         Me.btnAddRow.TabIndex = 15
@@ -101,10 +113,10 @@ Partial Class frmIncome
         Me.grdPeriod.Location = New System.Drawing.Point(6, 20)
         Me.grdPeriod.Name = "grdPeriod"
         Me.grdPeriod.SerializeCellsBehavior = Syncfusion.Windows.Forms.Grid.GridSerializeCellsBehavior.SerializeAsRangeStylesIntoCode
-        Me.grdPeriod.Size = New System.Drawing.Size(318, 116)
+        Me.grdPeriod.Size = New System.Drawing.Size(350, 116)
         Me.grdPeriod.SmartSizeBox = False
         Me.grdPeriod.TabIndex = 14
-        Me.grdPeriod.Tag = "21"
+        Me.grdPeriod.Tag = "27"
         Me.grdPeriod.Text = "GridControl1"
         Me.grdPeriod.UseRightToLeftCompatibleTextBox = True
         '
@@ -159,4 +171,5 @@ Partial Class frmIncome
     Friend WithEvents grdPeriod As Syncfusion.Windows.Forms.Grid.GridControl
     Friend WithEvents cboFrequency As System.Windows.Forms.ComboBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents btnRemoveRow As System.Windows.Forms.Button
 End Class
