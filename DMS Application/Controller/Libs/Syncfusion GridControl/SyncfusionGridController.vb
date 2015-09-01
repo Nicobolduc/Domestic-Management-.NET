@@ -1,6 +1,7 @@
 ﻿Option Strict Off
 
 Imports System.ComponentModel
+Imports Syncfusion.GridHelperClasses
 
 
 Public Class SyncfusionGridController
@@ -172,6 +173,7 @@ Public Class SyncfusionGridController
             mGrdSync.CommandStack.Enabled = True
             mGrdSync.ResizeColsBehavior = GridResizeCellsBehavior.ResizeSingle Or GridResizeCellsBehavior.OutlineHeaders Or GridResizeCellsBehavior.InsideGrid
             mGrdSync.ListBoxSelectionMode = SelectionMode.One
+            'mGrdSync.Model.Options.AllowSelection = GridSelectionFlags.Row
             mGrdSync.Model.Options.ActivateCurrentCellBehavior = GridCellActivateAction.DblClickOnCell
             mGrdSync.TableStyle.VerticalAlignment = GridVerticalAlignment.Middle
 
@@ -488,23 +490,34 @@ Public Class SyncfusionGridController
         Dim dtPickerCell As New DateTimePickerCell.DateTimePickerCellModel(mGrdSync.Model, vblnNullable)
 
         Try
-            If Not mGrdSync.CellModels.ContainsKey(Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker.ToString) Then
-                Syncfusion.GridHelperClasses.RegisterCellModel.GridCellType(mGrdSync, Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker)
+            If Not mGrdSync.CellModels.ContainsKey(CustomCellTypes.DateTimePicker.ToString) Then
+                RegisterCellModel.GridCellType(mGrdSync, CustomCellTypes.DateTimePicker)
             End If
 
-            mGrdSync.ColStyles(vintColumnIndex).CellType = Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker.ToString()
             'If Not mGrdSync.CellModels.ContainsKey("DateTimePicker") Then
             '    mGrdSync.CellModels.Add("DateTimePicker", dtPickerCell)
             'End If
 
             'mGrdSync.ColStyles(vintColumnIndex).CellType = "DateTimePicker"
+            mGrdSync.ColStyles(vintColumnIndex).CellType = CustomCellTypes.DateTimePicker.ToString()
             mGrdSync.ColStyles(vintColumnIndex).CellValueType = GetType(DateTime)
             mGrdSync.ColStyles(vintColumnIndex).Format = gcAppCtrl.str_GetUserDateFormat
 
             mGrdSync.ColWidths(vintColumnIndex) = 85
-            Dim render As Syncfusion.GridHelperClasses.DateTimeCellRenderer = mGrdSync.CellRenderers(Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker.ToString())
-            render = mGrdSync.CellRenderers(Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker.ToString())
-            DirectCast(render.Grid.Controls(0), Syncfusion.Windows.Forms.Tools.DateTimePickerAdv).NoneButtonVisible() = False
+
+            If Not vblnNullable Then
+                Dim renderer As DateTimeCellRenderer = TryCast(mGrdSync.CellRenderers(CustomCellTypes.DateTimePicker.ToString()), DateTimeCellRenderer)
+                Dim dtPicker As MyDateTimePicker
+
+                For Each contl As Control In renderer.Grid.Controls
+
+                    If TypeOf contl Is MyDateTimePicker Then
+
+                        dtPicker = TryCast(contl, MyDateTimePicker)
+                        dtPicker.NoneButtonVisible = False
+                    End If
+                Next contl
+            End If
 
         Catch ex As Exception
             gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source & " - " & System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name)
@@ -577,7 +590,7 @@ Public Class SyncfusionGridController
 
     Private Sub mGrdSync_CurrentCellActivating(ByVal sender As Object, ByVal e As Syncfusion.Windows.Forms.Grid.GridCurrentCellActivatingEventArgs) Handles mGrdSync.CurrentCellActivating
 
-        If mGrdSync(e.RowIndex, e.ColIndex).CellType = Syncfusion.GridHelperClasses.CustomCellTypes.DateTimePicker.ToString AndAlso mGrdSync(e.RowIndex, e.ColIndex).ReadOnly Then
+        If mGrdSync(e.RowIndex, e.ColIndex).CellType = CustomCellTypes.DateTimePicker.ToString AndAlso mGrdSync(e.RowIndex, e.ColIndex).ReadOnly Then
 
             e.Cancel = True
         End If

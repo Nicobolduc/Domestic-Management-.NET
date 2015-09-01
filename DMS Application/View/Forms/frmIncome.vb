@@ -34,7 +34,7 @@
         mcGridPeriodController = New SyncfusionGridController
     End Sub
 
-#End Region 
+#End Region
 
 #Region "Functions / Subs"
 
@@ -277,6 +277,7 @@
                 grdPeriod.Item(intRowRdx, mintGrdPeriod_Amount_col).ReadOnly = True
             End If
         Next
+
     End Sub
 
 #End Region

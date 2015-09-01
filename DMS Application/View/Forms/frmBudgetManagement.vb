@@ -116,7 +116,7 @@
 
     Private Function blnGrdBudget_AddSummaryRow(ByVal vintRowIndexToAdd As Integer, ByRef rintLastRowAddedIndex As Integer) As Boolean
         Dim blnValidReturn As Boolean
-        Dim dblPeriodTotal As Double
+        Dim dblPeriodTotalToPay As Double
         Dim intNbRowsAdded As Byte = 2
         Dim newCellsStyle As New GridStyleInfo
         Dim newRowBorders As New GridBorder(GridBorderStyle.Dashed, Color.LightSkyBlue, GridBorderWeight.Medium)
@@ -137,10 +137,10 @@
 
             For intRowIdx As Integer = rintLastRowAddedIndex To vintRowIndexToAdd - 1
 
-                dblPeriodTotal += Val(grdBudget(intRowIdx, mintGrdBudget_Exp_Amount_col).CellValue)
+                dblPeriodTotalToPay += Val(grdBudget(intRowIdx, mintGrdBudget_Exp_Amount_col).CellValue)
             Next
 
-            grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellValue = dblPeriodTotal
+            grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellValue = dblPeriodTotalToPay
             grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).Font.Bold = True
 
 
@@ -150,18 +150,18 @@
             grdBudget.Rows.InsertRange(vintRowIndexToAdd, 1)
             grdBudget(vintRowIndexToAdd, mintGrdBudget_Action_col).CellValue = SyncfusionGridController.GridRowActions.NO_ACTION
 
-            If CDbl(grdBudget(vintRowIndexToAdd - 1, mintGrdBudget_Exp_Amount_col).CellValue) < CDbl(lblMainIncomeAmount.Text) Then
+            If CDbl(grdBudget(vintRowIndexToAdd - 1, mintGrdBudget_Exp_Amount_col).CellValue) < CDbl(grdBudget(vintRowIndexToAdd - intNbRowsAdded, mintGrdBudget_Income_Amount_col).CellValue) Then
 
                 grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Name_col).HorizontalAlignment = GridHorizontalAlignment.Right
-                grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellValue = "+" & CStr(Val(lblMainIncomeAmount.Text) - Val(grdBudget(vintRowIndexToAdd - 1, mintGrdBudget_Exp_Amount_col).CellValue))
+                grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellValue = "+" & CStr(Val(grdBudget(vintRowIndexToAdd - intNbRowsAdded, mintGrdBudget_Income_Amount_col).CellValue) - Val(grdBudget(vintRowIndexToAdd - 1, mintGrdBudget_Exp_Amount_col).CellValue))
                 grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).TextColor = Color.Green
                 grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).Font.Bold = True
                 grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).Format = mConstants.DataFormat.CURRENCY
 
-            ElseIf CDbl(grdBudget(vintRowIndexToAdd - 1, mintGrdBudget_Exp_Amount_col).CellValue) > CDbl(lblMainIncomeAmount.Text) Then
+            ElseIf CDbl(grdBudget(vintRowIndexToAdd - 1, mintGrdBudget_Exp_Amount_col).CellValue) > CDbl(grdBudget(vintRowIndexToAdd - intNbRowsAdded, mintGrdBudget_Income_Amount_col).CellValue) Then
 
                 grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Name_col).HorizontalAlignment = GridHorizontalAlignment.Right
-                grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellValue = CDbl(lblMainIncomeAmount.Text) - CDbl(grdBudget(vintRowIndexToAdd - 1, mintGrdBudget_Exp_Amount_col).CellValue)
+                grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).CellValue = CDbl(grdBudget(vintRowIndexToAdd - intNbRowsAdded, mintGrdBudget_Income_Amount_col).CellValue) - CDbl(grdBudget(vintRowIndexToAdd - 1, mintGrdBudget_Exp_Amount_col).CellValue)
                 grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).TextColor = Color.Red
                 grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).Font.Bold = True
                 grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Amount_col).Format = mConstants.DataFormat.CURRENCY

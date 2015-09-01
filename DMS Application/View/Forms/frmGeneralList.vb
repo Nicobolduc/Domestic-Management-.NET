@@ -93,7 +93,9 @@ Public Class frmGeneralList
             txtFilter.Focus()
             txtFilter.SelectAll()
 
-            grdList.RefreshRange(GridRangeInfo.Cols(1, grdList.ColCount))
+            grdList.AllowProportionalColumnSizing = True
+            grdList.RefreshRange(GridRangeInfo.Cols(0, grdList.ColCount))
+            grdList.RaiseCellMouseHover(New GridCellMouseEventArgs(1, 1, New GridCellButton(grdList.CellRenderers("Base")), New MouseEventArgs(Windows.Forms.MouseButtons.Left, 1, grdList.GetCellRenderer(1, 1).GetCellClientRectangle(1, 1, GridStyleInfo.Default, False).Location.X, grdList.GetCellRenderer(1, 1).GetCellClientRectangle(1, 1, GridStyleInfo.Default, False).Location.Y, 0)))
 
         Catch ex As Exception
             blnValidReturn = False
@@ -133,6 +135,7 @@ Public Class frmGeneralList
     Private Sub mcGrid_SetDisplay() Handles mcGrdListController.SetDisplay
         grdList.AllowProportionalColumnSizing = True
         grdList.Model.Options.ActivateCurrentCellBehavior = GridCellActivateAction.None
+
         'mcGrdListController.SetColsSizeBehavior = ColsSizeBehaviorsController.colsSizeBehaviors.NONE
     End Sub
 
