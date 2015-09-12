@@ -8,6 +8,7 @@
         Private _strName As String = String.Empty
         Private _period_ID As mConstants.Period
         Private _isMainIncome As Boolean
+        Private _intBudget_ID As Integer
 
         'Private class members
         Private mcLstIncPeriod As List(Of IncomePeriod)
@@ -80,6 +81,16 @@
                 mcLstIncPeriod = value
             End Set
         End Property
+
+        Public Property Budget_ID As Integer
+            Get
+                Return _intBudget_ID
+            End Get
+            Set(value As Integer)
+                _intBudget_ID = value
+            End Set
+        End Property
+
 #End Region
 
 #Region "Constructors"
@@ -143,6 +154,7 @@
                     Case SQLController.bln_AddField("Inc_Name", _strName, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
                     Case SQLController.bln_AddField("Inc_IsMain", _isMainIncome, MySQLController.MySQL_FieldTypes.BIT_TYPE)
                     Case SQLController.bln_AddField("Per_ID", CInt(_period_ID), MySQLController.MySQL_FieldTypes.ID_TYPE)
+                    Case SQLController.bln_AddField("Bud_ID", _intBudget_ID, MySQLController.MySQL_FieldTypes.ID_TYPE)
                     Case Else
                         blnValidReturn = True
                 End Select

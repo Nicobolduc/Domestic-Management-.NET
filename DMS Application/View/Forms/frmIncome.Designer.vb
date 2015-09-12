@@ -28,11 +28,13 @@ Partial Class frmIncome
         Me.formController = New DMS_Application.ctlFormController()
         Me.chkMainIncome = New System.Windows.Forms.CheckBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.btnRemoveRow = New System.Windows.Forms.Button()
         Me.btnAddRow = New System.Windows.Forms.Button()
+        Me.btnRemoveRow = New System.Windows.Forms.Button()
         Me.grdPeriod = New Syncfusion.Windows.Forms.Grid.GridControl()
         Me.cboFrequency = New System.Windows.Forms.ComboBox()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.cboBudget = New System.Windows.Forms.ComboBox()
         Me.GroupBox1.SuspendLayout()
         CType(Me.grdPeriod, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -55,11 +57,11 @@ Partial Class frmIncome
         'formController
         '
         Me.formController.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.formController.FormIsLoading = False
         Me.formController.FormMode = DMS_Application.mConstants.Form_Mode.CONSULT_MODE
         Me.formController.Item_ID = 0
-        Me.formController.Location = New System.Drawing.Point(3, 205)
+        Me.formController.Location = New System.Drawing.Point(3, 230)
         Me.formController.Name = "formController"
         Me.formController.ShowButtonQuitOnly = False
         Me.formController.Size = New System.Drawing.Size(413, 33)
@@ -80,22 +82,12 @@ Partial Class frmIncome
         Me.GroupBox1.Controls.Add(Me.btnAddRow)
         Me.GroupBox1.Controls.Add(Me.btnRemoveRow)
         Me.GroupBox1.Controls.Add(Me.grdPeriod)
-        Me.GroupBox1.Location = New System.Drawing.Point(7, 59)
+        Me.GroupBox1.Location = New System.Drawing.Point(7, 83)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(406, 143)
         Me.GroupBox1.TabIndex = 15
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Périodes et montants"
-        '
-        'btnRemoveRow
-        '
-        Me.btnRemoveRow.BackgroundImage = CType(resources.GetObject("btnRemoveRow.BackgroundImage"), System.Drawing.Image)
-        Me.btnRemoveRow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.btnRemoveRow.Location = New System.Drawing.Point(362, 60)
-        Me.btnRemoveRow.Name = "btnRemoveRow"
-        Me.btnRemoveRow.Size = New System.Drawing.Size(35, 35)
-        Me.btnRemoveRow.TabIndex = 16
-        Me.btnRemoveRow.UseVisualStyleBackColor = True
         '
         'btnAddRow
         '
@@ -106,6 +98,16 @@ Partial Class frmIncome
         Me.btnAddRow.Size = New System.Drawing.Size(35, 35)
         Me.btnAddRow.TabIndex = 15
         Me.btnAddRow.UseVisualStyleBackColor = True
+        '
+        'btnRemoveRow
+        '
+        Me.btnRemoveRow.BackgroundImage = CType(resources.GetObject("btnRemoveRow.BackgroundImage"), System.Drawing.Image)
+        Me.btnRemoveRow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.btnRemoveRow.Location = New System.Drawing.Point(362, 60)
+        Me.btnRemoveRow.Name = "btnRemoveRow"
+        Me.btnRemoveRow.Size = New System.Drawing.Size(35, 35)
+        Me.btnRemoveRow.TabIndex = 16
+        Me.btnRemoveRow.UseVisualStyleBackColor = True
         '
         'grdPeriod
         '
@@ -137,11 +139,30 @@ Partial Class frmIncome
         Me.Label2.TabIndex = 3
         Me.Label2.Text = "Fréquence"
         '
+        'Label3
+        '
+        Me.Label3.Location = New System.Drawing.Point(4, 62)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(71, 13)
+        Me.Label3.TabIndex = 16
+        Me.Label3.Text = "Budget"
+        '
+        'cboBudget
+        '
+        Me.cboBudget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboBudget.FormattingEnabled = True
+        Me.cboBudget.Location = New System.Drawing.Point(73, 59)
+        Me.cboBudget.Name = "cboBudget"
+        Me.cboBudget.Size = New System.Drawing.Size(228, 21)
+        Me.cboBudget.TabIndex = 4
+        '
         'frmIncome
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(416, 236)
+        Me.ClientSize = New System.Drawing.Size(416, 261)
+        Me.Controls.Add(Me.cboBudget)
+        Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.chkMainIncome)
         Me.Controls.Add(Me.cboFrequency)
@@ -172,4 +193,6 @@ Partial Class frmIncome
     Friend WithEvents cboFrequency As System.Windows.Forms.ComboBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents btnRemoveRow As System.Windows.Forms.Button
+    Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents cboBudget As System.Windows.Forms.ComboBox
 End Class

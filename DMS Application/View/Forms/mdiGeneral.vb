@@ -44,11 +44,7 @@
     End Sub
 
     Private Sub mnuiBudget_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiBudget.Click
-        Dim frmGestionBudget As New frmBudgetManagement
-
-        frmGestionBudget.MdiParent = Me
-
-        frmGestionBudget.formController.ShowForm(mConstants.Form_Mode.UPDATE_MODE)
+        mGeneralList.ShowGenList(mGeneralList.GeneralLists_ID.BUDGET_LIST_ID)
     End Sub
 
     Private Sub mnuiExpenseToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiExpense.Click

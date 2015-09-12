@@ -118,7 +118,8 @@
             strSQL = strSQL & "        IncomePeriod.IncP_DtEnd, " & vbCrLf
             strSQL = strSQL & "        TRUNCATE(IncomePeriod.IncP_Amount, 2) AS IncP_Amount, " & vbCrLf
             strSQL = strSQL & "        Income.Per_ID, " & vbCrLf
-            strSQL = strSQL & "        Income.Inc_IsMain " & vbCrLf
+            strSQL = strSQL & "        Income.Inc_IsMain, " & vbCrLf
+            strSQL = strSQL & "        Income.Bud_ID " & vbCrLf
             strSQL = strSQL & " FROM Income " & vbCrLf
             strSQL = strSQL & "     INNER JOIN (SELECT IncomePeriod.* " & vbCrLf
             strSQL = strSQL & "                 FROM (SELECT MAX(IncomePeriod.IncP_DtBegin) AS IncP_DtBegin, IncomePeriod.Inc_ID " & vbCrLf
@@ -139,6 +140,7 @@
                 cIncome.Name = mySQLReader.Item("Inc_Name").ToString
                 cIncome.Period = CType(mySQLReader.Item("Per_ID"), Period)
                 cIncome.IsMainIncome = CBool(mySQLReader.Item("Inc_IsMain"))
+                cIncome.Budget_ID = CInt(mySQLReader.Item("Bud_ID"))
 
                 cIncome.CurrentIncAmount = New Model.Income.IncomePeriod
                 cIncome.CurrentIncAmount.Amount = CDbl(mySQLReader.Item("IncP_Amount"))

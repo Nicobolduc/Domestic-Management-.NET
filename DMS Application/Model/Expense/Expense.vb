@@ -7,7 +7,7 @@
         Private _intExpense_ID As Integer
         Private _strName As String = String.Empty
         Private _period_ID As mConstants.Period
-        Private _fixed As Boolean
+        Private _blnFixed As Boolean
 
         'Private class members
         Private mcExpenseType As ExpenseType
@@ -84,10 +84,10 @@
 
         Public Property Fixed As Boolean
             Get
-                Return _fixed
+                Return _blnFixed
             End Get
             Set(ByVal value As Boolean)
-                _fixed = value
+                _blnFixed = value
             End Set
         End Property
 
@@ -155,7 +155,7 @@
                     Case SQLController.bln_AddField("Exp_Name", _strName, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
                     Case SQLController.bln_AddField("ExpT_ID", mcExpenseType.ID, MySQLController.MySQL_FieldTypes.DECIMAL_TYPE)
                     Case SQLController.bln_AddField("Per_ID", CInt(_period_ID), MySQLController.MySQL_FieldTypes.ID_TYPE)
-                    Case SQLController.bln_AddField("Exp_Fixed", _fixed, MySQLController.MySQL_FieldTypes.BIT_TYPE)
+                    Case SQLController.bln_AddField("Exp_Fixed", _blnFixed, MySQLController.MySQL_FieldTypes.BIT_TYPE)
                     Case Else
                         blnValidReturn = True
                 End Select

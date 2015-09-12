@@ -241,7 +241,7 @@ Public Class frmGeneralList
         Me.Dispose()
     End Sub
 
-    Private Sub btnRefresh_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Sub btnRefresh_Click1() Handles btnRefresh.Click
         blnGrdList_Load()
     End Sub
 
@@ -259,4 +259,6 @@ Public Class frmGeneralList
 
 #End Region
 
+
+  
 End Class

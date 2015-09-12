@@ -49,6 +49,7 @@
                 txtName.Text = mcIncomeModel.Name
 
                 cboFrequency.SelectedValue = CInt(mcIncomeModel.Period)
+                cboBudget.SelectedValue = CInt(mcIncomeModel.Budget_ID)
                 chkMainIncome.Checked = mcIncomeModel.IsMainIncome
 
                 blnValidReturn = True
@@ -73,6 +74,26 @@
             strSQL = strSQL & " ORDER BY Period.Per_ID " & vbCrLf
 
             blnValidReturn = mWinControlsFunctions.blnComboBox_LoadFromSQL(strSQL, "Per_ID", "Per_Name", False, cboFrequency)
+
+        Catch ex As Exception
+            blnValidReturn = False
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnValidReturn
+    End Function
+
+    Private Function blnCboBudget_Load() As Boolean
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
+
+        Try
+            strSQL = strSQL & " SELECT Budget.Bud_ID, " & vbCrLf
+            strSQL = strSQL & "        Budget.Bud_Name " & vbCrLf
+            strSQL = strSQL & " FROM Budget " & vbCrLf
+            strSQL = strSQL & " ORDER BY Budget.Bud_Name " & vbCrLf
+
+            blnValidReturn = mWinControlsFunctions.blnComboBox_LoadFromSQL(strSQL, "Bud_ID", "Bud_Name", False, cboBudget)
 
         Catch ex As Exception
             blnValidReturn = False
@@ -149,6 +170,7 @@
             mcIncomeModel.Name = txtName.Text
             mcIncomeModel.Period = CType(cboFrequency.SelectedValue, Period)
             mcIncomeModel.IsMainIncome = chkMainIncome.Checked
+            mcIncomeModel.Budget_ID = CInt(cboBudget.SelectedValue)
 
             mcIncomeModel.LstIncPeriod = New List(Of Model.Income.IncomePeriod)
 
@@ -192,6 +214,7 @@
         Select Case False
             Case mcGridPeriodController.bln_Init(grdPeriod, btnAddRow, btnRemoveRow)
             Case blnCboFrequency_Load()
+            Case blnCboBudget_Load()
             Case formController.FormMode <> mConstants.Form_Mode.INSERT_MODE
                 blnValidReturn = True
             Case blnFormData_Load()
@@ -234,6 +257,11 @@
                 gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 cboFrequency.DroppedDown = True
                 cboFrequency.Focus()
+
+            Case cboBudget.SelectedIndex > -1
+                gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+                cboBudget.DroppedDown = True
+                cboBudget.Focus()
 
             Case strMainIncome = String.Empty
                 gcAppCtrl.ShowMessage(mConstants.Validation_Message.UNIQUE_ATTRIBUTE, MsgBoxStyle.Information)
@@ -369,5 +397,9 @@
 
             If Not eventArgs.IsValid Then Exit For
         Next
+    End Sub
+
+    Private Sub cboBudget_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboBudget.SelectedIndexChanged
+        formController.ChangeMade = True
     End Sub
 End Class

@@ -47,13 +47,14 @@ Partial Class frmBudgetManagement
         Me.rbtnMensuelle = New System.Windows.Forms.RadioButton()
         Me.grdBudget = New Syncfusion.Windows.Forms.Grid.GridControl()
         Me.btnPay = New System.Windows.Forms.Button()
-        Me.lblMainIncomeAmount = New System.Windows.Forms.Label()
-        Me.lblMainIncomeAmount_text = New System.Windows.Forms.Label()
         Me.btnUnselectAll = New System.Windows.Forms.Button()
         Me.btnSelectAll = New System.Windows.Forms.Button()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnRefresh = New DMS_Application.ctlRefresh()
         Me.formController = New DMS_Application.ctlFormController()
+        Me.gbInfos = New System.Windows.Forms.GroupBox()
+        Me.txtName = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.gbFilter.SuspendLayout()
         CType(Me.dtpToHr, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dtpToHr.Calendar, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -65,6 +66,7 @@ Partial Class frmBudgetManagement
         CType(Me.dtpFrom, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dtpFrom.Calendar, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.grdBudget, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.gbInfos.SuspendLayout()
         Me.SuspendLayout()
         '
         'gbFilter
@@ -82,7 +84,7 @@ Partial Class frmBudgetManagement
         Me.gbFilter.Controls.Add(Me.rbtnHebdo)
         Me.gbFilter.Controls.Add(Me.rbtnBiMensuel)
         Me.gbFilter.Controls.Add(Me.rbtnMensuelle)
-        Me.gbFilter.Location = New System.Drawing.Point(4, 2)
+        Me.gbFilter.Location = New System.Drawing.Point(430, 2)
         Me.gbFilter.Name = "gbFilter"
         Me.gbFilter.Size = New System.Drawing.Size(528, 93)
         Me.gbFilter.TabIndex = 3
@@ -563,7 +565,7 @@ Partial Class frmBudgetManagement
         Me.grdBudget.Name = "grdBudget"
         Me.grdBudget.RowHeightEntries.AddRange(New Syncfusion.Windows.Forms.Grid.GridRowHeight() {New Syncfusion.Windows.Forms.Grid.GridRowHeight(0, 25)})
         Me.grdBudget.SerializeCellsBehavior = Syncfusion.Windows.Forms.Grid.GridSerializeCellsBehavior.SerializeAsRangeStylesIntoCode
-        Me.grdBudget.Size = New System.Drawing.Size(954, 598)
+        Me.grdBudget.Size = New System.Drawing.Size(954, 610)
         Me.grdBudget.SmartSizeBox = False
         Me.grdBudget.TabIndex = 5
         Me.grdBudget.Tag = "11"
@@ -581,22 +583,6 @@ Partial Class frmBudgetManagement
         Me.btnPay.TabIndex = 11
         Me.ToolTip.SetToolTip(Me.btnPay, "Payer les factures sélectionnées")
         Me.btnPay.UseVisualStyleBackColor = True
-        '
-        'lblMainIncomeAmount
-        '
-        Me.lblMainIncomeAmount.Location = New System.Drawing.Point(686, 33)
-        Me.lblMainIncomeAmount.Name = "lblMainIncomeAmount"
-        Me.lblMainIncomeAmount.Size = New System.Drawing.Size(57, 16)
-        Me.lblMainIncomeAmount.TabIndex = 14
-        Me.lblMainIncomeAmount.Text = "50 000.00"
-        '
-        'lblMainIncomeAmount_text
-        '
-        Me.lblMainIncomeAmount_text.Location = New System.Drawing.Point(552, 33)
-        Me.lblMainIncomeAmount_text.Name = "lblMainIncomeAmount_text"
-        Me.lblMainIncomeAmount_text.Size = New System.Drawing.Size(128, 16)
-        Me.lblMainIncomeAmount_text.TabIndex = 13
-        Me.lblMainIncomeAmount_text.Text = "Revenu par période:"
         '
         'btnUnselectAll
         '
@@ -636,21 +622,46 @@ Partial Class frmBudgetManagement
         Me.formController.FormIsLoading = False
         Me.formController.FormMode = DMS_Application.mConstants.Form_Mode.CONSULT_MODE
         Me.formController.Item_ID = 0
-        Me.formController.Location = New System.Drawing.Point(923, 699)
+        Me.formController.Location = New System.Drawing.Point(4, 714)
         Me.formController.Name = "formController"
-        Me.formController.ShowButtonQuitOnly = True
-        Me.formController.Size = New System.Drawing.Size(85, 33)
+        Me.formController.ShowButtonQuitOnly = False
+        Me.formController.Size = New System.Drawing.Size(1003, 33)
         Me.formController.TabIndex = 4
+        '
+        'gbInfos
+        '
+        Me.gbInfos.Controls.Add(Me.txtName)
+        Me.gbInfos.Controls.Add(Me.Label3)
+        Me.gbInfos.Location = New System.Drawing.Point(4, 5)
+        Me.gbInfos.Name = "gbInfos"
+        Me.gbInfos.Size = New System.Drawing.Size(420, 90)
+        Me.gbInfos.TabIndex = 18
+        Me.gbInfos.TabStop = False
+        Me.gbInfos.Text = "Informations"
+        '
+        'txtName
+        '
+        Me.txtName.Location = New System.Drawing.Point(50, 20)
+        Me.txtName.Name = "txtName"
+        Me.txtName.Size = New System.Drawing.Size(247, 20)
+        Me.txtName.TabIndex = 0
+        '
+        'Label3
+        '
+        Me.Label3.Location = New System.Drawing.Point(8, 23)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(45, 16)
+        Me.Label3.TabIndex = 17
+        Me.Label3.Text = "Nom:"
         '
         'frmBudgetManagement
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
-        Me.ClientSize = New System.Drawing.Size(1008, 730)
+        Me.ClientSize = New System.Drawing.Size(1008, 747)
+        Me.Controls.Add(Me.gbInfos)
         Me.Controls.Add(Me.btnRefresh)
         Me.Controls.Add(Me.btnUnselectAll)
         Me.Controls.Add(Me.btnSelectAll)
-        Me.Controls.Add(Me.lblMainIncomeAmount)
-        Me.Controls.Add(Me.lblMainIncomeAmount_text)
         Me.Controls.Add(Me.btnPay)
         Me.Controls.Add(Me.grdBudget)
         Me.Controls.Add(Me.gbFilter)
@@ -659,7 +670,8 @@ Partial Class frmBudgetManagement
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
         Me.Name = "frmBudgetManagement"
-        Me.StartPosition = System.Windows.Forms.FormStartPosition.Manual
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.Tag = "28"
         Me.Text = "Budget"
         Me.gbFilter.ResumeLayout(False)
         Me.gbFilter.PerformLayout()
@@ -674,6 +686,8 @@ Partial Class frmBudgetManagement
         CType(Me.dtpFrom.Calendar, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dtpFrom, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.grdBudget, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.gbInfos.ResumeLayout(False)
+        Me.gbInfos.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -696,12 +710,13 @@ Partial Class frmBudgetManagement
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents dtpToHr As Syncfusion.Windows.Forms.Tools.DateTimePickerAdv
     Friend WithEvents dtpFromHr As Syncfusion.Windows.Forms.Tools.DateTimePickerAdv
-    Friend WithEvents lblMainIncomeAmount As System.Windows.Forms.Label
-    Friend WithEvents lblMainIncomeAmount_text As System.Windows.Forms.Label
     Friend WithEvents btnUnselectAll As System.Windows.Forms.Button
     Friend WithEvents btnSelectAll As System.Windows.Forms.Button
     Friend WithEvents rbtnAll As System.Windows.Forms.RadioButton
     Friend WithEvents btnRefresh As DMS_Application.ctlRefresh
     Friend WithEvents ToolTip As System.Windows.Forms.ToolTip
+    Friend WithEvents gbInfos As System.Windows.Forms.GroupBox
+    Friend WithEvents txtName As System.Windows.Forms.TextBox
+    Friend WithEvents Label3 As System.Windows.Forms.Label
 
 End Class

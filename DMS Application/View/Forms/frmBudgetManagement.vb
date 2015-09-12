@@ -1,6 +1,7 @@
 ﻿Public Class frmBudgetManagement
 
     'Private members
+    Private mintBudget_ID As Integer
 
     'GrdBudget grid
     Private mintGrdBudget_Action_col As Short = 1
@@ -40,12 +41,19 @@
 
     Private Function blnFormData_Load() As Boolean
         Dim blnValidReturn As Boolean
-        Dim strMainIncome As String = String.Empty
+        Dim strSQL As String = String.Empty
+
+        Dim mySQLReader As MySqlDataReader = Nothing
 
         Try
-            strMainIncome = MySQLController.str_ADOSingleLookUp("Inc_ID", "Income", "Income.Inc_IsMain = 1")
+            strSQL = "          SELECT Budget.Bud_Name " & vbCrLf
+            strSQL = strSQL & " FROM Budget " & vbCrLf
+            strSQL = strSQL & "     INNER JOIN Income ON Income.Inc_IsMain = 1 AND Income.Bud_ID = " & mintBudget_ID & vbCrLf
+            strSQL = strSQL & " WHERE Budget.Bud_ID = " & mintBudget_ID & vbCrLf
 
-            If strMainIncome <> String.Empty Then
+            mySQLReader = MySQLController.ADOSelect(strSQL)
+
+            If mySQLReader.Read Then
 
                 dtpFrom.Value = Date.Today
                 dtpFrom.CustomFormat = gcAppCtrl.str_GetUserDateFormat
@@ -53,8 +61,11 @@
                 dtpTo.Value = DateAdd(DateInterval.Month, 1, Date.Today)
                 dtpTo.CustomFormat = gcAppCtrl.str_GetUserDateFormat
 
+                txtName.Text = mySQLReader.Item("Bud_Name").ToString
+
                 blnValidReturn = True
             Else
+                mySQLReader.Close()
                 gcAppCtrl.ShowMessage(mintMustDefineMainIncome_msg, MsgBoxStyle.Information)
             End If
 
@@ -62,6 +73,7 @@
             gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
             blnValidReturn = False
         Finally
+            mySQLReader.Dispose()
             If Not blnValidReturn Then Me.Close()
         End Try
 
@@ -80,8 +92,6 @@
             blnValidReturn = mcGridBudgetController.bln_FillData(strSQL)
 
             If blnValidReturn Then
-
-                lblMainIncomeAmount.Text = grdBudget(grdBudget.RowCount, mintGrdBudget_Income_Amount_col).CellValue.ToString & " $"
 
                 While intRowIdx <= grdBudget.RowCount + 1
 
@@ -251,6 +261,50 @@
 
     End Sub
 
+    Private Function blnFormData_Save() As Boolean
+        Dim blnValidReturn As Boolean
+
+        Try
+            mcSQL = New MySQLController
+
+            If mcSQL.bln_BeginTransaction Then
+
+                mcSQL.bln_RefreshFields()
+
+                Select Case formController.FormMode
+                    Case Form_Mode.INSERT_MODE
+                        Select Case False
+                            Case mcSQL.bln_AddField("Bud_Name", txtName.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
+                            Case mcSQL.bln_ADOInsert("Budget", mintBudget_ID)
+                            Case mintBudget_ID > 0
+                            Case Else
+                                blnValidReturn = True
+                        End Select
+
+                    Case Form_Mode.UPDATE_MODE
+                        Select Case False
+                            Case mcSQL.bln_AddField("Bud_Name", txtName.Text, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
+                            Case mcSQL.bln_ADOUpdate("Budget", "Budget.Bud_ID = " & mintBudget_ID)
+                            Case Else
+                                blnValidReturn = True
+                        End Select
+
+                    Case Form_Mode.DELETE_MODE
+                        'TODO: Not allowed?
+
+                End Select
+            End If
+
+        Catch ex As Exception
+            blnValidReturn = False
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        Finally
+            mcSQL.bln_EndTransaction(blnValidReturn)
+        End Try
+
+        Return blnValidReturn
+    End Function
+
 #End Region
 
 #Region "Private events"
@@ -327,14 +381,19 @@
         End If
     End Sub
 
-    Private Sub myFormControler_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
+    Private Sub myFormController_LoadData(ByVal eventArgs As LoadDataEventArgs) Handles formController.LoadData
         Dim blnValidReturn As Boolean
 
         btnAfter.Text = ChrW(9660)
         btnBefore.Text = ChrW(9650)
 
+        mintBudget_ID = formController.Item_ID
+
         Select Case False
             Case mcGridBudgetController.bln_Init(grdBudget)
+            Case formController.FormMode <> Form_Mode.INSERT_MODE
+                blnValidReturn = True
+
             Case blnFormData_Load()
             Case blnGrdBudget_Load()
             Case Else
@@ -454,6 +513,48 @@
         btnRefresh.SetToRefresh = True
     End Sub
 
+    Private Sub formController_SaveData(eventArgs As SaveDataEventArgs) Handles formController.SaveData
+        eventArgs.SaveSuccessful = blnFormData_Save()
+    End Sub
+
+    Private Sub formController_SetReadRights() Handles formController.SetReadRights
+        Select Case formController.FormMode
+            Case Form_Mode.INSERT_MODE
+                btnRefresh.Enabled = False
+                gbFilter.Enabled = False
+
+        End Select
+    End Sub
+
+    Private Sub formController_ValidateForm(eventArgs As ValidateFormEventArgs) Handles formController.ValidateForm
+        Dim strBudgetName As String = String.Empty
+
+        strBudgetName = MySQLController.str_ADOSingleLookUp("Budget.Bud_ID", "Budget", "Budget.Bud_Name = " & gcAppCtrl.str_FixStringForSQL(txtName.Text))
+
+        eventArgs.IsValid = False
+        Select Case False
+            Case txtName.Text <> String.Empty
+                gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
+                txtName.Focus()
+                txtName.SelectAll()
+
+            Case strBudgetName = String.Empty
+                gcAppCtrl.ShowMessage(mConstants.Validation_Message.UNIQUE_ATTRIBUTE)
+                txtName.Focus()
+                txtName.SelectAll()
+
+            Case Else
+                eventArgs.IsValid = True
+
+        End Select
+    End Sub
+
+    Private Sub txtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
+        formController.ChangeMade = True
+    End Sub
+
 #End Region
+
+
 
 End Class

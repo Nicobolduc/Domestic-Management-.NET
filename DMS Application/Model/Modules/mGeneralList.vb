@@ -14,6 +14,7 @@
             GROCERY_LIST_ID = 8
             EXPENSE_TYPE_LIST_ID = 9
             INCOME_LIST_ID = 10
+            BUDGET_LIST_ID = 11
         End Enum
 
         Public Enum GeneralList_GridCapID
@@ -26,6 +27,7 @@
             GROCERY_CAP = 13
             EXPENSE_TYPE_CAP = 14
             INCOME_CAP = 16
+            BUDGET_CAP = 14
         End Enum
 
 
@@ -92,6 +94,12 @@
                         strListGenTitle = " - Revenus" 'TODO caption pour ca
                         frmGenList.mintGridTag = CStr(GeneralList_GridCapID.INCOME_CAP)
                         frmGenList.SetFormToOpenName = frmIncome.Name
+
+                    Case mGeneralList.GeneralLists_ID.BUDGET_LIST_ID
+                        strSQL = strGetBudgetList_SQL()
+                        strListGenTitle = " - Budgets" 'TODO caption pour ca
+                        frmGenList.mintGridTag = CStr(GeneralList_GridCapID.BUDGET_CAP)
+                        frmGenList.SetFormToOpenName = frmBudgetManagement.Name
 
                     Case Else
                         'Do nothing
@@ -272,15 +280,33 @@
 
             strSQL = strSQL & "  SELECT Income.Inc_ID, " & vbCrLf
             strSQL = strSQL & "         Income.Inc_Name, " & vbCrLf
-            strSQL = strSQL & "         Period.Per_Name " & vbCrLf
+            strSQL = strSQL & "         Period.Per_Name, " & vbCrLf
+            strSQL = strSQL & "         Budget.Bud_Name " & vbCrLf
             strSQL = strSQL & "  FROM Income " & vbCrLf
             strSQL = strSQL & "     INNER JOIN Period ON Period.Per_ID = Income.Per_ID " & vbCrLf
+            strSQL = strSQL & "     INNER JOIN Budget ON Budget.Bud_ID = Income.Bud_ID " & vbCrLf
 
             If vstrWhere <> String.Empty Then
 
             End If
 
             strSQL = strSQL & "  ORDER BY Income.Inc_Name " & vbCrLf
+
+            Return strSQL
+        End Function
+
+        Private Function strGetBudgetList_SQL(Optional ByVal vstrWhere As String = Nothing) As String
+            Dim strSQL As String = String.Empty
+
+            strSQL = strSQL & "  SELECT Budget.Bud_ID, " & vbCrLf
+            strSQL = strSQL & "         Budget.Bud_Name " & vbCrLf
+            strSQL = strSQL & "  FROM Budget " & vbCrLf
+
+            If vstrWhere <> String.Empty Then
+
+            End If
+
+            strSQL = strSQL & "  ORDER BY Budget.Bud_Name " & vbCrLf
 
             Return strSQL
         End Function
