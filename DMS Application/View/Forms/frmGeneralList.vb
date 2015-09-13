@@ -10,6 +10,7 @@ Public Class frmGeneralList
     'Private members
     Private Const mintItem_ID_col As Integer = 1
     Private mstrFormToOpenName As String = String.Empty
+    Private mblnChildFormIsModal As Boolean = True
 
     Private mListToOpen As mGeneralList.GeneralLists_ID
     Private mintSelectedRow As Integer = 1
@@ -21,8 +22,17 @@ Public Class frmGeneralList
 #Region "Properties"
 
     Public WriteOnly Property SetFormToOpenName As String
-        Set(value As String)
+        Set(ByVal value As String)
             mstrFormToOpenName = value
+        End Set
+    End Property
+
+    Public Property ChildFormIsModal As Boolean
+        Get
+            Return mblnChildFormIsModal
+        End Get
+        Set(ByVal value As Boolean)
+            mblnChildFormIsModal = value
         End Set
     End Property
 
@@ -59,14 +69,14 @@ Public Class frmGeneralList
 
             Select Case vFormMode
                 Case mConstants.Form_Mode.INSERT_MODE
-                    frmToOpen.formController.ShowForm(vFormMode, 0, True)
+                    frmToOpen.formController.ShowForm(vFormMode, 0, mblnChildFormIsModal)
 
                 Case mConstants.Form_Mode.UPDATE_MODE
-                    frmToOpen.formController.ShowForm(vFormMode, intItem_ID, True)
+                    frmToOpen.formController.ShowForm(vFormMode, intItem_ID, mblnChildFormIsModal)
 
                 Case mConstants.Form_Mode.DELETE_MODE
                     gcAppCtrl.DisableAllFormControls(frmToOpen)
-                    frmToOpen.formController.ShowForm(vFormMode, intItem_ID, True)
+                    frmToOpen.formController.ShowForm(vFormMode, intItem_ID, mblnChildFormIsModal)
 
             End Select
 

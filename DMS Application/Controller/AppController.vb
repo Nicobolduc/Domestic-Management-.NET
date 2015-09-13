@@ -131,8 +131,8 @@ Public NotInheritable Class AppController
 
         mcMySQLConnection = New MySqlConnection
 
-        mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.107;Port=3306;userid=Nicolas;password=nicolas;database=dms_tests"
-        'mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests" 'MultipleActiveResultSets=true
+        'mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.107;Port=3306;userid=Nicolas;password=nicolas;database=dms_tests"
+        mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests" 'MultipleActiveResultSets=true
 
         Try
             mcMySQLConnection.Open()
@@ -211,11 +211,27 @@ Public NotInheritable Class AppController
         Return DateTime.ParseExact(vdtToFormat, str_GetUserDateFormat, Globalization.CultureInfo.InvariantCulture)
     End Function
 
-    Public Sub ShowMessage(ByVal vintCaption_ID As Integer, Optional ByVal vmsgType As MsgBoxStyle = MsgBoxStyle.Information)
+    Public Sub ShowMessage(ByVal vintCaption_ID As Integer, Optional ByVal vmsgType As MsgBoxStyle = MsgBoxStyle.Information, Optional ByVal vlstMsgParam As List(Of String) = Nothing)
         Dim strMessage As String = String.Empty
+        Dim intParamCpt As Integer = 1
 
         Try
             strMessage = gcAppCtrl.str_GetCaption(vintCaption_ID, mcUser.GetLanguage)
+
+            If Not IsNothing(vlstMsgParam) Then
+
+                For Each strParam As String In vlstMsgParam
+
+                    If strMessage.Contains("@" & intParamCpt.ToString) Then
+
+                        strMessage = strMessage.Replace("@" & intParamCpt.ToString, strParam)
+
+                        intParamCpt += 1
+                    Else
+                        Exit For
+                    End If
+                Next
+            End If
 
             MsgBox(strMessage, vmsgType)
 
@@ -284,8 +300,11 @@ Public NotInheritable Class AppController
                     Case "TextBox"
                         objControl.Text = String.Empty
 
-                    Case "CheckBox", "RadioButton"
+                    Case "CheckBox"
                         DirectCast(objControl, CheckBox).Checked = False
+
+                    Case "RadioButton"
+                        DirectCast(objControl, RadioButton).Checked = False
 
                     Case "ComboBox"
                         DirectCast(objControl, ComboBox).DataSource = Nothing

@@ -12,6 +12,7 @@
         'Private class members
         Private mcExpenseType As ExpenseType
         Private mcLstExpPeriod As List(Of ExpensePeriod)
+        Private mcLstBudget As List(Of Budget)
 
 
 #Region "Properties"
@@ -40,6 +41,15 @@
             End Get
             Set(value As List(Of ExpensePeriod))
                 mcLstExpPeriod = value
+            End Set
+        End Property
+
+        Public Property LstBudget As List(Of Budget)
+            Get
+                Return mcLstBudget
+            End Get
+            Set(ByVal value As List(Of Budget))
+                mcLstBudget = value
             End Set
         End Property
 
@@ -96,8 +106,9 @@
 #Region "Constructors"
 
         Public Sub New()
-            mcLstExpPeriod = New List(Of ExpensePeriod)
             mcExpenseType = New ExpenseType
+            mcLstBudget = New List(Of Budget)
+            mcLstExpPeriod = New List(Of ExpensePeriod)
         End Sub
 
 #End Region
@@ -124,18 +135,36 @@
 
                     If blnValidReturn Then
 
-                        For Each ExpAmount As ExpensePeriod In mcLstExpPeriod
+                        For Each cExpAmount As ExpensePeriod In mcLstExpPeriod
 
-                            ExpAmount.SQLController = Me.SQLController
-                            ExpAmount._intExpense_ID = _intExpense_ID
+                            cExpAmount.SQLController = Me.SQLController
+                            cExpAmount._intExpense_ID = _intExpense_ID
 
-                            blnValidReturn = ExpAmount.blnExpensePeriod_Save
+                            blnValidReturn = cExpAmount.blnExpensePeriod_Save
 
                             If Not blnValidReturn Then Exit For
                         Next
+
+                        If blnValidReturn AndAlso Me.SQLController.bln_ADODelete("Bud_Exp", "Bud_Exp.Exp_ID = " & _intExpense_ID) Then
+
+                            For Each cBudget In mcLstBudget
+
+                                blnValidReturn = False
+                                Select Case False
+                                    Case Me.SQLController.bln_RefreshFields
+                                    Case Me.SQLController.bln_AddField("Bud_ID", cBudget.ID, MySQLController.MySQL_FieldTypes.ID_TYPE)
+                                    Case Me.SQLController.bln_AddField("Exp_ID", _intExpense_ID, MySQLController.MySQL_FieldTypes.ID_TYPE)
+                                    Case Me.SQLController.bln_ADOInsert("Bud_Exp")
+                                    Case Else
+                                        blnValidReturn = True
+                                End Select
+
+                                If Not blnValidReturn Then Exit For
+                            Next
+                        End If
+                    Else
+                        'Error
                     End If
-                Else
-                    'Error
                 End If
 
             Catch ex As Exception

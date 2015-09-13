@@ -8,17 +8,17 @@
 
     'GrdPeriod
     Private Const mintGrdPeriod_Action_col As Short = 1
-    Private Const mintGrdPeriod_DtBegin_col As Short = 2
+    Private Const mintGrdPeriod_DtPeriodBegin_col As Short = 2
     Private Const mintGrdPeriod_DtEnd_col As Short = 3
-    Private Const mintGrdPeriod_DtPeriod_col As Short = 4
-    Private Const mintGrdPeriod_Amount_col As Short = 5
-    Private Const mintGrdPeriod_Active_col As Short = 6
+    Private Const mintGrdPeriod_Amount_col As Short = 4
+    Private Const mintGrdPeriod_Active_col As Short = 5
 
     'Messages
     Private Const mintDateBeginRestriction_msg As Short = 22
     Private Const mintDateEndRestriction_msg As Short = 23
     Private Const mintDateBeginUsed_msg As Short = 24
     Private Const mintDateEndUsed_msg As Short = 25
+    Private Const mintMainIncomeExists_msg As Short = 31
 
     'Private members
     Private mintSelectedRow As Integer
@@ -137,7 +137,6 @@
             strSQL = strSQL & " SELECT " & SyncfusionGridController.GridRowActions.NO_ACTION & " AS ActionCol, " & vbCrLf
             strSQL = strSQL & "         IncomePeriod.IncP_DtBegin, " & vbCrLf
             strSQL = strSQL & "         IncomePeriod.IncP_DtEnd, " & vbCrLf
-            strSQL = strSQL & "         IncomePeriod.IncP_DtPeriod, " & vbCrLf
             strSQL = strSQL & "         IncomePeriod.IncP_Amount, " & vbCrLf
             strSQL = strSQL & "         CASE WHEN IncomePeriod.IncP_DtEnd IS NULL THEN 'TRUE' ELSE 'FALSE' END " & vbCrLf
             strSQL = strSQL & " FROM IncomePeriod " & vbCrLf
@@ -181,7 +180,7 @@
                     cIncPeriod = New Model.Income.IncomePeriod
 
                     cIncPeriod.Amount = Math.Round(Val(grdPeriod(grdPeriod.RowCount, mintGrdPeriod_Amount_col).CellValue), 2)
-                    cIncPeriod.DateBegin = gcAppCtrl.GetFormatedDate(grdPeriod(grdPeriod.RowCount, mintGrdPeriod_DtBegin_col).FormattedText)
+                    cIncPeriod.DateBegin = gcAppCtrl.GetFormatedDate(grdPeriod(grdPeriod.RowCount, mintGrdPeriod_DtPeriodBegin_col).FormattedText)
 
                     If Not mcGridPeriodController(grdPeriod.RowCount, mintGrdPeriod_DtEnd_col) = String.Empty Then
 
@@ -245,7 +244,7 @@
         Dim strMainIncome As String = String.Empty
 
         If chkMainIncome.Checked Then
-            strMainIncome = MySQLController.str_ADOSingleLookUp("Inc_IsMain", "Income", "Inc_IsMain = 1 AND Income.Inc_ID <> " & formController.Item_ID)
+            strMainIncome = MySQLController.str_ADOSingleLookUp("Inc_IsMain", "Income", "Inc_IsMain = 1 AND Income.Inc_ID <> " & formController.Item_ID & " AND Income.Bud_ID = " & Val(cboBudget.SelectedValue))
         End If
 
         Select Case False
@@ -264,16 +263,24 @@
                 cboBudget.Focus()
 
             Case strMainIncome = String.Empty
-                gcAppCtrl.ShowMessage(mConstants.Validation_Message.UNIQUE_ATTRIBUTE, MsgBoxStyle.Information)
-                chkMainIncome.Focus()
+                gcAppCtrl.ShowMessage(mintMainIncomeExists_msg, MsgBoxStyle.Information)
+                cboBudget.Focus()
+                cboBudget.DroppedDown = True
 
+            Case grdPeriod.RowCount > 0
+                Dim lstMsgParam As New List(Of String)
+                lstMsgParam.Add("Budget")
+                gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_GRID, , lstMsgParam)
+                btnAddRow.Focus()
+
+            Case mcGridPeriodController.bln_ValidateGridEvent
             Case Else
                 eventArgs.IsValid = True
 
         End Select
     End Sub
 
-    Private Sub chkMainIncome_CheckedChanged(sender As Object, e As EventArgs) Handles chkMainIncome.CheckedChanged
+    Private Sub chkMainIncome_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs) Handles chkMainIncome.CheckedChanged
         formController.ChangeMade = True
     End Sub
 
@@ -281,14 +288,9 @@
 
         mcGridPeriodController.SetColType_CheckBox(mintGrdPeriod_Active_col)
 
-        mcGridPeriodController.SetColType_DateTimePicker(mintGrdPeriod_DtBegin_col, False)
+        mcGridPeriodController.SetColType_DateTimePicker(mintGrdPeriod_DtPeriodBegin_col, False)
         mcGridPeriodController.SetColType_DateTimePicker(mintGrdPeriod_DtEnd_col, True)
-        mcGridPeriodController.SetColType_DateTimePicker(mintGrdPeriod_DtPeriod_col, True)
 
-        grdPeriod.ColWidths(mintGrdPeriod_Active_col) = 60
-        grdPeriod.ColWidths(mintGrdPeriod_DtBegin_col) = 75
-        grdPeriod.ColWidths(mintGrdPeriod_DtEnd_col) = 75
-        grdPeriod.ColWidths(mintGrdPeriod_DtPeriod_col) = 75
         grdPeriod.ColWidths(mintGrdPeriod_Active_col) = 40
 
         grdPeriod.ColStyles(mintGrdPeriod_Amount_col).CellValueType = GetType(Double)
@@ -300,7 +302,7 @@
 
             If intRowRdx <> grdPeriod.RowCount Then
 
-                grdPeriod.Item(intRowRdx, mintGrdPeriod_DtBegin_col).ReadOnly = True
+                grdPeriod.Item(intRowRdx, mintGrdPeriod_DtPeriodBegin_col).ReadOnly = True
                 grdPeriod.Item(intRowRdx, mintGrdPeriod_DtEnd_col).ReadOnly = True
                 grdPeriod.Item(intRowRdx, mintGrdPeriod_Amount_col).ReadOnly = True
             End If
@@ -320,11 +322,11 @@
         Dim strPaidExpense As String = String.Empty
 
         Select Case mcGridPeriodController.GetSelectedCol
-            Case mintGrdPeriod_DtBegin_col
+            Case mintGrdPeriod_DtPeriodBegin_col
 
-                If mintSelectedRow > 1 And Not String.IsNullOrEmpty(mcGridPeriodController(mintSelectedRow, mintGrdPeriod_DtBegin_col)) Then
+                If mintSelectedRow > 1 And Not String.IsNullOrEmpty(mcGridPeriodController(mintSelectedRow, mintGrdPeriod_DtPeriodBegin_col)) Then
 
-                    If gcAppCtrl.GetFormatedDate(grdPeriod(mintSelectedRow, mintGrdPeriod_DtBegin_col).FormattedText) <= gcAppCtrl.GetFormatedDate(grdPeriod(mintSelectedRow - 1, mintGrdPeriod_DtEnd_col).FormattedText) Then
+                    If gcAppCtrl.GetFormatedDate(grdPeriod(mintSelectedRow, mintGrdPeriod_DtPeriodBegin_col).FormattedText) <= gcAppCtrl.GetFormatedDate(grdPeriod(mintSelectedRow - 1, mintGrdPeriod_DtEnd_col).FormattedText) Then
 
                         gcAppCtrl.ShowMessage(mintDateBeginRestriction_msg)
                         e.Cancel = True
@@ -344,7 +346,7 @@
 
             Case mintGrdPeriod_DtEnd_col
 
-                If Not String.IsNullOrEmpty(mcGridPeriodController(mintSelectedRow, mintGrdPeriod_DtEnd_col)) AndAlso gcAppCtrl.GetFormatedDate(grdPeriod(mintSelectedRow, mintGrdPeriod_DtEnd_col).FormattedText) < gcAppCtrl.GetFormatedDate(grdPeriod(mintSelectedRow, mintGrdPeriod_DtBegin_col).FormattedText) Then
+                If Not String.IsNullOrEmpty(mcGridPeriodController(mintSelectedRow, mintGrdPeriod_DtEnd_col)) AndAlso gcAppCtrl.GetFormatedDate(grdPeriod(mintSelectedRow, mintGrdPeriod_DtEnd_col).FormattedText) < gcAppCtrl.GetFormatedDate(grdPeriod(mintSelectedRow, mintGrdPeriod_DtPeriodBegin_col).FormattedText) Then
 
                     gcAppCtrl.ShowMessage(mintDateEndRestriction_msg)
                     e.Cancel = True
@@ -372,7 +374,7 @@
         btnAddRow.Enabled = False
     End Sub
 
-    Private Sub mcGridPeriodController_ValidateData(ByVal eventArgs As ValidateGridEventArgs) Handles mcGridPeriodController.ValidateData
+    Private Sub mcGridPeriodController_ValidateData(ByVal eventArgs As ValidateGridEventArgs) Handles mcGridPeriodController.ValidateGridData
 
         For intRowIdx As Integer = 1 To grdPeriod.RowCount
 
@@ -382,9 +384,9 @@
                     gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
                     mcGridPeriodController.SetSelectedCell(intRowIdx, mintGrdPeriod_Amount_col)
 
-                Case String.IsNullOrEmpty(mcGridPeriodController(intRowIdx, mintGrdPeriod_DtBegin_col))
+                Case String.IsNullOrEmpty(mcGridPeriodController(intRowIdx, mintGrdPeriod_DtPeriodBegin_col))
                     gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
-                    mcGridPeriodController.SetSelectedCell(intRowIdx, mintGrdPeriod_DtBegin_col)
+                    mcGridPeriodController.SetSelectedCell(intRowIdx, mintGrdPeriod_DtPeriodBegin_col)
 
                 Case intRowIdx < grdPeriod.RowCount AndAlso String.IsNullOrEmpty(mcGridPeriodController(intRowIdx, mintGrdPeriod_DtEnd_col))
                     gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)

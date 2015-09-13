@@ -100,6 +100,7 @@
                         strListGenTitle = " - Budgets" 'TODO caption pour ca
                         frmGenList.mintGridTag = CStr(GeneralList_GridCapID.BUDGET_CAP)
                         frmGenList.SetFormToOpenName = frmBudgetManagement.Name
+                        frmGenList.ChildFormIsModal = False
 
                     Case Else
                         'Do nothing

@@ -41,6 +41,12 @@
 
         lblStatusBD.Text = lblStatusBD.Text & gcAppCtrl.MySQLConnection.Database
         lblStatusUser.Text = lblStatusUser.Text & " Nicolas"
+
+        mnuTests.Visible = False
+
+#If DEBUG Then
+        mnuTests.Visible = True
+#End If
     End Sub
 
     Private Sub mnuiBudget_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuiBudget.Click
@@ -93,7 +99,7 @@
 
 #End Region
 
-    Private Sub TestsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestsToolStripMenuItem.Click
+    Private Sub TestsToolStripMenuItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles mnuTests.Click
         Dim test = New test
 
         test.Show()

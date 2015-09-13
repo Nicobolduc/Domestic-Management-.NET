@@ -94,7 +94,7 @@
             strSQL = strSQL & "         ProductType.ProT_Name, " & vbCrLf
             strSQL = strSQL & "         ProductCategory.ProC_ID, " & vbCrLf
             strSQL = strSQL & "         CASE WHEN ProductCategory.ProC_Name IS NULL THEN '' ELSE ProductCategory.ProC_Name END AS ProC_Name, " & vbCrLf
-            strSQL = strSQL & "         CASE WHEN Product.Pro_Taxable = 1 THEN 'True' ELSE 'False' END, " & vbCrLf
+            strSQL = strSQL & "         CASE WHEN Product.Pro_Taxable = 1 THEN 'TRUE' ELSE 'FALSE' END, " & vbCrLf
             strSQL = strSQL & "         ProductBrand.ProB_ID, " & vbCrLf
             strSQL = strSQL & "         ProductBrand.ProB_Name, " & vbCrLf
             strSQL = strSQL & "         ProductPrice.ProP_Price, " & vbCrLf
@@ -203,11 +203,11 @@
         Try
             For intRow As Integer = 1 To grdGrocery.RowCount
 
-                If grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue.ToString = "True" And grdGrocery(intRow, mintGrdGrocery_Pro_Taxable_col).CellValue.ToString = "True" Then
+                If grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue.ToString = "TRUE" And grdGrocery(intRow, mintGrdGrocery_Pro_Taxable_col).CellValue.ToString = "TRUE" Then
 
                     dblSubtotalTaxable = dblSubtotalTaxable + Val(grdGrocery(intRow, mintGrdGrocery_ProP_Price_col).CellValue)
 
-                ElseIf grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue.ToString = "True" And grdGrocery(intRow, mintGrdGrocery_Pro_Taxable_col).CellValue.ToString = "False" Then
+                ElseIf grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue.ToString = "TRUE" And grdGrocery(intRow, mintGrdGrocery_Pro_Taxable_col).CellValue.ToString = "FALSE" Then
 
                     dblSubtotalNotTaxable = dblSubtotalNotTaxable + Val(grdGrocery(intRow, mintGrdGrocery_ProP_Price_col).CellValue)
 
@@ -350,7 +350,7 @@
 
                     blnValidReturn = False
                     Select Case False
-                        Case grdGrocery(cpt, mintGrdGrocery_Sel_col).CellValue.ToString = "True"
+                        Case grdGrocery(cpt, mintGrdGrocery_Sel_col).CellValue.ToString = "TRUE"
                             blnValidReturn = True
                         Case mcSQL.bln_AddField("Gro_ID", formController.Item_ID.ToString, MySQLController.MySQL_FieldTypes.ID_TYPE)
                         Case mcSQL.bln_AddField("Pro_ID", grdGrocery(cpt, mintGrdGrocery_Pro_ID_col).CellValue, MySQLController.MySQL_FieldTypes.ID_TYPE)

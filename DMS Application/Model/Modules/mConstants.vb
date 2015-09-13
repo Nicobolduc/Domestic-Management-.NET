@@ -31,6 +31,7 @@ Public Module mConstants
         MANDATORY_VALUE = 6
         NUMERIC_VALUE = 10
         UNIQUE_ATTRIBUTE = 17
+        MANDATORY_GRID = 30
     End Enum
 
     Public Enum CompanyType

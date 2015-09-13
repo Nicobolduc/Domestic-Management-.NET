@@ -145,6 +145,7 @@
     <Compile Include="Controller\Model Controllers\FinanceController.vb" />
     <Compile Include="Controller\Model Controllers\ProductController.vb" />
     <Compile Include="Model\BaseModel.vb" />
+    <Compile Include="Model\Budget.vb" />
     <Compile Include="Model\Company.vb" />
     <Compile Include="Model\Expense\PaidExpense.vb" />
     <Compile Include="Model\Income.vb" />

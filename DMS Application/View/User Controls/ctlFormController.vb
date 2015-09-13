@@ -277,8 +277,20 @@ Public Class ctlFormController
         mfrmParent.ResumeLayout()
     End Sub
 
+    'Private Sub ctlFormController_ValidateForm(ByVal eventArgs As ValidateFormEventArgs) Handles Me.ValidateForm
+
+    '    For Each cGridCtl As Object In mfrmParent.Controls
+
+    '        If TypeOf (cGridCtl) Is SyncfusionGridController Then
+
+    '            Dim validateGridData As System.Reflection.MethodInfo = cGridCtl.GetType().GetMethod("ValidateGridData", System.Reflection.BindingFlags.NonPublic Or System.Reflection.BindingFlags.Instance)
+    '            validateGridData.Invoke(cGridCtl, New Object() {New ValidateGridEventArgs()})
+    '        End If
+    '    Next
+    'End Sub
 #End Region
 
+    
 End Class
 
 #Region "Custom events"

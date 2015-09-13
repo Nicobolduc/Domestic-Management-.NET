@@ -24,8 +24,8 @@ Public Class SyncfusionGridController
 
     'Public events
     Public Event SetDisplay()
-    Public Event ValidateData(ByVal eventArgs As ValidateGridEventArgs)
-    Public Event SaveGridData()
+    Public Event ValidateGridData(ByVal eventArgs As ValidateGridEventArgs)
+    Public Event SaveGridData(ByVal eventArgs As SaveGridDataEventArgs)
 
     'Public enums
     Public Enum GridRowActions
@@ -442,10 +442,14 @@ Public Class SyncfusionGridController
     End Sub
 
     Public Sub SetColType_CheckBox(ByVal vintColumnIndex As Integer, Optional ByVal vblnAllowTriStates As Boolean = False)
+        mGrdSync.IgnoreReadOnly = True
 
         mGrdSync.ColStyles(vintColumnIndex).CellType = "CheckBox"
         mGrdSync.ColStyles(vintColumnIndex).CheckBoxOptions = New GridCheckBoxCellInfo(True.ToString(), False.ToString(), mstrUndeterminedCheckBoxState, False)
         mGrdSync.ColStyles(vintColumnIndex).TriState = vblnAllowTriStates
+        mGrdSync.ColStyles(vintColumnIndex).VerticalAlignment = GridVerticalAlignment.Middle
+
+        mGrdSync.IgnoreReadOnly = False
     End Sub
 
     Public Sub SetColType_ComboBox(ByVal vstrSQL As String, ByVal vintColumnIndex As Integer, ByVal vstrValueMember As String, ByVal vstrDisplayMember As String, ByVal vblnAllowEmpty As Boolean)
@@ -524,6 +528,22 @@ Public Class SyncfusionGridController
         End Try
     End Sub
 
+    Public Function bln_ValidateGridEvent() As Boolean
+        Dim validateGridEventArgs As New ValidateGridEventArgs
+
+        RaiseEvent ValidateGridData(validateGridEventArgs)
+
+        Return validateGridEventArgs.IsValid
+    End Function
+
+    Public Function bln_SaveGridDataEvent() As Boolean
+        Dim saveGridDataArgs As New SaveGridDataEventArgs
+
+        RaiseEvent SaveGridData(saveGridDataArgs)
+
+        Return saveGridDataArgs.SaveSuccessful
+    End Function
+
 #End Region
 
 #Region "Private events"
@@ -576,7 +596,12 @@ Public Class SyncfusionGridController
     End Sub
 
     Private Sub mGrdSync_CheckBoxClick(sender As Object, e As GridCellClickEventArgs) Handles mGrdSync.CheckBoxClick
-        Dim lol As Integer = 23
+
+        If Me(e.RowIndex, e.ColIndex) = "TRUE" Then
+            e.Cancel = True
+        Else
+            mfrmGridParent.formController.ChangeMade = True
+        End If
     End Sub
 
     Private Sub mGrdSync_CurrentCellAcceptedChanges(sender As Object, e As CancelEventArgs) Handles mGrdSync.CurrentCellAcceptedChanges
@@ -631,6 +656,22 @@ Public Class ValidateGridEventArgs
         End Get
         Set(ByVal value As Boolean)
             mblnIsValid = value
+        End Set
+    End Property
+
+End Class
+
+Public Class SaveGridDataEventArgs
+    Inherits System.EventArgs
+
+    Private mblnSaveSuccessful As Boolean
+
+    Public Property SaveSuccessful As Boolean
+        Get
+            Return mblnSaveSuccessful
+        End Get
+        Set(ByVal value As Boolean)
+            mblnSaveSuccessful = value
         End Set
     End Property
 

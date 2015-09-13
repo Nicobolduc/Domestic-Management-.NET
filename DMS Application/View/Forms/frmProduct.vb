@@ -69,6 +69,8 @@ Public Class frmProduct
             If mcProductModel Is Nothing Then
 
                 mcProductModel = New Model.Product
+            Else
+                mcProductModel.Category = New Model.ProductCategory
             End If
 
             mcProductModel.SQLController = mcSQL
@@ -311,7 +313,6 @@ Public Class frmProduct
     End Sub
 
     Private Sub formController_ValidateForm(ByVal eventArgs As ValidateFormEventArgs) Handles formController.ValidateForm
-        Dim intRowIndex As Integer
 
         Select Case False
             Case txtName.Text <> String.Empty
@@ -328,42 +329,11 @@ Public Class frmProduct
                 cboType.DroppedDown = True
                 cboType.Focus()
 
+            Case mcGrdPricesController.bln_ValidateGridEvent
             Case Else
                 eventArgs.IsValid = True
 
         End Select
-
-        If eventArgs.IsValid And grdPrices.RowCount > 0 Then
-
-            For intRowIndex = 1 To grdPrices.RowCount
-
-                eventArgs.IsValid = False
-
-                Select Case True
-                    Case mcGrdPricesController.CellIsEmpty(intRowIndex, mintGrdPrices_Cy_Seller_ID_col)
-                        gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
-
-                        mcGrdPricesController.SetSelectedCol(True) = mintGrdPrices_Cy_Seller_Name_col
-
-                    Case mcGrdPricesController.CellIsEmpty(intRowIndex, mintGrdPrices_ProB_ID_col)
-                        gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
-
-                        mcGrdPricesController.SetSelectedCol(True) = mintGrdPrices_ProB_Name_col
-
-                    Case mcGrdPricesController.CellIsEmpty(intRowIndex, mintGrdPrices_Price_col)
-                        gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
-
-                        mcGrdPricesController.SetSelectedCol() = mintGrdPrices_Price_col
-
-                    Case Else
-                        eventArgs.IsValid = True
-
-                End Select
-
-                If Not eventArgs.IsValid Then Exit For
-            Next
-
-        End If
     End Sub
 
     Private Sub mcGrdPrices_SetDisplay() Handles mcGrdPricesController.SetDisplay
@@ -429,13 +399,39 @@ Public Class frmProduct
         formController.ChangeMade = True
     End Sub
 
-    Private Sub mcGrdPrices_ValidateData(ByVal eventArgs As ValidateGridEventArgs) Handles mcGrdPricesController.ValidateData
+    Private Sub mcGrdPrices_ValidateData(ByVal eventArgs As ValidateGridEventArgs) Handles mcGrdPricesController.ValidateGridData
         If grdPrices.RowCount < 1 Then
 
             gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
             eventArgs.IsValid = False
         Else
-            eventArgs.IsValid = True
+            For intRowIndex = 1 To grdPrices.RowCount
+
+                eventArgs.IsValid = False
+
+                Select Case True
+                    Case mcGrdPricesController.CellIsEmpty(intRowIndex, mintGrdPrices_Cy_Seller_ID_col)
+                        gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+
+                        mcGrdPricesController.SetSelectedCol(True) = mintGrdPrices_Cy_Seller_Name_col
+
+                    Case mcGrdPricesController.CellIsEmpty(intRowIndex, mintGrdPrices_ProB_ID_col)
+                        gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+
+                        mcGrdPricesController.SetSelectedCol(True) = mintGrdPrices_ProB_Name_col
+
+                    Case mcGrdPricesController.CellIsEmpty(intRowIndex, mintGrdPrices_Price_col)
+                        gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
+
+                        mcGrdPricesController.SetSelectedCol() = mintGrdPrices_Price_col
+
+                    Case Else
+                        eventArgs.IsValid = True
+
+                End Select
+
+                If Not eventArgs.IsValid Then Exit For
+            Next
         End If
     End Sub
 

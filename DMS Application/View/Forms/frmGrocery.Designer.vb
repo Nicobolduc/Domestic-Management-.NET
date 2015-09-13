@@ -218,7 +218,7 @@ Partial Class frmGrocery
         Me.grdGrocery.Name = "grdGrocery"
         Me.grdGrocery.RowHeightEntries.AddRange(New Syncfusion.Windows.Forms.Grid.GridRowHeight() {New Syncfusion.Windows.Forms.Grid.GridRowHeight(0, 25)})
         Me.grdGrocery.SerializeCellsBehavior = Syncfusion.Windows.Forms.Grid.GridSerializeCellsBehavior.SerializeAsRangeStylesIntoCode
-        Me.grdGrocery.Size = New System.Drawing.Size(706, 465)
+        Me.grdGrocery.Size = New System.Drawing.Size(706, 467)
         Me.grdGrocery.SmartSizeBox = False
         Me.grdGrocery.TabIndex = 22
         Me.grdGrocery.Tag = "12"

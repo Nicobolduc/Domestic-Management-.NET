@@ -1,11 +1,17 @@
 ﻿Public Class frmExpense
 
-    'Private members
+    'GrdPeriod
     Private Const mintGrdPeriod_Action_col As Short = 1
     Private Const mintGrdPeriod_DtBegin_col As Short = 2
     Private Const mintGrdPeriod_DtEnd_col As Short = 3
     Private Const mintGrdPeriod_Amount_col As Short = 4
     Private Const mintGrdPeriod_Current_col As Short = 5
+
+    'GrdBudget
+    Private Const mintGrdBudget_Action_col As Short = 1
+    Private Const mintGrdBudget_Bud_ID_col As Short = 2
+    Private Const mintGrdBudget_Name_col As Short = 3
+    Private Const mintGrdBudget_Sel_col As Short = 4
 
     Private mintSelectedRow As Integer
 
@@ -18,6 +24,7 @@
     'Private class members
     Private mcSQL As MySQLController
     Private WithEvents mcGridPeriodController As SyncfusionGridController
+    Private WithEvents mcGridBudgetController As SyncfusionGridController
     Private mcExpenseModel As Model.Expense
 
 
@@ -29,6 +36,7 @@
 
         ' Add any initialization after the InitializeComponent() call.
         mcGridPeriodController = New SyncfusionGridController
+        mcGridBudgetController = New SyncfusionGridController
     End Sub
 
 #End Region
@@ -75,6 +83,29 @@
             strSQL = strSQL & " ORDER BY ExpensePeriod.ExpP_DtBegin ASC " & vbCrLf
 
             blnValidReturn = mcGridPeriodController.bln_FillData(strSQL)
+
+        Catch ex As Exception
+            blnValidReturn = False
+            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        End Try
+
+        Return blnValidReturn
+    End Function
+
+    Private Function blnGrdBudget_Load() As Boolean
+        Dim blnValidReturn As Boolean
+        Dim strSQL As String = String.Empty
+
+        Try
+            strSQL = strSQL & " SELECT " & SyncfusionGridController.GridRowActions.NO_ACTION & " AS ActionCol, " & vbCrLf
+            strSQL = strSQL & "         Budget.Bud_ID, " & vbCrLf
+            strSQL = strSQL & "         Budget.Bud_Name, " & vbCrLf
+            strSQL = strSQL & "         CASE WHEN Bud_Exp.Exp_ID IS NOT NULL THEN 'TRUE' ELSE 'FALSE' END AS SelCol " & vbCrLf
+            strSQL = strSQL & " FROM Budget " & vbCrLf
+            strSQL = strSQL & "     LEFT JOIN Bud_Exp ON Bud_Exp.Bud_ID = Budget.Bud_ID AND Bud_Exp.Exp_ID = " & formController.Item_ID & vbCrLf
+            strSQL = strSQL & " ORDER BY Budget.Bud_Name " & vbCrLf
+
+            blnValidReturn = mcGridBudgetController.bln_FillData(strSQL)
 
         Catch ex As Exception
             blnValidReturn = False
@@ -153,6 +184,7 @@
     Public Function blnSyncExpenseModel() As Boolean
         Dim blnValidReturn As Boolean
         Dim cExpPeriod As Model.Expense.ExpensePeriod
+        Dim cBudget As Model.Budget
 
         Try
             If mcExpenseModel Is Nothing Then
@@ -166,6 +198,9 @@
             mcExpenseModel.Name = txtName.Text
             mcExpenseModel.Period = CType(cboInterval.SelectedValue, Period)
             mcExpenseModel.Fixed = chkFixed.Checked
+
+            mcExpenseModel.Type = New Model.ExpenseType
+            mcExpenseModel.Type.ID = CInt(cboType.SelectedValue)
 
             mcExpenseModel.LstExpPeriod = New List(Of Model.Expense.ExpensePeriod)
 
@@ -189,8 +224,22 @@
                 End If
             Next
 
-            mcExpenseModel.Type = New Model.ExpenseType
-            mcExpenseModel.Type.ID = CInt(cboType.SelectedValue)
+            mcExpenseModel.LstBudget = New List(Of Model.Budget)
+
+            For intRowIdx As Integer = 1 To grdBudget.RowCount
+
+                If grdBudget(intRowIdx, mintGrdBudget_Sel_col).CellValue.ToString.Equals("TRUE") Then
+
+                    cBudget = New Model.Budget
+
+                    cBudget.ID = CInt(grdBudget(intRowIdx, mintGrdBudget_Bud_ID_col).CellValue)
+                    cBudget.Name = grdBudget(intRowIdx, mintGrdBudget_Name_col).CellValue.ToString
+
+                    cBudget.DLMCommand = CType(grdBudget(grdBudget.RowCount, mintGrdBudget_Action_col).CellValue, Form_Mode)
+
+                    mcExpenseModel.LstBudget.Add(cBudget)
+                End If
+            Next
 
             blnValidReturn = True
 
@@ -213,8 +262,10 @@
 
         Select Case False
             Case mcGridPeriodController.bln_Init(grdPeriod, btnAddRow)
+            Case mcGridBudgetController.bln_Init(grdBudget)
             Case blnCboInterval_Load()
             Case blnCboType_Load()
+            Case blnGrdBudget_Load()
             Case formController.FormMode <> mConstants.Form_Mode.INSERT_MODE
                 mcGridPeriodController.AddRow()
                 blnValidReturn = True
@@ -243,15 +294,12 @@
     End Sub
 
     Private Sub myFormControler_ValidateForm(ByVal eventArgs As ValidateFormEventArgs) Handles formController.ValidateForm
-        Dim gridEventArgs As New ValidateGridEventArgs
         Dim strOtherExpenseName As String = String.Empty
 
         strOtherExpenseName = MySQLController.str_ADOSingleLookUp("Expense.Exp_ID", "Expense", "Expense.Exp_Name = " & gcAppCtrl.str_FixStringForSQL(txtName.Text) & " AND Expense.Exp_ID <> " & formController.Item_ID)
 
-        mcGridAmountController_ValidateData(gridEventArgs)
-
         Select Case False
-            Case gridEventArgs.IsValid
+            Case mcGridPeriodController.bln_ValidateGridEvent
             Case txtName.Text <> String.Empty
                 gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE, MsgBoxStyle.Information)
                 txtName.Focus()
@@ -373,7 +421,7 @@
         End If
     End Sub
 
-    Private Sub mcGridAmountController_ValidateData(ByVal eventArgs As ValidateGridEventArgs) Handles mcGridPeriodController.ValidateData
+    Private Sub mcGridAmountController_ValidateData(ByVal eventArgs As ValidateGridEventArgs) Handles mcGridPeriodController.ValidateGridData
 
         For intRowIdx As Integer = 1 To grdPeriod.RowCount
 
@@ -406,6 +454,17 @@
         btnAddRow.Enabled = False
     End Sub
 
+    Private Sub mcGridBudgetController_SetDisplay() Handles mcGridBudgetController.SetDisplay
+        grdBudget.ColWidths(mintGrdBudget_Name_col) = 200
+
+        mcGridBudgetController.SetColType_CheckBox(mintGrdBudget_Sel_col)
+
+        grdBudget.ColStyles(mintGrdBudget_Name_col).ReadOnly = True
+
+        mcGridBudgetController.SetColsSizeBehavior = ColsSizeBehaviorsController.colsSizeBehaviors.EXTEND_LAST_COL
+    End Sub
+
 #End Region
+
 
 End Class

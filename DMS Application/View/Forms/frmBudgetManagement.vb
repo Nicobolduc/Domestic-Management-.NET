@@ -87,7 +87,10 @@
         Dim intLastRowAddedIndex As Integer = 1
 
         Try
-            strSQL = strSQL & " CALL sp_LoadBudgetGrid (" & gcAppCtrl.str_FixStringForSQL(Format(dtpFrom.Value, gcAppCtrl.str_GetServerDateFormat) & " " & Format(dtpFromHr.Value, gcAppCtrl.str_GetServerTimeFormat)) & ", " & gcAppCtrl.str_FixStringForSQL(Format(dtpTo.Value, gcAppCtrl.str_GetServerDateFormat) & " " & Format(dtpToHr.Value, gcAppCtrl.str_GetServerTimeFormat)) & ");" & vbCrLf
+            strSQL = strSQL & " CALL sp_LoadBudgetGrid (" & _
+                gcAppCtrl.str_FixStringForSQL(Format(dtpFrom.Value, gcAppCtrl.str_GetServerDateFormat) & " " & Format(dtpFromHr.Value, gcAppCtrl.str_GetServerTimeFormat)) & ", " & _
+                gcAppCtrl.str_FixStringForSQL(Format(dtpTo.Value, gcAppCtrl.str_GetServerDateFormat) & " " & Format(dtpToHr.Value, gcAppCtrl.str_GetServerTimeFormat)) & ", " & _
+                formController.Item_ID & ");"
 
             blnValidReturn = mcGridBudgetController.bln_FillData(strSQL)
 
@@ -182,6 +185,7 @@
             End If
 
             grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Name_col).CellValue = "Revenus: " & grdBudget(vintRowIndexToAdd - intNbRowsAdded, mintGrdBudget_Income_Amount_col).CellValue.ToString
+            grdBudget(vintRowIndexToAdd, mintGrdBudget_Exp_Name_col).Font.Bold = True
 
             newCellsStyle.CellType = "Default"
             newCellsStyle.ReadOnly = True
@@ -204,41 +208,54 @@
     Private Function blnPayExpenses() As Boolean
         Dim blnValidReturn As Boolean
         Dim cPaidExpense As Model.PaidExpense
+        Dim questionResult As MsgBoxResult
 
-        Me.Cursor = Cursors.WaitCursor
+        questionResult = MsgBox("Vous ne pourrez plus revenir en arrière. Voulez-vous continuer?", MsgBoxStyle.YesNo, "Attention")
 
-        mcSQL = New MySQLController
+        If questionResult = MsgBoxResult.Yes Then
 
-        blnValidReturn = mcSQL.bln_BeginTransaction()
+            Me.Cursor = Cursors.WaitCursor
 
-        Try
-            For intRowIdx As Integer = 1 To grdBudget.RowCount
+            mcSQL = New MySQLController
 
-                If Not blnValidReturn Then Exit For
+            blnValidReturn = mcSQL.bln_BeginTransaction()
 
-                If grdBudget(intRowIdx, mintGrdBudget_Sel_col).CellValue.ToString.ToUpper = "TRUE" And CInt(grdBudget(intRowIdx, mintGrdBudget_Action_col).CellValue) = SyncfusionGridController.GridRowActions.UPDATE_ACTION Then
+            Try
+                For intRowIdx As Integer = 1 To grdBudget.RowCount
 
-                    cPaidExpense = New Model.PaidExpense
-                    cPaidExpense.DLMCommand = Form_Mode.INSERT_MODE
-                    cPaidExpense.SQLController = mcSQL
+                    If Not blnValidReturn Then Exit For
 
-                    cPaidExpense.Expense_ID = CInt(grdBudget(intRowIdx, mintGrdBudget_Exp_ID_col).CellValue)
-                    cPaidExpense.ExpenseBillingDate_ID = CDate(grdBudget(intRowIdx, mintGrdBudget_Exp_NextBillingDate_col).CellValue)
-                    cPaidExpense.AmountPaid = CDbl(IIf(grdBudget(intRowIdx, mintGrdBudget_PExp_AmountPaid_col).CellValue.ToString <> String.Empty, grdBudget(intRowIdx, mintGrdBudget_PExp_AmountPaid_col).CellValue, grdBudget(intRowIdx, mintGrdBudget_Exp_Amount_col).CellValue))
-                    cPaidExpense.DatePaid = CDate(grdBudget(intRowIdx, mintGrdBudget_PExp_DatePaid_col).CellValue)
-                    cPaidExpense.Comment = grdBudget(intRowIdx, mintGrdBudget_PExp_Comment_col).CellValue.ToString
+                    If grdBudget(intRowIdx, mintGrdBudget_Sel_col).CellValue.ToString.ToUpper = "TRUE" And CInt(grdBudget(intRowIdx, mintGrdBudget_Action_col).CellValue) = SyncfusionGridController.GridRowActions.UPDATE_ACTION Then
 
-                    blnValidReturn = cPaidExpense.blnPaidExpense_Save()
-                End If
-            Next
+                        cPaidExpense = New Model.PaidExpense
+                        cPaidExpense.DLMCommand = Form_Mode.INSERT_MODE
+                        cPaidExpense.SQLController = mcSQL
 
-        Catch ex As Exception
-            blnValidReturn = False
-            gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
-        Finally
-            mcSQL.bln_EndTransaction(blnValidReturn)
-            Me.Cursor = Cursors.Default
-        End Try
+                        cPaidExpense.Expense_ID = CInt(grdBudget(intRowIdx, mintGrdBudget_Exp_ID_col).CellValue)
+                        cPaidExpense.ExpenseBillingDate_ID = CDate(grdBudget(intRowIdx, mintGrdBudget_Exp_NextBillingDate_col).CellValue)
+                        cPaidExpense.AmountPaid = CDbl(IIf(grdBudget(intRowIdx, mintGrdBudget_PExp_AmountPaid_col).CellValue.ToString <> String.Empty, grdBudget(intRowIdx, mintGrdBudget_PExp_AmountPaid_col).CellValue, grdBudget(intRowIdx, mintGrdBudget_Exp_Amount_col).CellValue))
+                        cPaidExpense.DatePaid = CDate(grdBudget(intRowIdx, mintGrdBudget_PExp_DatePaid_col).CellValue)
+                        cPaidExpense.Comment = grdBudget(intRowIdx, mintGrdBudget_PExp_Comment_col).CellValue.ToString
+
+                        blnValidReturn = cPaidExpense.blnPaidExpense_Save()
+                    End If
+                Next
+
+            Catch ex As Exception
+                blnValidReturn = False
+                gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+            Finally
+                mcSQL.bln_EndTransaction(blnValidReturn)
+                Me.Cursor = Cursors.Default
+            End Try
+
+            If blnValidReturn Then
+
+                blnValidReturn = blnGrdBudget_Load()
+            End If
+        Else
+            blnValidReturn = True
+        End If
 
         Return blnValidReturn
     End Function
@@ -346,7 +363,9 @@
         mcGridBudgetController.SetColsSizeBehavior = ColsSizeBehaviorsController.colsSizeBehaviors.EXTEND_LAST_COL
 
         For intCol As Integer = 1 To grdBudget.ColCount
+
             If intCol <> mintGrdBudget_PExp_DatePaid_col And intCol <> mintGrdBudget_PExp_Comment_col And intCol <> mintGrdBudget_PExp_AmountPaid_col And intCol <> mintGrdBudget_Sel_col Then
+
                 grdBudget.ColStyles(intCol).ReadOnly = True
             End If
         Next
@@ -386,6 +405,8 @@
 
         btnAfter.Text = ChrW(9660)
         btnBefore.Text = ChrW(9650)
+
+        btnRefresh.SetToRefresh = False
 
         mintBudget_ID = formController.Item_ID
 
@@ -529,24 +550,32 @@
     Private Sub formController_ValidateForm(eventArgs As ValidateFormEventArgs) Handles formController.ValidateForm
         Dim strBudgetName As String = String.Empty
 
-        strBudgetName = MySQLController.str_ADOSingleLookUp("Budget.Bud_ID", "Budget", "Budget.Bud_Name = " & gcAppCtrl.str_FixStringForSQL(txtName.Text))
-
         eventArgs.IsValid = False
-        Select Case False
-            Case txtName.Text <> String.Empty
-                gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
-                txtName.Focus()
-                txtName.SelectAll()
+        Select Case formController.FormMode
+            Case mConstants.Form_Mode.INSERT_MODE, mConstants.Form_Mode.UPDATE_MODE
+                strBudgetName = MySQLController.str_ADOSingleLookUp("Budget.Bud_ID", "Budget", "Budget.Bud_Name = " & gcAppCtrl.str_FixStringForSQL(txtName.Text) & " AND Budget.Bud_ID <> " & formController.Item_ID)
 
-            Case strBudgetName = String.Empty
-                gcAppCtrl.ShowMessage(mConstants.Validation_Message.UNIQUE_ATTRIBUTE)
-                txtName.Focus()
-                txtName.SelectAll()
+                Select Case False
+                    Case txtName.Text <> String.Empty
+                        gcAppCtrl.ShowMessage(mConstants.Validation_Message.MANDATORY_VALUE)
+                        txtName.Focus()
+                        txtName.SelectAll()
 
-            Case Else
-                eventArgs.IsValid = True
+                    Case strBudgetName = String.Empty
+                        gcAppCtrl.ShowMessage(mConstants.Validation_Message.UNIQUE_ATTRIBUTE)
+                        txtName.Focus()
+                        txtName.SelectAll()
+
+                    Case Else
+                        eventArgs.IsValid = True
+
+                End Select
+
+            Case mConstants.Form_Mode.DELETE_MODE
+                MsgBox("Pas encore disponible", MsgBoxStyle.Information)
 
         End Select
+        
     End Sub
 
     Private Sub txtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
