@@ -10,6 +10,7 @@
         Private _dblAmountPaid As Double
         Private _dtDatePaid As Date
         Private _strComment As String = String.Empty
+        Private _intBud_ID As Integer
 
 
 #Region "Properties"
@@ -68,6 +69,15 @@
             End Set
         End Property
 
+        Public Property Bud_ID As Integer
+            Get
+                Return _intBud_ID
+            End Get
+            Set(ByVal value As Integer)
+                _intBud_ID = value
+            End Set
+        End Property
+
 #End Region
 
 #Region "Functions / Subs"
@@ -112,6 +122,7 @@
                     Case SQLController.bln_AddField("PExp_AmountPaid", _dblAmountPaid, MySQLController.MySQL_FieldTypes.DECIMAL_TYPE)
                     Case SQLController.bln_AddField("PExp_DatePaid", _dtDatePaid, MySQLController.MySQL_FieldTypes.DATETIME_TYPE)
                     Case SQLController.bln_AddField("PExp_Comment", _strComment, MySQLController.MySQL_FieldTypes.VARCHAR_TYPE)
+                    Case SQLController.bln_AddField("Bud_ID", _intBud_ID, MySQLController.MySQL_FieldTypes.ID_TYPE)
                     Case Else
                         blnValidReturn = True
                 End Select

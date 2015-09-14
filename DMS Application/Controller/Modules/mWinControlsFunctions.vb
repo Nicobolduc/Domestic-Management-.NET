@@ -29,7 +29,7 @@ Namespace mWinControlsFunctions
                 rcboToLoad.DataSource = myBindingList
                 rcboToLoad.ValueMember = "Key"
                 rcboToLoad.DisplayMember = "Value"
-                rcboToLoad.SelectedIndex = 0
+                rcboToLoad.SelectedIndex = CInt(IIf(mySQLReader.HasRows, 0, -1))
 
                 blnValidReturn = True
 

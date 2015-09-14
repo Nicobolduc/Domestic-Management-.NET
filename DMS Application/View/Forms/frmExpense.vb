@@ -210,15 +210,15 @@
 
                     cExpPeriod = New Model.Expense.ExpensePeriod
 
-                    cExpPeriod.Amount = Math.Round(Val(grdPeriod(grdPeriod.RowCount, mintGrdPeriod_Amount_col).CellValue), 2)
-                    cExpPeriod.DateBegin = gcAppCtrl.GetFormatedDate(grdPeriod(grdPeriod.RowCount, mintGrdPeriod_DtBegin_col).FormattedText)
+                    cExpPeriod.Amount = Math.Round(Val(grdPeriod(intRowIdx, mintGrdPeriod_Amount_col).CellValue), 2)
+                    cExpPeriod.DateBegin = gcAppCtrl.GetFormatedDate(grdPeriod(intRowIdx, mintGrdPeriod_DtBegin_col).FormattedText)
 
-                    If Not mcGridPeriodController(grdPeriod.RowCount, mintGrdPeriod_DtEnd_col) = String.Empty Then
+                    If Not mcGridPeriodController(intRowIdx, mintGrdPeriod_DtEnd_col) = String.Empty Then
 
-                        cExpPeriod.DateEnd = gcAppCtrl.GetFormatedDate(grdPeriod(grdPeriod.RowCount, mintGrdPeriod_DtEnd_col).FormattedText)
+                        cExpPeriod.DateEnd = gcAppCtrl.GetFormatedDate(grdPeriod(intRowIdx, mintGrdPeriod_DtEnd_col).FormattedText)
                     End If
 
-                    cExpPeriod.DLMCommand = CType(grdPeriod(grdPeriod.RowCount, mintGrdPeriod_Action_col).CellValue, Form_Mode)
+                    cExpPeriod.DLMCommand = CType(grdPeriod(intRowIdx, mintGrdPeriod_Action_col).CellValue, Form_Mode)
 
                     mcExpenseModel.LstExpPeriod.Add(cExpPeriod)
                 End If
@@ -228,7 +228,7 @@
 
             For intRowIdx As Integer = 1 To grdBudget.RowCount
 
-                If grdBudget(intRowIdx, mintGrdBudget_Sel_col).CellValue.ToString.Equals("TRUE") Then
+                If mcGridBudgetController.CellIsChecked(intRowIdx, mintGrdBudget_Sel_col) Then
 
                     cBudget = New Model.Budget
 

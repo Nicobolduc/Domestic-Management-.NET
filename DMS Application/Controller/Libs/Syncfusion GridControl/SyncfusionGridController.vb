@@ -10,7 +10,6 @@ Public Class SyncfusionGridController
 
     'Private members
     Private Const mintDefaultActionCol As Short = 1
-    Private Const mstrSelectionColName As String = "SelCol"
     Private mintPreviousCellChangedRow As Integer
     Private mstrUndeterminedCheckBoxState As String = "TO_DEFINE"
     Private mblnHasNoActionColumn As Boolean
@@ -329,6 +328,14 @@ Public Class SyncfusionGridController
         Return blnIsEmpty
     End Function
 
+    Public Function CellIsChecked(ByVal vintRowIdx As Integer, ByVal vintColIdx As Integer) As Boolean
+        Dim blnCellIsChecked As Boolean
+
+        blnCellIsChecked = Me.Item(vintRowIdx, vintColIdx).ToUpper.Equals("TRUE")
+
+        Return blnCellIsChecked
+    End Function
+
     Private Function blnSetColsDisplay() As Boolean
         Dim blnValidReturn As Boolean = True
         Dim strGridCaption As String = String.Empty
@@ -597,11 +604,7 @@ Public Class SyncfusionGridController
 
     Private Sub mGrdSync_CheckBoxClick(sender As Object, e As GridCellClickEventArgs) Handles mGrdSync.CheckBoxClick
 
-        If Me(e.RowIndex, e.ColIndex) = "TRUE" Then
-            e.Cancel = True
-        Else
-            mfrmGridParent.formController.ChangeMade = True
-        End If
+        mfrmGridParent.formController.ChangeMade = True
     End Sub
 
     Private Sub mGrdSync_CurrentCellAcceptedChanges(sender As Object, e As CancelEventArgs) Handles mGrdSync.CurrentCellAcceptedChanges

@@ -225,7 +225,7 @@
 
                     If Not blnValidReturn Then Exit For
 
-                    If grdBudget(intRowIdx, mintGrdBudget_Sel_col).CellValue.ToString.ToUpper = "TRUE" And CInt(grdBudget(intRowIdx, mintGrdBudget_Action_col).CellValue) = SyncfusionGridController.GridRowActions.UPDATE_ACTION Then
+                    If mcGridBudgetController.CellIsChecked(intRowIdx, mintGrdBudget_Sel_col) And CInt(grdBudget(intRowIdx, mintGrdBudget_Action_col).CellValue) = SyncfusionGridController.GridRowActions.UPDATE_ACTION Then
 
                         cPaidExpense = New Model.PaidExpense
                         cPaidExpense.DLMCommand = Form_Mode.INSERT_MODE
@@ -234,8 +234,15 @@
                         cPaidExpense.Expense_ID = CInt(grdBudget(intRowIdx, mintGrdBudget_Exp_ID_col).CellValue)
                         cPaidExpense.ExpenseBillingDate_ID = CDate(grdBudget(intRowIdx, mintGrdBudget_Exp_NextBillingDate_col).CellValue)
                         cPaidExpense.AmountPaid = CDbl(IIf(grdBudget(intRowIdx, mintGrdBudget_PExp_AmountPaid_col).CellValue.ToString <> String.Empty, grdBudget(intRowIdx, mintGrdBudget_PExp_AmountPaid_col).CellValue, grdBudget(intRowIdx, mintGrdBudget_Exp_Amount_col).CellValue))
-                        cPaidExpense.DatePaid = CDate(grdBudget(intRowIdx, mintGrdBudget_PExp_DatePaid_col).CellValue)
                         cPaidExpense.Comment = grdBudget(intRowIdx, mintGrdBudget_PExp_Comment_col).CellValue.ToString
+                        cPaidExpense.Bud_ID = formController.Item_ID
+
+                        If mcGridBudgetController.CellIsEmpty(intRowIdx, mintGrdBudget_PExp_DatePaid_col) Then
+
+                            cPaidExpense.DatePaid = CDate(grdBudget(intRowIdx, mintGrdBudget_Exp_NextBillingDate_col).CellValue)
+                        Else
+                            cPaidExpense.DatePaid = CDate(grdBudget(intRowIdx, mintGrdBudget_PExp_DatePaid_col).CellValue)
+                        End If
 
                         blnValidReturn = cPaidExpense.blnPaidExpense_Save()
                     End If
@@ -580,6 +587,17 @@
 
     Private Sub txtName_TextChanged(sender As Object, e As EventArgs) Handles txtName.TextChanged
         formController.ChangeMade = True
+    End Sub
+
+    Private Sub grdBudget_CheckBoxClick(ByVal sender As Object, ByVal e As Syncfusion.Windows.Forms.Grid.GridCellClickEventArgs) Handles grdBudget.CheckBoxClick
+
+        If mcGridBudgetController.CellIsChecked(e.RowIndex, e.ColIndex) Then
+
+            formController.ChangeMade = False
+            e.Cancel = True
+        Else
+            formController.ChangeMade = True
+        End If
     End Sub
 
 #End Region

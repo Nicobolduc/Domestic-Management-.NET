@@ -203,11 +203,11 @@
         Try
             For intRow As Integer = 1 To grdGrocery.RowCount
 
-                If grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue.ToString = "TRUE" And grdGrocery(intRow, mintGrdGrocery_Pro_Taxable_col).CellValue.ToString = "TRUE" Then
+                If mcGrdGroceryController.CellIsChecked(intRow, mintGrdGrocery_Sel_col) And mcGrdGroceryController.CellIsChecked(intRow, mintGrdGrocery_Pro_Taxable_col) Then
 
                     dblSubtotalTaxable = dblSubtotalTaxable + Val(grdGrocery(intRow, mintGrdGrocery_ProP_Price_col).CellValue)
 
-                ElseIf grdGrocery(intRow, mintGrdGrocery_Sel_col).CellValue.ToString = "TRUE" And grdGrocery(intRow, mintGrdGrocery_Pro_Taxable_col).CellValue.ToString = "FALSE" Then
+                ElseIf mcGrdGroceryController.CellIsChecked(intRow, mintGrdGrocery_Sel_col) And Not mcGrdGroceryController.CellIsChecked(intRow, mintGrdGrocery_Pro_Taxable_col) Then
 
                     dblSubtotalNotTaxable = dblSubtotalNotTaxable + Val(grdGrocery(intRow, mintGrdGrocery_ProP_Price_col).CellValue)
 
@@ -346,15 +346,15 @@
 
             If blnValidReturn Then
 
-                For cpt As Integer = 1 To grdGrocery.RowCount
+                For intRowIdx As Integer = 1 To grdGrocery.RowCount
 
                     blnValidReturn = False
                     Select Case False
-                        Case grdGrocery(cpt, mintGrdGrocery_Sel_col).CellValue.ToString = "TRUE"
+                        Case mcGrdGroceryController.CellIsChecked(intRowIdx, mintGrdGrocery_Sel_col)
                             blnValidReturn = True
                         Case mcSQL.bln_AddField("Gro_ID", formController.Item_ID.ToString, MySQLController.MySQL_FieldTypes.ID_TYPE)
-                        Case mcSQL.bln_AddField("Pro_ID", grdGrocery(cpt, mintGrdGrocery_Pro_ID_col).CellValue, MySQLController.MySQL_FieldTypes.ID_TYPE)
-                        Case mcSQL.bln_AddField("ProB_ID", grdGrocery(cpt, mintGrdGrocery_ProB_ID_col).CellValue, MySQLController.MySQL_FieldTypes.ID_TYPE)
+                        Case mcSQL.bln_AddField("Pro_ID", grdGrocery(intRowIdx, mintGrdGrocery_Pro_ID_col).CellValue, MySQLController.MySQL_FieldTypes.ID_TYPE)
+                        Case mcSQL.bln_AddField("ProB_ID", grdGrocery(intRowIdx, mintGrdGrocery_ProB_ID_col).CellValue, MySQLController.MySQL_FieldTypes.ID_TYPE)
                         Case mcSQL.bln_ADOInsert("Gro_Pro")
                         Case Else
                             blnValidReturn = True

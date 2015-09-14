@@ -132,7 +132,7 @@ Public NotInheritable Class AppController
         mcMySQLConnection = New MySqlConnection
 
         'mcMySQLConnection.ConnectionString = "Persist Security Info=False;server=192.168.1.107;Port=3306;userid=Nicolas;password=nicolas;database=dms_tests"
-        mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_tests" 'MultipleActiveResultSets=true
+        mcMySQLConnection.ConnectionString = "server=127.0.0.1;Port=3306;userid=root;database=dms_prod" 'MultipleActiveResultSets=true
 
         Try
             mcMySQLConnection.Open()
