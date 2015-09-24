@@ -326,8 +326,11 @@ Public Class MySQLController
     Public Shared Function bln_CheckReferenceIntegrity(ByVal vstrForeignTableName As String, ByVal vstrForeignKeyName As String, ByVal vintForeignKeyValue As Integer) As Boolean
         Dim blnValidReturn As Boolean
         Dim strSQL As String = String.Empty
+        Dim cSQL As MySQLController = New MySQLController
 
         Try
+            cSQL.bln_BeginTransaction()
+
             strSQL = "DELETE FROM " & vstrForeignTableName & " WHERE " & vstrForeignKeyName & " = " & vintForeignKeyValue
 
             blnValidReturn = bln_ADOExecute(strSQL)
@@ -335,6 +338,8 @@ Public Class MySQLController
         Catch ex As Exception
             blnValidReturn = False
             gcAppCtrl.cErrorsLog.WriteToErrorLog(ex.Message, ex.StackTrace, Err.Source)
+        Finally
+            cSQL.bln_EndTransaction(False)
         End Try
 
         If Not blnValidReturn Then
