@@ -179,7 +179,7 @@ Public Class MySQLController
         Dim vstrValue As String = String.Empty
 
         Try
-            If vobjValue Is Nothing Or IsDBNull(vstrValue) Then
+            If vobjValue Is Nothing Or IsDBNull(vobjValue) Then
                 vstrValue = String.Empty
             Else
                 vstrValue = vobjValue.ToString
