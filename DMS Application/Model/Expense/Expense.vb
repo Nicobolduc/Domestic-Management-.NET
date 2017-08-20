@@ -133,7 +133,7 @@
 
                     End Select
 
-                    If blnValidReturn Then
+                    If blnValidReturn And DLMCommand <> Form_Mode.DELETE_MODE Then
 
                         For Each cExpAmount As ExpensePeriod In mcLstExpPeriod
 
@@ -242,6 +242,7 @@
             Try
                 Select Case False
                     Case SQLController.bln_ADODelete("ExpensePeriod", "Exp_ID = " & _intExpense_ID)
+                    Case SQLController.bln_ADODelete("Bud_Exp", "Exp_ID = " & _intExpense_ID)
                     Case SQLController.bln_ADODelete("Expense", "Exp_ID = " & _intExpense_ID)
                     Case Else
                         blnValidReturn = True

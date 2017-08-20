@@ -198,7 +198,6 @@
     <Compile Include="Model\Product\ProductBrand.vb" />
     <Compile Include="Model\Product\ProductPrice.vb" />
     <Compile Include="Model\Expense\ExpenseType.vb" />
-    <Compile Include="View\Forms\ExpenseAmount.vb" />
     <Compile Include="View\Forms\frmIncome.Designer.vb">
       <DependentUpon>frmIncome.vb</DependentUpon>
     </Compile>
